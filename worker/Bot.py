@@ -9,7 +9,7 @@ import sys
 
 class Bot(object):
     def __init__(self):
-        print "Bot should not be directly called"
+        print("Bot should not be directly called")
 
     # just read and return the next line from the bot's stdout
     def read(self):
@@ -17,7 +17,7 @@ class Bot(object):
 
     # pass line through to the bot's stdin
     def write(self, line):
-        return self.proc.stdin.write(line)
+        return self.proc.stdin.write(line.encode())
 
 
 # class for being run in containerized "live" environment
