@@ -1,7 +1,9 @@
-Si32 Web Frontend
+Si32 Web
 ========
 
-## Running
+The UI component of Si32. 
+
+## Building and Running
 From this directory, `docker-compose build` and then `docker-compose up` should
 run the front end on your machine at `localhost:4000`.
 
