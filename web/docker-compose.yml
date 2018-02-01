@@ -1,0 +1,6 @@
+si32-web:
+  build: .
+  ports:
+    - "4000:4000"
+  volumes:
+    - ./src:/app/src

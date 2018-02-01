@@ -1,10 +1,9 @@
 {
-  "name": "web",
+  "name": "api",
   "version": "1.0.0",
-  "description": "Si32 Web ======= The web API for Si32.",
+  "description": "The web API for Si32.",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon --experimental-modules app.mjs",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

@@ -3,7 +3,7 @@ mongo:
   volumes:
     - ./.dbdata:/data/db
 
-si32-web:
+si32-api:
   build: .
   ports:
     - "3000:3000"
