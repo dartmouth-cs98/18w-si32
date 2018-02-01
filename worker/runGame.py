@@ -10,8 +10,8 @@ def execGame():
     try:
         game.start([bot1, bot2])
     except Exception as err:
-        print "GAME ERR"
-        print err
+        print("GAME ERR")
+        print(err)
 
     bot1.cleanup()
     bot2.cleanup()

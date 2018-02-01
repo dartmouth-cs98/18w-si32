@@ -14,14 +14,14 @@ def start(bots):
         b.run()
 
     for b in bots:
-        print b.read(),
+        print(b.read(),)
         sys.stdout.flush()
 
     for i, b in enumerate(bots):
         b.write("hello bot %d \n" % (i+1))
 
     for b in bots:
-        print b.read(),
+        print(b.read(),)
 
     '''
     General game loop will probably look something like:

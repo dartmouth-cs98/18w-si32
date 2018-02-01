@@ -10,11 +10,7 @@ def execGame():
     for i, arg in enumerate(sys.argv[1:]):
         bots.append(LocalBot(arg, i))
 
-    try:
-        game.start(bots)
-    except Exception as err:
-        print "GAME ERR"
-        print err
+    game.start(bots)
 
     # get results from game and post to server
 
