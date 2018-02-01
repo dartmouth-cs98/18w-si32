@@ -1,0 +1,13 @@
+mongo:
+  image: mongo:jessie
+  volumes:
+    - ./.dbdata:/data/db
+
+si32-api:
+  build: .
+  ports:
+    - "3000:3000"
+  volumes:
+    - .:/app
+  links:
+    - mongo
