@@ -11,8 +11,8 @@ ENV NODE_PATH=/install/node_modules
 
 # copy local files over
 WORKDIR /app
-COPY . /app
+COPY ./app /app
 
 EXPOSE 3000
 
-CMD ["nodemon", "app.js"]
+CMD ["nodemon", "app/index.js"]
