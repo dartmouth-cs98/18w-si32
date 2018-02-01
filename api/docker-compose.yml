@@ -3,12 +3,11 @@ mongo:
   volumes:
     - ./.dbdata:/data/db
 
-app:
+si32-web:
   build: .
   ports:
     - "3000:3000"
   volumes:
     - .:/app
-    - /app/node_modules
   links:
     - mongo
