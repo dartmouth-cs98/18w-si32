@@ -1,15 +1,11 @@
 const express = require("express");
 const http = require("http");
 const bodyParser = require("body-parser");
-
 const db = require("./db");
-
-// import all sub routers
 const userRouter = require("./users/routes");
 const botRouter = require("./bots/routes");
 
-// TODO setup config management
-const PORT = 3000;
+const PORT = process.env.PORT;
 
 const app = express();
 

@@ -6,7 +6,6 @@ const rs = new RedisSessions({
   host: "redis"
 });
 
-// returns promise
 // resolves with session object
 const create = (user, ip) => {
   return new Promise((resolve, reject) => {
@@ -28,7 +27,6 @@ const create = (user, ip) => {
   });
 };
 
-// returns promise
 // resolves with the user id associated with a valid token
 const get = token => {
   return new Promise((resolve, reject) => {
@@ -49,6 +47,7 @@ const get = token => {
   });
 };
 
+// removes session by token
 const destroy = token => {
   return new Promise((resolve, reject) => {
     rs.kill(

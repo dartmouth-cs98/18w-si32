@@ -12,6 +12,4 @@ ENV NODE_PATH=/install/node_modules
 WORKDIR /app
 COPY ./app /app
 
-EXPOSE 3000
-
 CMD ["nodemon", "app/index.js"]
