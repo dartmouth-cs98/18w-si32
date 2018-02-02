@@ -64,9 +64,13 @@ TODO: how to deploy the project
 ## Authors
 
 Gabe Boning
+
 Kyle Dotterrer
+
 Robin Jayaswal
+
 Paul Spangfort
+
 Tong Xu
 
 ## Acknowledgments
