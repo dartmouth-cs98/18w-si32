@@ -12,6 +12,7 @@ Stretch goals:
 - Statistical analysis during the match (of advantage, positions, etc.)
 - Team VS gameplay
 - More advanced graphics
+![Alt text](https://i.imgur.com/faV8fWC.png)
 
 ## Architecture
 
