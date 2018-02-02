@@ -3,6 +3,11 @@ mongo:
   volumes:
     - ./.dbdata:/data/db
 
+redis:
+  image: redis:3.2-alpine
+  volumes:
+    - ./.redis:/data/db
+
 si32-api:
   build: .
   ports:
@@ -11,3 +16,4 @@ si32-api:
     - .:/app
   links:
     - mongo
+    - redis

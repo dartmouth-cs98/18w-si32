@@ -1,10 +1,10 @@
-const _ = require('lodash');
-require('./style.css');
+const _ = require("lodash");
+require("./style.css");
 
 function component() {
-  var element = document.createElement('div');
+  var element = document.createElement("div");
 
-  element.innerHTML = _.join(['Hello ', 'webpacking'], ' ');
+  element.innerHTML = _.join(["Hello ", "webpacking"], " ");
 
   return element;
 }

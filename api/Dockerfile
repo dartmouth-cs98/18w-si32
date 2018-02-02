@@ -5,7 +5,6 @@ RUN mkdir /install
 WORKDIR /install
 COPY package.json /install
 RUN npm install -g nodemon
-RUN npm install
 
 ENV NODE_PATH=/install/node_modules
 
