@@ -9,6 +9,6 @@ const bootstrap = () => {
   container.id = "root";
   document.body.appendChild(container);
   ReactDOM.render(<App />, container);
-}
+};
 
 bootstrap();
