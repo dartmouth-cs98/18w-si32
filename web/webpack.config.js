@@ -13,13 +13,18 @@ module.exports = {
     host: "0.0.0.0",
     port: 4000
   },
-  plugins: [new HtmlWebpackPlugin()],
   module: {
     rules: [
+      {
+        test: /\.(js|jsx)$/,
+        exclude: /node_modules/,
+        loader: "babel-loader"
+      },
       {
         test: /\.css$/,
         use: ["style-loader", "css-loader"]
       }
     ]
-  }
+  },
+  plugins: [new HtmlWebpackPlugin()],
 };

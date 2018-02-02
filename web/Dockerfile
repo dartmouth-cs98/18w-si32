@@ -16,4 +16,4 @@ COPY . /app
 
 EXPOSE 4000
 
-CMD ["webpack-dev-server"]
+CMD ["webpack-dev-server", "-d"]

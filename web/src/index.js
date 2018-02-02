@@ -1,12 +1,14 @@
-const _ = require("lodash");
-require("./style.css");
+import React from "react";
+import ReactDOM from "react-dom";
+import _ from "lodash";
+import "./style.css";
+import App from "./app.js";
 
-function component() {
-  var element = document.createElement("div");
-
-  element.innerHTML = _.join(["Hello ", "webpacking"], " ");
-
-  return element;
+const bootstrap = () => {
+  const container = document.createElement("div");
+  container.id = "root";
+  document.body.appendChild(container);
+  ReactDOM.render(<App />, container);
 }
 
-document.body.appendChild(component());
+bootstrap();
