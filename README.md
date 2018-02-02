@@ -31,8 +31,8 @@ This is where users, bots, and game results are kept. We are using MongoDB.
 
 * Game Runner
 
-This is the Docker infrastructure for running games. It is a a python process that spins up child processes for
-each bot in the game, and communicates with them through STDIN and STDOUT in the various processes. This will all be in
+This is the Docker infrastructure for running games. It is a a python process that spins up child docker containers for
+each bot in the game, and communicates with them through STDIN and STDOUT. This will all be in
 python, except for the subprocesses which may be different if we support more languages.
 
 * Code Starter Kits / Libraries
@@ -45,21 +45,24 @@ strategy. These will at first only be in Python.
 
 ## Setup
 
-* Frontend / Database
+### Frontend / Database
 
-Run npm i in the web and api repo.
+View README in respective directories `api` and `web`. Docker compose will create and link together mongo, redis, and the web components for you.
 
 
-* Game Runner
+### Game Runner
 
 Set up Docker on your computer, following official documentation. Now, in the `worker` repo, call `make`.
 You should now be ready to run `./start.sh` and see a 'game' spin up, where the bots do nothing. If it is not working,
 try manually running the make commands as there is currently an issue open about sometimes needing to do this.
 
+Again, follow README in `worker`. 
+
 
 ## Deployment
 
-TODO: how to deploy the project
+TODO: figure this one out
+
 
 ## Authors
 
