@@ -13,7 +13,9 @@ Stretch goals:
 - Team VS gameplay
 - More advanced graphics
 ![Alt text](https://i.imgur.com/faV8fWC.png)
-
+![Alt text](https://i.imgur.com/P7w6uWA.png)
+![Alt text](https://i.imgur.com/1LnASxh.png)
+![Alt text](https://i.imgur.com/fAbwxMw.png)
 ## Architecture
 
 Docker
