@@ -10,6 +10,7 @@ const loggedIn = (req, res, next) => {
   session.get(token).then(
     userId => {
       req.userId = userId;
+      req.token = token;
       next();
     },
     err => {

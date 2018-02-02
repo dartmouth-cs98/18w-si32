@@ -37,11 +37,30 @@ const get = token => {
         app: RS_APPNAME,
         token
       },
-      (err, resp) => {
-        if (err) {
+      (err, session) => {
+        console.log("SESSION GET", err, session);
+        if (err || !session.id) {
           reject(err);
         } else {
-          resolve(resp.id);
+          resolve(session.id);
+        }
+      }
+    );
+  });
+};
+
+const destroy = token => {
+  return new Promise((resolve, reject) => {
+    rs.kill(
+      {
+        app: RS_APPNAME,
+        token
+      },
+      (err, resp) => {
+        if (err || resp.kill == 0) {
+          reject();
+        } else {
+          resolve();
         }
       }
     );
@@ -50,5 +69,6 @@ const get = token => {
 
 module.exports = {
   create,
-  get
+  get,
+  destroy
 };

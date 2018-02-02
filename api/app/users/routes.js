@@ -2,6 +2,7 @@ const express = require("express");
 const bcrypt = require("bcryptjs");
 
 const session = require("../session");
+const auth = require("../auth");
 const User = require("./model");
 
 const userRouter = express.Router();
@@ -60,10 +61,24 @@ userRouter.post("/login", (req, res) => {
       });
     })
     .catch(err => {
-      console.log(err);
       res.status(401).json({
-        message: "Couldn't log in",
-        err
+        message: "Couldn't log in"
+      });
+    });
+});
+
+userRouter.post("/logout", auth.loggedIn, (req, res) => {
+  session
+    .destroy(req.token)
+    .then(() => {
+      return res.json({
+        success: true
+      });
+    })
+    .catch(() => {
+      res.json({
+        message: "Couldn't find or destroy that session",
+        success: false
       });
     });
 });
