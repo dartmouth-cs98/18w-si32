@@ -1,6 +1,6 @@
 # Project Name
 
-Si32 will be an online environment where players can submit their own bots to play against each other in a very simple Starcraft-style turn-based strategy game. Each bot will control an army of "units" which will build "factories" that will spawn more units; the objective of the game is to destroy all of the opponent's factories. Bots will control all aspects of gameplay and will direct how each and every unit will move. 
+Si32 will be an online environment where players can submit their own bots to play against each other in a very simple Starcraft-style turn-based strategy game. Each bot will control an army of "units" which will build "factories" that will spawn more units; the objective of the game is to destroy all of the opponent's factories. Bots will control all aspects of gameplay and will direct how each and every unit will move.
 
 Basic functionalities we're hoping to implement:
 - The game (obviously)
@@ -18,11 +18,44 @@ Stretch goals:
 ![Alt text](https://i.imgur.com/fAbwxMw.png)
 ## Architecture
 
-Docker
+There are several distinct but connected parts of this project. They are
+
+* API and Frontend
+
+This is where users can create accounts, upload their code, and see results. An interface that exposes
+the game infrastructure to the outside world. We are using SPA structure with a REST backend.
+
+* Database
+
+This is where users, bots, and game results are kept. We are using MongoDB.
+
+* Game Runner
+
+This is the Docker infrastructure for running games. It is a a python process that spins up child processes for
+each bot in the game, and communicates with them through STDIN and STDOUT in the various processes. This will all be in
+python, except for the subprocesses which may be different if we support more languages.
+
+* Code Starter Kits / Libraries
+
+This abstracts away the complications of communicating with the central game server through STDIN/STDOUT.
+Users can import the library and simply call `game.send_moves()` to get the state sent to the game manager.
+Furthermore, these provide helpful classes for objects in the game that make it easier for the user to focus on
+strategy. These will at first only be in Python.
+
 
 ## Setup
 
-TODO: how to get the project dev environment up and running, npm install etc
+* Frontend / Database
+
+Run npm i in the web and api repo.
+
+
+* Game Runner
+
+Set up Docker on your computer, following official documentation. Now, in the `worker` repo, call `make`.
+You should now be ready to run `./start.sh` and see a 'game' spin up, where the bots do nothing. If it is not working,
+try manually running the make commands as there is currently an issue open about sometimes needing to do this.
+
 
 ## Deployment
 
@@ -30,6 +63,12 @@ TODO: how to deploy the project
 
 ## Authors
 
-TODO: list of authors
+Gabe Boning
+Kyle Dotterrer
+Robin Jayaswal
+Paul Spangfort
+Tong Xu
 
 ## Acknowledgments
+
+Inspiration: Halite.
