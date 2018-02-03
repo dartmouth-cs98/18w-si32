@@ -21,6 +21,7 @@ class Game(ABC):
 
         for b in bots:
             print(b.read(),)
+            sys.stdout.flush()
 
         super().__init__()
 

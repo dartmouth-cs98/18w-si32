@@ -17,7 +17,9 @@ class Bot(object):
 
     # pass line through to the bot's stdin
     def write(self, line):
-        return self.proc.stdin.write(line.encode())
+        self.proc.stdin.write(line.encode())
+        self.proc.stdin.flush()
+        return 
 
 
 # class for being run in containerized "live" environment
