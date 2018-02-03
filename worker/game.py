@@ -17,11 +17,11 @@ class Game(ABC):
             sys.stdout.flush()
 
         for i, b in enumerate(bots):
-            b.write("hello bot %d \n" % (i+1))
+            b.write("%d\n" % (i))
 
-        for b in bots:
-            print(b.read(),)
-            sys.stdout.flush()
+        # for b in bots:
+        #     print(b.read(),)
+        #     sys.stdout.flush()
 
         super().__init__()
 
