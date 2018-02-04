@@ -8,4 +8,6 @@
 ehthumbs.db
 Thumbs.db
 
+*.log
+
 *.pyc
