@@ -7,6 +7,13 @@ class SimpleGame(Game):
     def __init__(self, bots):
         self.bots = bots
 
+        self.commandsMap = {
+            'up': (0, 1),
+            'down': (0, -1),
+            'right': (1, 0),
+            'left': (-1, 0)
+        }
+
         self.players = {}
         for i, bot in enumerate(self.bots):
             self.players[i] = self.SimpleGamePlayer(i, bot, (0, 0))
@@ -22,7 +29,21 @@ class SimpleGame(Game):
         self.send_state()
         print('sent state')
         for b in self.bots:
-            print(b.read(),)
+            commandStr = b.read()
+            print(commandStr)
+            commands = json.loads(commandStr)
+
+            for command in commands:
+                # command = json.loads(command)
+                print(command)
+                if ('player' in command) and ('direction' in command):
+                    playerId = command['player']
+                    direction = command['direction']
+                    if (playerId in self.players) and (direction in self.commandsMap):
+                        newX = self.players[playerId].position[0] + self.commandsMap[direction][0]
+                        newY = self.players[playerId].position[1] + self.commandsMap[direction][1]
+                        self.players[playerId].position = (newX, newY)
+
 
     def send_state(self):
         for bot in self.bots:

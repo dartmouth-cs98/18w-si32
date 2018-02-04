@@ -48,7 +48,7 @@ class SimpleGameHelper():
         }
 
     def send_commands(self, commands):
-        print(json.dumps(commands),)
+        print(json.dumps(commands))
         sys.stdout.flush()
 
     def log(self, log):
