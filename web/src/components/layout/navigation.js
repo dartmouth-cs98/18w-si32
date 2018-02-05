@@ -45,9 +45,9 @@ class Navigation extends React.PureComponent {
           <Link style={{ ...styles.link, ...styles.homeLink }} href="/">
             Si32
           </Link>
-          <Link style={styles.link} href="/bots">
+          {this.props.isLoggedIn && <Link style={styles.link} href="/bots">
             Bots
-          </Link>
+          </Link>}
         </div>
 
         {this.renderUserArea()}

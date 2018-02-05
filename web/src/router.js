@@ -5,6 +5,7 @@ import history from "./history";
 import LoginPage from "./components/user/login";
 import RegisterPage from "./components/user/register";
 import ProfilePage from "./components/user/profile";
+import BotListPage from "./components/bots/botList";
 
 // TODO split these out into modules?
 const routes = [
@@ -23,7 +24,11 @@ const routes = [
   {
     path: "/profile",
     action: () => <ProfilePage />
-  }
+  },
+  {
+    path: "/bots",
+    action: () => <BotListPage />
+  },
 ];
 
 const router = new UniversalRouter(routes);

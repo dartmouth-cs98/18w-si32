@@ -14,7 +14,7 @@ const login = (username, password) => (dispatch, getState) => {
     .then(res => {
       dispatch({
         type: SESSION_START,
-        token: res.body.session.token
+        data: res.body.session,
       });
     });
 };
@@ -30,7 +30,7 @@ const logout = () => dispatch => {
     });
 };
 
-const register = (username, password) => {
+const register = (username, password) => dispatch => {
   return http
     .post("/users/register")
     .send({
@@ -40,7 +40,7 @@ const register = (username, password) => {
     .then(res => {
       dispatch({
         type: SESSION_START,
-        token: res.body.session.token
+        data: res.body.session,
       });
     });
 };
