@@ -49,39 +49,120 @@ table {
 	border-spacing: 0;
 }
 
-
-/* share-tech-mono-regular - latin */
+/* saira-200 - latin */
 @font-face {
-  font-family: 'Share Tech Mono';
+  font-family: 'Saira';
   font-style: normal;
-  font-weight: 400;
-  src: url('../fonts/share-tech-mono-v7-latin-regular.eot'); /* IE9 Compat Modes */
-  src: local('Share Tech Mono'), local('ShareTechMono-Regular'),
-       url('../fonts/share-tech-mono-v7-latin-regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
-       url('../fonts/share-tech-mono-v7-latin-regular.woff2') format('woff2'), /* Super Modern Browsers */
-       url('../fonts/share-tech-mono-v7-latin-regular.woff') format('woff'), /* Modern Browsers */
-       url('../fonts/share-tech-mono-v7-latin-regular.ttf') format('truetype'), /* Safari, Android, iOS */
-       url('../fonts/share-tech-mono-v7-latin-regular.svg#ShareTechMono') format('svg'); /* Legacy iOS */
+  font-weight: 200;
+  src: local('Saira ExtraLight'), local('Saira-ExtraLight'),
+       url('../fonts/saira-v2-latin-200.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+       url('../fonts/saira-v2-latin-200.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
 }
 
-/* share-tech-regular - latin */
+/* saira-300 - latin */
 @font-face {
-  font-family: 'Share Tech';
+  font-family: 'Saira';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Saira Light'), local('Saira-Light'),
+       url('../fonts/saira-v2-latin-300.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+       url('../fonts/saira-v2-latin-300.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+
+/* saira-regular - latin */
+@font-face {
+  font-family: 'Saira';
   font-style: normal;
   font-weight: 400;
-  src: url('../fonts/share-tech-v7-latin-regular.eot'); /* IE9 Compat Modes */
-  src: local('Share Tech Regular'), local('ShareTech-Regular'),
-       url('../fonts/share-tech-v7-latin-regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
-       url('../fonts/share-tech-v7-latin-regular.woff2') format('woff2'), /* Super Modern Browsers */
-       url('../fonts/share-tech-v7-latin-regular.woff') format('woff'), /* Modern Browsers */
-       url('../fonts/share-tech-v7-latin-regular.ttf') format('truetype'), /* Safari, Android, iOS */
-       url('../fonts/share-tech-v7-latin-regular.svg#ShareTech') format('svg'); /* Legacy iOS */
+  src: local('Saira Regular'), local('Saira-Regular'),
+       url('../fonts/saira-v2-latin-regular.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+       url('../fonts/saira-v2-latin-regular.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
 }
+
+/* saira-500 - latin */
+@font-face {
+  font-family: 'Saira';
+  font-style: normal;
+  font-weight: 500;
+  src: local('Saira Medium'), local('Saira-Medium'),
+       url('../fonts/saira-v2-latin-500.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+       url('../fonts/saira-v2-latin-500.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+
+/* saira-600 - latin */
+@font-face {
+  font-family: 'Saira';
+  font-style: normal;
+  font-weight: 600;
+  src: local('Saira SemiBold'), local('Saira-SemiBold'),
+       url('../fonts/saira-v2-latin-600.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+       url('../fonts/saira-v2-latin-600.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+
+/* saira-700 - latin */
+@font-face {
+  font-family: 'Saira';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Saira Bold'), local('Saira-Bold'),
+       url('../fonts/saira-v2-latin-700.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+       url('../fonts/saira-v2-latin-700.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+
+@font-face {
+  font-family: 'Saira Condensed';
+  font-style: normal;
+  font-weight: 200;
+  src: local('Saira Condensed ExtraLight'), local('SairaCondensed-ExtraLight'),
+       url('../fonts/saira-condensed-v3-latin-200.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+       url('../fonts/saira-condensed-v3-latin-200.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+
+/* saira-condensed-300 - latin */
+@font-face {
+  font-family: 'Saira Condensed';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Saira Condensed Light'), local('SairaCondensed-Light'),
+       url('../fonts/saira-condensed-v3-latin-300.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+       url('../fonts/saira-condensed-v3-latin-300.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+
+/* saira-condensed-regular - latin */
+@font-face {
+  font-family: 'Saira Condensed';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Saira Condensed Regular'), local('SairaCondensed-Regular'),
+       url('../fonts/saira-condensed-v3-latin-regular.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+       url('../fonts/saira-condensed-v3-latin-regular.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+
+/* saira-condensed-500 - latin */
+@font-face {
+  font-family: 'Saira Condensed';
+  font-style: normal;
+  font-weight: 500;
+  src: local('Saira Condensed Medium'), local('SairaCondensed-Medium'),
+       url('../fonts/saira-condensed-v3-latin-500.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+       url('../fonts/saira-condensed-v3-latin-500.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+
+/* saira-condensed-600 - latin */
+@font-face {
+  font-family: 'Saira Condensed';
+  font-style: normal;
+  font-weight: 600;
+  src: local('Saira Condensed SemiBold'), local('SairaCondensed-SemiBold'),
+       url('../fonts/saira-condensed-v3-latin-600.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+       url('../fonts/saira-condensed-v3-latin-600.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+
 
 
 body {
   background-color: #121121;
-  font-family: "Share Tech", sans-serif;
+  font-family: "Saira", sans-serif;
 	font-weight: 400;
 	-webkit-font-smoothing: antialiased;
 	font-smooth: antialiased;

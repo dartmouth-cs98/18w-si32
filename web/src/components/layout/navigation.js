@@ -59,7 +59,7 @@ class Navigation extends React.PureComponent {
 const styles = {
   wrapper: {
     backgroundColor: "#141529",
-    borderBottom: "1px solid #9B51E0",
+    borderBottom: "1px solid #2F214E",
     display: "flex",
     height: 56,
     alignItems: "center",
@@ -73,6 +73,8 @@ const styles = {
   link: {
     color: "white",
     fontSize: 18,
+    fontFamily: "Saira Condensed",
+    fontWeight: 300,
     textDecoration: "none",
     textTransform: "uppercase",
     margin: "0 10px"
