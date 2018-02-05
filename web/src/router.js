@@ -1,24 +1,32 @@
 import React from "react";
 import UniversalRouter from "universal-router";
-import createHistory from 'history/createBrowserHistory';
+import createHistory from "history/createBrowserHistory";
+
+import LoginPage from "./components/user/login.js";
+import ProfilePage from "./components/user/profile.js";
 
 const history = createHistory();
 
+// TODO split these out into modules?
 const routes = [
   {
-    path: '',
-    action: () => <h1>Home</h1>,
+    path: "",
+    action: () => <h1>Home</h1>
   },
   {
-    path: '/login',
-    action: () => <h1>Login</h1>,
+    path: "/login",
+    action: () => <LoginPage />
+  },
+  {
+    path: "/profile",
+    action: () => <ProfilePage />
   }
 ];
 
 const router = new UniversalRouter(routes);
 
 // start listening to history changes and call renderFn with new route contents
-const initRouter = (renderFn) => {
+const initRouter = renderFn => {
   // on changes, resolve the route and tell the function
   history.listen((location, action) => {
     router.resolve(location).then(html => renderFn(html));
@@ -26,11 +34,11 @@ const initRouter = (renderFn) => {
 
   // render the view we started on
   router.resolve(history.location).then(html => renderFn(html));
-}
+};
 
 // helper component to use history push to navigate
 class Link extends React.PureComponent {
-  clicked = (event) => {
+  clicked = event => {
     // if not attempting to open in new window or something else funky,
     // do nothing
     if (event.shiftKey || event.ctrlKey || event.metaKey) {
@@ -39,15 +47,15 @@ class Link extends React.PureComponent {
 
     history.push(this.props.href);
     event.preventDefault();
-  }
+  };
 
   render() {
-    return (<a onClick={this.clicked} {...this.props}>{ this.props.children }</a>)
+    return (
+      <a onClick={this.clicked} {...this.props}>
+        {this.props.children}
+      </a>
+    );
   }
 }
 
-
-export {
-  Link,
-  initRouter,
-};
+export { Link, history, initRouter };

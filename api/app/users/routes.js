@@ -7,6 +7,8 @@ const User = require("./model");
 
 const userRouter = express.Router();
 
+// TODO split handlers into independent places?
+
 userRouter.post("/register", (req, res) => {
   // hash the password
   bcrypt
@@ -81,6 +83,11 @@ userRouter.post("/logout", auth.loggedIn, (req, res) => {
         success: false
       });
     });
+});
+
+// placeholder simple authed profile endpoint 
+userRouter.get("/profile", auth.loggedIn, (req, res) => {
+  res.send({ user: req.userId });
 });
 
 module.exports = userRouter;
