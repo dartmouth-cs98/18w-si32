@@ -8,6 +8,10 @@ const init = token => {
   curSession.token = token;
 };
 
+const isLoggedIn = () => {
+  return !!curSession.token;
+}
+
 const getToken = () => {
   return curSession.token;
 };
@@ -17,4 +21,9 @@ const destroy = () => {
   localStorage["s"] = "";
 };
 
-export { init, getToken, destroy };
+export {
+  isLoggedIn,
+  init,
+  getToken,
+  destroy
+};

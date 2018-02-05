@@ -1,5 +1,6 @@
 import * as http from "../../util/http.js";
 import * as sessionManager from "./sessionManager.js";
+import history from "../../history.js";
 
 // makes requests to API and sets local sessionManager accordingly
 
@@ -17,7 +18,14 @@ const login = (username, password) => {
     });
 };
 
-const logout = () => {};
+const logout = () => {
+  return http
+    .post("/users/logout")
+    .send()
+    .then(res => {
+      sessionManager.destroy();
+    });
+};
 
 const register = () => {};
 

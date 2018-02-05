@@ -1,11 +1,11 @@
 import React from "react";
 import UniversalRouter from "universal-router";
-import createHistory from "history/createBrowserHistory";
 
+import history from "./history.js";
 import LoginPage from "./components/user/login.js";
+import RegisterPage from "./components/user/register.js";
 import ProfilePage from "./components/user/profile.js";
 
-const history = createHistory();
 
 // TODO split these out into modules?
 const routes = [
@@ -16,6 +16,10 @@ const routes = [
   {
     path: "/login",
     action: () => <LoginPage />
+  },
+  {
+    path: "/register",
+    action: () => <RegisterPage />
   },
   {
     path: "/profile",
