@@ -36,7 +36,6 @@ const get = token => {
         token
       },
       (err, session) => {
-        console.log("SESSION GET", err, session);
         if (err || !session.id) {
           reject(err);
         } else {
