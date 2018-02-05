@@ -1,11 +1,10 @@
 import * as http from "../../util/http.js";
-import * as sessionManager from "./sessionManager.js";
 import history from "../../history.js";
 
-// makes requests to API and sets local sessionManager accordingly
+const SESSION_START = "SESSION_START";
+const SESSION_DESTROY = "SESSION_DESTROY";
 
-const login = (username, password) => {
-  console.log("Login", username, password);
+const login = (username, password) => (dispatch, getState) => {
   return http
     .post("/users/login")
     .send({
@@ -13,17 +12,21 @@ const login = (username, password) => {
       password
     })
     .then(res => {
-      sessionManager.init(res.body.session.token);
-      return true;
+      dispatch({
+        type: SESSION_START,
+        token: res.body.session.token
+      });
     });
 };
 
-const logout = () => {
+const logout = () => dispatch => {
   return http
     .post("/users/logout")
     .send()
     .then(res => {
-      sessionManager.destroy();
+      dispatch({
+        type: SESSION_DESTROY
+      });
     });
 };
 
@@ -35,11 +38,11 @@ const register = (username, password) => {
       password
     })
     .then(res => {
-      debugger;
-      sessionManager.init(res.body.session.token);
-      return true;
+      dispatch({
+        type: SESSION_START,
+        token: res.body.session.token
+      });
     });
-
 };
 
-export { login, register, logout };
+export { login, register, logout, SESSION_START, SESSION_DESTROY };

@@ -1,11 +1,10 @@
 import React from "react";
 import UniversalRouter from "universal-router";
 
-import history from "./history.js";
-import LoginPage from "./components/user/login.js";
-import RegisterPage from "./components/user/register.js";
-import ProfilePage from "./components/user/profile.js";
-
+import history from "./history";
+import LoginPage from "./components/user/login";
+import RegisterPage from "./components/user/register";
+import ProfilePage from "./components/user/profile";
 
 // TODO split these out into modules?
 const routes = [

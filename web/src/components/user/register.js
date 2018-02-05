@@ -1,7 +1,7 @@
 import React from "react";
-import { Link } from "../../router.js";
-import history from "../../history.js";
-import { register } from "../../data/session/sessionActions.js";
+import { Link } from "../../router";
+import history from "../../history";
+import { register } from "../../data/session/sessionActions";
 
 class RegisterPage extends React.PureComponent {
   constructor(props) {

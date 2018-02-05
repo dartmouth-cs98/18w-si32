@@ -1,6 +1,6 @@
 import React from "react";
 
-import { getProfile } from "../../data/user/userActions.js";
+import { getProfile } from "../../data/user/userActions";
 
 class ProfilePage extends React.PureComponent {
   constructor(props) {

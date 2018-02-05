@@ -1,22 +1,24 @@
 import React from "react";
-import { Link } from "../../router.js";
-import { isLoggedIn } from "../../data/session/sessionManager.js";
-import { logout } from "../../data/session/sessionActions.js";
-import history from "../../history.js";
+import { connect } from "react-redux";
+import { Link } from "../../router";
+import { logout } from "../../data/session/sessionActions";
+import history from "../../history";
 
 class Navigation extends React.PureComponent {
   logout = () => {
-    logout().then(() => {
+    this.props.logout().then(() => {
       history.push("/");
     });
-  }
+  };
 
   renderUserArea = () => {
-    if (isLoggedIn()) {
+    if (this.props.isLoggedIn) {
       return (
         <div>
           <Link href="/profile">Profile</Link>
-          <Link href="#" onClick={this.logout}>Logout</Link>
+          <Link href="#" onClick={this.logout}>
+            Logout
+          </Link>
         </div>
       );
     } else {
@@ -27,16 +29,24 @@ class Navigation extends React.PureComponent {
         </div>
       );
     }
-  }
+  };
 
   render() {
     return (
       <nav>
         <Link href="/">Home</Link>
-        { this.renderUserArea() }
+        {this.renderUserArea()}
       </nav>
     );
   }
 }
 
-export default Navigation;
+const mapStateToProps = state => ({
+  isLoggedIn: !!state.session.token
+});
+
+const mapDispatchToProps = dispatch => ({
+  logout: () => dispatch(logout())
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Navigation);

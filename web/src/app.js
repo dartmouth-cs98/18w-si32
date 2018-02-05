@@ -1,6 +1,6 @@
 import React from "react";
-import { initRouter } from "./router.js";
-import Navigation from "./components/layout/navigation.js";
+import { initRouter } from "./router";
+import Navigation from "./components/layout/navigation";
 
 class App extends React.Component {
   constructor() {

@@ -1,6 +1,7 @@
 import React from "react";
-import { Link, history } from "../../router.js";
-import { login } from "../../data/session/sessionActions.js";
+import { connect } from "react-redux";
+import { Link, history } from "../../router";
+import { login } from "../../data/session/sessionActions";
 
 class LoginPage extends React.PureComponent {
   constructor(props) {
@@ -23,7 +24,8 @@ class LoginPage extends React.PureComponent {
 
   doLogin = event => {
     event.preventDefault();
-    login(this.state.username, this.state.password)
+    this.props
+      .login(this.state.username, this.state.password)
       .then(() => {
         history.push("/");
       })
@@ -63,4 +65,8 @@ class LoginPage extends React.PureComponent {
   }
 }
 
-export default LoginPage;
+const mapDispatchToProps = dispatch => ({
+  login: (username, password) => dispatch(login(username, password))
+});
+
+export default connect(null, mapDispatchToProps)(LoginPage);
