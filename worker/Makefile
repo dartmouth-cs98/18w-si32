@@ -1,4 +1,4 @@
-all: child worker
+all: worker child
 
 worker: Dockerfile
 	docker build -t si32-worker .

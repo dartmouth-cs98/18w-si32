@@ -1,4 +1,4 @@
-FROM python:2-alpine
+FROM python:3-alpine
 
 # Needed to install packages into alpine
 RUN echo "ipv6" >> /etc/modules
