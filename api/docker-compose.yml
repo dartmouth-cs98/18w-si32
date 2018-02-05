@@ -1,0 +1,21 @@
+mongo:
+  image: mongo:jessie
+  volumes:
+    - ./.dbdata:/data/db
+
+redis:
+  image: redis:3.2-alpine
+  volumes:
+    - ./.redis:/etc/redis/database
+
+si32-api:
+  build: .
+  ports:
+    - "3000:3000"
+  volumes:
+    - .:/app
+  environment:
+    PORT: 3000
+  links:
+    - mongo
+    - redis

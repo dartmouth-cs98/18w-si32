@@ -10,4 +10,7 @@ Thumbs.db
 
 *.log
 
+
 *.pyc
+.dbdata
+node_modules
