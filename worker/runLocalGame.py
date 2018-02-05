@@ -21,10 +21,7 @@ def execGame():
         bots.append(LocalBot(arg, i))
 
     game = gameClasses[gameType](bots)
-    print("here?")
-    i = 0
-    while i < 10000:
-        i+=1
+    
     game.start()
 
     # get results from game and post to server
