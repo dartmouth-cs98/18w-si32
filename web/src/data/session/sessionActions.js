@@ -27,6 +27,19 @@ const logout = () => {
     });
 };
 
-const register = () => {};
+const register = (username, password) => {
+  return http
+    .post("/users/register")
+    .send({
+      username,
+      password
+    })
+    .then(res => {
+      debugger;
+      sessionManager.init(res.body.session.token);
+      return true;
+    });
+
+};
 
 export { login, register, logout };
