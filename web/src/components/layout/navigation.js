@@ -16,7 +16,9 @@ class Navigation extends React.PureComponent {
     if (this.props.isLoggedIn) {
       return (
         <div>
-          <Link style={styles.link} href="/profile">Profile</Link>
+          <Link style={styles.link} href="/profile">
+            Profile
+          </Link>
           <Link style={styles.link} href="#" onClick={this.logout}>
             Logout
           </Link>
@@ -25,8 +27,12 @@ class Navigation extends React.PureComponent {
     } else {
       return (
         <div>
-          <Link style={styles.link} href="/register">Register</Link>
-          <Link style={styles.link} href="/login">Log in</Link>
+          <Link style={styles.link} href="/register">
+            Register
+          </Link>
+          <Link style={styles.link} href="/login">
+            Log in
+          </Link>
         </div>
       );
     }
@@ -35,7 +41,15 @@ class Navigation extends React.PureComponent {
   render() {
     return (
       <nav style={styles.wrapper}>
-        <Link style={styles.link} href="/">Home</Link>
+        <div style={styles.mainNav}>
+          <Link style={{ ...styles.link, ...styles.homeLink }} href="/">
+            Si32
+          </Link>
+          <Link style={styles.link} href="/bots">
+            Bots
+          </Link>
+        </div>
+
         {this.renderUserArea()}
       </nav>
     );
@@ -47,17 +61,26 @@ const styles = {
     backgroundColor: "#141529",
     borderBottom: "1px solid #9B51E0",
     display: "flex",
+    height: 56,
+    alignItems: "center",
     justifyContent: "space-between",
-    padding: 10,
+    padding: "0 10px"
+  },
+  mainNav: {
+    display: "flex",
+    alignItems: "center"
   },
   link: {
     color: "white",
     fontSize: 18,
     textDecoration: "none",
-    margin: "0 10px",
+    textTransform: "uppercase",
+    margin: "0 10px"
   },
+  homeLink: {
+    fontSize: 30
+  }
 };
-
 
 const mapStateToProps = state => ({
   isLoggedIn: !!state.session.token
@@ -67,5 +90,4 @@ const mapDispatchToProps = dispatch => ({
   logout: () => dispatch(logout())
 });
 
-
-export default Radium(connect(mapStateToProps, mapDispatchToProps)(Navigation));
+export default connect(mapStateToProps, mapDispatchToProps)(Radium(Navigation));
