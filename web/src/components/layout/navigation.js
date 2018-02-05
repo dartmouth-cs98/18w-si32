@@ -1,4 +1,5 @@
 import React from "react";
+import Radium from "radium";
 import { connect } from "react-redux";
 import { Link } from "../../router";
 import { logout } from "../../data/session/sessionActions";
@@ -15,8 +16,8 @@ class Navigation extends React.PureComponent {
     if (this.props.isLoggedIn) {
       return (
         <div>
-          <Link href="/profile">Profile</Link>
-          <Link href="#" onClick={this.logout}>
+          <Link style={styles.link} href="/profile">Profile</Link>
+          <Link style={styles.link} href="#" onClick={this.logout}>
             Logout
           </Link>
         </div>
@@ -24,8 +25,8 @@ class Navigation extends React.PureComponent {
     } else {
       return (
         <div>
-          <Link href="/register">Register</Link>
-          <Link href="/login">Log in</Link>
+          <Link style={styles.link} href="/register">Register</Link>
+          <Link style={styles.link} href="/login">Log in</Link>
         </div>
       );
     }
@@ -33,13 +34,30 @@ class Navigation extends React.PureComponent {
 
   render() {
     return (
-      <nav>
-        <Link href="/">Home</Link>
+      <nav style={styles.wrapper}>
+        <Link style={styles.link} href="/">Home</Link>
         {this.renderUserArea()}
       </nav>
     );
   }
 }
+
+const styles = {
+  wrapper: {
+    backgroundColor: "#141529",
+    borderBottom: "1px solid #9B51E0",
+    display: "flex",
+    justifyContent: "space-between",
+    padding: 10,
+  },
+  link: {
+    color: "white",
+    fontSize: 18,
+    textDecoration: "none",
+    margin: "0 10px",
+  },
+};
+
 
 const mapStateToProps = state => ({
   isLoggedIn: !!state.session.token
@@ -49,4 +67,5 @@ const mapDispatchToProps = dispatch => ({
   logout: () => dispatch(logout())
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Navigation);
+
+export default Radium(connect(mapStateToProps, mapDispatchToProps)(Navigation));

@@ -1,4 +1,5 @@
 import React from "react";
+import Page from "../layout/page";
 import { Link } from "../../router";
 import history from "../../history";
 import { register } from "../../data/session/sessionActions";
@@ -36,7 +37,7 @@ class RegisterPage extends React.PureComponent {
 
   render() {
     return (
-      <div>
+      <Page>
         <h1>Register for Si32</h1>
         <form onSubmit={this.doRegister}>
           <label>
@@ -60,7 +61,7 @@ class RegisterPage extends React.PureComponent {
           </label>
           <input type="submit" value="Submit" />
         </form>
-      </div>
+      </Page>
     );
   }
 }

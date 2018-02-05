@@ -1,5 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
+import Page from "../layout/page";
 import { Link, history } from "../../router";
 import { login } from "../../data/session/sessionActions";
 
@@ -36,8 +37,8 @@ class LoginPage extends React.PureComponent {
 
   render() {
     return (
-      <div>
-        <h1>Login page</h1>
+      <Page>
+        <h1>Login</h1>
         <form onSubmit={this.doLogin}>
           <label>
             Username:
@@ -60,7 +61,7 @@ class LoginPage extends React.PureComponent {
           </label>
           <input type="submit" value="Submit" />
         </form>
-      </div>
+      </Page>
     );
   }
 }

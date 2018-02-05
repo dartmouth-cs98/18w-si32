@@ -1,4 +1,5 @@
 import React from "react";
+import Page from "../layout/page";
 
 import { getProfile } from "../../data/user/userActions";
 
@@ -13,10 +14,10 @@ class ProfilePage extends React.PureComponent {
 
   render() {
     return (
-      <div>
+      <Page>
         <h1>Profile</h1>
         <h3>Your user id: {this.state.user}</h3>
-      </div>
+      </Page>
     );
   }
 }
