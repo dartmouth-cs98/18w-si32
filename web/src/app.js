@@ -18,7 +18,7 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        <Link href="/">Login</Link>
+        <Link href="/">Home</Link>
         <Link href="/login">Login</Link>
         <div>{ this.main }</div>
       </div>
