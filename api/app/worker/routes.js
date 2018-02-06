@@ -7,10 +7,10 @@ const workerRouter = express.Router();
 workerRouter.use(auth.workerAuth);
 
 workerRouter.get("/nextTask", (req, res) => {
-  if (Math.random() < .5) {
-    res.send({ newGame: false, message: 'No Game Ready', players: [] });
+  if (Math.random() < .0001) {
+    res.json({ newGame: false, message: 'No Game Ready', players: [] });
   } else {
-    res.send({ newGame: true, players: [1, 2] });
+    res.json({ newGame: true, players: [1, 2], gameType: 'SimpleGame' });
   }
 });
 
