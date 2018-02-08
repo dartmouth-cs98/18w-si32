@@ -17,27 +17,27 @@ class SimpleGame(Game):
         self.players = {}
         for i, bot in enumerate(self.bots):
             self.players[i] = self.SimpleGamePlayer(i, bot, (0, 0))
+
+        self.state_log = []
         super().__init__(bots)
 
     def start(self):
-        print("Started!?")
-
         i = 0
         while i < 1000:
             self.game_loop()
             i += 1
+        return self.state_log
 
     def game_loop(self):
-        self.send_state()
-        print('sent state')
+        current_state = self.send_state()
+        self.state_log.append(current_state)
+
         for b in self.bots:
+            print("reading instruction")
             commandStr = b.read()
-            print(commandStr)
             commands = json.loads(commandStr)
 
             for command in commands:
-                # command = json.loads(command)
-                print(command)
                 if ('player' in command) and ('direction' in command):
                     playerId = command['player']
                     direction = command['direction']
@@ -48,12 +48,15 @@ class SimpleGame(Game):
 
 
     def send_state(self):
+        jsonString = None
         for bot in self.bots:
             jsonString = {}
             for playerId, player in self.players.items():
                 jsonString[str(playerId)] = player.toJSON()
             print(json.dumps(jsonString))
             bot.write(json.dumps(jsonString) + "\n")
+        return jsonString
+
 
 
     class SimpleGamePlayer():

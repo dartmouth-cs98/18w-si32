@@ -15,6 +15,7 @@ def pollUntilGameReady():
     players = response_json['players']
     botNumToPlayerIds = {}
     for i, player in enumerate(players):
+        botNumToPlayerIds[i] = player
         endpoints.get_bot_file(id=player, bnum=i)
 
     return botNumToPlayerIds, response_json['gameType']
