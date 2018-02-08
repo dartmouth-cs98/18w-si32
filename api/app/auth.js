@@ -20,7 +20,8 @@ const loggedIn = (req, res, next) => {
 };
 
 const workerAuth = (req, res, next) => {
-  return next()
+  return next() // NOTE: right now we dont care about worker actually authenticating, but remove this before prod
+
   if (!req.headers.w_access_token) {
     return res.status(401).json({ message: "Auth required" });
   }

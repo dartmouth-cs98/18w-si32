@@ -20,4 +20,9 @@ workerRouter.get("/file/:id", (req, res) => {
   // res.sendFile('index.html', { root: __dirname });
 });
 
+workerRouter.post("/result", (req, res) => {
+  console.log(req.body)
+  res.json({message: 'thanks bud'})
+})
+
 module.exports = workerRouter;
