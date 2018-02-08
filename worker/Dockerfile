@@ -21,4 +21,4 @@ ADD . /app
 # install python modules needed
 RUN pip install -r ./requirements.txt
 
-CMD ["python", "startWorker.py"]
+CMD ["python", "-u", "startWorker.py"]

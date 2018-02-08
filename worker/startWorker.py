@@ -30,10 +30,9 @@ def run_worker():
             bot1.cleanup()
             bot2.cleanup()
 
-        print("here")
         post_game_result(botNumToPlayerIds, result)
 
-        sleep(10)
+        sleep(2)
 
     # get results from game and post to server
 
