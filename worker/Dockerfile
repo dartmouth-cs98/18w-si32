@@ -1,5 +1,9 @@
 FROM python:3-alpine
 
+# accept a build arg for the api url to hit for games. set arg as env variable
+ARG api_route=http://docker.for.mac.host.internal:5000/worker
+ENV api_route=$api_route
+
 # Needed to install packages into alpine
 RUN echo "ipv6" >> /etc/modules
 RUN apk update

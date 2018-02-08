@@ -3,9 +3,10 @@ import os
 import requests
 import urllib.request
 
+# by default use localhost, but if api_route set in environment point to different url
 API = 'http://localhost:5000/worker'
-if 'API_ROUTE' in os.environ:
-    API = os.environ['API_ROUTE']
+if 'api_route' in os.environ:
+    API = os.environ['api_route']
 
 def is_game_ready():
     return requests.get(API + '/nextTask')
