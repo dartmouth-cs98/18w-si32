@@ -22,8 +22,10 @@ class SimpleGame(Game):
     def start(self):
         print("Started!?")
 
-        while True:
+        i = 0
+        while i < 1000:
             self.game_loop()
+            i += 1
 
     def game_loop(self):
         self.send_state()

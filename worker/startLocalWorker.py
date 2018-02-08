@@ -24,6 +24,8 @@ def play_game():
 
     print(result)
 
+    for bot in bots:
+        bot.cleanup()
             # no new game ready
 
     # persistently hits endpoint, api eventually says yep run a game, here are the bot ids.

@@ -19,7 +19,7 @@ class Bot(object):
     def write(self, line):
         self.proc.stdin.write(line.encode())
         self.proc.stdin.flush()
-        return 
+        return
 
 
 # class for being run in containerized "live" environment
@@ -72,5 +72,6 @@ class LocalBot(Bot):
     def cleanup(self):
         try:
             self.proc.kill()
-        except Exception: # proc already exited
+        except Exception as e: # proc already exited
+            print(e)
             pass

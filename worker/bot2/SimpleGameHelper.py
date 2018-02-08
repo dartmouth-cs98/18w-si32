@@ -12,12 +12,14 @@ class SimpleGameHelper():
         l = sys.stdin.readline()
         self.myId = int(l)
 
-        self.log_file = open('output.log', 'a')
+        self.log_file = open('output.log', 'w')
         self.log_file.write(str(time()) + '\n')
 
 
     def get_state(self):
         l = sys.stdin.readline()
+        while l == '':
+            l = sys.stdin.readline()
         state = json.loads(l)
 
 
