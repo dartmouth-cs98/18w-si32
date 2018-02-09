@@ -44,7 +44,7 @@ userRouter.post("/login", (req, res) => {
   User.findOne({ username: req.body.username })
     .then(user => {
       if (!user) {
-        throw new Exception();
+        throw new Error();
       }
 
       foundUser = user;
@@ -54,7 +54,7 @@ userRouter.post("/login", (req, res) => {
     })
     .then(match => {
       if (!match) {
-        throw new Exception();
+        throw new Error();
       }
 
       return session.create(foundUser, req.connection.remoteAddress);

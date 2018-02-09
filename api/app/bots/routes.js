@@ -9,4 +9,8 @@ botRouter.get("/", (req, res) => {
   res.send({ name: "bot", user: req.userId });
 });
 
+botRouter.post("/new", (req, res) => {
+  res.send({ name: "bot", user: req.userId });
+});
+
 module.exports = botRouter;

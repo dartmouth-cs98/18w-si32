@@ -12,6 +12,7 @@ class BotListPage extends React.PureComponent {
     return (
       <Page>
         <h1>Your Bots</h1>
+        <Link href="/bots/create">Create a new bot</Link>
       </Page>
     );
   }

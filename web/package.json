@@ -12,6 +12,7 @@
   "dependencies": {
     "babel-preset-stage-2": "^6.24.1",
     "history": "^4.7.2",
+    "morgan": "^1.9.0",
     "radium": "^0.21.2",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
