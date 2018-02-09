@@ -22,7 +22,7 @@ while True:
 
 
     commands = []
-    commands.append(game.create_move_command('left'))
+    commands.append(game.create_move_command('down'))
     game.send_commands(commands)
 
     i += 1

@@ -1,6 +1,8 @@
 import sys
 from Bot import LocalBot
 from SimpleGame import SimpleGame
+from waitForGame import pollUntilGameReady
+
 
 gameClasses = {
     'SimpleGame': SimpleGame
@@ -21,10 +23,13 @@ def execGame():
         bots.append(LocalBot(arg, i))
 
     game = gameClasses[gameType](bots)
-    
+
     game.start()
+
+    for bot in bots:
+        bot.cleanup()
+
 
     # get results from game and post to server
 
 execGame()
-# execGame("asdf")
