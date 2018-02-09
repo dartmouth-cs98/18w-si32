@@ -1,6 +1,8 @@
 from subprocess import Popen, PIPE, call
 import os
 import sys
+import docker
+client = docker.from_env()
 
 # Bot is our internal wrapper around an end-user implementation of a bot
 # this class should handle prepping and running a bot in a separate
@@ -19,7 +21,7 @@ class Bot(object):
     def write(self, line):
         self.proc.stdin.write(line.encode())
         self.proc.stdin.flush()
-        return 
+        return
 
 
 # class for being run in containerized "live" environment
@@ -49,7 +51,9 @@ class DockerBot(Bot):
         except Exception: # proc already exited
             pass
 
-        call("docker wait %s > /dev/null" % self.name, shell=True)
+        # Do we prefer direct calls or using the docker lib?
+        # call("docker stop %s > /dev/null" % self.name, shell=True)
+        client.containers.get(self.name).stop()
         call("docker rm %s > /dev/null" % self.name, shell=True)
 
         # remove bot code from long-running volume
@@ -72,5 +76,6 @@ class LocalBot(Bot):
     def cleanup(self):
         try:
             self.proc.kill()
-        except Exception: # proc already exited
+        except Exception as e: # proc already exited
+            print(e)
             pass

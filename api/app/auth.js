@@ -19,6 +19,23 @@ const loggedIn = (req, res, next) => {
   );
 };
 
+const workerAuth = (req, res, next) => {
+  return next() // NOTE: right now we dont care about worker actually authenticating, but remove this before prod
+
+  if (!req.headers.w_access_token) {
+    return res.status(401).json({ message: "Auth required" });
+  }
+
+  const token = req.headers.w_access_token
+  const acceptedToken = process.env.W_ACCESS_TOKEN
+  if (acceptedToken && token === acceptedToken) { // make sure env variable actually set!
+    next()
+  } else {
+    res.status(401).json({ message: "Invalid session" });
+  }
+}
+
 module.exports = {
-  loggedIn
+  loggedIn,
+  workerAuth
 };

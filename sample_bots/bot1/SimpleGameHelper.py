@@ -18,8 +18,6 @@ class SimpleGameHelper():
 
     def get_state(self):
         l = sys.stdin.readline()
-        while l == '':
-            l = sys.stdin.readline()
         state = json.loads(l)
 
 

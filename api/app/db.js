@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 
-mongoose.connect("mongodb://mongo:27017/dev");
+const DB_URI = (process.env.DB_URI || 'mongodb://localhost:27017') + '/si32'
+
+mongoose.connect(DB_URI);
 
 const db = mongoose.connection;
 
