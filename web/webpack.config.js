@@ -10,7 +10,7 @@ module.exports = {
   },
   devServer: {
     contentBase: path.join(__dirname, "dist"),
-    compress: false,
+    compress: true,
     host: "0.0.0.0",
     historyApiFallback: true,
     port: 4000

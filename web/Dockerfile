@@ -16,4 +16,4 @@ COPY . /app
 
 EXPOSE 4000
 
-CMD ["webpack-dev-server", "-d", "--history-api-fallback"]
+CMD ["webpack-dev-server", "-d"]
