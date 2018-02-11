@@ -1,6 +1,7 @@
 import request from "superagent";
 import store from "../store";
 import { history } from "../router";
+import { SESSION_DESTROY } from "../data/session/sessionActions";
 
 // TODO put this into env
 const BASE_URL = "http://localhost:3000";
@@ -15,6 +16,10 @@ agent.use(req => {
   req.on("response", res => {
     // if we got a 401, redirect to the login page
     if (res.status == 401) {
+      // destroy the local session if there was one
+      store.dispatch({
+        type: SESSION_DESTROY
+      });
       history.push("/login");
     }
   });

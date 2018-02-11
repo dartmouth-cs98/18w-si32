@@ -11,6 +11,8 @@ Thumbs.db
 *.log
 
 
+__pycache__
 *.pyc
 .dbdata
 node_modules
+.env

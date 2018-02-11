@@ -2,6 +2,11 @@ const session = require("./session");
 
 // middleware that passes if user is logged in
 const loggedIn = (req, res, next) => {
+  // dont check on pre-flight options requests
+  if (req.method == "OPTIONS") {
+    return next();
+  }
+
   if (!req.headers.authorization) {
     return res.status(401).json({ message: "Auth required" });
   }

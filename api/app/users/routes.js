@@ -1,5 +1,6 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
+const _ = require("lodash");
 
 const session = require("../session");
 const auth = require("../auth");
@@ -29,6 +30,7 @@ userRouter.post("/register", (req, res) => {
       });
     })
     .catch(err => {
+      console.log(err);
       return res.json({
         created: false,
         err
@@ -42,7 +44,7 @@ userRouter.post("/login", (req, res) => {
   User.findOne({ username: req.body.username })
     .then(user => {
       if (!user) {
-        throw new Exception();
+        throw new Error();
       }
 
       foundUser = user;
@@ -52,17 +54,18 @@ userRouter.post("/login", (req, res) => {
     })
     .then(match => {
       if (!match) {
-        throw new Exception();
+        throw new Error();
       }
 
       return session.create(foundUser, req.connection.remoteAddress);
     })
     .then(session => {
       res.json({
-        session
+        session,
       });
     })
     .catch(err => {
+      console.log(err);
       res.status(401).json({
         message: "Couldn't log in"
       });
@@ -85,7 +88,7 @@ userRouter.post("/logout", auth.loggedIn, (req, res) => {
     });
 });
 
-// placeholder simple authed profile endpoint 
+// placeholder simple authed profile endpoint
 userRouter.get("/profile", auth.loggedIn, (req, res) => {
   res.send({ user: req.userId });
 });

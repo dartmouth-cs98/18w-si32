@@ -1,4 +1,5 @@
 import React from "react";
+import { connect } from "react-redux";
 import Page from "../layout/page";
 import { Link } from "../../router";
 import history from "../../history";
@@ -26,11 +27,12 @@ class RegisterPage extends React.PureComponent {
 
   doRegister = event => {
     event.preventDefault();
-    register(this.state.username, this.state.password)
+    this.props.register(this.state.username, this.state.password)
       .then(() => {
         history.push("/profile");
       })
-      .catch(() => {
+      .catch((err) => {
+        console.log(err);
         console.log("FAIL");
       });
   };
@@ -66,4 +68,8 @@ class RegisterPage extends React.PureComponent {
   }
 }
 
-export default RegisterPage;
+const mapDispatchToProps = dispatch => ({
+  register: (username, password) => dispatch(register(username, password))
+});
+
+export default connect(null, mapDispatchToProps)(RegisterPage);

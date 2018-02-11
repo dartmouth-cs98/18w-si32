@@ -1,39 +1,55 @@
+import traceback
 from SimpleGame import SimpleGame
 from Bot import DockerBot
 from waitForGame import pollUntilGameReady
-from endpoints import post_game_result
-from time import sleep
+from endpoints import post_match_result
 
 gameClasses = {
     'SimpleGame': SimpleGame
 }
 
-# called whenever there would be a game that this worker needs to run
 def run_worker():
-
     while True:
-        (botNumToPlayerIds, gameType) = pollUntilGameReady()
+        log = False
+        result = {}
+        # get the next game
+        (botSpecs, gameType, matchId) = pollUntilGameReady()
 
-        # setupBots()
-        bot1 = DockerBot("bot1", 1)
-        bot2 = DockerBot("bot2", 2)
+        bots = []
 
-        result = None
+        # create a bot object for each bot that's in this match
+        for b in botSpecs:
+            bots.append(DockerBot(b['id'], b['index'], b['url']))
+
         try:
-            game = gameClasses[gameType]([bot1, bot2])
-            result = game.start()
-            bot1.cleanup()
-            bot2.cleanup()
+            game = gameClasses[gameType](bots)
+
+            # we'll need more than just a log at some point
+            # should probably return a tuple of log and results, which would contain
+            # flags/info on game termination (timeout, completion, bot error, etc.)
+            log = game.start()
+            result = {
+                'completed': True
+            }
+
+            print("Got results.")
         except Exception as err:
             print("GAME ERR")
             print(err)
-            bot1.cleanup()
-            bot2.cleanup()
+            # TODO attribute fault to the bot that caused an error and set them as loser
+            # or determine that the crash was our fault
+            traceback.print_exc()
+            result = {
+                'completed': False
+            }
+            log = False
 
-        post_game_result(botNumToPlayerIds, result)
+        for b in bots:
+            b.cleanup()
 
-        sleep(2)
+        print("Done cleaning up.")
 
-    # get results from game and post to server
+        # send the results back to the server
+        post_match_result(matchId, result, log)
 
 run_worker()
