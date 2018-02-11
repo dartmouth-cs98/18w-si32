@@ -14,10 +14,11 @@ def is_game_ready():
 def get_bot_file(url, bnum):
     urllib.request.urlretrieve(url, '/bot' + str(bnum) + '/bot.py')
 
-# QUESTION: will api have already a game object, and we need to pass the id? Or will we just pass the bot ids and the results
-def post_game_result(botNumToPlayerIds, gameLog):
+# QUESTION: will api have already a game object, and we need to pass the id?
+# Or will we just pass the bot ids and the results
+def post_match_result(matchId, gameLog):
     body = {
-        'botNumberToPlayerIdMap': botNumToPlayerIds,
-        'gameLog': gameLog
+        'gameLog': gameLog,
+        'matchId': matchId
     }
     return requests.post(API + '/result', json=body)

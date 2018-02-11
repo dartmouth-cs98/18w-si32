@@ -1,7 +1,8 @@
+import traceback
 from SimpleGame import SimpleGame
 from Bot import DockerBot
 from waitForGame import pollUntilGameReady
-from endpoints import post_game_result
+from endpoints import post_match_result
 
 gameClasses = {
     'SimpleGame': SimpleGame
@@ -9,6 +10,7 @@ gameClasses = {
 
 def run_worker():
     while True:
+        result = {}
         # get the next game
         (botSpecs, gameType, matchId) = pollUntilGameReady()
 
@@ -25,13 +27,16 @@ def run_worker():
         except Exception as err:
             print("GAME ERR")
             print(err)
+            traceback.print_exc()
+            result = {"completed": False}
 
         for b in bots:
             b.cleanup()
 
         print("Done cleaning up.")
+        print(result)
 
         # send the results back to the server
-        post_game_result(botNumToPlayerIds, result)
+        post_match_result(matchId, result)
 
 run_worker()

@@ -2,13 +2,14 @@ const AWS = require("aws-sdk");
 
 const s3 = new AWS.S3({signatureVersion: "v4"});
 
-const BOT_BUCKET = "s3-bots";
+const MATCH_LOG_BUCKET = "si32-matches";
+const BOT_BUCKET = "si32-bots";
 const SIGNED_URL_EXPIRE_SECONDS = 60 * 5;
 
 const upload = (bucket, key, payload) => {
   return new Promise((resolve, reject) => {
     s3.upload({
-      Bucket: "s3-bots",
+      Bucket: bucket,
       Key: key,
       Body: payload
     }, (err, data) => {
@@ -22,6 +23,10 @@ const upload = (bucket, key, payload) => {
       }
     });
   });
+};
+
+const uploadMatchLog = (matchId, log) => {
+  return upload(MATCH_LOG_BUCKET, `${userId}/${botName}_${code.name}`, code.data);
 };
 
 const uploadBot = (userId, botName, code) => {
