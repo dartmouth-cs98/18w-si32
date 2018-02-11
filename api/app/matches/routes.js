@@ -15,6 +15,7 @@ matchRouter.get("/", (req, res) => {
   Match.find({
     users: req.userId,
   })
+  .select({ log: 0 })
   .then((matches) => {
     res.send(matches);
   });
