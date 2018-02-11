@@ -8,7 +8,7 @@ const Bot = require("../bots/model");
 
 const matchRouter = express.Router();
 
-// every bot route requires login
+// every match route requires login
 matchRouter.use(auth.loggedIn);
 
 matchRouter.get("/", (req, res) => {

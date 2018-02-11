@@ -26,7 +26,6 @@ const upload = (bucket, key, payload) => {
 };
 
 const uploadBot = (userId, botName, code) => {
-  // TODO verify bot is a zip
   if (code.mimetype != "text/x-python-script") {
     return Promise.reject("Bot must be a python file");
   }
