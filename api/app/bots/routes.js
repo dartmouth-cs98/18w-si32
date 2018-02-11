@@ -20,12 +20,15 @@ botRouter.get("/", (req, res) => {
 
 botRouter.post("/new", (req, res) => {
   // upload the code first
-  s3.uploadBot(req.userId, req.body.name, req.files.code).then(({ url }) => {
+  s3.uploadBot(req.userId, req.body.name, req.files.code).then(({ url, key }) => {
     // put the bot in db w/ the code's url
     return Bot.create({
       name: req.body.name,
       user: req.userId,
-      codeUrl: url
+      code: {
+        url,
+        key
+      }
     });
   })
   .then((bot) => {
@@ -35,7 +38,7 @@ botRouter.post("/new", (req, res) => {
     });
   })
   .catch((err) => {
-    res.status(500).send({ success: false, message: "couldn't create your bot" });
+    res.status(400).send({ success: false, message: "couldn't create your bot", err });
   });
 });
 

@@ -8,6 +8,7 @@ const db = require("./db");
 const userRouter = require("./users/routes");
 const botRouter = require("./bots/routes");
 const workerRouter = require("./worker/routes");
+const matchRouter = require("./matches/routes");
 
 const PORT = process.env.PORT || 5000;
 
@@ -29,6 +30,7 @@ app.use(busboyBodyParser());
 app.use("/users", userRouter);
 app.use("/bots", botRouter);
 app.use("/worker", workerRouter);
+app.use("/matches", matchRouter);
 
 // listen for requests
 const server = http.createServer(app);

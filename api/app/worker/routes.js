@@ -1,17 +1,30 @@
 const express = require("express");
 const path = require('path');
 const auth = require("../auth");
+const Match = require("../matches/model");
+
 const workerRouter = express.Router();
 
 // every bot route requires login
 workerRouter.use(auth.workerAuth);
 
 workerRouter.get("/nextTask", (req, res) => {
-  if (Math.random() < .0001) {
-    res.json({ newGame: false, message: 'No Game Ready', players: [] });
-  } else {
-    res.json({ newGame: true, players: [1, 2], gameType: 'SimpleGame' });
-  }
+  // TODO need some way to revert back to QUEUED if we dont get results
+  // for some reason (worker crashed, etc.)
+  Match.getNext()
+  .then(match => {
+    if (!match) {
+      return res.json({
+        newGame: false,
+        message: "No game",
+      });
+    }
+
+    res.json({
+      newGame: true,
+      ...match
+    });
+  });
 });
 
 workerRouter.get("/file/:id", (req, res) => {

@@ -11,14 +11,9 @@ def pollUntilGameReady():
         r = endpoints.is_game_ready()
         response_json = r.json()
 
-    # now fetch the bots from the array of ids.
-    players = response_json['players']
-    botNumToPlayerIds = {}
-    for i, player in enumerate(players):
-        botNumToPlayerIds[i] = player
-        endpoints.get_bot_file(id=player, bnum=i)
+    print(response_json)
 
-    return botNumToPlayerIds, response_json['gameType']
+    return response_json['bots'], response_json['gameType'], response_json['id']
 
 def new_game_available(response_json):
     if ('newGame' in response_json) and (response_json['newGame']):

@@ -13,13 +13,16 @@ const _User = new Schema({
     type: String,
     required: true
   }
+}, {
+  timestamps: true
 });
 
 _User.methods.toJSON = function() {
- var obj = this.toObject();
- delete obj.password;
- return obj;
+  var obj = this.toObject();
+  delete obj.password;
+  return obj;
 }
+
 const User = mongoose.model("User", _User);
 
 module.exports = User;
