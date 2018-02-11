@@ -25,10 +25,6 @@ const upload = (bucket, key, payload) => {
   });
 };
 
-const uploadMatchLog = (matchId, log) => {
-  return upload(MATCH_LOG_BUCKET, `${userId}/${botName}_${code.name}`, code.data);
-};
-
 const uploadBot = (userId, botName, code) => {
   // TODO verify bot is a zip
   if (code.mimetype != "text/x-python-script") {
