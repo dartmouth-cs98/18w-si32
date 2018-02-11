@@ -29,10 +29,6 @@ const _Bot = new Schema({
   timestamps: true
 });
 
-_Bot.methods.getCodeLink = function() { 
-
-};
-
 const Bot = mongoose.model("Bot", _Bot);
 
 module.exports = Bot;
