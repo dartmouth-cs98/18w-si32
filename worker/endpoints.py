@@ -16,9 +16,12 @@ def get_bot_file(url, bnum):
 
 # QUESTION: will api have already a game object, and we need to pass the id?
 # Or will we just pass the bot ids and the results
-def post_match_result(matchId, gameLog):
+def post_match_result(matchId, result, log):
     body = {
-        'gameLog': gameLog,
-        'matchId': matchId
+        'log': log,
+        'matchId': matchId,
+        'result': result
     }
+
+    # TODO retry on failure?
     return requests.post(API + '/result', json=body)

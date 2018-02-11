@@ -22,8 +22,8 @@ const _Match = new Schema({
     enum: ["QUEUED", "RUNNING", "DONE"],
     default: "QUEUED",
   },
-  results: Object, // some stats on the game we can have without reading the log
-  logUrl: String, // complete game log stored on S3
+  result: Object, // some stats on the game we can have without reading the log
+  log: Object, // complete game log stored on S3
 }, {
   timestamps: true
 });
@@ -76,6 +76,18 @@ _Match.statics.getNext = () => {
       id: match._id,
       gameType: "SimpleGame", // everything is a SimpleGame at this point
     };
+  });
+};
+
+_Match.statics.handleWorkerResponse = (id, result, log) => {
+  // TODO if result was our fault, set status back to queued and try again?
+
+  return Match.update({ "_id": id }, {
+    "$set": {
+      result,
+      log,
+      status: "DONE",
+    }
   });
 };
 

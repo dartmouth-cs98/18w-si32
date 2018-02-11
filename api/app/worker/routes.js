@@ -27,15 +27,15 @@ workerRouter.get("/nextTask", (req, res) => {
   });
 });
 
-workerRouter.get("/file/:id", (req, res) => {
-  // TODO: this should obviously be fetching a bot from the database, not one stored in the file system.
-  res.sendFile(`bot${req.params.id}.py`, {root: path.join(__dirname, '../../public')})
-  // res.sendFile('index.html', { root: __dirname });
-});
-
 workerRouter.post("/result", (req, res) => {
   console.log(req.body)
-  res.json({message: 'thanks bud'})
+  Match.handleWorkerResponse(req.body.matchId, req.body.result, req.body.log)
+  .then(() => {
+    res.json({message: 'thanks bud'})
+  })
+  .catch(() => {
+    res.status(500).json({success: false, message: "Hmm.."});
+  });
 })
 
 module.exports = workerRouter;

@@ -10,6 +10,7 @@ gameClasses = {
 
 def run_worker():
     while True:
+        log = False
         result = {}
         # get the next game
         (botSpecs, gameType, matchId) = pollUntilGameReady()
@@ -22,21 +23,33 @@ def run_worker():
 
         try:
             game = gameClasses[gameType](bots)
-            result = game.start()
+
+            # we'll need more than just a log at some point
+            # should probably return a tuple of log and results, which would contain
+            # flags/info on game termination (timeout, completion, bot error, etc.)
+            log = game.start()
+            result = {
+                'completed': True
+            }
+
             print("Got results.")
         except Exception as err:
             print("GAME ERR")
             print(err)
+            # TODO attribute fault to the bot that caused an error and set them as loser
+            # or determine that the crash was our fault
             traceback.print_exc()
-            result = {"completed": False}
+            result = {
+                'completed': False
+            }
+            log = False
 
         for b in bots:
             b.cleanup()
 
         print("Done cleaning up.")
-        print(result)
 
         # send the results back to the server
-        post_match_result(matchId, result)
+        post_match_result(matchId, result, log)
 
 run_worker()

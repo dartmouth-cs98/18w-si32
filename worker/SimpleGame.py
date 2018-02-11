@@ -67,7 +67,6 @@ class SimpleGame(Game):
         def toJSON(self):
             jsonObj = {
                 'position': self.position,
-                str(self.id): self.id
             }
 
             return json.dumps(jsonObj)
