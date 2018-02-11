@@ -40,7 +40,7 @@ class BotCreatePage extends React.PureComponent {
         <h1>Create a Bot</h1>
         <form onSubmit={this.submit}>
           <label>
-            Username:
+            Bot name:
             <input
               name="botName"
               type="text"

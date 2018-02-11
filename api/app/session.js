@@ -20,7 +20,7 @@ const create = (user, ip) => {
         if (err) {
           reject(err);
         } else {
-          resp.user = user.toJSON();
+          resp.user = user;
           resolve(resp);
         }
       }

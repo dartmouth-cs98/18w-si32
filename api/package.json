@@ -10,8 +10,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "aws-sdk": "^2.192.0",
     "bcryptjs": "^2.4.3",
     "busboy": "^0.2.14",
+    "busboy-body-parser": "^0.3.1",
+    "dotenv": "^5.0.0",
     "express": "^4.16.2",
     "mongoose": "^5.0.3",
     "morgan": "^1.9.0",

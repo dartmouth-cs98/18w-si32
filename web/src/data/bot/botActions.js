@@ -8,6 +8,7 @@ const createBot = (name, code) => (dispatch, getState) => {
   return http
     .post("/bots/new")
     .field("name", name)
+    .field("code", code)
     .then(res => {
       console.log("success AFTER upload attempt", res);
     }).catch(err => {

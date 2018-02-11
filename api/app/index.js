@@ -1,7 +1,9 @@
+require('dotenv').config(); // load environment vars from .env
 const express = require("express");
 const http = require("http");
 const bodyParser = require("body-parser");
 const morgan = require("morgan");
+const busboyBodyParser = require('busboy-body-parser');
 const db = require("./db");
 const userRouter = require("./users/routes");
 const botRouter = require("./bots/routes");
@@ -21,6 +23,7 @@ app.use((req, res, next) => {
 });
 
 app.use(bodyParser.json());
+app.use(busboyBodyParser());
 
 // use all the imported routers
 app.use("/users", userRouter);
