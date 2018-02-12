@@ -8,7 +8,7 @@ import { fetchBots } from "../../data/bot/botActions";
 const BotList = ({ bots }) => {
   const items = _.map(bots, b =>
     <div key={b._id}>
-      {b.name}
+      <Link href={`/bots/${b._id}`}>{b.name}</Link>
     </div>
   );
 

@@ -21,19 +21,20 @@ botRouter.get("/", (req, res) => {
 });
 
 botRouter.post("/new", (req, res) => {
-  // upload the code first
-  s3.uploadBot(req.userId, req.body.name, req.files.code).then(({ url, key }) => {
-    // put the bot in db w/ the code's url
-    return Bot.create({
-      name: req.body.name,
-      user: req.userId,
-      code: {
-        url,
-        key
-      }
-    });
+  Bot.create({
+    name: req.body.name,
+    user: req.userId,
   })
   .then((bot) => {
+    // upload the code async. Better to return faster and do the 2 db calls than
+    // wait for code to make it to s3 before responding
+    // TODO need some error handling/retrying here
+    s3.uploadBot(req.userId, bot._id, req.files.code).then(({ url, key }) => {
+      // update bot in db w/ code's url
+      bot.set("code", { url, key });
+      bot.save();
+    });
+
     res.send({
       success: true,
       bot

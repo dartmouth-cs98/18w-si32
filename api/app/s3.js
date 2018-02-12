@@ -25,12 +25,12 @@ const upload = (bucket, key, payload) => {
   });
 };
 
-const uploadBot = (userId, botName, code) => {
+const uploadBot = (userId, botId, code) => {
   if (code.mimetype != "text/x-python-script") {
     return Promise.reject("Bot must be a python file");
   }
 
-  return upload(BOT_BUCKET, `${userId}/${botName}_${code.name}`, code.data);
+  return upload(BOT_BUCKET, `${userId}/${botId}.py`, code.data);
 };
 
 // returns a link with a signature that allows holder access to the bot file

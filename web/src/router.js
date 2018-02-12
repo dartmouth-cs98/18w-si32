@@ -6,6 +6,7 @@ import LoginPage from "./components/user/loginPage";
 import RegisterPage from "./components/user/registerPage";
 import ProfilePage from "./components/user/profilePage";
 import BotListPage from "./components/bots/listPage";
+import BotSinglePage from "./components/bots/singlePage";
 import BotCreatePage from "./components/bots/createPage";
 
 // TODO split these out into modules?
@@ -36,6 +37,10 @@ const routes = [
       {
         path: "/create",
         action: () => <BotCreatePage />
+      },
+      {
+        path: "/:id",
+        action: (context) => <BotSinglePage id={context.params.id}/>
       }
     ],
   },
