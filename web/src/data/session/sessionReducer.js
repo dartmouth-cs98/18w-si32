@@ -8,9 +8,9 @@ const INITIAL_STATE = { token: localStorage["token"] };
 export default function sessionReducer(state = INITIAL_STATE, action) {
   switch (action.type) {
     case SESSION_START:
-      localStorage["token"] = action.data.token;
+      localStorage["token"] = action.session.token;
 
-      return Object.assign({}, state, action.data);
+      return Object.assign({}, state, action.session);
 
     case SESSION_DESTROY:
       // clear token

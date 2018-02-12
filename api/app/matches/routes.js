@@ -12,23 +12,25 @@ const matchRouter = express.Router();
 matchRouter.use(auth.loggedIn);
 
 matchRouter.get("/", (req, res) => {
+  // TODO this currently only returns matches that this user is part of. we'll
+  // definitely need some flexible options/search ability here
   Match.find({
     users: req.userId,
   })
-  .select({ log: 0 })
   .then((matches) => {
     res.send(matches);
   });
   // TODO error handle
 });
 
-matchRouter.post("/new", (req, res) => {
+matchRouter.post("/", (req, res) => {
   // TODO validate that the user passed in one of their own bots
   Match.createWithBots(req.userId, req.body.botIds)
   .then(match => {
-    res.send({ success: true, match });
+    res.send({ success: true, updatedRecords: [match] });
   })
   .catch(err => {
+    console.log(err);
     res.status(400).send({ success: false, err });
   });
 });

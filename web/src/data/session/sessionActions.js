@@ -14,7 +14,7 @@ const login = (username, password) => (dispatch, getState) => {
     .then(res => {
       dispatch({
         type: SESSION_START,
-        data: res.body.session,
+        session: res.body.session,
       });
     });
 };
@@ -40,7 +40,7 @@ const register = (username, password) => dispatch => {
     .then(res => {
       dispatch({
         type: SESSION_START,
-        data: res.body.session,
+        session: res.body.session,
       });
     });
 };
