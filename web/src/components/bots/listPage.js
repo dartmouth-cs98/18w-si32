@@ -1,11 +1,12 @@
 import React from "react";
+import _ from "lodash";
 import { connect } from "react-redux";
 import Page from "../layout/page";
 import { Link, history } from "../../router";
 import { fetchBots } from "../../data/bot/botActions";
 
 const BotList = ({ bots }) => {
-  const items = bots.map(b =>
+  const items = _.map(bots, b =>
     <div key={b._id}>
       {b.name}
     </div>
@@ -39,7 +40,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const mapStateToProps = state => ({
-  bots: state.bots.data,
+  bots: state.bots.records,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(BotListPage);

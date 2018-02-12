@@ -1,7 +1,6 @@
-import { RECEIVED_BOTS } from "./botActions";
 import httpCollectionReducer from "../httpCollectionReducer";
 
-const botReducer = httpCollectionReducer("BOTS", (state, action) => {
+const botReducer = httpCollectionReducer("BOT", (state, action) => {
   return state;
 });
 

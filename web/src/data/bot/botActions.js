@@ -1,21 +1,8 @@
 import * as http from "../../util/http.js";
+import { httpGetAction } from "../httpCollectionActions";
+import history from "../../history";
 
-const CREATE_BOT = "CREATE_BOT";
-const RECEIVED_BOTS = "RECEIVED_BOTS";
-
-const fetchBots = () => (dispatch, getState) => {
-  return http
-    .get("/bots")
-    .then(res => {
-      dispatch({
-        type: RECEIVED_BOTS,
-        data: res.body
-      });
-    }).catch(err => {
-      console.log("error loading bots");
-    });
-}
-
+const fetchBots = () => httpGetAction("BOT", "/bots", null);
 
 const createBot = (name, code) => (dispatch, getState) => {
   return http
@@ -23,6 +10,14 @@ const createBot = (name, code) => (dispatch, getState) => {
     .field("name", name)
     .field("code", code)
     .then(res => {
+      // push the new bot into the store
+      dispatch({
+        type: "RECEIVED_BOT",
+        doMerge: true,
+        payload: [res.body.bot],
+      });
+
+      history.push("/bots");
       console.log("success AFTER upload attempt", res);
     }).catch(err => {
       console.log("err AFTER upload attempt", err);
