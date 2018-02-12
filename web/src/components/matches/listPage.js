@@ -8,7 +8,7 @@ import { fetchMatches } from "../../data/match/matchActions";
 const MatchList = ({ matches }) => {
   const items = _.map(matches, m =>
     <div key={m._id}>
-      <Link href={`/matches/${m._id}`}>{m._id} {m.last_updated_at}</Link>
+      <Link href={`/matches/${m._id}`}>{m.status} {m._id}</Link>
     </div>
   );
 
