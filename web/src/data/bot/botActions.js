@@ -1,10 +1,23 @@
 import * as http from "../../util/http.js";
 
 const CREATE_BOT = "CREATE_BOT";
+const RECEIVED_BOTS = "RECEIVED_BOTS";
+
+const fetchBots = () => (dispatch, getState) => {
+  return http
+    .get("/bots")
+    .then(res => {
+      dispatch({
+        type: RECEIVED_BOTS,
+        data: res.body
+      });
+    }).catch(err => {
+      console.log("error loading bots");
+    });
+}
 
 
 const createBot = (name, code) => (dispatch, getState) => {
-  console.log("created bot");
   return http
     .post("/bots/new")
     .field("name", name)
@@ -16,4 +29,4 @@ const createBot = (name, code) => (dispatch, getState) => {
     });
 };
 
-export { createBot };
+export { createBot, fetchBots };

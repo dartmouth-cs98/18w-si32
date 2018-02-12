@@ -2,11 +2,11 @@ import React from "react";
 import UniversalRouter from "universal-router";
 
 import history from "./history";
-import LoginPage from "./components/user/login";
-import RegisterPage from "./components/user/register";
-import ProfilePage from "./components/user/profile";
-import BotListPage from "./components/bots/list";
-import BotCreatePage from "./components/bots/create";
+import LoginPage from "./components/user/loginPage";
+import RegisterPage from "./components/user/registerPage";
+import ProfilePage from "./components/user/profilePage";
+import BotListPage from "./components/bots/listPage";
+import BotCreatePage from "./components/bots/createPage";
 
 // TODO split these out into modules?
 const routes = [

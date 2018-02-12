@@ -14,8 +14,10 @@ botRouter.get("/", (req, res) => {
   })
   .then((bots) => {
     res.send(bots);
+  })
+  .catch(() => {
+    res.status(500).send([]);
   });
-  // TODO error handle
 });
 
 botRouter.post("/new", (req, res) => {

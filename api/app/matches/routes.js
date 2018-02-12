@@ -12,6 +12,8 @@ const matchRouter = express.Router();
 matchRouter.use(auth.loggedIn);
 
 matchRouter.get("/", (req, res) => {
+  // TODO this currently only returns matches that this user is part of. we'll
+  // definitely need some flexible options/search ability here
   Match.find({
     users: req.userId,
   })
