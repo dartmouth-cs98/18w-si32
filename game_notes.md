@@ -10,7 +10,7 @@ A work-in-progress overview of the Si32 game.
 * Victory follows naturally from effective gameplay (no 'inflection points')
 * Fundamental tradeoffs
 	* Offense v.s. defense
-	* Agression v.s. conservatism
+	* Aggression v.s. conservatism
 	* Make yourself better off v.s. make opponent worse off
 * Unsolved / unsolvable (no dominant strategy, large game tree)
 * Fast paced (relatively - no fun to watch computers play chess)
