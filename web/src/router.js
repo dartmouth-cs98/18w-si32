@@ -11,6 +11,7 @@ import BotCreatePage from "./components/bots/createPage";
 
 import MatchListPage from "./components/matches/listPage";
 import MatchCreatePage from "./components/matches/createPage";
+import MatchSinglePage from "./components/matches/singlePage";
 
 // TODO split these out into modules?
 const routes = [
@@ -43,7 +44,7 @@ const routes = [
       },
       {
         path: "/:id",
-        action: (context) => <BotSinglePage id={context.params.id}/>
+        action: ({ params: { id }}) => <BotSinglePage id={id}/>
       }
     ],
   },
@@ -57,6 +58,10 @@ const routes = [
       {
         path: "/create",
         action: () => <MatchCreatePage />
+      },
+      {
+        path: "/:id",
+        action: ({ params: { id }}) => <MatchSinglePage id={id} />
       },
     ],
   },

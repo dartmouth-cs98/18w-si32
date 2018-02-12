@@ -20,7 +20,7 @@ botRouter.get("/", (req, res) => {
   });
 });
 
-botRouter.post("/new", (req, res) => {
+botRouter.post("/", (req, res) => {
   Bot.create({
     name: req.body.name,
     user: req.userId,
@@ -38,7 +38,7 @@ botRouter.post("/new", (req, res) => {
 
     res.send({
       success: true,
-      bot
+      updatedRecords: [bot]
     });
   })
   .catch((err) => {
@@ -53,13 +53,13 @@ botRouter.post("/:botId", (req, res) => {
     if (req.userId !== bot.user) {
       throw new AccessError();
     }
-    
+
     return s3.uploadBot(req.userId, bot._id, req.files.code).then(({ url, key }) => {
       // update bot in db w/ code's url
       bot.set("code", { url, key });
       bot.set("version", bot.version + 1);
       bot.save();
-      res.send({ bot });
+      res.send({ updatedRecords: [bot] });
     });
   })
   .catch(err => {

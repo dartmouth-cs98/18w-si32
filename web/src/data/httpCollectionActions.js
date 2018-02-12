@@ -20,4 +20,23 @@ const httpGetAction = (collectionName, endpoint, params, options={}) => (dispatc
     });
 }
 
-export { httpGetAction };
+const httpPostAction = (collectionName, endpoint, body={}, options={}) => (dispatch, getState) => {
+  dispatch({
+    type: `REQUESTED_${collectionName}`
+  });
+  return http
+    .post(endpoint)
+    .send(body)
+    .then(res => {
+      dispatch({
+        type: `RECEIVED_${collectionName}`,
+        doMerge: true, // whatever we get back, merge in without replacing everything still there
+        payload: res.body.updatedRecords
+      });
+    }).catch(err => {
+      // TODO what to do in the store here?
+      console.log("HTTP error", collectionName, endpoint, body, err);
+    });
+}
+
+export { httpGetAction, httpPostAction };

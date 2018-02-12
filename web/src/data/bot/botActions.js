@@ -6,7 +6,7 @@ const fetchBots = () => httpGetAction("BOT", "/bots", null);
 
 const createBot = (name, code) => (dispatch, getState) => {
   return http
-    .post("/bots/new")
+    .post("/bots")
     .field("name", name)
     .field("code", code)
     .then(res => {
@@ -14,7 +14,7 @@ const createBot = (name, code) => (dispatch, getState) => {
       dispatch({
         type: "RECEIVED_BOT",
         doMerge: true,
-        payload: [res.body.bot],
+        payload: res.body.updatedRecords,
       });
 
       history.push(`/bots/${res.body.bot._id}`);
@@ -33,7 +33,7 @@ const updateBotCode = (botId, code) => (dispatch, getState) => {
       dispatch({
         type: "RECEIVED_BOT",
         doMerge: true,
-        payload: [res.body.bot],
+        payload: res.body.updatedRecords,
       });
     }).catch(err => {
       console.log("err AFTER upload attempt", err);

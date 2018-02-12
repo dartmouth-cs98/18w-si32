@@ -1,41 +1,48 @@
 import React from "react";
 import { connect } from "react-redux";
+import _ from "lodash";
 import Page from "../layout/page";
 import { Link, history } from "../../router";
 import { createMatch } from "../../data/match/matchActions";
+import { fetchBots } from "../../data/bot/botActions";
+
+const MatchBotList = ({ bots, selectedBotIds, toggleBot }) => (
+  _.map(bots, (b) => (
+    <div onClick={() => toggleBot(b._id)} key={b._id}>
+      {b.name} {selectedBotIds[b._id] ? "SELECTED" : "" }
+    </div>
+  ))
+);
 
 class MatchCreatePage extends React.PureComponent {
   constructor(props) {
     super(props);
-    this.state = {bots: []};
+    this.state = { bots: {} };
   }
 
-  handleInputChange = event => {
-    const target = event.target;
-    const value = target.type === "checkbox" ? target.checked : target.value;
-    const name = target.name;
+  componentDidMount() {
+    this.props.fetchBots();
+  }
 
+  toggleBot = (botId) => {
     this.setState({
-      [name]: value
+      bots: {
+        ...this.state.bots,
+        [botId]: !this.state.bots[botId],
+      }
     });
   };
 
-  submit = (event) => {
-    console.log("submitted");
-    event.preventDefault();
-    // TODO validation
-
-    this.props.create(this.state.bots);
+  create = () => {
+    this.props.create(Object.keys(this.state.bots));
   };
-
 
   render() {
     return (
       <Page>
         <h1>Create a Match</h1>
-        <form onSubmit={this.submit}>
-
-        </form>
+        <MatchBotList toggleBot={this.toggleBot} bots={this.props.bots} selectedBotIds={this.state.bots} />
+        <input type="button" value="create" onClick={this.create} />
       </Page>
     );
   }
@@ -43,9 +50,11 @@ class MatchCreatePage extends React.PureComponent {
 
 const mapDispatchToProps = dispatch => ({
   create: (bots) => dispatch(createMatch(bots)),
+  fetchBots: () => dispatch(fetchBots()),
 });
 
 const mapStateToProps = state => ({
+  bots: state.bots.records,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MatchCreatePage);
