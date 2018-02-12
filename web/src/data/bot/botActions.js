@@ -18,7 +18,6 @@ const createBot = (name, code) => (dispatch, getState) => {
       });
 
       history.push(`/bots/${res.body.bot._id}`);
-      console.log("success AFTER upload attempt", res);
     }).catch(err => {
       console.log("err AFTER upload attempt", err);
     });
@@ -26,7 +25,7 @@ const createBot = (name, code) => (dispatch, getState) => {
 
 const updateBotCode = (botId, code) => (dispatch, getState) => {
   return http
-    .post("/bots/upload")
+    .post(`/bots/${botId}`)
     .field("id", botId)
     .field("code", code)
     .then(res => {
@@ -36,7 +35,6 @@ const updateBotCode = (botId, code) => (dispatch, getState) => {
         doMerge: true,
         payload: [res.body.bot],
       });
-      console.log("success AFTER upload attempt", res);
     }).catch(err => {
       console.log("err AFTER upload attempt", err);
     });
