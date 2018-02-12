@@ -9,6 +9,9 @@ import BotListPage from "./components/bots/listPage";
 import BotSinglePage from "./components/bots/singlePage";
 import BotCreatePage from "./components/bots/createPage";
 
+import MatchListPage from "./components/matches/listPage";
+import MatchCreatePage from "./components/matches/createPage";
+
 // TODO split these out into modules?
 const routes = [
   {
@@ -44,6 +47,20 @@ const routes = [
       }
     ],
   },
+  {
+    path: "/matches",
+    children: [
+      {
+        path: "",
+        action: () => <MatchListPage />,
+      },
+      {
+        path: "/create",
+        action: () => <MatchCreatePage />
+      },
+    ],
+  },
+
 ];
 
 const router = new UniversalRouter(routes);

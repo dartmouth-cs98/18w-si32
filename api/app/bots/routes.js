@@ -48,8 +48,12 @@ botRouter.post("/new", (req, res) => {
 
 // update bot with uploaded code
 botRouter.post("/:botId", (req, res) => {
-  console.log("handling");
+  // TODO validate that user owns this bot
   Bot.findById(req.params.botId).then(bot => {
+    if (req.userId !== bot.user) {
+      throw new AccessError();
+    }
+    
     return s3.uploadBot(req.userId, bot._id, req.files.code).then(({ url, key }) => {
       // update bot in db w/ code's url
       bot.set("code", { url, key });
