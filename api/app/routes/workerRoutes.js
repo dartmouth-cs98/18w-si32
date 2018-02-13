@@ -1,6 +1,6 @@
 const Router = require("koa-router");
 const auth = require("../auth");
-const Match = require("../matches/model");
+const Match = require("../models").Match;
 
 const workerRouter = Router();
 

@@ -10,24 +10,16 @@ const loggedIn = async (ctx, next) => {
   const token = (ctx.request.headers.authorization || "").replace("Bearer ", "");
 
   if (!token) {
-    ctx.status = 401;
-    ctx.body = { message: "Auth Required" };
-    return;
+    throw new Error("Auth required");
   }
 
   const userId = await session.get(token);
 
-  if (!userId) {
-    ctx.status = 401;
-    ctx.body = { message: "Invalid session" };
-    return;
-  }
-
   // attach session info to context
-  ctx.userId = userId;
-  ctx.token = token;
+  ctx.state.userId = userId;
+  ctx.state.token = token;
 
-  await next();
+  return next();
 };
 
 const workerAuth = async (ctx, next) => {

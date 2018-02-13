@@ -4,13 +4,13 @@ const _ = require("lodash");
 
 const session = require("../session");
 const auth = require("../auth");
-const User = require("./model");
+const User = require("../models").User;
 
 const userRouter = Router();
 
 // TODO split handlers into independent places?
 
-userRouter.post("/register", async (ctx, next) => {
+userRouter.post("/register", async (ctx) => {
   // hash the password
   const hash = await bcrypt.hash(ctx.request.body.password, 10);
 
@@ -25,11 +25,9 @@ userRouter.post("/register", async (ctx, next) => {
     created: true,
     session: s
   };
-
-  return next();
 });
 
-userRouter.post("/login", async (ctx, next) => {
+userRouter.post("/login", async (ctx) => {
   const user = await User.findOne({ username: ctx.request.body.username });
 
   if (!user) {
@@ -46,12 +44,10 @@ userRouter.post("/login", async (ctx, next) => {
   ctx.body = {
     session: s,
   };
-
-  return next();
 });
 
-userRouter.post("/logout", auth.loggedIn, async (ctx, next) => {
-  await session.destroy(ctx.token);
+userRouter.post("/logout", auth.loggedIn, async (ctx) => {
+  await session.destroy(ctx.state.token);
 
   ctx.body = {
     success: true
@@ -59,9 +55,8 @@ userRouter.post("/logout", auth.loggedIn, async (ctx, next) => {
 });
 
 // placeholder simple authed profile endpoint
-userRouter.get("/profile", auth.loggedIn, async (ctx, next) => {
-  ctx.body = { user: ctx.userId };
-  return next();
+userRouter.get("/profile", auth.loggedIn, async (ctx) => {
+  ctx.body = { user: ctx.state.userId };
 });
 
 module.exports = userRouter;

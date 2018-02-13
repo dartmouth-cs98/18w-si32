@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const Bot = require("../bots/model");
-const s3 = require("../s3");
+const Bot = require("./botModel");
+const s3 = require("../files/s3");
 const _ = require("lodash");
 
 const _Match = new Schema({
