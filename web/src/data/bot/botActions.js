@@ -17,7 +17,7 @@ const createBot = (name, code) => (dispatch, getState) => {
         payload: res.body.updatedRecords,
       });
 
-      history.push(`/bots/${res.body.bot._id}`);
+      history.push(`/bots/${res.body.updatedRecords[0]._id}`);
     }).catch(err => {
       console.log("err AFTER upload attempt", err);
     });

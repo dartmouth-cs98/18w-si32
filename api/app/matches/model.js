@@ -52,7 +52,7 @@ _Match.statics.getNext = () => {
   return Match.findOneAndUpdate({
     status: "QUEUED"
   }, {
-    status: "QUEUED",
+    status: "RUNNING",
   })
   .sort({ createdAt: -1 })
   .then(match => {

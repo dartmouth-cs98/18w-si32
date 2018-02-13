@@ -50,12 +50,13 @@ botRouter.post("/", (req, res) => {
 botRouter.post("/:botId", (req, res) => {
   // TODO validate that user owns this bot
   Bot.findById(req.params.botId).then(bot => {
-    if (req.userId !== bot.user) {
-      throw new AccessError();
+    if (req.userId != bot.user) {
+      throw new Error("not your bot");
     }
 
     return s3.uploadBot(req.userId, bot._id, req.files.code).then(({ url, key }) => {
       // update bot in db w/ code's url
+      console.log("new code", url, key);
       bot.set("code", { url, key });
       bot.set("version", bot.version + 1);
       bot.save();
