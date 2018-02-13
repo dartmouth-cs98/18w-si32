@@ -2,6 +2,9 @@ import React from "react";
 import UniversalRouter from "universal-router";
 
 import history from "./history";
+
+import LandingPage from "./components/landing/landingPage";
+
 import LoginPage from "./components/user/loginPage";
 import RegisterPage from "./components/user/registerPage";
 import ProfilePage from "./components/user/profilePage";
@@ -18,7 +21,7 @@ import MatchSinglePage from "./components/matches/singlePage";
 const routes = [
   {
     path: "",
-    action: () => <h1>Home</h1>
+    action: () => <LandingPage />
   },
   {
     path: "/login",
@@ -87,30 +90,26 @@ const initRouter = renderFn => {
   router.resolve(history.location).then(html => renderFn(html));
 };
 
-// helper component to use history push to navigate
-class Link extends React.PureComponent {
-  constructor(props) {
-    super(props);
-  }
+// // helper component to use history push to navigate
+// class Link extends React.PureComponent {
+//   clicked = event => {
+//     // if not attempting to open in new window or something else funky,
+//     // do nothing
+//     if (event.shiftKey || event.ctrlKey || event.metaKey) {
+//       return;
+//     }
+//
+//     history.push(this.props.href);
+//     event.preventDefault();
+//   };
+//
+//   render() {
+//     return (
+//       <div onClick={this.clicked} {...this.props}>
+//         {this.props.children}
+//       </div>
+//     );
+//   }
+// }
 
-  clicked = (event) => {
-    // if not attempting to open in new window or something else funky,
-    // do nothing
-    if (event.shiftKey || event.ctrlKey || event.metaKey) {
-      return;
-    }
-
-    history.push(this.props.href);
-    event.preventDefault();
-  }
-
-  render() {
-    return (
-      <a onClick={this.clicked} {...this.props}>
-        {this.props.children}
-      </a>
-    );
-  }
-}
-
-export { Link, history, initRouter };
+export { history, initRouter };

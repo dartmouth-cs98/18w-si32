@@ -1,5 +1,18 @@
 const NAVBAR_HEIGHT = "65px";
+const FOOTER_HEIGHT = "65px";
+
+const PALETTE_WHITE = "#e7ecef";
+const PALETTE_RED = "#ec0b43";
+const PALETTE_BLUE = "#274c77";
+const PALETTE_GRAY = "#56666b";
+const PALETTE_BLACK = "#464f51";
 
 export {
   NAVBAR_HEIGHT,
+  FOOTER_HEIGHT,
+  PALETTE_WHITE,
+  PALETTE_RED,
+  PALETTE_BLUE,
+  PALETTE_GRAY,
+  PALETTE_BLACK
 }

@@ -1,11 +1,17 @@
 import React from "react";
 import Radium from "radium";
 import { connect } from "react-redux";
-import { Link } from "../../router";
-import { logout } from "../../data/session/sessionActions";
-import history from "../../history";
 
-import { NAVBAR_HEIGHT } from "../../style/constants"
+import Link from "./link";
+import history from "../../history";
+import { logout } from "../../data/session/sessionActions";
+
+import {
+  NAVBAR_HEIGHT,
+  PALETTE_WHITE,
+  PALETTE_RED,
+  PALETTE_BLACK
+} from "../../style/constants"
 
 class Navigation extends React.PureComponent {
   logout = () => {
@@ -17,7 +23,7 @@ class Navigation extends React.PureComponent {
   renderUserArea() {
     if (this.props.isLoggedIn) {
       return (
-        <div>
+        <div style={styles.userAreaContainer}>
           <Link style={styles.link} href="/profile">
             Profile
           </Link>
@@ -28,7 +34,7 @@ class Navigation extends React.PureComponent {
       );
     } else {
       return (
-        <div>
+        <div style={styles.userAreaContainer}>
           <Link style={styles.link} href="/register">
             Register
           </Link>
@@ -57,9 +63,7 @@ class Navigation extends React.PureComponent {
     return (
       <nav style={styles.wrapper}>
         <div style={styles.mainNav}>
-          <Link style={{ ...styles.link, ...styles.homeLink }} href="/">
-            Si32
-          </Link>
+          <Link style={{...styles.link, ...styles.homeLink}} href="/">SI32</Link>
           {this.renderMainNav()}
         </div>
 
@@ -71,26 +75,32 @@ class Navigation extends React.PureComponent {
 
 const styles = {
   wrapper: {
-    backgroundColor: "#141529",
-    borderBottom: "1px solid #2F214E",
-    display: "flex",
     height: NAVBAR_HEIGHT,
+    display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
-    padding: "0 10px"
+    padding: "0 10px",
+    backgroundColor: PALETTE_WHITE
   },
   mainNav: {
     display: "flex",
     alignItems: "center"
   },
+  userAreaContainer: {
+    display: "flex",
+    flexDirection: "row"
+  },
   link: {
-    color: "white",
+    color: PALETTE_RED,
     fontSize: 18,
     fontFamily: "Roboto",
     fontWeight: 300,
     textDecoration: "none",
     textTransform: "uppercase",
-    margin: "0 10px"
+    margin: "0 10px",
+    ":hover": {
+      cursor: "pointer"
+    }
   },
   homeLink: {
     fontSize: 30
