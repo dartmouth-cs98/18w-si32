@@ -1,40 +1,37 @@
 require('dotenv').config(); // load environment vars from .env
-const express = require("express");
-const http = require("http");
-const bodyParser = require("body-parser");
-const morgan = require("morgan");
-const busboyBodyParser = require('busboy-body-parser');
+
+const Koa = require("koa");
+const cors = require("@koa/cors");
+const koaBody = require('koa-body');
+
 const db = require("./db");
-const userRouter = require("./users/routes");
-const botRouter = require("./bots/routes");
-const workerRouter = require("./worker/routes");
-const matchRouter = require("./matches/routes");
+const fileMiddleware = require("./files/fileMiddleware");
+
+const rootRouter = require("./routes");
 
 const PORT = process.env.PORT || 5000;
 
-const app = express();
+const app = new Koa();
 
-app.use(morgan('tiny'));
-
-// turn on CORS
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-  next();
+app.use(async (ctx, next) => {
+  console.log(ctx.request.method, ctx.request.path);
+  await next();
 });
 
-app.use(bodyParser.json());
-app.use(busboyBodyParser());
+app.use(cors());
+app.use(koaBody({multipart: true}));
 
-// use all the imported routers
-app.use("/users", userRouter);
-app.use("/bots", botRouter);
-app.use("/worker", workerRouter);
-app.use("/matches", matchRouter);
+app.use(fileMiddleware);
+
+app
+  .use(rootRouter.routes())
+  .use(rootRouter.allowedMethods());
+
 
 // listen for requests
-const server = http.createServer(app);
-server.listen(PORT);
+app.listen(PORT);
+// const server = http.createServer(app);
+// server.listen(PORT);
 
 console.log(`Server listening on port ${PORT}`)
 
