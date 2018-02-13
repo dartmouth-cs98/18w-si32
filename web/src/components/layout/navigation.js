@@ -5,6 +5,8 @@ import { Link } from "../../router";
 import { logout } from "../../data/session/sessionActions";
 import history from "../../history";
 
+import { NAVBAR_HEIGHT } from "../../style/constants"
+
 class Navigation extends React.PureComponent {
   logout = () => {
     this.props.logout().then(() => {
@@ -72,7 +74,7 @@ const styles = {
     backgroundColor: "#141529",
     borderBottom: "1px solid #2F214E",
     display: "flex",
-    height: 56,
+    height: NAVBAR_HEIGHT,
     alignItems: "center",
     justifyContent: "space-between",
     padding: "0 10px"
@@ -84,7 +86,7 @@ const styles = {
   link: {
     color: "white",
     fontSize: 18,
-    fontFamily: "Saira Condensed",
+    fontFamily: "Roboto",
     fontWeight: 300,
     textDecoration: "none",
     textTransform: "uppercase",

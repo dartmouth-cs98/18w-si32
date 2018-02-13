@@ -25,28 +25,52 @@ time, mark, audio, video {
 	font: inherit;
 	vertical-align: baseline;
 }
+
 /* HTML5 display-role reset for older browsers */
 article, aside, details, figcaption, figure,
 footer, header, hgroup, menu, nav, section {
 	display: block;
 }
+
 body {
 	line-height: 1;
 }
+
 ol, ul {
 	list-style: none;
 }
+
 blockquote, q {
 	quotes: none;
 }
+
 blockquote:before, blockquote:after,
 q:before, q:after {
 	content: '';
 	content: none;
 }
+
 table {
 	border-collapse: collapse;
 	border-spacing: 0;
+}
+
+body {
+  background-color: #121121;
+  font-family: "Saira", sans-serif;
+	font-weight: 400;
+	-webkit-font-smoothing: antialiased;
+	font-smooth: antialiased;
+  color: white;
+}
+
+a {
+	color: white;
+}
+
+/* global styles for temp dev use */
+h1 {
+	font-size: 30px;
 }
 
 /* saira-200 - latin */
@@ -156,24 +180,4 @@ table {
   src: local('Saira Condensed SemiBold'), local('SairaCondensed-SemiBold'),
        url('../fonts/saira-condensed-v3-latin-600.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
        url('../fonts/saira-condensed-v3-latin-600.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
-}
-
-
-
-body {
-  background-color: #121121;
-  font-family: "Saira", sans-serif;
-	font-weight: 400;
-	-webkit-font-smoothing: antialiased;
-	font-smooth: antialiased;
-  color: white;
-}
-
-a {
-	color: white;
-}
-
-/* global styles for temp dev use */
-h1 {
-	font-size: 30px;
 }
