@@ -1,4 +1,4 @@
-const express = require("express");
+const Router = require("koa-router");
 const _ = require("lodash");
 const auth = require("../auth");
 const s3 = require("../s3");
@@ -6,33 +6,30 @@ const Match = require("./model");
 const Bot = require("../bots/model");
 
 
-const matchRouter = express.Router();
+const matchRouter = Router();
 
 // every match route requires login
 matchRouter.use(auth.loggedIn);
 
-matchRouter.get("/", (req, res) => {
+matchRouter.get("/", async (ctx, next) => {
   // TODO this currently only returns matches that this user is part of. we'll
   // definitely need some flexible options/search ability here
-  Match.find({
-    users: req.userId,
-  })
-  .then((matches) => {
-    res.send(matches);
+  const matches = await Match.find({
+    users: ctx.userId,
   });
-  // TODO error handle
+
+  ctx.body = matches;
+
+  return next();
 });
 
-matchRouter.post("/", (req, res) => {
+matchRouter.post("/", async (ctx, next) => {
   // TODO validate that the user passed in one of their own bots
-  Match.createWithBots(req.userId, req.body.botIds)
-  .then(match => {
-    res.send({ success: true, updatedRecords: [match] });
-  })
-  .catch(err => {
-    console.log(err);
-    res.status(400).send({ success: false, err });
-  });
+  const match = await Match.createWithBots(ctx.userId, ctx.request.body.botIds);
+
+  ctx.body = { success: true, updatedRecords: [match] };
+
+  return next();
 });
 
 module.exports = matchRouter;

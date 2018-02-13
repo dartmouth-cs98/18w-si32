@@ -1,41 +1,37 @@
-const express = require("express");
-const path = require('path');
+const Router = require("koa-router");
 const auth = require("../auth");
 const Match = require("../matches/model");
 
-const workerRouter = express.Router();
+const workerRouter = Router();
 
 // every bot route requires login
 workerRouter.use(auth.workerAuth);
 
-workerRouter.get("/nextTask", (req, res) => {
+workerRouter.get("/nextTask", async (ctx, next) => {
   // TODO need some way to revert back to QUEUED if we dont get results
   // for some reason (worker crashed, etc.)
-  Match.getNext()
-  .then(match => {
-    if (!match) {
-      return res.json({
-        newGame: false,
-        message: "No game",
-      });
-    }
+  const match = await Match.getNext();
 
-    res.json({
-      newGame: true,
-      ...match
-    });
-  });
+  if (!match) {
+    ctx.body ={
+      newGame: false,
+      message: "No game",
+    };
+    return next();
+  }
+
+  ctx.body = {
+    newGame: true,
+    ...match
+  };
+
+  return next();
 });
 
-workerRouter.post("/result", (req, res) => {
-  console.log(req.body)
-  Match.handleWorkerResponse(req.body.matchId, req.body.result, req.body.log)
-  .then(() => {
-    res.json({message: 'thanks bud'})
-  })
-  .catch(() => {
-    res.status(500).json({success: false, message: "Hmm.."});
-  });
+workerRouter.post("/result", async (ctx, next) => {
+  const matchResult = await Match.handleWorkerResponse(ctx.request.body.matchId, ctx.request.body.result, ctx.request.body.log);
+  ctx.body = {message: 'thanks bud'};
+  return next();
 })
 
 module.exports = workerRouter;

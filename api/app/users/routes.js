@@ -1,4 +1,4 @@
-const express = require("express");
+const Router = require("koa-router");
 const bcrypt = require("bcryptjs");
 const _ = require("lodash");
 
@@ -6,91 +6,62 @@ const session = require("../session");
 const auth = require("../auth");
 const User = require("./model");
 
-const userRouter = express.Router();
+const userRouter = Router();
 
 // TODO split handlers into independent places?
 
-userRouter.post("/register", (req, res) => {
+userRouter.post("/register", async (ctx, next) => {
   // hash the password
-  bcrypt
-    .hash(req.body.password, 10)
-    .then(hash => {
-      return User.create({
-        // create the user in the db
-        username: req.body.username,
-        password: hash
-      });
-    })
-    // start a session for them
-    .then(u => session.create(u, req.connection.remoteAddress))
-    .then(session => {
-      res.json({
-        created: true,
-        session
-      });
-    })
-    .catch(err => {
-      console.log(err);
-      return res.json({
-        created: false,
-        err
-      });
-    });
+  const hash = await bcrypt.hash(ctx.request.body.password, 10);
+
+  const u = await User.create({
+    // create the user in the db
+    username: ctx.request.body.username,
+    password: hash
+  });
+
+  const s = await session.create(u, ctx.ip);
+  ctx.body = {
+    created: true,
+    session: s
+  };
+
+  return next();
 });
 
-userRouter.post("/login", (req, res) => {
-  let foundUser;
+userRouter.post("/login", async (ctx, next) => {
+  const user = await User.findOne({ username: ctx.request.body.username });
 
-  User.findOne({ username: req.body.username })
-    .then(user => {
-      if (!user) {
-        throw new Error();
-      }
+  if (!user) {
+    throw new Error();
+  }
+  const match = await bcrypt.compare(ctx.request.body.password, user.password);
 
-      foundUser = user;
+  if (!match) {
+    throw new Error();
+  }
 
-      // check password
-      return bcrypt.compare(req.body.password, user.password);
-    })
-    .then(match => {
-      if (!match) {
-        throw new Error();
-      }
+  const s = await session.create(user, ctx.ip);
 
-      return session.create(foundUser, req.connection.remoteAddress);
-    })
-    .then(session => {
-      res.json({
-        session,
-      });
-    })
-    .catch(err => {
-      console.log(err);
-      res.status(401).json({
-        message: "Couldn't log in"
-      });
-    });
+  ctx.body = {
+    session: s,
+  };
+
+  return next();
 });
 
-userRouter.post("/logout", auth.loggedIn, (req, res) => {
-  session
-    .destroy(req.token)
-    .then(() => {
-      return res.json({
-        success: true
-      });
-    })
-    .catch(() => {
-      res.json({
-        message: "Couldn't find or destroy that session",
-        success: false
-      });
-    });
+userRouter.post("/logout", auth.loggedIn, async (ctx, next) => {
+  await session.destroy(ctx.token);
+
+  ctx.body = {
+    success: true
+  };
 });
 
 // placeholder simple authed profile endpoint
-userRouter.get("/profile", auth.loggedIn, (req, res) => {
-  res.send({ user: req.userId });
+userRouter.get("/profile", auth.loggedIn, async (ctx, next) => {
+  ctx.body = { user: ctx.userId };
+  return next();
 });
 
 module.exports = userRouter;
