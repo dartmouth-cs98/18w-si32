@@ -6,7 +6,8 @@
   "main": "webpack.config.js",
   "scripts": {
     "test": "eslint src",
-    "prepush": "npm test"
+    "prepush": "npm test",
+    "dev": "./node_modules/webpack-dev-server/bin/webpack-dev-server.js"
   },
   "author": "",
   "license": "ISC",
