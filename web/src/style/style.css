@@ -169,6 +169,10 @@ body {
   color: white;
 }
 
+a {
+	color: white;
+}
+
 /* global styles for temp dev use */
 h1 {
 	font-size: 30px;

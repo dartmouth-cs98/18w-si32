@@ -1,19 +1,43 @@
 import * as http from "../../util/http.js";
+import { httpGetAction } from "../httpCollectionActions";
+import history from "../../history";
 
-const CREATE_BOT = "CREATE_BOT";
-
+const fetchBots = () => httpGetAction("BOT", "/bots", null);
 
 const createBot = (name, code) => (dispatch, getState) => {
-  console.log("created bot");
   return http
-    .post("/bots/new")
+    .post("/bots")
     .field("name", name)
     .field("code", code)
     .then(res => {
-      console.log("success AFTER upload attempt", res);
+      // push the new bot into the store
+      dispatch({
+        type: "RECEIVED_BOT",
+        doMerge: true,
+        payload: res.body.updatedRecords,
+      });
+
+      history.push(`/bots/${res.body.updatedRecords[0]._id}`);
     }).catch(err => {
       console.log("err AFTER upload attempt", err);
     });
 };
 
-export { createBot };
+const updateBotCode = (botId, code) => (dispatch, getState) => {
+  return http
+    .post(`/bots/${botId}`)
+    .field("id", botId)
+    .field("code", code)
+    .then(res => {
+      // push the updated bot into the store
+      dispatch({
+        type: "RECEIVED_BOT",
+        doMerge: true,
+        payload: res.body.updatedRecords,
+      });
+    }).catch(err => {
+      console.log("err AFTER upload attempt", err);
+    });
+};
+
+export { createBot, updateBotCode, fetchBots };
