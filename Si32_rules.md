@@ -36,3 +36,9 @@ Buildings in Si32 have several noteworthy properties. First of all, creating a b
 Each building will produce new units at a rate proportional to how many units a player has working in the building. 
 Buildings can also be destroyed. If an enemy player commands enough of their units onto the tile where one of your buildings is placed, the building will be destroyed. 
 Determining how many enemy units are "enough" to destroy a building is quite easy. In order to destroy a building, one must march a number of opposing units onto the building's tile which is equal to the number of workers in the building + the inherent defense rating of the building. The default defense rating of buildings is 10. 
+
+### Combat
+
+Combat in Si32 takes place in two discrete phases. In the first phase, after the game state has received all the unit commands both players, it checks if any of the commands send enemy units from adjacent tiles into each other.  
+If there are any such 'collisions' between units, then units from the marching armies will be subtracted from each other until none or the larger army remains. After this, the commands will be modified to reflect the, probably, smaller size of the new marching army.  
+After this, positions of units are updated, and in each tile, units from opposing armies are subtracted from each other until none or the larger army remains.
