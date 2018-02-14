@@ -2,11 +2,16 @@ import React from "react";
 import UniversalRouter from "universal-router";
 
 import history from "./history";
-import LoginPage from "./components/user/login";
-import RegisterPage from "./components/user/register";
-import ProfilePage from "./components/user/profile";
-import BotListPage from "./components/bots/list";
-import BotCreatePage from "./components/bots/create";
+import LoginPage from "./components/user/loginPage";
+import RegisterPage from "./components/user/registerPage";
+import ProfilePage from "./components/user/profilePage";
+import BotListPage from "./components/bots/listPage";
+import BotSinglePage from "./components/bots/singlePage";
+import BotCreatePage from "./components/bots/createPage";
+
+import MatchListPage from "./components/matches/listPage";
+import MatchCreatePage from "./components/matches/createPage";
+import MatchSinglePage from "./components/matches/singlePage";
 
 // TODO split these out into modules?
 const routes = [
@@ -36,9 +41,31 @@ const routes = [
       {
         path: "/create",
         action: () => <BotCreatePage />
+      },
+      {
+        path: "/:id",
+        action: ({ params: { id }}) => <BotSinglePage id={id}/>
       }
     ],
   },
+  {
+    path: "/matches",
+    children: [
+      {
+        path: "",
+        action: () => <MatchListPage />,
+      },
+      {
+        path: "/create",
+        action: () => <MatchCreatePage />
+      },
+      {
+        path: "/:id",
+        action: ({ params: { id }}) => <MatchSinglePage id={id} />
+      },
+    ],
+  },
+
 ];
 
 const router = new UniversalRouter(routes);

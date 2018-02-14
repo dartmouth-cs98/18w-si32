@@ -34,4 +34,8 @@ const post = url => {
   return agent.post(BASE_URL + url);
 };
 
-export { get, post };
+const put = url => {
+  return agent.put(BASE_URL + url);
+};
+
+export { get, post, put };

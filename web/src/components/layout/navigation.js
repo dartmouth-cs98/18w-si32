@@ -38,6 +38,19 @@ class Navigation extends React.PureComponent {
     }
   };
 
+  renderMainNav = () => {
+    if (this.props.isLoggedIn) {
+      return (
+        <div style={styles.mainNav}>
+          <Link style={styles.link} href="/bots">Bots</Link>
+          <Link style={styles.link} href="/matches">Matches</Link>
+        </div>
+      );
+    }
+
+    return null;
+  }
+
   render() {
     return (
       <nav style={styles.wrapper}>
@@ -45,9 +58,7 @@ class Navigation extends React.PureComponent {
           <Link style={{ ...styles.link, ...styles.homeLink }} href="/">
             Si32
           </Link>
-          {this.props.isLoggedIn && <Link style={styles.link} href="/bots">
-            Bots
-          </Link>}
+          {this.renderMainNav()}
         </div>
 
         {this.renderUserArea()}
