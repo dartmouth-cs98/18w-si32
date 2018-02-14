@@ -1,6 +1,5 @@
 const Router = require("koa-router");
 const bcrypt = require("bcryptjs");
-const _ = require("lodash");
 
 const session = require("../session");
 const auth = require("../auth");

@@ -2,7 +2,6 @@ import React from "react";
 import { connect } from "react-redux";
 import _ from "lodash";
 import Page from "../layout/page";
-import { Link, history } from "../../router";
 import { createMatch } from "../../data/match/matchActions";
 import { fetchBots } from "../../data/bot/botActions";
 
@@ -24,18 +23,18 @@ class MatchCreatePage extends React.PureComponent {
     this.props.fetchBots();
   }
 
-  toggleBot = (botId) => {
+  toggleBot(botId) {
     this.setState({
       bots: {
         ...this.state.bots,
         [botId]: !this.state.bots[botId],
       }
     });
-  };
+  }
 
-  create = () => {
+  create() {
     this.props.create(Object.keys(this.state.bots));
-  };
+  }
 
   render() {
     return (

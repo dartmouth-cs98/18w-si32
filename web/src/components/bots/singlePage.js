@@ -1,8 +1,6 @@
 import React from "react";
-import _ from "lodash";
 import { connect } from "react-redux";
 import Page from "../layout/page";
-import { Link, history } from "../../router";
 import { fetchBots, updateBotCode } from "../../data/bot/botActions";
 
 class BotSinglePage extends React.PureComponent {
@@ -15,19 +13,19 @@ class BotSinglePage extends React.PureComponent {
     this.props.fetchBots();
   }
 
-  handleFileChange = event => {
+  handleFileChange(event) {
     // store handle to the selected file
-    this.state.botFile = event.target.files[0];
-  };
+    this.setState({
+      botFile: event.target.files[0]
+    });
+  }
 
-  submit = event => {
-    console.log("submitted");
+  submit(event) {
     event.preventDefault();
     // TODO validation
 
     this.props.upload(this.state.botFile);
-  };
-
+  }
 
   render() {
     return (

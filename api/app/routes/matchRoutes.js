@@ -1,9 +1,10 @@
 const Router = require("koa-router");
-const _ = require("lodash");
 const auth = require("../auth");
+
+/* eslint-disable no-unused-vars */
 const s3 = require("../files/s3");
 const { Bot, Match } = require("../models");
-
+/* eslint-enable no-unused-vars */
 
 const matchRouter = Router();
 

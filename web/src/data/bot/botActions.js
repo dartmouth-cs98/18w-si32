@@ -2,6 +2,10 @@ import * as http from "../../util/http.js";
 import { httpGetAction } from "../httpCollectionActions";
 import history from "../../history";
 
+/* eslint-disable no-unused-vars */
+// TODO: getState creating eslint error here because it is not used,
+// do we need it? 
+
 const fetchBots = () => httpGetAction("BOT", "/bots", null);
 
 const createBot = (name, code) => (dispatch, getState) => {
@@ -19,7 +23,9 @@ const createBot = (name, code) => (dispatch, getState) => {
 
       history.push(`/bots/${res.body.updatedRecords[0]._id}`);
     }).catch(err => {
+      /* eslint-disable no-console */
       console.log("err AFTER upload attempt", err);
+      /* eslint-enable no-console */
     });
 };
 
@@ -36,7 +42,9 @@ const updateBotCode = (botId, code) => (dispatch, getState) => {
         payload: res.body.updatedRecords,
       });
     }).catch(err => {
+      /* eslint-disable no-console */
       console.log("err AFTER upload attempt", err);
+      /* eslint-enable no-console */
     });
 };
 

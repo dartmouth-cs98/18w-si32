@@ -1,0 +1,35 @@
+{
+    "plugins": [ "node" ],
+    "extends": [
+      "eslint:recommended",
+      "plugin:node/recommended"
+    ],
+    "parserOptions": {
+      "sourceType": "module",
+      "ecmaFeatures": {
+        "experimentalObjectRestSpread": true
+      }
+    },
+    "rules": {
+      "quotes": [
+        "error",
+        "double"
+      ],
+      "semi": [
+        "error",
+        "always"
+      ],
+      "node/no-unsupported-features": [
+        "error",
+        {
+          "ignores": [ "asyncAwait" ]
+        }
+      ],
+      "node/no-extraneous-require": [
+        "error",
+        {
+          "allowModules": [ "lodash" ]
+        }
+      ]
+    }
+}

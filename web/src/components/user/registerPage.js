@@ -1,7 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
 import Page from "../layout/page";
-import { Link } from "../../router";
 import history from "../../history";
 import { register } from "../../data/session/sessionActions";
 
@@ -15,7 +14,7 @@ class RegisterPage extends React.PureComponent {
   }
 
   // TODO use redux-form or something better here
-  handleInputChange = event => {
+  handleInputChange(event) {
     const target = event.target;
     const value = target.type === "checkbox" ? target.checked : target.value;
     const name = target.name;
@@ -23,19 +22,21 @@ class RegisterPage extends React.PureComponent {
     this.setState({
       [name]: value
     });
-  };
+  }
 
-  doRegister = event => {
+  doRegister(event) {
     event.preventDefault();
     this.props.register(this.state.username, this.state.password)
       .then(() => {
         history.push("/profile");
       })
       .catch((err) => {
+        /* eslint-disable no-console */
         console.log(err);
         console.log("FAIL");
+        /* eslint-enable no-console */
       });
-  };
+  }
 
   render() {
     return (
