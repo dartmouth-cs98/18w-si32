@@ -1,5 +1,3 @@
-"use strict";
-
 const session = require("./session");
 
 // middleware that passes if user is logged in
@@ -25,8 +23,9 @@ const loggedIn = async (ctx, next) => {
 };
 
 const workerAuth = async (ctx, next) => {
-  return next() // NOTE: right now we dont care about worker actually authenticating, but remove this before prod
-}
+  // NOTE: right now we dont care about worker actually authenticating, but remove this before prod
+  return next();
+};
 
 module.exports = {
   loggedIn,

@@ -34,9 +34,9 @@ workerRouter.post("/result", async (ctx, next) => {
   /* eslint-disable no-unused-vars */
   const matchResult = await Match.handleWorkerResponse(ctx.request.body.matchId, ctx.request.body.result, ctx.request.body.log);
   /* eslint-disable no-unused-vars */
-  
-  ctx.body = {message: 'thanks bud'};
+
+  ctx.body = {message: "thanks bud"};
   return next();
-})
+});
 
 module.exports = workerRouter;

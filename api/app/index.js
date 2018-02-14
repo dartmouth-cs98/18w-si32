@@ -1,8 +1,8 @@
-require('dotenv').config(); // load environment vars from .env
+require("dotenv").config(); // load environment vars from .env
 
 const Koa = require("koa");
 const cors = require("@koa/cors");
-const koaBody = require('koa-body');
+const koaBody = require("koa-body");
 
 /* eslint-disable no-unused-vars */
 const db = require("./db");
