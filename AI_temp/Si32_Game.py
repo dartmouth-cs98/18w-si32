@@ -1,28 +1,15 @@
-import json
 from unit_command import Unit_command
 from Player import Player
-from collections import namedtuple
+from json_helpers import json_to_object_list
 
-
-def json_to_object(json_object, type):  # helper function for json -> object
-
-    if type == "unit_command":
-        return Unit_command(json_object['tile'], json_object['unit_command'], json_object['number_of_units'], json_object['direction'])
-
-
-def json_to_object_list(json_list, type):  # turn list of json to list of objects
-    objects = []
-
-    if type == 'unit_command':  # checking type to allow other json -> object ops
-
-        for json_obj in json_list:
-            objects.append(json_to_object(json_obj, type))
-
-        return objects
 
 class Game_state:
 
     def __init__(self, map, rules, number_of_players, user_code):
+
+        # Game state is determined by map, players, and rules. Higher level
+        # game state takes these objects and runs games, allowing for a
+        # game agnostic framework
 
         self.map = map
 
@@ -60,7 +47,7 @@ class Game_state:
         return players
 
     def execute_moves(self, moves, player):
-        moves = self.json_to_object_list(moves)
+        moves = json_to_object_list(moves)
 
         for move in moves:
             execute_move(move, player)

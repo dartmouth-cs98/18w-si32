@@ -9,6 +9,7 @@ class Player:
         self.playerID = playerId
         self.map = map
         self.user_code = user_code
+        self.winner = False
 
     def make_move(self):
         # 1 = move north, 2 = move east, 3 = move south, 4 = move west, 5 = build north, 6 = build east, 7 = build south, 8 = build west, 9 = mine
@@ -25,7 +26,6 @@ class Player:
     def add_building(self, building):
         self.buildings.append(building)
 
-
     def __str__(self):
         string = "Player " + str(self.playerId) + "\n"
 
@@ -35,10 +35,8 @@ class Player:
             string += str(unit)
             string += "\n"
 
-
         for building in self.buildings:
             string += str(building)
             string += "\n"
-
 
         return string
