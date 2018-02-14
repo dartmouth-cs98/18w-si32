@@ -1,8 +1,6 @@
 import React from "react";
-import _ from "lodash";
 import { connect } from "react-redux";
 import Page from "../layout/page";
-import { Link, history } from "../../router";
 import { fetchMatches } from "../../data/match/matchActions";
 
 class MatchSinglePage extends React.PureComponent {
@@ -21,13 +19,13 @@ class MatchSinglePage extends React.PureComponent {
         <h1>Match {this.props.match._id}</h1>
         <p>status: {this.props.match.status}</p>
         <p>created: {this.props.match.createdAt}</p>
-        { this.props.match.status === 'DONE' ? <p>log: {JSON.stringify(this.props.match.log)}</p> : "" }
+        { this.props.match.status === "DONE" ? <p>log: {JSON.stringify(this.props.match.log)}</p> : "" }
       </Page>
     );
   }
 }
 
-const mapDispatchToProps = (dispatch, props) => ({
+const mapDispatchToProps = dispatch => ({
   fetchMatches: () => dispatch(fetchMatches()),
 });
 

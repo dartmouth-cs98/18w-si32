@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import Page from "../layout/page";
-import { Link, history } from "../../router";
+import { history } from "../../router";
 import { login } from "../../data/session/sessionActions";
 
 class LoginPage extends React.PureComponent {
@@ -13,7 +13,7 @@ class LoginPage extends React.PureComponent {
     };
   }
 
-  handleInputChange = event => {
+  handleInputChange(event) {
     const target = event.target;
     const value = target.type === "checkbox" ? target.checked : target.value;
     const name = target.name;
@@ -21,9 +21,9 @@ class LoginPage extends React.PureComponent {
     this.setState({
       [name]: value
     });
-  };
+  }
 
-  doLogin = event => {
+  doLogin(event) {
     event.preventDefault();
     this.props
       .login(this.state.username, this.state.password)
@@ -31,9 +31,11 @@ class LoginPage extends React.PureComponent {
         history.push("/");
       })
       .catch(() => {
+        /* eslint-disable no-console */
         console.log("FAIL");
+        /* eslint-enable no-console */
       });
-  };
+  }
 
   render() {
     return (

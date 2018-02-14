@@ -14,6 +14,7 @@ import MatchCreatePage from "./components/matches/createPage";
 import MatchSinglePage from "./components/matches/singlePage";
 
 // TODO split these out into modules?
+/* eslint-disable react/display-name */
 const routes = [
   {
     path: "",
@@ -68,14 +69,19 @@ const routes = [
 
 ];
 
+/* eslint-enable react/display-name */
+
 const router = new UniversalRouter(routes);
 
 // start listening to history changes and call renderFn with new route contents
 const initRouter = renderFn => {
   // on changes, resolve the route and tell the function
+
+  /* eslint-disable no-unused-vars */
   history.listen((location, action) => {
     router.resolve(location).then(html => renderFn(html));
   });
+  /* eslint-disable no-unused-vars */
 
   // render the view we started on
   router.resolve(history.location).then(html => renderFn(html));
@@ -83,7 +89,7 @@ const initRouter = renderFn => {
 
 // helper component to use history push to navigate
 class Link extends React.PureComponent {
-  clicked = event => {
+  clicked(event) {
     // if not attempting to open in new window or something else funky,
     // do nothing
     if (event.shiftKey || event.ctrlKey || event.metaKey) {
@@ -92,7 +98,7 @@ class Link extends React.PureComponent {
 
     history.push(this.props.href);
     event.preventDefault();
-  };
+  }
 
   render() {
     return (
