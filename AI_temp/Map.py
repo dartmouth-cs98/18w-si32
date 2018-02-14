@@ -12,8 +12,35 @@ class Map:
         self.width = width
         self.height = height
 
+    # --------- Helper functions -------------
+
     def get_tile(self, position):  # helper function for getting files
         return self.map[position[0]][position[1]]
+
+    def get_adjacent_squares(self, position):  # returns list of adjacent tiles
+        result = []
+        squares = []
+
+        squares.append([position[0]+1, position[1]])  # Square to the right
+        squares.append([position[0]-1, position[1]])  # Square to the left
+        squares.append([position[0], position[1]+1])  # Square below
+        squares.append([position[0], position[1]-1])  # Square down
+
+        for square in squares:  # return legal tiles
+            if self.tile_in_range(square):
+                result.append(self.map.get_tile(square))
+
+        return result
+
+    def tile_in_range(self, pos):  # check if coordinates are contained by map
+
+        if (pos[0] < 0) | (pos[0] >= (self.width-1)) | (pos[1] < 0) | (pos[1] >= (self.height-1)):
+            return False
+
+        else:
+            return True
+
+    # ------ Initializing function ---------------
 
     def initialize_map(self, width, height):
         tiles = []
@@ -34,27 +61,3 @@ class Map:
             w += 1
 
         return tiles
-
-    def get_adjacent_squares(self, position):  # returns list of adjacent tiles
-        # write out all adjacent tiles
-        result = []
-
-        squares = []
-        squares.append([position[0]+1, position[1]])  # Square to the right
-        squares.append([position[0]-1, position[1]])  # Square to the left
-        squares.append([position[0], position[1]+1])  # Square below
-        squares.append([position[0], position[1]-1])  # Square down
-
-        for square in squares:  # return legal tiles
-            if self.is_in_range(square):
-                result.append(self.map[square[0]][square[1]])
-
-        return result
-
-    def is_in_range(self, pos):  # check if coordinates are contained by map
-
-        if (pos[0] < 0) | (pos[0] >= (self.width-1)) | (pos[1] < 0) | (pos[1] >= (self.height-1)):
-            return False
-
-        else:
-            return True
