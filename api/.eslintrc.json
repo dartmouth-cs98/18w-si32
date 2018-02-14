@@ -11,6 +11,14 @@
       }
     },
     "rules": {
+      "quotes": [
+        "error",
+        "double"
+      ],
+      "semi": [
+        "error",
+        "always"
+      ],
       "node/no-unsupported-features": [
         "error",
         {
