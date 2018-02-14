@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const _ = require("lodash");
 const Bot = require("./botModel");
 const s3 = require("../files/s3");
-const _ = require("lodash");
 
 const _Match = new Schema({
   createdBy: {

@@ -3,7 +3,7 @@ const fs = require("fs");
 
 const s3 = new AWS.S3({signatureVersion: "v4"});
 
-const MATCH_LOG_BUCKET = "si32-matches";
+// const MATCH_LOG_BUCKET = "si32-matches";
 const BOT_BUCKET = "si32-bots";
 const SIGNED_URL_EXPIRE_SECONDS = 60 * 5;
 

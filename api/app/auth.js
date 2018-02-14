@@ -1,3 +1,5 @@
+"use strict";
+
 const session = require("./session");
 
 // middleware that passes if user is logged in
