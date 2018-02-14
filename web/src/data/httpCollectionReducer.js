@@ -12,7 +12,7 @@ const INITIAL_STATE = {
 // if doMerge is true, adds/overwrites in existing records
 // otherwise replaces existingRecords
 const mergeRecords = (existingRecords, newRecords, doMerge) => {
-  const rById = doMerge ? existingRecords : {}; // need to create new ref in either case
+  const rById = doMerge ? { ...existingRecords }  : {}; // need to create new ref in either case
   newRecords.forEach(r => rById[r._id] = r);
   return rById;
 };
