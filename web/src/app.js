@@ -5,6 +5,11 @@ import Navigation from "./components/layout/navigation";
 class App extends React.Component {
   constructor() {
     super();
+
+    this.updateMain = this.updateMain.bind(this);
+  }
+
+  componentWillMount() {
     initRouter(this.updateMain);
   }
 

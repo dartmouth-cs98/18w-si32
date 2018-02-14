@@ -89,6 +89,12 @@ const initRouter = renderFn => {
 
 // helper component to use history push to navigate
 class Link extends React.PureComponent {
+  constructor(props) {
+    super(props)
+
+    this.clicked = this.clicked.bind(this);
+  }
+
   clicked(event) {
     // if not attempting to open in new window or something else funky,
     // do nothing
