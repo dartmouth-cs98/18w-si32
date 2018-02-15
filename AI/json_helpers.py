@@ -1,3 +1,6 @@
+from unit_command import Unit_command
+
+
 def json_to_object(json_object, type):  # helper function for json -> object
 
     if type == "unit_command":
