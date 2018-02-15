@@ -1,5 +1,5 @@
 from Map import width, height
-from Building import Building
+from Building import Building, resource_cost
 from Player import Player
 from Map import Map
 from random import randint
@@ -247,7 +247,7 @@ class Game:
 
     def build(self, build_x, build_y, player):
         if (len(player.buildings) < 8):
-            if (player.resource >= 100):
+            if (player.resource >= resource_cost):
                 if self.map.is_in_range((build_x, build_y)):
                     if (len(self.map.tiles[(build_x) + width * (build_y)].units_A) == 0) & (len(self.map.tiles[(build_x) + width * (build_y)].units_B) == 0):
                         if self.map.tiles[(build_x) + width * (build_y)].building is None:
@@ -267,6 +267,5 @@ class Game:
                 print("Building failed")
         else:
             print("Building failed")
-
     def __str__(self):
         return str(self.playerA) + "\n" + str(self.playerB) + "\n"
