@@ -15,4 +15,4 @@ export {
   PALETTE_BLUE,
   PALETTE_GRAY,
   PALETTE_BLACK
-}
+};

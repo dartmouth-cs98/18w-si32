@@ -9,7 +9,7 @@ class Footer extends React.PureComponent {
       <div style={styles.wrapper}>
         hello footer
       </div>
-    )
+    );
   }
 }
 
@@ -22,6 +22,6 @@ const styles = {
     alignItems: "center",
     padding: "0 15px"
   }
-}
+};
 
 export default Radium(Footer);

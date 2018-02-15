@@ -10,8 +10,7 @@ import {
   NAVBAR_HEIGHT,
   PALETTE_WHITE,
   PALETTE_RED,
-  PALETTE_BLACK
-} from "../../style/constants"
+} from "../../style/constants";
 
 class Navigation extends React.PureComponent {
   logout = () => {

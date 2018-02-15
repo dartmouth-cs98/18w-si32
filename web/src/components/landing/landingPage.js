@@ -1,11 +1,11 @@
-import React from "react"
+import React from "react";
 import { connect } from "react-redux";
 
-import Page from "../layout/page"
+import Page from "../layout/page";
 
 class LandingPage extends React.PureComponent {
   constructor(props) {
-    super(props)
+    super(props);
   }
 
   render() {
@@ -15,7 +15,7 @@ class LandingPage extends React.PureComponent {
           hello world
         </div>
       </Page>
-    )
+    );
   }
 }
 
@@ -23,6 +23,6 @@ const styles = {
   wrapper: {
     padding: "0 15px"
   }
-}
+};
 
 export default connect(null, null)(LandingPage);
