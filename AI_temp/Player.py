@@ -4,6 +4,7 @@ from Map import width, height
 
 starting_distance = 30
 
+
 class Player:
     def __init__(self, playerId, map, user_code):
         self.playerID = playerId

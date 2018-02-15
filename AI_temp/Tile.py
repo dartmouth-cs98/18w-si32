@@ -22,7 +22,7 @@ class Tile:
     def increment_units(self, player, number=1):  # Useful for when buildings create unit
         self.units[player] += number
 
-    def decrement_units(self, player, number=1):  # Useful for when buildings create unit
+    def decrement_units(self, player, number=1):
         self.units[player] -= number
 
     def set_units(self, player, number_of_units):
