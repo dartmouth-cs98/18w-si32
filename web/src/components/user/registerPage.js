@@ -53,7 +53,7 @@ class RegisterPage extends React.PureComponent {
       <Page>
         <div style={styles.wrapper}>
           <div style={styles.titleContainer}>Different awesome tagline.</div>
-          <form style={styles.form} onSubmit={this.doLogin}>
+          <form style={styles.form} onSubmit={this.doRegister}>
             <input
               name="username"
               key="username"
@@ -73,8 +73,8 @@ class RegisterPage extends React.PureComponent {
               onChange={this.handleInputChange}
             />
             <input type="submit"
-                 value="Create Account"
-                 style={styles.submitButton}
+                   value="Create Account"
+                   style={styles.submitButton}
             />
           </form>
           <div style={styles.registerContainer}>

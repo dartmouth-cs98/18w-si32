@@ -1,8 +1,9 @@
 import React from "react";
-import _ from "lodash";
 import { connect } from "react-redux";
+import _ from "lodash";
+
 import Page from "../layout/page";
-import { Link } from "../../router";
+import Link from "../layout/link";
 import { fetchMatches } from "../../data/match/matchActions";
 
 const MatchList = ({ matches }) => {

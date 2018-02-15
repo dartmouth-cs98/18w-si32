@@ -40,7 +40,7 @@ const routes = [
     children: [
       {
         path: "",
-        action: () => <BotListPage />,
+        action: () => <BotListPage />
       },
       {
         path: "/create",
@@ -82,6 +82,7 @@ const initRouter = renderFn => {
 
   /* eslint-disable no-unused-vars */
   history.listen((location, action) => {
+    console.log(location)
     router.resolve(location).then(html => renderFn(html));
   });
   /* eslint-disable no-unused-vars */

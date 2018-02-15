@@ -1,12 +1,13 @@
 import React from "react";
 import { connect } from "react-redux";
+
 import Page from "../layout/page";
 import { createBot } from "../../data/bot/botActions";
 
 class BotCreatePage extends React.PureComponent {
   constructor(props) {
     super(props);
-    this.state = {botName: ""};
+    this.state = { botName: "" };
   }
 
   handleInputChange = (event) => {
