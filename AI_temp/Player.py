@@ -1,6 +1,5 @@
-from Unit import Unit
 from random import randint
-from Map import width, height
+from unit_command import Unit_command
 
 starting_distance = 30
 
