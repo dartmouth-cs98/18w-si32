@@ -1,24 +1,33 @@
 const session = require("./session");
 
 // middleware that passes if user is logged in
-const loggedIn = (req, res, next) => {
-  if (!req.headers.authorization) {
-    return res.status(401).json({ message: "Auth required" });
+const loggedIn = async (ctx, next) => {
+  // dont check on pre-flight options requests
+  if (ctx.request.method == "OPTIONS") {
+    return next();
   }
 
-  const token = req.headers.authorization.replace("Bearer ", "");
-  session.get(token).then(
-    userId => {
-      req.userId = userId;
-      req.token = token;
-      next();
-    },
-    err => {
-      res.status(401).json({ message: "Invalid session" });
-    }
-  );
+  const token = (ctx.request.headers.authorization || "").replace("Bearer ", "");
+
+  if (!token) {
+    throw new Error("Auth required");
+  }
+
+  const userId = await session.get(token);
+
+  // attach session info to context
+  ctx.state.userId = userId;
+  ctx.state.token = token;
+
+  return next();
+};
+
+const workerAuth = async (ctx, next) => {
+  // NOTE: right now we dont care about worker actually authenticating, but remove this before prod
+  return next();
 };
 
 module.exports = {
-  loggedIn
+  loggedIn,
+  workerAuth
 };

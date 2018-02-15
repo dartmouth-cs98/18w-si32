@@ -1,6 +1,9 @@
 from subprocess import Popen, PIPE, call
 import os
 import sys
+import docker
+from endpoints import get_bot_file
+client = docker.from_env()
 
 # Bot is our internal wrapper around an end-user implementation of a bot
 # this class should handle prepping and running a bot in a separate
@@ -17,40 +20,46 @@ class Bot(object):
 
     # pass line through to the bot's stdin
     def write(self, line):
-        return self.proc.stdin.write(line.encode())
+        self.proc.stdin.write(line.encode())
+        self.proc.stdin.flush()
+        return
 
 
 # class for being run in containerized "live" environment
 class DockerBot(Bot):
-    def __init__(self, name, playerNum):
+    def __init__(self, name, playerNum, codeUrl):
         self.playerNum = playerNum
         self.name = name
+        self.codeUrl = codeUrl
 
     # eventually will download/unzip etc. bot from server
     # for now, mock "prep" stage by copying from local dir into docker vol
     def prep(self):
         sys.stdout.flush()
-        call("cp -r %s/* /bot%d" % (self.name, self.playerNum), shell=True)
+
+        # download the user-provided bot code
+        get_bot_file(self.codeUrl, self.playerNum)
+
+        # copy everything from bot_common (provided helpers, etc.) into bot dir
+        call("cp bot_common/* /bot%d" % self.playerNum, shell=True)
 
     def run(self):
         command = ["docker", "run", "-i",
                       "-v", "bot%d:/bot" % self.playerNum,
                       "--name", "%s" % self.name,
                       "si32-child-bot"]
+
         # run docker and start the bot in its own isolated environment
         self.proc = Popen(command, stdout=PIPE, stdin=PIPE)
 
     # remove docker container
     def cleanup(self):
-        try:
-            self.proc.kill()
-        except Exception: # proc already exited
-            pass
+        container = client.containers.get(self.name)
+        container.remove(force=True)
 
-        call("docker wait %s > /dev/null" % self.name, shell=True)
-        call("docker rm %s > /dev/null" % self.name, shell=True)
+        print("Killed bot %d." % self.playerNum)
 
-        # remove bot code from long-running volume
+        # remove bot code from volume that is persistent
         call("rm -r /bot%d/*" % self.playerNum, shell=True)
 
 
@@ -70,5 +79,6 @@ class LocalBot(Bot):
     def cleanup(self):
         try:
             self.proc.kill()
-        except Exception: # proc already exited
+        except Exception as e: # proc already exited
+            print(e)
             pass

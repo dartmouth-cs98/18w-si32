@@ -18,8 +18,9 @@ const create = (user, ip) => {
       },
       (err, resp) => {
         if (err) {
-          reject(err);
+          reject(new Error(err));
         } else {
+          resp.user = user;
           resolve(resp);
         }
       }
@@ -36,9 +37,8 @@ const get = token => {
         token
       },
       (err, session) => {
-        console.log("SESSION GET", err, session);
         if (err || !session.id) {
-          reject(err);
+          reject(new Error("No such session"));
         } else {
           resolve(session.id);
         }
@@ -57,7 +57,7 @@ const destroy = token => {
       },
       (err, resp) => {
         if (err || resp.kill == 0) {
-          reject();
+          reject(new Error(err));
         } else {
           resolve();
         }

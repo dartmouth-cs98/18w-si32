@@ -1,9 +1,10 @@
-all: child worker
+.PHONY: all worker child
+all: worker child
 
-worker: Dockerfile
-	docker build -t si32-worker .
+worker:
+	docker build -t si32-worker --build-arg API_ROUTE=$(API_ROUTE) .
 
-child: child/Dockerfile
+child:
 	cd child && docker build -t si32-child-bot .
 
 clean:

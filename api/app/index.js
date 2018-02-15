@@ -1,22 +1,41 @@
-const express = require("express");
-const http = require("http");
-const bodyParser = require("body-parser");
+require("dotenv").config(); // load environment vars from .env
+
+const Koa = require("koa");
+const cors = require("@koa/cors");
+const koaBody = require("koa-body");
+
+/* eslint-disable no-unused-vars */
 const db = require("./db");
-const userRouter = require("./users/routes");
-const botRouter = require("./bots/routes");
+/* eslint-enable no-unused-vars */
+const fileMiddleware = require("./files/fileMiddleware");
 
-const PORT = process.env.PORT;
+const rootRouter = require("./routes");
 
-const app = express();
+const PORT = process.env.PORT || 5000;
 
-app.use(bodyParser.json());
+const app = new Koa();
 
-// use all the imported routers
-app.use("/users", userRouter);
-app.use("/bots", botRouter);
+app.use(async (ctx, next) => {
+  await next();
+});
+
+app.use(cors());
+app.use(koaBody({multipart: true}));
+
+app.use(fileMiddleware);
+
+app
+  .use(rootRouter.routes())
+  .use(rootRouter.allowedMethods());
+
 
 // listen for requests
-const server = http.createServer(app);
-server.listen(PORT);
+app.listen(PORT);
+// const server = http.createServer(app);
+// server.listen(PORT);
+
+/* eslint-disable no-console */
+console.log(`Server listening on port ${PORT}`);
+/* eslint-enable no-console */
 
 module.exports = app;
