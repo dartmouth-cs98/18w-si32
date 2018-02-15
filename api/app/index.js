@@ -1,33 +1,41 @@
-const express = require("express");
-const http = require("http");
-const bodyParser = require("body-parser");
+require("dotenv").config(); // load environment vars from .env
+
+const Koa = require("koa");
+const cors = require("@koa/cors");
+const koaBody = require("koa-body");
+
+/* eslint-disable no-unused-vars */
 const db = require("./db");
-const userRouter = require("./users/routes");
-const botRouter = require("./bots/routes");
-const workerRouter = require("./worker/routes");
+/* eslint-enable no-unused-vars */
+const fileMiddleware = require("./files/fileMiddleware");
+
+const rootRouter = require("./routes");
 
 const PORT = process.env.PORT || 5000;
 
-const app = express();
+const app = new Koa();
 
-app.use(bodyParser.json());
-
-// turn on CORS
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-  next();
+app.use(async (ctx, next) => {
+  await next();
 });
 
-// use all the imported routers
-app.use("/users", userRouter);
-app.use("/bots", botRouter);
-app.use("/worker", workerRouter);
+app.use(cors());
+app.use(koaBody({multipart: true}));
+
+app.use(fileMiddleware);
+
+app
+  .use(rootRouter.routes())
+  .use(rootRouter.allowedMethods());
+
 
 // listen for requests
-const server = http.createServer(app);
-server.listen(PORT);
+app.listen(PORT);
+// const server = http.createServer(app);
+// server.listen(PORT);
 
-console.log(`Server listening on port ${PORT}`)
+/* eslint-disable no-console */
+console.log(`Server listening on port ${PORT}`);
+/* eslint-enable no-console */
 
 module.exports = app;
