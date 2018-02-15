@@ -4,23 +4,21 @@ const INPUT_HEIGHT = 30;
 const BUTTON_HEIGHT = 35;
 
 // replace with constants
-// all relative units 
+// all relative units
 // const PRIMARY_TEXT_SIZE = 10;
 
-const PALETTE_WHITE = "#FFFFFF";
-const PALETTE_RED = "#ec0b43";
-const PALETTE_BLUE = "#274c77";
-const PALETTE_GRAY = "#56666b";
-const PALETTE_BLACK = "#464f51";
+const PALETTE_PRIMARY = "#ec0b43";       // red
+const PALETTE_DETAIL_0 = "#56666b";      // gray
+const PALETTE_DETAIL_1 = "#274c77";      // blue
+const PALETTE_BACKGROUND = "#FFFFFF";    // white
 
 export {
   NAVBAR_HEIGHT,
   FOOTER_HEIGHT,
   INPUT_HEIGHT,
   BUTTON_HEIGHT,
-  PALETTE_WHITE,
-  PALETTE_RED,
-  PALETTE_BLUE,
-  PALETTE_GRAY,
-  PALETTE_BLACK
+  PALETTE_PRIMARY,
+  PALETTE_DETAIL_0,
+  PALETTE_DETAIL_1,
+  PALETTE_BACKGROUND,
 };

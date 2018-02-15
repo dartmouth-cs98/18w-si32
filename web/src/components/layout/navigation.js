@@ -1,6 +1,7 @@
 import React from "react";
 import Radium from "radium";
 import { connect } from "react-redux";
+import Color from "color";
 
 import Link from "./link";
 import history from "../../history";
@@ -8,8 +9,9 @@ import { logout } from "../../data/session/sessionActions";
 
 import {
   NAVBAR_HEIGHT,
-  PALETTE_WHITE,
-  PALETTE_RED,
+  PALETTE_BACKGROUND,
+  PALETTE_PRIMARY,
+  PALETTE_DETAIL_0,
 } from "../../style/constants";
 
 class Navigation extends React.PureComponent {
@@ -82,7 +84,10 @@ const styles = {
     alignItems: "center",
     justifyContent: "space-between",
     padding: "0 10px",
-    backgroundColor: PALETTE_WHITE
+    backgroundColor: PALETTE_BACKGROUND,
+    borderStyle: "hidden hidden solid hidden",
+    borderWidth: "1px",
+    borderColor: PALETTE_PRIMARY
   },
   mainNav: {
     display: "flex",
@@ -93,7 +98,7 @@ const styles = {
     flexDirection: "row"
   },
   link: {
-    color: PALETTE_RED,
+    color: PALETTE_DETAIL_0,
     fontSize: 18,
     fontFamily: "Roboto",
     fontWeight: 300,
@@ -101,10 +106,12 @@ const styles = {
     textTransform: "uppercase",
     margin: "0 10px",
     ":hover": {
+      color: Color(PALETTE_PRIMARY).lighten(0.2).string(),
       cursor: "pointer"
     }
   },
   homeLink: {
+    color: PALETTE_PRIMARY,
     fontSize: 30
   }
 };

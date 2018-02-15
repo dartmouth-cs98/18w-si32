@@ -2,14 +2,16 @@ import React from "react";
 import { connect } from "react-redux";
 import Color from "color";
 
+import Link from "../layout/link";
 import Page from "../layout/page";
 import { history } from "../../router";
 import { login } from "../../data/session/sessionActions";
 
-import { INPUT_HEIGHT,
-         BUTTON_HEIGHT,
-         PALETTE_RED,
-         PALETTE_WHITE
+import {
+  INPUT_HEIGHT,
+  BUTTON_HEIGHT,
+  PALETTE_PRIMARY,
+  PALETTE_BACKGROUND
 } from "../../style/constants";
 
 class LoginPage extends React.PureComponent {
@@ -46,7 +48,6 @@ class LoginPage extends React.PureComponent {
   }
 
   render() {
-    console.log(Color(PALETTE_RED).lighten(0.2).string())
     return (
       <Page>
         <div style={styles.wrapper}>
@@ -75,8 +76,14 @@ class LoginPage extends React.PureComponent {
                  style={styles.submitButton}
             />
           </form>
-          <div>
-            New to SI32? Create an Account >>
+          <div style={styles.registerContainer}>
+            <span style={styles.registerText}>New to SI32? </span>
+            <Link
+              key="create-account-link"
+              href="/register"
+              style={styles.registerLink}>
+              Create an Account
+            </Link>
           </div>
         </div>
       </Page>
@@ -117,7 +124,7 @@ const styles = {
     fontSize: "16px",
     margin: "10px 0",
     ":focus": {
-      borderColor: Color(PALETTE_RED).lighten(0.7).string(),
+      borderColor: Color(PALETTE_PRIMARY).lighten(0.7).string(),
       borderStyle: "solid",
       borderWidth: "1px"
     }
@@ -126,16 +133,32 @@ const styles = {
     width: "50%",
     height: BUTTON_HEIGHT,
     margin: "15px 0",
-    backgroundColor: PALETTE_WHITE,
-    color: PALETTE_RED,
+    backgroundColor: PALETTE_BACKGROUND,
+    color: PALETTE_PRIMARY,
     borderWidth: "1px",
     borderStyle: "solid",
-    borderColor: PALETTE_RED,
+    borderColor: PALETTE_PRIMARY,
     borderRadius: "2px",
     ":hover": {
-      backgroundColor: PALETTE_RED,
-      color: PALETTE_WHITE,
+      backgroundColor: PALETTE_PRIMARY,
+      color: PALETTE_BACKGROUND,
       cursor: "pointer"
+    }
+  },
+  registerContainer: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  registerText: {
+    marginRight: "5px"
+  },
+  registerLink: {
+    color: PALETTE_PRIMARY,
+    ":hover": {
+      cursor: "pointer",
+      textDecoration: "underline"
     }
   }
 }
