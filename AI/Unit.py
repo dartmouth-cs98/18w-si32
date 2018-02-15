@@ -5,7 +5,6 @@ class Unit:
         self.position = position #position on the battleground
         self.status = 1 #whether unit is idle (1), mining (2), or building (3). If unit is dead its status is (0)
         self.map = map
-        self.unitId = 0
 
     def set_health(self, new_hp): #sets new value for unit health (i.e. when unit takes damage)
         self.hp = new_hp
