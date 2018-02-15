@@ -1,27 +1,22 @@
-from Unit import Unit
 from random import randint
-from Map import width, height
+from unit_command import Unit_command
+
+starting_distance = 30
+
 
 class Player:
-    def __init__(self, playerId, starting_unit):
-
-        self.units = [starting_unit]
-
-        #print("INITIAL UNIT LIST")
-        #print(self.units)
-
-        self.resource = 0 #player starts with no resource
-        self.playerId = playerId
-
-        self.buildings = []
+    def __init__(self, playerId, map, user_code):
+        self.playerID = playerId
+        self.map = map
+        self.user_code = user_code
+        self.winner = False
 
     def make_move(self):
-        #1 = move north, 2 = move east, 3 = move south, 4 = move west, 5 = build north, 6 = build east, 7 = build south, 8 = build west, 9 = mine
-        #decisions will be random (for now)
+        # 1 = move north, 2 = move east, 3 = move south, 4 = move west, 5 = build north, 6 = build east, 7 = build south, 8 = build west, 9 = mine
 
         move_as_list = []
 
-        #the numbers in the tuple will correspond to commands given to each unit
+        # the numbers in the tuple will correspond to commands given to each unit
         for unit in self.units:
             move_as_list.append(randint(1, 10))
 
@@ -40,16 +35,8 @@ class Player:
             string += str(unit)
             string += "\n"
 
-
         for building in self.buildings:
             string += str(building)
             string += "\n"
 
-
         return string
-
-
-
-
-
-
