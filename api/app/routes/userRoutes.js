@@ -5,6 +5,8 @@ const session = require("../session");
 const auth = require("../auth");
 const User = require("../models").User;
 
+const { NotFoundError, AuthError } = require("../errors");
+
 const userRouter = Router();
 
 // TODO split handlers into independent places?
@@ -30,12 +32,13 @@ userRouter.post("/login", async (ctx) => {
   const user = await User.findOne({ username: ctx.request.body.username });
 
   if (!user) {
-    throw new Error();
+    throw new NotFoundError();
   }
+
   const match = await bcrypt.compare(ctx.request.body.password, user.password);
 
   if (!match) {
-    throw new Error();
+    throw new AuthError();
   }
 
   const s = await session.create(user, ctx.ip);
@@ -48,9 +51,7 @@ userRouter.post("/login", async (ctx) => {
 userRouter.post("/logout", auth.loggedIn, async (ctx) => {
   await session.destroy(ctx.state.token);
 
-  ctx.body = {
-    success: true
-  };
+  ctx.body = {};
 });
 
 // placeholder simple authed profile endpoint

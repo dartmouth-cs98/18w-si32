@@ -1,4 +1,5 @@
 const session = require("./session");
+const { AuthError } = require("./errors");
 
 // middleware that passes if user is logged in
 const loggedIn = async (ctx, next) => {
@@ -10,7 +11,7 @@ const loggedIn = async (ctx, next) => {
   const token = (ctx.request.headers.authorization || "").replace("Bearer ", "");
 
   if (!token) {
-    throw new Error("Auth required");
+    throw new AuthError("No token included");
   }
 
   const userId = await session.get(token);

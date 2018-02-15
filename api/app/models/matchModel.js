@@ -3,6 +3,7 @@ const Schema = mongoose.Schema;
 const _ = require("lodash");
 const Bot = require("./botModel");
 const s3 = require("../files/s3");
+const { MalformedError } = require("../errors");
 
 const _Match = new Schema({
   createdBy: {
@@ -33,7 +34,7 @@ _Match.statics.createWithBots = (userId, botIds) => {
     "_id": { $in: botIds }
   }).lean().then(bots => {
     if (bots.length != botIds.length) {
-      throw new Error("not all bots found");
+      throw new MalformedError("not all bots found");
     }
 
     // pluck all users involved in the match

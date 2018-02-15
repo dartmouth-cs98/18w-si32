@@ -2,6 +2,7 @@ const Router = require("koa-router");
 const auth = require("../auth");
 const s3 = require("../files/s3");
 const Bot = require("../models").Bot;
+const { AccessError } = require("../errors");
 
 const botRouter = new Router();
 
@@ -48,7 +49,7 @@ botRouter.post("/:botId", async (ctx) => {
   const bot = await Bot.findById(ctx.params.botId);
 
   if (ctx.state.userId != bot.user) {
-    throw new Error("not your bot");
+    throw new AccessError("That's not your bot");
   }
 
   const { url, key } = await s3.uploadBot(ctx.state.userId, bot._id, ctx.request.body.files.code);
