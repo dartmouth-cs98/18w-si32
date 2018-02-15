@@ -13,7 +13,7 @@ class LoginPage extends React.PureComponent {
     };
   }
 
-  handleInputChange(event) {
+  handleInputChange = (event) => {
     const target = event.target;
     const value = target.type === "checkbox" ? target.checked : target.value;
     const name = target.name;
@@ -23,7 +23,7 @@ class LoginPage extends React.PureComponent {
     });
   }
 
-  doLogin(event) {
+  doLogin = (event) => {
     event.preventDefault();
     this.props
       .login(this.state.username, this.state.password)

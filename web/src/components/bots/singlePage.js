@@ -13,14 +13,14 @@ class BotSinglePage extends React.PureComponent {
     this.props.fetchBots();
   }
 
-  handleFileChange(event) {
+  handleFileChange = (event) => {
     // store handle to the selected file
     this.setState({
       botFile: event.target.files[0]
     });
   }
 
-  submit(event) {
+  submit = (event) => {
     event.preventDefault();
     // TODO validation
 

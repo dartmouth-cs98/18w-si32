@@ -14,7 +14,7 @@ class RegisterPage extends React.PureComponent {
   }
 
   // TODO use redux-form or something better here
-  handleInputChange(event) {
+  handleInputChange = (event) => {
     const target = event.target;
     const value = target.type === "checkbox" ? target.checked : target.value;
     const name = target.name;
@@ -24,7 +24,7 @@ class RegisterPage extends React.PureComponent {
     });
   }
 
-  doRegister(event) {
+  doRegister = (event) => {
     event.preventDefault();
     this.props.register(this.state.username, this.state.password)
       .then(() => {

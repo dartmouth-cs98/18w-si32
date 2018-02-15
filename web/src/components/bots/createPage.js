@@ -9,7 +9,7 @@ class BotCreatePage extends React.PureComponent {
     this.state = {botName: ""};
   }
 
-  handleInputChange(event) {
+  handleInputChange = (event) => {
     const target = event.target;
     const value = target.type === "checkbox" ? target.checked : target.value;
     const name = target.name;
@@ -19,14 +19,14 @@ class BotCreatePage extends React.PureComponent {
     });
   }
 
-  handleFileChange(event) {
+  handleFileChange = (event) => {
     // store handle to the selected file
     this.setState({
       botFile: event.target.files[0]
     });
   }
 
-  submit(event) {
+  submit = (event) => {
     event.preventDefault();
     // TODO validation
 

@@ -6,7 +6,7 @@ import { logout } from "../../data/session/sessionActions";
 import history from "../../history";
 
 class Navigation extends React.PureComponent {
-  logout() {
+  logout = () => {
     this.props.logout().then(() => {
       history.push("/");
     });
