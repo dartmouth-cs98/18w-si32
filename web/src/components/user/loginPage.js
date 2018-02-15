@@ -72,14 +72,14 @@ class LoginPage extends React.PureComponent {
               onChange={this.handleInputChange}
             />
             <input type="submit"
-                 value="Submit"
+                 value="Log In"
                  style={styles.submitButton}
             />
           </form>
           <div style={styles.registerContainer}>
             <span style={styles.registerText}>New to SI32? </span>
             <Link
-              key="create-account-link"
+              key="register-link"
               href="/register"
               style={styles.registerLink}>
               Create an Account
