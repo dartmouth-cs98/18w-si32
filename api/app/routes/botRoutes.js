@@ -57,7 +57,6 @@ botRouter.post("/:botId", async (ctx) => {
   delete ctx.request.body.files.code;
 
   // update bot in db w/ code's url
-  console.log("new code", url, key);
   bot.set("code", { url, key });
   bot.set("version", bot.version + 1);
   bot.save();

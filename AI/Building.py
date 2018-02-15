@@ -1,3 +1,4 @@
+resource_cost = 1
 class Building:
     def __init__(self, owner, tile):
         self.tile = tile # position on the battleground (10 x 10 grid) (right now buildings take 1 tile of space, probably change this later)

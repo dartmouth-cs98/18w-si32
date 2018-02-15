@@ -2,7 +2,7 @@ import React from "react";
 import _ from "lodash";
 import { connect } from "react-redux";
 import Page from "../layout/page";
-import { Link, history } from "../../router";
+import { Link } from "../../router";
 import { fetchMatches } from "../../data/match/matchActions";
 
 const MatchList = ({ matches }) => {
@@ -12,7 +12,7 @@ const MatchList = ({ matches }) => {
     </div>
   );
 
-  return <div>{items}</div>
+  return <div>{items}</div>;
 };
 
 class MatchListPage extends React.PureComponent {

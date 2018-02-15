@@ -2,6 +2,10 @@ import * as http from "../util/http.js";
 
 // base actions for typical http requests
 
+/* eslint-disable no-unused-vars */
+// TODO: getState, options creating eslint error here because they are not used,
+// do we need it?
+
 const httpGetAction = (collectionName, endpoint, params, options={}) => (dispatch, getState) => {
   dispatch({
     type: `REQUESTED_${collectionName}`
@@ -16,9 +20,11 @@ const httpGetAction = (collectionName, endpoint, params, options={}) => (dispatc
       });
     }).catch(err => {
       // TODO what to do in the store here?
+      /* eslint-disable no-console */
       console.log("HTTP error", collectionName, endpoint, params, err);
+      /* eslint-enable no-console */
     });
-}
+};
 
 const httpPostAction = (collectionName, endpoint, body={}, options={}) => (dispatch, getState) => {
   dispatch({
@@ -35,8 +41,10 @@ const httpPostAction = (collectionName, endpoint, body={}, options={}) => (dispa
       });
     }).catch(err => {
       // TODO what to do in the store here?
+      /* eslint-disable no-console */
       console.log("HTTP error", collectionName, endpoint, body, err);
+      /* eslint-enable no-console */
     });
-}
+};
 
 export { httpGetAction, httpPostAction };

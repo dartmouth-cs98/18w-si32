@@ -2,7 +2,7 @@ import React from "react";
 import _ from "lodash";
 import { connect } from "react-redux";
 import Page from "../layout/page";
-import { Link, history } from "../../router";
+import { Link } from "../../router";
 import { fetchBots } from "../../data/bot/botActions";
 
 const BotList = ({ bots }) => {
@@ -12,7 +12,7 @@ const BotList = ({ bots }) => {
     </div>
   );
 
-  return <div>{items}</div>
+  return <div>{items}</div>;
 };
 
 class BotListPage extends React.PureComponent {

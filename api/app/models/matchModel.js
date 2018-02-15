@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const _ = require("lodash");
 const Bot = require("./botModel");
 const s3 = require("../files/s3");
-const _ = require("lodash");
 
 const _Match = new Schema({
   createdBy: {
@@ -30,7 +30,7 @@ const _Match = new Schema({
 
 _Match.statics.createWithBots = (userId, botIds) => {
   return Bot.find({
-    '_id': { $in: botIds }
+    "_id": { $in: botIds }
   }).lean().then(bots => {
     if (bots.length != botIds.length) {
       throw new Error("not all bots found");
@@ -43,8 +43,8 @@ _Match.statics.createWithBots = (userId, botIds) => {
       createdBy: userId,
       users: allUserIds,
       bots: bots,
-    })
-  })
+    });
+  });
 };
 
 // finds, updates, and returns the next match to be played

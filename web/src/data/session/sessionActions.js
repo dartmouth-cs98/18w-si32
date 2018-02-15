@@ -1,8 +1,11 @@
 import * as http from "../../util/http.js";
-import history from "../../history.js";
 
 const SESSION_START = "SESSION_START";
 const SESSION_DESTROY = "SESSION_DESTROY";
+
+/* eslint-disable no-unused-vars */
+// TODO: getState creating eslint error here because it is not used,
+// do we need it? 
 
 const login = (username, password) => (dispatch, getState) => {
   return http
@@ -23,7 +26,7 @@ const logout = () => dispatch => {
   return http
     .post("/users/logout")
     .send()
-    .then(res => {
+    .then(() => {
       dispatch({
         type: SESSION_DESTROY
       });

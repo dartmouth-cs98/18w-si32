@@ -6,13 +6,13 @@ import { logout } from "../../data/session/sessionActions";
 import history from "../../history";
 
 class Navigation extends React.PureComponent {
-  logout = () => {
+  logout() {
     this.props.logout().then(() => {
       history.push("/");
     });
-  };
+  }
 
-  renderUserArea = () => {
+  renderUserArea() {
     if (this.props.isLoggedIn) {
       return (
         <div>
@@ -36,9 +36,9 @@ class Navigation extends React.PureComponent {
         </div>
       );
     }
-  };
+  }
 
-  renderMainNav = () => {
+  renderMainNav() {
     if (this.props.isLoggedIn) {
       return (
         <div style={styles.mainNav}>
