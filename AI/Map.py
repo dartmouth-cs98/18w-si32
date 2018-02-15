@@ -1,7 +1,7 @@
 from Tile import Tile
 
-width = 8 #width of map
-height = 8 #height of map
+width = 40 #width of map
+height = 40 #height of map
 
 class Map:
     def __init__(self):
@@ -13,12 +13,8 @@ class Map:
             for i in range(0, width):
                 self.tiles.append(Tile((i, j)))
 
-
-
-
     def is_in_range(self, pos):
         if (pos[0] < 0) | (pos[0] >= width) | (pos[1] < 0) | (pos[1] >= height):
             return False
         else:
             return True
-
