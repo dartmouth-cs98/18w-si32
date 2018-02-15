@@ -8,6 +8,11 @@ import LandingPage from "./components/landing/landingPage";
 import LoginPage from "./components/user/loginPage";
 import RegisterPage from "./components/user/registerPage";
 import ProfilePage from "./components/user/profilePage";
+
+import DocsPage from "./components/docs/docsPage";
+import LeaderboardPage from "./components/leaderboard/leaderboardPage";
+import ReplayPage from "./components/replay/replayPage";
+
 import BotListPage from "./components/bots/listPage";
 import BotSinglePage from "./components/bots/singlePage";
 import BotCreatePage from "./components/bots/createPage";
@@ -34,6 +39,18 @@ const routes = [
   {
     path: "/profile",
     action: () => <ProfilePage />
+  },
+  {
+    path: "/docs",
+    action: () => <DocsPage />
+  },
+  {
+    path: "/leaderboard",
+    action: () => <LeaderboardPage />
+  },
+  {
+    path: "/replay",
+    action: () => <ReplayPage />
   },
   {
     path: "/bots",
@@ -82,7 +99,6 @@ const initRouter = renderFn => {
 
   /* eslint-disable no-unused-vars */
   history.listen((location, action) => {
-    console.log(location)
     router.resolve(location).then(html => renderFn(html));
   });
   /* eslint-disable no-unused-vars */

@@ -116,7 +116,7 @@ const styles = {
   },
   input: {
     width: "100%",
-    height: "30px",
+    height: INPUT_HEIGHT,
     fontFamily: "Roboto",
     fontSize: "16px",
     margin: "10px 0",
@@ -158,7 +158,7 @@ const styles = {
       textDecoration: "underline"
     }
   }
-}
+};
 
 const mapDispatchToProps = dispatch => ({
   register: (username, password) => dispatch(register(username, password))

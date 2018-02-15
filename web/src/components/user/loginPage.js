@@ -119,7 +119,7 @@ const styles = {
   },
   input: {
     width: "100%",
-    height: "30px",
+    height: INPUT_HEIGHT,
     fontFamily: "Roboto",
     fontSize: "16px",
     margin: "10px 0",
@@ -161,6 +161,6 @@ const styles = {
       textDecoration: "underline"
     }
   }
-}
+};
 
 export default connect(null, mapDispatchToProps)(LoginPage);

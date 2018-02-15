@@ -7,7 +7,7 @@ class Footer extends React.PureComponent {
   render() {
     return (
       <div style={styles.wrapper}>
-        hello footer
+        Footer Content Here. 
       </div>
     );
   }
