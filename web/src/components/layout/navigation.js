@@ -25,11 +25,8 @@ class Navigation extends React.PureComponent {
     if (this.props.isLoggedIn) {
       return (
         <div style={styles.userAreaContainer}>
-          <Link style={styles.link} href="/profile">
-            Profile
-          </Link>
           <Link style={styles.link} href="#" onClick={this.logout}>
-            Logout
+            Log Out
           </Link>
         </div>
       );
@@ -37,7 +34,7 @@ class Navigation extends React.PureComponent {
       return (
         <div style={styles.userAreaContainer}>
           <Link style={styles.link} href="/login">
-            Log in
+            Log In
           </Link>
         </div>
       );
@@ -45,32 +42,24 @@ class Navigation extends React.PureComponent {
   }
 
   renderMainNav() {
-    if (this.props.isLoggedIn) {
-      return (
-        <div style={styles.mainNav}>
-          <Link style={styles.link} href="/docs">Docs</Link>
-          <Link style={styles.link} href="/leaderboard">Leaderboard</Link>
-          <Link style={styles.link} href="/replay">Replay</Link>
-          <Link style={styles.link} href="/bots">Bots</Link>
-          <Link style={styles.link} href="/matches">Matches</Link>
-        </div>
-      );
-    } else {
-      return (
-        <div style={styles.mainNav}>
-          <Link style={styles.link} href="/docs">Docs</Link>
-          <Link style={styles.link} href="/leaderboard">Leaderboard</Link>
-          <Link style={styles.link} href="/replay">Replay</Link>
-        </div>
-      );
-    }
+    return (
+      <div style={styles.mainNav}>
+        <Link style={styles.link} href="/docs">Docs</Link>
+        <Link style={styles.link} href="/leaderboard">Leaderboard</Link>
+        <Link style={styles.link} href="/replay">Replay</Link>
+      </div>
+    );
   }
 
   render() {
+    const mainLinkDest = this.props.isLoggedIn ? "/dashboard" : "/";
+
     return (
       <nav style={styles.wrapper}>
         <div style={styles.mainNav}>
-          <Link style={{...styles.link, ...styles.homeLink}} href="/">SI32</Link>
+          <Link style={{...styles.link, ...styles.homeLink}} href={mainLinkDest}>
+            Monad
+          </Link>
           {this.renderMainNav()}
         </div>
 

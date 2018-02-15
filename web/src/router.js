@@ -7,7 +7,7 @@ import LandingPage from "./components/landing/landingPage";
 
 import LoginPage from "./components/user/loginPage";
 import RegisterPage from "./components/user/registerPage";
-import ProfilePage from "./components/user/profilePage";
+import DashboardPage from "./components/user/dashboardPage";
 
 import DocsPage from "./components/docs/docsPage";
 import LeaderboardPage from "./components/leaderboard/leaderboardPage";
@@ -37,8 +37,8 @@ const routes = [
     action: () => <RegisterPage />
   },
   {
-    path: "/profile",
-    action: () => <ProfilePage />
+    path: "/dashboard",
+    action: () => <DashboardPage />
   },
   {
     path: "/docs",

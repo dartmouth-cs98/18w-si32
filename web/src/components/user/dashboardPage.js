@@ -1,9 +1,10 @@
 import React from "react";
+import { connect } from "react-redux";
 import Page from "../layout/page";
 
 import { getProfile } from "../../data/user/userActions";
 
-class ProfilePage extends React.PureComponent {
+class DashboardPage extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {};
@@ -15,11 +16,11 @@ class ProfilePage extends React.PureComponent {
   render() {
     return (
       <Page>
-        <h1>Profile</h1>
+        <h1>Dashboard</h1>
         <h3>Your user id: {this.state.user}</h3>
       </Page>
     );
   }
 }
 
-export default ProfilePage;
+export default connect(null, null)(DashboardPage);

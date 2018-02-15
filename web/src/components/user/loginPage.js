@@ -38,7 +38,7 @@ class LoginPage extends React.PureComponent {
     this.props
       .login(this.state.username, this.state.password)
       .then(() => {
-        history.push("/");
+        history.push("/dashboard");
       })
       .catch(() => {
         /* eslint-disable no-console */

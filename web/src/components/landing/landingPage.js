@@ -12,7 +12,7 @@ class LandingPage extends React.PureComponent {
     return (
       <Page>
         <div style={styles.wrapper}>
-          hello world
+          Landing Page Content
         </div>
       </Page>
     );
