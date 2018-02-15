@@ -2,7 +2,7 @@ import sys
 import time
 from SimpleGameHelper import SimpleGameHelper
 
-print("I'm bot1.py")
+print("I'm bot34975237497.py")
 sys.stdout.flush()
 
 i = 0
