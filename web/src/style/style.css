@@ -56,21 +56,20 @@ table {
 }
 
 body {
-  background-color: #e7ecef;
+  background-color: #FFFFFF;
   font-family: "Roboto", sans-serif;
 	font-weight: 400;
 	-webkit-font-smoothing: antialiased;
 	font-smooth: antialiased;
-  color: white; 
+  color: #000000;
 }
 
 a {
 	color: white;
 }
 
-/* global styles for temp dev use */
-h1 {
-	font-size: 30px;
+textarea:focus, input:focus{
+    outline: none;
 }
 
 /* saira-200 - latin */

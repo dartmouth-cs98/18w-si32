@@ -1,7 +1,13 @@
-const NAVBAR_HEIGHT = "65px";
-const FOOTER_HEIGHT = "65px";
+const NAVBAR_HEIGHT = 65;
+const FOOTER_HEIGHT = 65;
+const INPUT_HEIGHT = 30;
+const BUTTON_HEIGHT = 35;
 
-const PALETTE_WHITE = "#e7ecef";
+// replace with constants
+// all relative units 
+// const PRIMARY_TEXT_SIZE = 10;
+
+const PALETTE_WHITE = "#FFFFFF";
 const PALETTE_RED = "#ec0b43";
 const PALETTE_BLUE = "#274c77";
 const PALETTE_GRAY = "#56666b";
@@ -10,6 +16,8 @@ const PALETTE_BLACK = "#464f51";
 export {
   NAVBAR_HEIGHT,
   FOOTER_HEIGHT,
+  INPUT_HEIGHT,
+  BUTTON_HEIGHT,
   PALETTE_WHITE,
   PALETTE_RED,
   PALETTE_BLUE,

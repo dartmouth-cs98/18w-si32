@@ -34,9 +34,6 @@ class Navigation extends React.PureComponent {
     } else {
       return (
         <div style={styles.userAreaContainer}>
-          <Link style={styles.link} href="/register">
-            Register
-          </Link>
           <Link style={styles.link} href="/login">
             Log in
           </Link>
@@ -55,7 +52,13 @@ class Navigation extends React.PureComponent {
       );
     }
 
-    return null;
+    return (
+      <div style={styles.mainNav}>
+        <Link style={styles.link} href="/">Learn</Link>
+        <Link style={styles.link} href="/">Leaderboard</Link>
+        <Link style={styles.link} href="/">Replay</Link>
+      </div>
+    );
   }
 
   render() {
