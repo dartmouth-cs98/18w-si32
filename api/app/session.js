@@ -1,4 +1,5 @@
 const RedisSessions = require("redis-sessions");
+const { AuthError } = require("./errors");
 
 const RS_APPNAME = "si32";
 
@@ -18,7 +19,7 @@ const create = (user, ip) => {
       },
       (err, resp) => {
         if (err) {
-          reject(new Error(err));
+          reject(new AuthError());
         } else {
           resp.user = user;
           resolve(resp);
@@ -38,7 +39,7 @@ const get = token => {
       },
       (err, session) => {
         if (err || !session.id) {
-          reject(new Error("No such session"));
+          reject(new AuthError("No session found"));
         } else {
           resolve(session.id);
         }
