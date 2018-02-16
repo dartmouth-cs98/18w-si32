@@ -5,12 +5,21 @@ const session = require("../session");
 const auth = require("../auth");
 const User = require("../models").User;
 
-const { NotFoundError, AuthError } = require("../errors");
+const { AuthError } = require("../errors");
 
 const userRouter = Router();
 
-// TODO split handlers into independent places?
+userRouter.get("/", auth.loggedIn, async (ctx) => {
+  const users = await User.find();
+  ctx.body = users;
+});
 
+// placeholder simple authed profile endpoint
+userRouter.get("/profile", auth.loggedIn, async (ctx) => {
+  ctx.body = { user: ctx.state.userId };
+});
+
+// TODO split handlers into independent places?
 userRouter.post("/register", async (ctx) => {
   // hash the password
   const hash = await bcrypt.hash(ctx.request.body.password, 10);
@@ -24,7 +33,10 @@ userRouter.post("/register", async (ctx) => {
   const s = await session.create(u, ctx.ip);
   ctx.body = {
     created: true,
-    session: s
+    session: {
+      token: s.token,
+      userId: u._id,
+    },
   };
 });
 
@@ -32,19 +44,22 @@ userRouter.post("/login", async (ctx) => {
   const user = await User.findOne({ username: ctx.request.body.username });
 
   if (!user) {
-    throw new NotFoundError();
+    throw new AuthError("Couldn't log you in with those credentials");
   }
 
   const match = await bcrypt.compare(ctx.request.body.password, user.password);
 
   if (!match) {
-    throw new AuthError();
+    throw new AuthError("Couldn't log you in with those credentials");
   }
 
   const s = await session.create(user, ctx.ip);
 
   ctx.body = {
-    session: s,
+    session: {
+      token: s.token,
+      userId: user._id,
+    },
   };
 });
 
@@ -52,11 +67,6 @@ userRouter.post("/logout", auth.loggedIn, async (ctx) => {
   await session.destroy(ctx.state.token);
 
   ctx.body = {};
-});
-
-// placeholder simple authed profile endpoint
-userRouter.get("/profile", auth.loggedIn, async (ctx) => {
-  ctx.body = { user: ctx.state.userId };
 });
 
 module.exports = userRouter;

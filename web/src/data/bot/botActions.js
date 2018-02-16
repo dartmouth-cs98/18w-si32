@@ -4,9 +4,11 @@ import history from "../../history";
 
 /* eslint-disable no-unused-vars */
 // TODO: getState creating eslint error here because it is not used,
-// do we need it? 
+// do we need it?
 
-const fetchBots = () => httpGetAction("BOT", "/bots", null);
+const fetchBots = (userId) => httpGetAction("BOT", "/bots", { userId });
+
+const fetchBot = (userId) => httpGetAction("BOT", `/bots/${userId}`, { userId }, { isSingle: true });
 
 const createBot = (name, code) => (dispatch, getState) => {
   return http
@@ -21,6 +23,7 @@ const createBot = (name, code) => (dispatch, getState) => {
         payload: res.body.updatedRecords,
       });
 
+      // TODO this probably should live elsewhere in code
       history.push(`/bots/${res.body.updatedRecords[0]._id}`);
     }).catch(err => {
       /* eslint-disable no-console */
@@ -48,4 +51,9 @@ const updateBotCode = (botId, code) => (dispatch, getState) => {
     });
 };
 
-export { createBot, updateBotCode, fetchBots };
+export {
+  createBot,
+  fetchBot,
+  fetchBots,
+  updateBotCode,
+};

@@ -10,9 +10,12 @@ const botRouter = new Router();
 botRouter.use(auth.loggedIn);
 
 botRouter.get("/", async (ctx) => {
-  const bots = await Bot.find({
-    user: ctx.state.userId,
-  });
+  let bots;
+  if (ctx.request.query.userId) {
+    bots = await Bot.findByUser(ctx.request.query.userId);
+  } else {
+    bots = await Bot.find();
+  }
 
   ctx.body = bots;
 });
@@ -41,6 +44,12 @@ botRouter.post("/", async (ctx) => {
     success: true,
     updatedRecords: [bot]
   };
+});
+
+botRouter.get("/:botId", async (ctx) => {
+  const bot = await Bot.findById(ctx.params.botId);
+
+  ctx.body = bot;
 });
 
 // update bot with uploaded code

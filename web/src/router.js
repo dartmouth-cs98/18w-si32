@@ -6,6 +6,7 @@ import history from "./history";
 import LandingPage from "./components/landing/landingPage";
 
 import LoginPage from "./components/user/loginPage";
+import ProfilePage from "./components/user/profilePage";
 import RegisterPage from "./components/user/registerPage";
 import DashboardPage from "./components/dashboard/dashboardPage";
 
@@ -86,6 +87,20 @@ const routes = [
       },
     ],
   },
+  {
+    path: "/users",
+    children: [
+      {
+        path: "",
+        action: () => <LeaderboardPage />,
+      },
+      {
+        path: "/:id",
+        action: ({ params: { id }}) => <ProfilePage id={id} />
+      },
+    ],
+  },
+
 
 ];
 
