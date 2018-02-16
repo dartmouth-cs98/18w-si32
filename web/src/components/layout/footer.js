@@ -3,6 +3,7 @@ import Radium from "radium";
 
 import {
   constants,
+  colors,
 } from "../../style";
 
 class Footer extends React.PureComponent {
