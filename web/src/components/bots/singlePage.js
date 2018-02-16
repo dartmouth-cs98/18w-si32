@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import Page from "../layout/page";
-import { fetchBots, fetchBot, updateBotCode } from "../../data/bot/botActions";
+import { fetchBot, updateBotCode } from "../../data/bot/botActions";
 
 class BotSinglePage extends React.PureComponent {
   constructor(props) {

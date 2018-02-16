@@ -5,7 +5,7 @@ const session = require("../session");
 const auth = require("../auth");
 const User = require("../models").User;
 
-const { NotFoundError, AuthError } = require("../errors");
+const { AuthError } = require("../errors");
 
 const userRouter = Router();
 
