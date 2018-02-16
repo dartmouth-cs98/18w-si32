@@ -2,9 +2,8 @@ import React from "react";
 import Radium from "radium";
 
 import {
-  FOOTER_HEIGHT,
-  PALETTE_PRIMARY
-} from "../../style/constants";
+  constants,
+} from "../../style";
 
 class Footer extends React.PureComponent {
   render() {
@@ -18,7 +17,7 @@ class Footer extends React.PureComponent {
 
 const styles = {
   wrapper: {
-    height: FOOTER_HEIGHT,
+    height: constants.FOOTER_HEIGHT,
     display: "flex",
     flexDirection: "row",
     justifyContent: "center",
@@ -26,7 +25,7 @@ const styles = {
     padding: "0 15px",
     borderStyle: "solid hidden hidden hidden",
     borderWidth: "1px",
-    borderColor: PALETTE_PRIMARY
+    borderColor: colors.primary,
   }
 };
 

@@ -8,11 +8,9 @@ import history from "../../history";
 import { logout } from "../../data/session/sessionActions";
 
 import {
-  NAVBAR_HEIGHT,
-  PALETTE_PRIMARY,
-  PALETTE_DETAIL,
-  PALETTE_BACKGROUND,
-} from "../../style/constants";
+  colors,
+  constants,
+} from "../../style";
 
 class Navigation extends React.PureComponent {
   logout = () => {
@@ -79,15 +77,15 @@ class Navigation extends React.PureComponent {
 
 const styles = {
   wrapper: {
-    height: NAVBAR_HEIGHT,
+    height: constants.NAVBAR_HEIGHT,
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
     padding: "0 10px",
-    backgroundColor: PALETTE_BACKGROUND,
+    backgroundColor: colors.background,
     borderStyle: "hidden hidden solid hidden",
     borderWidth: "1px",
-    borderColor: PALETTE_PRIMARY
+    borderColor: colors.primary,
   },
   mainNav: {
     display: "flex",
@@ -107,19 +105,19 @@ const styles = {
     flexDirection: "row"
   },
   link: {
-    color: PALETTE_DETAIL,
+    color: colors.detail,
     fontSize: 16,
     fontWeight: 200,
     textDecoration: "none",
     textTransform: "uppercase",
     margin: "0 10px",
     ":hover": {
-      color: Color(PALETTE_PRIMARY).lighten(0.2).string(),
+      color: Color(colors.primary).lighten(0.2).string(),
       cursor: "pointer"
     }
   },
   homeLink: {
-    color: PALETTE_PRIMARY,
+    color: colors.primary,
     fontSize: 24
   },
   logoContainer: {
@@ -134,7 +132,7 @@ const styles = {
     borderRadius: "50%",
     borderStyle: "solid",
     borderWidth: "1px",
-    borderColor: PALETTE_PRIMARY,
+    borderColor: colors.primary,
     backgroundColor: "#FFFFFF"
   },
   logoInner: {
@@ -144,7 +142,7 @@ const styles = {
     width: "20%",
     height: "20%",
     borderRadius: "50%",
-    backgroundColor: PALETTE_PRIMARY
+    backgroundColor: colors.primary
   }
 };
 

@@ -3,12 +3,7 @@ import Radium from "radium";
 
 import history from "../../history";
 
-import {
-  NAVBAR_HEIGHT,
-  PALETTE_PRIMARY,
-  PALETTE_DETAIL,
-  PALETTE_BACKGROUND,
-} from "../../style/constants";
+import { colors } from "../../style";
 
 class Link extends React.PureComponent {
   clicked = event => {
@@ -33,7 +28,7 @@ class Link extends React.PureComponent {
 
 const styles = {
   base: {
-    color: PALETTE_PRIMARY,
+    color: colors.primary,
     cursor: "pointer",
     ":hover": {
       opacity: .7, // just something for now
