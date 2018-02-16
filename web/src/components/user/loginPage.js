@@ -8,11 +8,9 @@ import { history } from "../../router";
 import { login } from "../../data/session/sessionActions";
 
 import {
-  INPUT_HEIGHT,
-  BUTTON_HEIGHT,
-  PALETTE_PRIMARY,
-  PALETTE_BACKGROUND
-} from "../../style/constants";
+  colors,
+  constants,
+} from "../../style";
 
 class LoginPage extends React.PureComponent {
   constructor(props) {
@@ -107,7 +105,6 @@ const styles = {
   },
   titleContainer: {
     fontSize: "30px",
-    fontFamily: "Roboto",
     padding: "15px 0"
   },
   form: {
@@ -119,29 +116,28 @@ const styles = {
   },
   input: {
     width: "100%",
-    height: INPUT_HEIGHT,
-    fontFamily: "Roboto",
+    height: constants.INPUT_HEIGHT,
     fontSize: "16px",
     margin: "10px 0",
     ":focus": {
-      borderColor: Color(PALETTE_PRIMARY).lighten(0.7).string(),
+      borderColor: Color(colors.primary).lighten(0.7).string(),
       borderStyle: "solid",
       borderWidth: "1px"
     }
   },
   submitButton: {
     width: "50%",
-    height: BUTTON_HEIGHT,
+    height: constants.BUTTON_HEIGHT,
     margin: "15px 0",
-    backgroundColor: PALETTE_BACKGROUND,
-    color: PALETTE_PRIMARY,
+    backgroundColor: colors.background,
+    color: colors.primary,
     borderWidth: "1px",
     borderStyle: "solid",
-    borderColor: PALETTE_PRIMARY,
+    borderColor: colors.primary,
     borderRadius: "2px",
     ":hover": {
-      backgroundColor: PALETTE_PRIMARY,
-      color: PALETTE_BACKGROUND,
+      backgroundColor: colors.primary,
+      color: colors.background,
       cursor: "pointer"
     }
   },
@@ -155,7 +151,7 @@ const styles = {
     marginRight: "5px"
   },
   registerLink: {
-    color: PALETTE_PRIMARY,
+    color: colors.primary,
     ":hover": {
       cursor: "pointer",
       textDecoration: "underline"

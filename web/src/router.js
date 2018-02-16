@@ -7,7 +7,7 @@ import LandingPage from "./components/landing/landingPage";
 
 import LoginPage from "./components/user/loginPage";
 import RegisterPage from "./components/user/registerPage";
-import DashboardPage from "./components/user/dashboardPage";
+import DashboardPage from "./components/dashboard/dashboardPage";
 
 import DocsPage from "./components/docs/docsPage";
 import LeaderboardPage from "./components/leaderboard/leaderboardPage";

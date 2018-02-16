@@ -1,7 +1,7 @@
 import React from "react";
 import Radium from "radium";
 
-import { NAVBAR_HEIGHT } from "../../style/constants";
+import { constants } from "../../style";
 
 class Page extends React.PureComponent {
   render() {
@@ -10,17 +10,13 @@ class Page extends React.PureComponent {
 }
 
 const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-const pageHeight = vh - NAVBAR_HEIGHT;
+const pageHeight = vh - constants.NAVBAR_HEIGHT*2;
 
 const styles = {
   base: {
     minHeight: pageHeight,
     maxWidth: 1080,
     margin: "0px auto",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center"
   }
 };
 
