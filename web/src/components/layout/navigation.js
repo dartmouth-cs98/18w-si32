@@ -10,7 +10,7 @@ import { logout } from "../../data/session/sessionActions";
 import {
   NAVBAR_HEIGHT,
   PALETTE_PRIMARY,
-  PALETTE_DETAIL_0,
+  PALETTE_DETAIL,
   PALETTE_BACKGROUND,
 } from "../../style/constants";
 
@@ -102,7 +102,7 @@ const styles = {
     flexDirection: "row"
   },
   link: {
-    color: PALETTE_DETAIL_0,
+    color: PALETTE_DETAIL,
     fontSize: 16,
     fontFamily: "Roboto",
     fontWeight: 300,
@@ -129,7 +129,7 @@ const styles = {
     height: "100%",
     borderRadius: "50%",
     borderStyle: "solid",
-    borderWidth: "2px",
+    borderWidth: "1px",
     borderColor: PALETTE_PRIMARY,
     backgroundColor: "#FFFFFF"
   },

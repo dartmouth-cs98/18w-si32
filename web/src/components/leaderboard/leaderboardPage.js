@@ -11,12 +11,23 @@ class LeaderboardPage extends React.PureComponent {
   render() {
     return (
       <Page>
-        <div>
-          Leaderboard Content
+        <div style={styles.wrapper}>
+          <div>Leaderboard Content</div>
         </div>
       </Page>
     );
   }
 }
+
+const styles = {
+  wrapper: {
+    width: "100%",
+    height: "100%",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+  }
+};
 
 export default connect(null, null)(LeaderboardPage);
