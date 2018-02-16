@@ -1,4 +1,5 @@
-# Project Name
+SI32
+====
 
 Si32 will be an online environment where players can submit their own bots to play against each other in a very simple Starcraft-style turn-based strategy game. Each bot will control an army of "units" which will build "factories" that will spawn more units; the objective of the game is to destroy all of the opponent's factories. Bots will control all aspects of gameplay and will direct how each and every unit will move.
 
@@ -11,11 +12,8 @@ Stretch goals:
 - Guided tutorials/AIs of incremental difficulties for players to train their bots against
 - Statistical analysis during the match (of advantage, positions, etc.)
 - Team VS gameplay
-- More advanced graphics
-![Alt text](https://i.imgur.com/faV8fWC.png)
-![Alt text](https://i.imgur.com/P7w6uWA.png)
-![Alt text](https://i.imgur.com/1LnASxh.png)
-![Alt text](https://i.imgur.com/fAbwxMw.png)
+- Advanced graphics
+
 ## Architecture
 
 There are several distinct but connected parts of this project. They are
@@ -42,13 +40,11 @@ Users can import the library and simply call `game.send_moves()` to get the stat
 Furthermore, these provide helpful classes for objects in the game that make it easier for the user to focus on
 strategy. These will at first only be in Python.
 
-
 ## Setup
 
 ### Frontend / Database
 
 View README in respective directories `api` and `web`. Docker compose will create and link together mongo, redis, and the web components for you.
-
 
 ### Game Runner
 
@@ -58,11 +54,9 @@ try manually running the make commands as there is currently an issue open about
 
 Again, follow README in `worker`. 
 
-
 ## Deployment
 
 TODO: figure this one out
-
 
 ## Authors
 
@@ -78,4 +72,4 @@ Tong Xu
 
 ## Acknowledgments
 
-Inspiration: Halite.
+Inspiration: Halite
