@@ -25,6 +25,9 @@ class Navigation extends React.PureComponent {
     if (this.props.isLoggedIn) {
       return (
         <div style={styles.userAreaContainer}>
+          <Link style={styles.link} href="/profile">
+            Profile
+          </Link>
           <Link style={styles.link} href="#" onClick={this.logout}>
             Log Out
           </Link>
@@ -44,8 +47,10 @@ class Navigation extends React.PureComponent {
   renderMainNav() {
     return (
       <div style={styles.mainNav}>
-        <Link style={styles.link} href="/docs">Docs</Link>
         <Link style={styles.link} href="/leaderboard">Leaderboard</Link>
+        <Link style={styles.link} href="/feed">Feed</Link>
+
+        <Link style={styles.link} href="/docs">Docs</Link>
         <Link style={styles.link} href="/replay">Replay</Link>
       </div>
     );
@@ -104,8 +109,7 @@ const styles = {
   link: {
     color: PALETTE_DETAIL,
     fontSize: 16,
-    fontFamily: "Roboto",
-    fontWeight: 300,
+    fontWeight: 200,
     textDecoration: "none",
     textTransform: "uppercase",
     margin: "0 10px",

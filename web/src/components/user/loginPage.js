@@ -107,7 +107,6 @@ const styles = {
   },
   titleContainer: {
     fontSize: "30px",
-    fontFamily: "Roboto",
     padding: "15px 0"
   },
   form: {
@@ -120,7 +119,6 @@ const styles = {
   input: {
     width: "100%",
     height: INPUT_HEIGHT,
-    fontFamily: "Roboto",
     fontSize: "16px",
     margin: "10px 0",
     ":focus": {
