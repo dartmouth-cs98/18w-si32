@@ -17,13 +17,11 @@ const httpGetAction = (collectionName, endpoint, params, options={}) => (dispatc
       dispatch({
         type: `RECEIVED_${collectionName}`,
         doMerge: options.doMerge,
-        payload: res.body
+        payload: options.isSingle ? [res.body] : res.body,
       });
     }).catch(err => {
       // TODO what to do in the store here?
-      /* eslint-disable no-console */
-      console.log("HTTP error", collectionName, endpoint, params, err);
-      /* eslint-enable no-console */
+      console.log("HTTP error", collectionName, endpoint, params, err); // eslint-disable-line
     });
 };
 
@@ -42,9 +40,7 @@ const httpPostAction = (collectionName, endpoint, body={}, options={}) => (dispa
       });
     }).catch(err => {
       // TODO what to do in the store here?
-      /* eslint-disable no-console */
-      console.log("HTTP error", collectionName, endpoint, body, err);
-      /* eslint-enable no-console */
+      console.log("HTTP error", collectionName, endpoint, body, err); // eslint-disable-line
     });
 };
 

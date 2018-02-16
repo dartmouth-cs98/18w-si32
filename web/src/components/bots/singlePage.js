@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import Page from "../layout/page";
-import { fetchBots, updateBotCode } from "../../data/bot/botActions";
+import { fetchBots, fetchBot, updateBotCode } from "../../data/bot/botActions";
 
 class BotSinglePage extends React.PureComponent {
   constructor(props) {
@@ -10,7 +10,7 @@ class BotSinglePage extends React.PureComponent {
   }
 
   componentDidMount() {
-    this.props.fetchBots();
+    this.props.fetchBot();
   }
 
   handleFileChange = (event) => {
@@ -61,7 +61,7 @@ class BotSinglePage extends React.PureComponent {
 }
 
 const mapDispatchToProps = (dispatch, props) => ({
-  fetchBots: () => dispatch(fetchBots()),
+  fetchBot: () => dispatch(fetchBot(props.id)),
   upload: (file) => dispatch(updateBotCode(props.id, file)),
 });
 

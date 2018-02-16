@@ -8,6 +8,8 @@ import history from "../../history";
 
 const fetchBots = (userId) => httpGetAction("BOT", "/bots", { userId });
 
+const fetchBot = (userId) => httpGetAction("BOT", `/bots/${userId}`, { userId }, { isSingle: true });
+
 const createBot = (name, code) => (dispatch, getState) => {
   return http
     .post("/bots")
@@ -49,4 +51,9 @@ const updateBotCode = (botId, code) => (dispatch, getState) => {
     });
 };
 
-export { createBot, updateBotCode, fetchBots };
+export {
+  createBot,
+  fetchBot,
+  fetchBots,
+  updateBotCode,
+};

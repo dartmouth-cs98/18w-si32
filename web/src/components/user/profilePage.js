@@ -38,10 +38,10 @@ class ProfilePage extends React.PureComponent {
   }
 }
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch, props) => ({
   fetchUsers: () => dispatch(fetchUsers()), // TODO this should load only this user
-  fetchMatches: () => dispatch(fetchMatches()), // TODO this should only load matches for this user
-  fetchBots: () => dispatch(fetchBots()), // TODO this should only load bots for this user
+  fetchMatches: () => dispatch(fetchMatches(props.id)), // TODO this should only load matches for this user
+  fetchBots: () => dispatch(fetchBots(props.id)), // TODO this should only load bots for this user
 });
 
 const mapStateToProps = (state, props) => ({

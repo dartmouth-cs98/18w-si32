@@ -44,13 +44,13 @@ userRouter.post("/login", async (ctx) => {
   const user = await User.findOne({ username: ctx.request.body.username });
 
   if (!user) {
-    throw new NotFoundError();
+    throw new AuthError("Couldn't log you in with those credentials");
   }
 
   const match = await bcrypt.compare(ctx.request.body.password, user.password);
 
   if (!match) {
-    throw new AuthError();
+    throw new AuthError("Couldn't log you in with those credentials");
   }
 
   const s = await session.create(user, ctx.ip);
