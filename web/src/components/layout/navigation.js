@@ -9,9 +9,9 @@ import { logout } from "../../data/session/sessionActions";
 
 import {
   NAVBAR_HEIGHT,
-  PALETTE_BACKGROUND,
   PALETTE_PRIMARY,
   PALETTE_DETAIL_0,
+  PALETTE_BACKGROUND,
 } from "../../style/constants";
 
 class Navigation extends React.PureComponent {
@@ -57,8 +57,11 @@ class Navigation extends React.PureComponent {
     return (
       <nav style={styles.wrapper}>
         <div style={styles.mainNav}>
-          <Link style={{...styles.link, ...styles.homeLink}} href={mainLinkDest}>
-            Monad
+          <Link style={styles.mainLinkContainer} href={mainLinkDest}>
+            <div key="main-logo" style={styles.logoContainer}>
+              <div style={styles.logoOuter}><div style={styles.logoInner}></div></div>
+            </div>
+            <div key="main-title" style={{...styles.link, ...styles.homeLink}}>MONAD</div>
           </Link>
           {this.renderMainNav()}
         </div>
@@ -85,13 +88,22 @@ const styles = {
     display: "flex",
     alignItems: "center"
   },
+  mainLinkContainer: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    ":hover": {
+      cursor: "pointer"
+    }
+  },
   userAreaContainer: {
     display: "flex",
     flexDirection: "row"
   },
   link: {
     color: PALETTE_DETAIL_0,
-    fontSize: 18,
+    fontSize: 16,
     fontFamily: "Roboto",
     fontWeight: 300,
     textDecoration: "none",
@@ -104,7 +116,31 @@ const styles = {
   },
   homeLink: {
     color: PALETTE_PRIMARY,
-    fontSize: 30
+    fontSize: 24
+  },
+  logoContainer: {
+    position: "relative",
+    width: "30px",
+    height: "30px"
+  },
+  logoOuter: {
+    position: "absolute",
+    width: "100%",
+    height: "100%",
+    borderRadius: "50%",
+    borderStyle: "solid",
+    borderWidth: "2px",
+    borderColor: PALETTE_PRIMARY,
+    backgroundColor: "#FFFFFF"
+  },
+  logoInner: {
+    position: "absolute",
+    marginTop: "40%",
+    marginLeft: "40%",
+    width: "20%",
+    height: "20%",
+    borderRadius: "50%",
+    backgroundColor: PALETTE_PRIMARY
   }
 };
 

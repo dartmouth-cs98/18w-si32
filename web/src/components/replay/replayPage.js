@@ -12,7 +12,7 @@ class ReplayPage extends React.PureComponent {
     return (
       <Page>
         <div>
-          Replay
+          Replay Content
         </div>
       </Page>
     );

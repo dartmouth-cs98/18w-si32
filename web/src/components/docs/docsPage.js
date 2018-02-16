@@ -12,7 +12,7 @@ class DocsPage extends React.PureComponent {
     return (
       <Page>
         <div>
-          Docs
+          Docs Content
         </div>
       </Page>
     );

@@ -12,7 +12,7 @@ class LeaderboardPage extends React.PureComponent {
     return (
       <Page>
         <div>
-          Leaderboard
+          Leaderboard Content
         </div>
       </Page>
     );
