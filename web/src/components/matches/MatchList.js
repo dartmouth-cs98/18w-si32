@@ -2,7 +2,7 @@ import React from "react";
 import _ from "lodash";
 import Link from "../layout/link";
 
-export default ({ matches }) => {
+const MatchList = ({ matches }) => {
   const items = _.map(matches, m =>
     <div key={m._id}>
       <Link href={`/matches/${m._id}`}>{m.status} {m._id}</Link>
@@ -11,3 +11,5 @@ export default ({ matches }) => {
 
   return <div>{items}</div>;
 };
+
+export default MatchList; 

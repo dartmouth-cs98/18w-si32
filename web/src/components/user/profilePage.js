@@ -1,9 +1,7 @@
 import React from "react";
-import _ from "lodash";
 import { connect } from "react-redux";
 
 import Page from "../layout/page";
-import Link from "../layout/link";
 
 import MatchList from "../matches/MatchList";
 import BotList from "../bots/BotList";
@@ -26,7 +24,6 @@ class ProfilePage extends React.PureComponent {
   }
 
   render() {
-    console.log(this.props.bots);
     return (
       <Page>
         <MainTitle>Profile: { this.props.user.username }</MainTitle>

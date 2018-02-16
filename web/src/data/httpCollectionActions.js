@@ -12,6 +12,7 @@ const httpGetAction = (collectionName, endpoint, params, options={}) => (dispatc
   });
   return http
     .get(endpoint)
+    .query(params)
     .then(res => {
       dispatch({
         type: `RECEIVED_${collectionName}`,

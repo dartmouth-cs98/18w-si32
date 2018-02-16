@@ -10,7 +10,12 @@ const botRouter = new Router();
 botRouter.use(auth.loggedIn);
 
 botRouter.get("/", async (ctx) => {
-  const bots = await Bot.find();
+  let bots;
+  if (ctx.request.query.userId) {
+    bots = await Bot.findByUser(ctx.params.userId);
+  } else {
+    bots = await Bot.find();
+  }
 
   ctx.body = bots;
 });

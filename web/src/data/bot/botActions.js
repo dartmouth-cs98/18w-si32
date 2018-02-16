@@ -6,7 +6,7 @@ import history from "../../history";
 // TODO: getState creating eslint error here because it is not used,
 // do we need it?
 
-const fetchBots = () => httpGetAction("BOT", "/bots", null);
+const fetchBots = (userId) => httpGetAction("BOT", "/bots", { userId });
 
 const createBot = (name, code) => (dispatch, getState) => {
   return http

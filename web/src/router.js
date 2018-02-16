@@ -92,7 +92,7 @@ const routes = [
     children: [
       {
         path: "",
-        action: () => <LeaderBoardPage />,
+        action: () => <LeaderboardPage />,
       },
       {
         path: "/:id",

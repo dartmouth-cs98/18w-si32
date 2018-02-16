@@ -45,7 +45,7 @@ class DashboardPage extends React.PureComponent {
   }
 
   componentDidMount() {
-    this.props.fetchBots();
+    this.props.fetchBots(this.props.userId);
     this.props.fetchMatches();
   }
 
@@ -71,11 +71,12 @@ class DashboardPage extends React.PureComponent {
 
 
 const mapDispatchToProps = dispatch => ({
-  fetchBots: () => dispatch(fetchBots()),
+  fetchBots: (userId) => dispatch(fetchBots(userId)),
   fetchMatches: () => dispatch(fetchMatches()),
 });
 
 const mapStateToProps = state => ({
+  userId: state.session.userId,
   matches: getMatchesForUser(state, state.session.userId),
   bots: getBotsForUser(state, state.session.userId),
 });

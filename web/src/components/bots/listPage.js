@@ -1,6 +1,5 @@
 import React from "react";
 import { connect } from "react-redux";
-import _ from "lodash";
 
 import Page from "../layout/page";
 import Link from "../layout/link";

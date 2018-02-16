@@ -2,7 +2,7 @@ import React from "react";
 import _ from "lodash";
 import Link from "../layout/link";
 
-export default ({ bots }) => {
+const BotList = ({ bots }) => {
   const items = _.map(bots, b =>
     <div key={b._id}>
       <Link href={`/bots/${b._id}`}>{b.name}</Link>
@@ -11,3 +11,5 @@ export default ({ bots }) => {
 
   return <div>{items}</div>;
 };
+
+export default BotList;
