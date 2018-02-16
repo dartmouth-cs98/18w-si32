@@ -9,6 +9,8 @@ import { fetchBots } from "../../data/bot/botActions";
 import { fetchMatches } from "../../data/match/matchActions";
 import { getProfile } from "../../data/user/userActions";
 
+import { MainTitle, SubTitle } from "./titles";
+
 const DashBotList = ({ bots }) => {
   const items = _.map(bots, b =>
     <div key={b._id}>
@@ -49,14 +51,14 @@ class DashboardPage extends React.PureComponent {
     return (
       <Page>
         <div style={{paddingTop: 20}}>
-          <h1 style={styles.header}>Dashboard</h1>
+          <MainTitle>Dashboard</MainTitle>
           <h3>Your user id: {this.state.user}</h3>
 
-          <h2 style={styles.subheader}>Your Bots</h2>
+          <SubTitle>Your Bots</SubTitle>
           <DashBotList bots={this.props.bots} />
           <Link href="/bots/create">+ Create a new bot</Link>
 
-          <h2 style={styles.subheader}>Your Latest Matches</h2>
+          <SubTitle>Your Latest Matches</SubTitle>
           <DashMatchList matches={this.props.matches} />
           <Link href="/matches">View all &rarr;</Link>
         </div>
@@ -65,15 +67,6 @@ class DashboardPage extends React.PureComponent {
   }
 }
 
-const styles = {
-  header: {
-    fontSize: 30,
-  },
-  subheader: {
-    fontSize: 20,
-    marginTop: 20,
-  }
-};
 
 const mapDispatchToProps = dispatch => ({
   fetchBots: () => dispatch(fetchBots()),

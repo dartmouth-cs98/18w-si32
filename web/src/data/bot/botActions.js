@@ -4,7 +4,7 @@ import history from "../../history";
 
 /* eslint-disable no-unused-vars */
 // TODO: getState creating eslint error here because it is not used,
-// do we need it? 
+// do we need it?
 
 const fetchBots = () => httpGetAction("BOT", "/bots", null);
 
@@ -21,6 +21,7 @@ const createBot = (name, code) => (dispatch, getState) => {
         payload: res.body.updatedRecords,
       });
 
+      // TODO this probably should live elsewhere in code
       history.push(`/bots/${res.body.updatedRecords[0]._id}`);
     }).catch(err => {
       /* eslint-disable no-console */
