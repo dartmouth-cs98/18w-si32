@@ -8,6 +8,8 @@
   "main": "index.js",
   "scripts": {
     "test": "eslint app/",
+    "build": "docker-compose build",
+    "up": "docker-compose up",
     "start": "nodemon app/index.js",
     "prepush": "npm test"
   },

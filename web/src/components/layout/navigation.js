@@ -1,9 +1,18 @@
 import React from "react";
 import Radium from "radium";
 import { connect } from "react-redux";
-import { Link } from "../../router";
-import { logout } from "../../data/session/sessionActions";
+import Color from "color";
+
+import Link from "./link";
 import history from "../../history";
+import { logout } from "../../data/session/sessionActions";
+
+import {
+  NAVBAR_HEIGHT,
+  PALETTE_PRIMARY,
+  PALETTE_DETAIL,
+  PALETTE_BACKGROUND,
+} from "../../style/constants";
 
 class Navigation extends React.PureComponent {
   logout = () => {
@@ -15,23 +24,17 @@ class Navigation extends React.PureComponent {
   renderUserArea() {
     if (this.props.isLoggedIn) {
       return (
-        <div>
-          <Link style={styles.link} href="/profile">
-            Profile
-          </Link>
+        <div style={styles.userAreaContainer}>
           <Link style={styles.link} href="#" onClick={this.logout}>
-            Logout
+            Log Out
           </Link>
         </div>
       );
     } else {
       return (
-        <div>
-          <Link style={styles.link} href="/register">
-            Register
-          </Link>
+        <div style={styles.userAreaContainer}>
           <Link style={styles.link} href="/login">
-            Log in
+            Log In
           </Link>
         </div>
       );
@@ -39,24 +42,26 @@ class Navigation extends React.PureComponent {
   }
 
   renderMainNav() {
-    if (this.props.isLoggedIn) {
-      return (
-        <div style={styles.mainNav}>
-          <Link style={styles.link} href="/bots">Bots</Link>
-          <Link style={styles.link} href="/matches">Matches</Link>
-        </div>
-      );
-    }
-
-    return null;
+    return (
+      <div style={styles.mainNav}>
+        <Link style={styles.link} href="/docs">Docs</Link>
+        <Link style={styles.link} href="/leaderboard">Leaderboard</Link>
+        <Link style={styles.link} href="/replay">Replay</Link>
+      </div>
+    );
   }
 
   render() {
+    const mainLinkDest = this.props.isLoggedIn ? "/dashboard" : "/";
+
     return (
       <nav style={styles.wrapper}>
         <div style={styles.mainNav}>
-          <Link style={{ ...styles.link, ...styles.homeLink }} href="/">
-            Si32
+          <Link style={styles.mainLinkContainer} href={mainLinkDest}>
+            <div key="main-logo" style={styles.logoContainer}>
+              <div style={styles.logoOuter}><div style={styles.logoInner}></div></div>
+            </div>
+            <div key="main-title" style={{...styles.link, ...styles.homeLink}}>MONAD</div>
           </Link>
           {this.renderMainNav()}
         </div>
@@ -69,29 +74,73 @@ class Navigation extends React.PureComponent {
 
 const styles = {
   wrapper: {
-    backgroundColor: "#141529",
-    borderBottom: "1px solid #2F214E",
+    height: NAVBAR_HEIGHT,
     display: "flex",
-    height: 56,
     alignItems: "center",
     justifyContent: "space-between",
-    padding: "0 10px"
+    padding: "0 10px",
+    backgroundColor: PALETTE_BACKGROUND,
+    borderStyle: "hidden hidden solid hidden",
+    borderWidth: "1px",
+    borderColor: PALETTE_PRIMARY
   },
   mainNav: {
     display: "flex",
     alignItems: "center"
   },
+  mainLinkContainer: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    ":hover": {
+      cursor: "pointer"
+    }
+  },
+  userAreaContainer: {
+    display: "flex",
+    flexDirection: "row"
+  },
   link: {
-    color: "white",
-    fontSize: 18,
-    fontFamily: "Saira Condensed",
+    color: PALETTE_DETAIL,
+    fontSize: 16,
+    fontFamily: "Roboto",
     fontWeight: 300,
     textDecoration: "none",
     textTransform: "uppercase",
-    margin: "0 10px"
+    margin: "0 10px",
+    ":hover": {
+      color: Color(PALETTE_PRIMARY).lighten(0.2).string(),
+      cursor: "pointer"
+    }
   },
   homeLink: {
-    fontSize: 30
+    color: PALETTE_PRIMARY,
+    fontSize: 24
+  },
+  logoContainer: {
+    position: "relative",
+    width: "30px",
+    height: "30px"
+  },
+  logoOuter: {
+    position: "absolute",
+    width: "100%",
+    height: "100%",
+    borderRadius: "50%",
+    borderStyle: "solid",
+    borderWidth: "1px",
+    borderColor: PALETTE_PRIMARY,
+    backgroundColor: "#FFFFFF"
+  },
+  logoInner: {
+    position: "absolute",
+    marginTop: "40%",
+    marginLeft: "40%",
+    width: "20%",
+    height: "20%",
+    borderRadius: "50%",
+    backgroundColor: PALETTE_PRIMARY
   }
 };
 

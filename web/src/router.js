@@ -2,9 +2,17 @@ import React from "react";
 import UniversalRouter from "universal-router";
 
 import history from "./history";
+
+import LandingPage from "./components/landing/landingPage";
+
 import LoginPage from "./components/user/loginPage";
 import RegisterPage from "./components/user/registerPage";
-import ProfilePage from "./components/user/profilePage";
+import DashboardPage from "./components/user/dashboardPage";
+
+import DocsPage from "./components/docs/docsPage";
+import LeaderboardPage from "./components/leaderboard/leaderboardPage";
+import ReplayPage from "./components/replay/replayPage";
+
 import BotListPage from "./components/bots/listPage";
 import BotSinglePage from "./components/bots/singlePage";
 import BotCreatePage from "./components/bots/createPage";
@@ -18,7 +26,7 @@ import MatchSinglePage from "./components/matches/singlePage";
 const routes = [
   {
     path: "",
-    action: () => <h1>Home</h1>
+    action: () => <LandingPage />
   },
   {
     path: "/login",
@@ -29,15 +37,27 @@ const routes = [
     action: () => <RegisterPage />
   },
   {
-    path: "/profile",
-    action: () => <ProfilePage />
+    path: "/dashboard",
+    action: () => <DashboardPage />
+  },
+  {
+    path: "/docs",
+    action: () => <DocsPage />
+  },
+  {
+    path: "/leaderboard",
+    action: () => <LeaderboardPage />
+  },
+  {
+    path: "/replay",
+    action: () => <ReplayPage />
   },
   {
     path: "/bots",
     children: [
       {
         path: "",
-        action: () => <BotListPage />,
+        action: () => <BotListPage />
       },
       {
         path: "/create",
@@ -87,30 +107,4 @@ const initRouter = renderFn => {
   router.resolve(history.location).then(html => renderFn(html));
 };
 
-// helper component to use history push to navigate
-class Link extends React.PureComponent {
-  constructor(props) {
-    super(props);
-  }
-
-  clicked = (event) => {
-    // if not attempting to open in new window or something else funky,
-    // do nothing
-    if (event.shiftKey || event.ctrlKey || event.metaKey) {
-      return;
-    }
-
-    history.push(this.props.href);
-    event.preventDefault();
-  }
-
-  render() {
-    return (
-      <a onClick={this.clicked} {...this.props}>
-        {this.props.children}
-      </a>
-    );
-  }
-}
-
-export { Link, history, initRouter };
+export { history, initRouter };
