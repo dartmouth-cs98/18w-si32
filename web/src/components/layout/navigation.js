@@ -23,7 +23,7 @@ class Navigation extends React.PureComponent {
     if (this.props.isLoggedIn) {
       return (
         <div style={styles.userAreaContainer}>
-          <Link style={styles.link} href="/profile">
+          <Link style={styles.link} href={`/users/${this.props.userId}`}>
             Profile
           </Link>
           <Link style={styles.link} href="#" onClick={this.logout}>
@@ -147,7 +147,8 @@ const styles = {
 };
 
 const mapStateToProps = state => ({
-  isLoggedIn: !!state.session.token
+  isLoggedIn: !!state.session.token,
+  userId: state.session.userId,
 });
 
 const mapDispatchToProps = dispatch => ({

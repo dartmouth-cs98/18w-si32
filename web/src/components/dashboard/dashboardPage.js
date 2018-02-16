@@ -8,6 +8,8 @@ import Page from "../layout/page";
 import { fetchBots } from "../../data/bot/botActions";
 import { fetchMatches } from "../../data/match/matchActions";
 import { getProfile } from "../../data/user/userActions";
+import { getMatchesForUser } from "../../data/match/matchSelectors";
+import { getBotsForUser } from "../../data/bot/botSelectors";
 
 import { MainTitle, SubTitle } from "./titles";
 
@@ -74,8 +76,8 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const mapStateToProps = state => ({
-  bots: state.bots.records,
-  matches: state.matches.records,
+  matches: getMatchesForUser(state, state.session.userId),
+  bots: getBotsForUser(state, state.session.userId),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(DashboardPage);

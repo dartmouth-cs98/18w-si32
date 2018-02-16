@@ -10,9 +10,7 @@ const botRouter = new Router();
 botRouter.use(auth.loggedIn);
 
 botRouter.get("/", async (ctx) => {
-  const bots = await Bot.find({
-    user: ctx.state.userId,
-  });
+  const bots = await Bot.find();
 
   ctx.body = bots;
 });

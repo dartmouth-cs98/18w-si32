@@ -6,15 +6,7 @@ import Page from "../layout/page";
 import Link from "../layout/link";
 import { fetchBots } from "../../data/bot/botActions";
 
-const BotList = ({ bots }) => {
-  const items = _.map(bots, b =>
-    <div key={b._id}>
-      <Link href={`/bots/${b._id}`}>{b.name}</Link>
-    </div>
-  );
-
-  return <div>{items}</div>;
-};
+import BotList from "./BotList";
 
 class BotListPage extends React.PureComponent {
   constructor(props) {

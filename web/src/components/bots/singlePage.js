@@ -27,23 +27,34 @@ class BotSinglePage extends React.PureComponent {
     this.props.upload(this.state.botFile);
   }
 
+  renderForm = () => {
+    if (this.props.userId != this.props.bot.user) {
+      return null;
+    }
+
+    return (
+      <form onSubmit={this.submit}>
+        <label>
+          Bot file (zip only):
+          <input
+            name="botFile"
+            type="file"
+            onChange={this.handleFileChange}
+          />
+        </label>
+        <input type="submit" value="Submit" />
+      </form>
+    );
+  }
+
   render() {
     return (
       <Page>
         <h1>Bot: {this.props.bot.name}</h1>
         <h3>{this.props.id}</h3>
         <p>Version {this.props.bot.version}</p>
-        <form onSubmit={this.submit}>
-          <label>
-            Bot file (zip only):
-            <input
-              name="botFile"
-              type="file"
-              onChange={this.handleFileChange}
-            />
-          </label>
-          <input type="submit" value="Submit" />
-        </form>
+        { this.renderForm() }
+
       </Page>
     );
   }
@@ -56,6 +67,7 @@ const mapDispatchToProps = (dispatch, props) => ({
 
 const mapStateToProps = (state, props) => ({
   bot: state.bots.records[props.id] || {},
+  userId: state.session.userId,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(BotSinglePage);
