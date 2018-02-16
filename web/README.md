@@ -1,4 +1,4 @@
-Si32 Web
+SI32 Web
 ========
 
 The UI component of Si32
