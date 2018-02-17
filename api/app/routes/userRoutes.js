@@ -14,10 +14,35 @@ userRouter.get("/", auth.loggedIn, async (ctx) => {
   ctx.body = users;
 });
 
+// trying to be RESTful here. Imagine we're creating some "follows" resource/link
+// from logged in user to targetUserId, which is passed in the body.
+userRouter.put("/follows/:targetUserId", auth.loggedIn, async (ctx) => {
+  let user = await User.findById(ctx.state.userId);
+
+  let { userFrom, userTo } = await user.follow(ctx.params.targetUserId);
+
+  ctx.body = {
+    updatedRecords: [userFrom, userTo],
+  };
+});
+
+// trying to be RESTful here. Imagine we're creating some "follows" resource/link
+// from logged in user to targetUserId, which is passed in the body.
+userRouter.delete("/follows/:targetUserId", auth.loggedIn, async (ctx) => {
+  let user = await User.findById(ctx.state.userId);
+
+  let { userFrom, userTo } = await user.unfollow(ctx.params.targetUserId);
+
+  ctx.body = {
+    updatedRecords: [userFrom, userTo],
+  };
+});
+
 // placeholder simple authed profile endpoint
 userRouter.get("/profile", auth.loggedIn, async (ctx) => {
   ctx.body = { user: ctx.state.userId };
 });
+
 
 // TODO split handlers into independent places?
 userRouter.post("/register", async (ctx) => {

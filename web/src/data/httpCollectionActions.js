@@ -27,14 +27,14 @@ const httpGetAction = (collectionName, endpoint, params, options={}) => (dispatc
 
 const httpPostAction = (collectionName, endpoint, body={}, options={}) => (dispatch, getState) => {
   dispatch({
-    type: `REQUESTED_${collectionName}`
+    type: `POSTED_${collectionName}`
   });
   return http
     .post(endpoint)
     .send(body)
     .then(res => {
       dispatch({
-        type: `RECEIVED_${collectionName}`,
+        type: `UPDATED_${collectionName}`,
         doMerge: true, // whatever we get back, merge in without replacing everything still there
         payload: res.body.updatedRecords
       });
@@ -44,4 +44,45 @@ const httpPostAction = (collectionName, endpoint, body={}, options={}) => (dispa
     });
 };
 
-export { httpGetAction, httpPostAction };
+const httpPutAction = (collectionName, endpoint, body={}, options={}) => (dispatch, getState) => {
+  dispatch({
+    type: `PUT_${collectionName}`
+  });
+  return http
+    .put(endpoint)
+    .send(body)
+    .then(res => {
+      dispatch({
+        type: `UPDATED_${collectionName}`,
+        doMerge: true, // whatever we get back, merge in without replacing everything still there
+        payload: res.body.updatedRecords
+      });
+    }).catch(err => {
+      // TODO what to do in the store here?
+      console.log("HTTP error", collectionName, endpoint, body, err); // eslint-disable-line
+    });
+};
+
+const httpDeleteAction = (collectionName, endpoint, body={}, options={}) => (dispatch, getState) => {
+  dispatch({
+    type: `DELETE_${collectionName}`
+  });
+  return http
+    .del(endpoint)
+    .send(body)
+    .then(res => {
+      dispatch({
+        type: `UPDATED_${collectionName}`,
+        doMerge: true, // whatever we get back, merge in without replacing everything still there
+        payload: res.body.updatedRecords
+      });
+    }).catch(err => {
+      // TODO what to do in the store here?
+      console.log("HTTP error", collectionName, endpoint, body, err); // eslint-disable-line
+    });
+};
+
+
+
+
+export { httpGetAction, httpPostAction, httpPutAction, httpDeleteAction };

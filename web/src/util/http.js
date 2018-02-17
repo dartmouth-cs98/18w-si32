@@ -39,4 +39,8 @@ const put = url => {
   return agent.put(BASE_URL + url);
 };
 
-export { get, post, put };
+const del = url => {
+  return agent.del(BASE_URL + url);
+};
+
+export { get, post, put, del };

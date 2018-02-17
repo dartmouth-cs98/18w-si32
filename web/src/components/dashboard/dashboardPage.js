@@ -33,8 +33,6 @@ const DashMatchList = ({ matches }) => {
   return <div>{items}</div>;
 };
 
-
-
 class DashboardPage extends React.PureComponent {
   constructor(props) {
     super(props);
