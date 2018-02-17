@@ -14,6 +14,8 @@ userRouter.get("/", auth.loggedIn, async (ctx) => {
   if (ctx.query.q) {
     users = await User.find({ "username": { "$regex": `${ctx.query.q}`, "$options": "i" } });
   } else {
+    // TODO: probably dont want to be doing a find on all users in the event there is no query...
+    // what do we want to do here? 
     users = await User.find();
   }
   ctx.body = users;

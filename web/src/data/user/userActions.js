@@ -16,7 +16,8 @@ const getUsersForSearch = (query) => {
     });
 }
 
-const fetchUsers = (userQuery) => httpGetAction("USER", "/users", { userQuery: userQuery });
+// TODO: do we still need / want this? 
+const fetchUsers = () => httpGetAction("USER", "/users", null);
 
 const followUser = (targetUserId) => httpPutAction("USER", `/users/follows/${targetUserId}`);
 const unfollowUser = (targetUserId) => httpDeleteAction("USER", `/users/follows/${targetUserId}`);
