@@ -1,12 +1,14 @@
 import React from "react";
+import _ from "lodash";
 import { connect } from "react-redux";
 
 import Page from "../layout/page";
+import Link from "../layout/link";
 
 import MatchList from "../matches/MatchList";
 import BotList from "../bots/BotList";
 import { MainTitle, SubTitle } from "../dashboard/titles";
-import { fetchUsers } from "../../data/user/userActions";
+import { fetchUsers, followUser, unfollowUser } from "../../data/user/userActions";
 import { fetchBots } from "../../data/bot/botActions";
 import { fetchMatches } from "../../data/match/matchActions";
 import { getMatchesForUser } from "../../data/match/matchSelectors";
@@ -23,9 +25,18 @@ class ProfilePage extends React.PureComponent {
     this.props.fetchBots();
   }
 
+  renderFollowLink = () => {
+    if (_.includes(this.props.curUser.following, this.props.user._id)) {
+      return <Link onClick={this.props.unfollowUser}>Unfollow</Link>;
+    }
+
+    return <Link onClick={this.props.followUser}>Follow</Link>;
+  }
+
   render() {
     return (
       <Page>
+        { this.renderFollowLink() }
         <MainTitle>Profile: { this.props.user.username }</MainTitle>
         <SubTitle>Bots</SubTitle>
         <BotList bots={this.props.bots} />
@@ -39,12 +50,15 @@ class ProfilePage extends React.PureComponent {
 }
 
 const mapDispatchToProps = (dispatch, props) => ({
+  followUser: () => dispatch(followUser(props.id)),
+  unfollowUser: () => dispatch(unfollowUser(props.id)),
   fetchUsers: () => dispatch(fetchUsers()), // TODO this should load only this user
   fetchMatches: () => dispatch(fetchMatches(props.id)), // TODO this should only load matches for this user
   fetchBots: () => dispatch(fetchBots(props.id)), // TODO this should only load bots for this user
 });
 
 const mapStateToProps = (state, props) => ({
+  curUser: state.users.records[state.session.userId] || {},
   user: state.users.records[props.id] || {},
   matches: getMatchesForUser(state, props.id),
   bots: getBotsForUser(state, props.id),
