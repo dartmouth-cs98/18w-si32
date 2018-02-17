@@ -13,6 +13,7 @@ import DashboardPage from "./components/dashboard/dashboardPage";
 import DocsPage from "./components/docs/docsPage";
 import LeaderboardPage from "./components/leaderboard/leaderboardPage";
 import ReplayPage from "./components/replay/replayPage";
+import FeedPage from "./components/feed/feedPage";
 
 import BotListPage from "./components/bots/listPage";
 import BotSinglePage from "./components/bots/singlePage";
@@ -40,6 +41,10 @@ const routes = [
   {
     path: "/dashboard",
     action: () => <DashboardPage />
+  },
+  {
+    path: "/feed", 
+    action: () => <FeedPage />
   },
   {
     path: "/docs",
