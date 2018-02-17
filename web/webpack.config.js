@@ -29,6 +29,9 @@ module.exports = {
       { test: /\.(png|woff|woff2|eot|ttf|svg)$/, loader: 'url-loader?limit=100000' }
     ]
   },
+  resolve: {
+    extensions: [".js", ".jsx"],
+  },
   plugins: [new HtmlWebpackPlugin({
     template: "src/index.html"
   })],
