@@ -1,9 +1,10 @@
 import request from "superagent";
 import store from "../store";
+
 import { history } from "../router";
 import { SESSION_DESTROY } from "../data/session/sessionActions";
 
-// TODO put this into env
+// TODO: put this into env
 const BASE_URL = "http://localhost:3000";
 
 const agent = request.agent();

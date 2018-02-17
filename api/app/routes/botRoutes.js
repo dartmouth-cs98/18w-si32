@@ -2,6 +2,7 @@ const Router = require("koa-router");
 const auth = require("../auth");
 const s3 = require("../files/s3");
 const Bot = require("../models").Bot;
+const { AccessError } = require("../errors");
 
 const botRouter = new Router();
 
@@ -9,9 +10,12 @@ const botRouter = new Router();
 botRouter.use(auth.loggedIn);
 
 botRouter.get("/", async (ctx) => {
-  const bots = await Bot.find({
-    user: ctx.state.userId,
-  });
+  let bots;
+  if (ctx.request.query.userId) {
+    bots = await Bot.findByUser(ctx.request.query.userId);
+  } else {
+    bots = await Bot.find();
+  }
 
   ctx.body = bots;
 });
@@ -42,13 +46,19 @@ botRouter.post("/", async (ctx) => {
   };
 });
 
+botRouter.get("/:botId", async (ctx) => {
+  const bot = await Bot.findById(ctx.params.botId);
+
+  ctx.body = bot;
+});
+
 // update bot with uploaded code
 botRouter.post("/:botId", async (ctx) => {
   // TODO validate that user owns this bot
   const bot = await Bot.findById(ctx.params.botId);
 
   if (ctx.state.userId != bot.user) {
-    throw new Error("not your bot");
+    throw new AccessError("That's not your bot");
   }
 
   const { url, key } = await s3.uploadBot(ctx.state.userId, bot._id, ctx.request.body.files.code);

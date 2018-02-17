@@ -1,19 +1,11 @@
 import React from "react";
-import _ from "lodash";
 import { connect } from "react-redux";
+
 import Page from "../layout/page";
-import { Link } from "../../router";
+import Link from "../layout/link";
 import { fetchMatches } from "../../data/match/matchActions";
 
-const MatchList = ({ matches }) => {
-  const items = _.map(matches, m =>
-    <div key={m._id}>
-      <Link href={`/matches/${m._id}`}>{m.status} {m._id}</Link>
-    </div>
-  );
-
-  return <div>{items}</div>;
-};
+import MatchList from "./MatchList";
 
 class MatchListPage extends React.PureComponent {
   constructor(props) {

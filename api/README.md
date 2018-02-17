@@ -1,6 +1,7 @@
-Si32 API
+SI32 API
 =======
-The API for Si32.
+
+The API component of Si32
 
 ## Building and Running
 1. From the web directory, run `docker-compose build`

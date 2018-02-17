@@ -30,6 +30,6 @@ module.exports = {
     ]
   },
   plugins: [new HtmlWebpackPlugin({
-    title: "Si32"
+    template: "src/index.html"
   })],
 };

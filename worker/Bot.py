@@ -2,8 +2,10 @@ from subprocess import Popen, PIPE, call
 import os
 import sys
 import docker
+docker_client = docker.from_env()
 from endpoints import get_bot_file
 client = docker.from_env()
+
 
 # Bot is our internal wrapper around an end-user implementation of a bot
 # this class should handle prepping and running a bot in a separate
@@ -57,7 +59,13 @@ class DockerBot(Bot):
         container = client.containers.get(self.name)
         container.remove(force=True)
 
+        # Do we prefer direct calls or using the docker lib?
+        # call("docker stop %s > /dev/null" % self.name, shell=True)
+        docker_client.containers.get(self.name).stop()
+        call("docker rm %s > /dev/null" % self.name, shell=True)
+
         print("Killed bot %d." % self.playerNum)
+
 
         # remove bot code from volume that is persistent
         call("rm -r /bot%d/*" % self.playerNum, shell=True)

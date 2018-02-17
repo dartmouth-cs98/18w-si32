@@ -27,6 +27,12 @@ const _Bot = new Schema({
   timestamps: true
 });
 
+_Bot.statics.findByUser = (userId) => {
+  return Bot.find({
+    user: userId,
+  });
+};
+
 const Bot = mongoose.model("Bot", _Bot);
 
 module.exports = Bot;

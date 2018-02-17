@@ -23,7 +23,7 @@ class MatchCreatePage extends React.PureComponent {
     this.props.fetchBots();
   }
 
-  toggleBot(botId) {
+  toggleBot = (botId) => {
     this.setState({
       bots: {
         ...this.state.bots,
@@ -32,7 +32,7 @@ class MatchCreatePage extends React.PureComponent {
     });
   }
 
-  create() {
+  create = () => {
     this.props.create(Object.keys(this.state.bots));
   }
 
