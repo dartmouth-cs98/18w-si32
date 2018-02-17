@@ -77,7 +77,11 @@ class Navigation extends React.PureComponent {
 
 const styles = {
   wrapper: {
+    width: "100%",
     height: constants.NAVBAR_HEIGHT,
+    position: "fixed", 
+    top: "0", 
+    left: "0",
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
