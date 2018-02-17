@@ -7,7 +7,9 @@ import Link from "../layout/link";
 
 import MatchList from "../matches/MatchList";
 import BotList from "../bots/BotList";
+
 import { MainTitle, SubTitle } from "../dashboard/titles";
+
 import { fetchUsers, followUser, unfollowUser } from "../../data/user/userActions";
 import { fetchBots } from "../../data/bot/botActions";
 import { fetchMatches } from "../../data/match/matchActions";
@@ -52,9 +54,9 @@ class ProfilePage extends React.PureComponent {
 const mapDispatchToProps = (dispatch, props) => ({
   followUser: () => dispatch(followUser(props.id)),
   unfollowUser: () => dispatch(unfollowUser(props.id)),
-  fetchUsers: () => dispatch(fetchUsers()), // TODO this should load only this user
+  fetchUsers: () => dispatch(fetchUsers()),              // TODO this should load only this user
   fetchMatches: () => dispatch(fetchMatches(props.id)),
-  fetchBots: () => dispatch(fetchBots(props.id)), 
+  fetchBots: () => dispatch(fetchBots(props.id)),
 });
 
 const mapStateToProps = (state, props) => ({

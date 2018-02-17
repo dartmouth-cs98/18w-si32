@@ -10,7 +10,12 @@ const { AuthError } = require("../errors");
 const userRouter = Router();
 
 userRouter.get("/", auth.loggedIn, async (ctx) => {
-  const users = await User.find();
+  let users;
+  if (ctx.query.userQuery) {
+    users = await User.find({ "username": { "$regex": `${ctx.query.userQuery}`, "$options": "i" } });
+  } else {
+    users = await User.find();
+  }
   ctx.body = users;
 });
 

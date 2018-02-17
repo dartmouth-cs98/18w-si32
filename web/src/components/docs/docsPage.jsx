@@ -27,6 +27,7 @@ const styles = {
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
+    paddingTop: "20px"
   }
 };
 

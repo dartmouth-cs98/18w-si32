@@ -26,12 +26,13 @@ class LeaderboardPage extends React.PureComponent {
   render() {
     return (
       <Page>
-        <MainTitle>Leaderboard</MainTitle>
-        <SubTitle>Global</SubTitle>
-        <RankedList users={this.props.users} />
+        <div style={styles.wrapper}>
+          <MainTitle>Leaderboard</MainTitle>
+          <SubTitle>Global</SubTitle>
+          <RankedList users={this.props.users} />
 
-        <SubTitle>People you Follow</SubTitle>
-
+          <SubTitle>People you Follow</SubTitle>
+        </div>
       </Page>
     );
   }
@@ -45,5 +46,14 @@ const mapStateToProps = state => ({
   users: state.users.records,
 });
 
+const styles = {
+  wrapper: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingTop: "20px"
+  }
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(LeaderboardPage);

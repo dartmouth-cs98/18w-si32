@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+
 const { MalformedError } = require("../errors");
 
 const _User = new Schema({
