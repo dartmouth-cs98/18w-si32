@@ -32,8 +32,6 @@ _User.methods._followUnfollow = async function(targetUserId, op) {
     throw new MalformedError("You can't follow yourself!");
   }
 
-  console.log(this, targetUserId, op);
-
   // targetUser contains user correctly
   const userFrom = await User.findOneAndUpdate({ _id: targetUserId }, { [op]: { "followers": this._id }}, { new: true });
 
@@ -45,14 +43,14 @@ _User.methods._followUnfollow = async function(targetUserId, op) {
   const userTo = await User.findOneAndUpdate({ _id: this._id }, { [op]: { "following": targetUserId }}, { new: true });
 
   return { userFrom, userTo };
-}
+};
 
 // this instance of a user starts following targetUser
 _User.methods.follow = async function(targetUserId) {
   return await this._followUnfollow(targetUserId, "$addToSet");
 };
 
-// this instance of a user starts following targetUser
+// this instance of a user stops following targetUser
 _User.methods.unfollow = async function(targetUserId) {
   return await this._followUnfollow(targetUserId, "$pull");
 };
