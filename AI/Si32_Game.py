@@ -1,5 +1,7 @@
 from unit_command import Unit_command
 from Player import Player
+from Map import Map
+from Rules import Rules
 from json_helpers import json_to_object_list
 
 
@@ -11,13 +13,22 @@ class Game_state:
         # game state takes these objects and runs games, allowing for a
         # game agnostic framework
 
-        self.map = map
+        self.map = map(number_of_players)
 
-        self.players = self.initialize_players(number_of_players, map, user_code)
+        self.players = self.initialize_players(number_of_players, self.map, user_code)
 
         self.rules = rules(self.map, self.players)
 
         self.game_over = False
+
+        self.create_game_log()
+
+        print(self.map)
+
+    def create_game_log(self):
+        game_log = open("guru99.txt","w+")
+
+    # ------------------ Main Functions ---------------------
 
     def play_game(self):
 
@@ -29,11 +40,21 @@ class Game_state:
         i = 0
 
         for player in self.players:
-            moves.append(player.get_moves())
+            #TODO: Replace the get random moves with real calls to user code
+            moves.append(player.get_random_moves())
 
-        while i < self.number_of_players:
-            self.execute_moves(moves[i], i)
-            i += 1
+        #while i < self.number_of_players:
+        #    self.execute_moves(moves[i], i)
+        #    i += 1
+
+    def execute_moves(self, moves, player):
+        moves = json_to_object_list(moves)
+
+        for move in moves:
+            execute_move(move, player)
+
+
+    # ------------ Initializing function ------------------
 
     def initialize_players(self, number_of_players, map, user_code):  # initalizes players
         i = 0
@@ -46,8 +67,7 @@ class Game_state:
 
         return players
 
-    def execute_moves(self, moves, player):
-        moves = json_to_object_list(moves)
 
-        for move in moves:
-            execute_move(move, player)
+test = Game_state(Map, Rules, 2, 'hi')
+
+test.play_a_turn()

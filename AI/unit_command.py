@@ -1,4 +1,5 @@
 import json
+from Tile import Tile
 
 
 class Unit_command:
@@ -13,6 +14,6 @@ class Unit_command:
         return json.dumps(self, default=lambda o: o.__dict__)
 
 
-test = Unit_command([0, 0], 'move', 5, 90)
+test = Unit_command(Tile([0, 0], 2), 'move', 5, 90)
 
 print(test.to_json())

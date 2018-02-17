@@ -8,7 +8,7 @@ class Map:
     def __init__(self, number_of_players):
 
         self.number_of_players = number_of_players
-        self.map = self.initialize_map(width, height)
+        self.tiles = self.initialize_map(width, height)
         self.width = width
         self.height = height
 
@@ -58,6 +58,14 @@ class Map:
                 col.append(new_tile)
                 h += 1
 
+            tiles.append(col)
             w += 1
 
         return tiles
+
+    def __str__(self):
+        return str(self.tiles)
+
+Test = Map(2)
+
+print(Test)

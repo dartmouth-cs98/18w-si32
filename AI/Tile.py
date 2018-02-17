@@ -41,7 +41,7 @@ class Tile:
     def initialize_units_list(self, number_of_players):  # We want to store the number of units a player has in each square, initialized to 0 for each player
         units = []
 
-        for i in range(number_of_plaByers):
+        for i in range(number_of_players):
             units.append(0)
 
         return units

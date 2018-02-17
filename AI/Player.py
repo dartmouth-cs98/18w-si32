@@ -1,4 +1,4 @@
-from random import randint
+from random import random, randint
 from unit_command import Unit_command
 
 starting_distance = 30
@@ -22,6 +22,67 @@ class Player:
 
         move_as_tuple = tuple(move_as_list)
         return move_as_tuple
+
+    # Find all tiles in which player has units to control
+    def get_occupied_tiles(self):
+        tiles = []
+
+        print(self.map.tiles)
+
+        for col in self.map.tiles:
+            for tile in col:
+                if tile.units[self.playerID] != 0:
+                    tiles.append(tile)
+
+        return tiles
+
+    # Top level method for getting all moves
+    def get_random_moves(self):
+        tiles = self.get_occupied_tiles()
+        moves = []
+
+        for tile in tiles:
+            moves += self.random_moves_by_tile(tile)
+
+        return moves
+
+    # Method for making random moves on a specific tile
+    def random_moves_by_tile(self, tile):
+        moves = []
+        units = tile.units[self.playerID]
+
+        while units != 0:
+            move = self.make_random_move(tile, units)
+            moves.append(move)
+            units -= move.number_of_units
+
+        return moves
+
+    def make_random_move(self, tile, units_available):
+
+        units = randint(1, units_available)
+
+        direction = self.get_random_direction()
+
+        random_move = Unit_command(tile, 'move', units, direction)
+
+        return random_move
+
+
+    def get_random_direction(self):
+        rand_number = random.uniform(0,1)
+
+        if rand_number > 0.75:
+            return (0,-1)
+
+        elif rand_number > 0.5:
+            return (0, 1)
+
+        elif rand_number > 0.25:
+            return (-1, 0)
+
+        else:
+            return (1, 0)
 
     def add_building(self, building):
         self.buildings.append(building)
