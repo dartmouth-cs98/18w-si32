@@ -15,7 +15,7 @@ class Map:
     # --------- Helper functions -------------
 
     def get_tile(self, position):  # helper function for getting files
-        return self.map[position[0]][position[1]]
+        return self.tiles[position[0]][position[1]]
 
     def get_adjacent_squares(self, position):  # returns list of adjacent tiles
         result = []
@@ -28,7 +28,7 @@ class Map:
 
         for square in squares:  # return legal tiles
             if self.tile_in_range(square):
-                result.append(self.map.get_tile(square))
+                result.append(self.tiles.get_tile(square))
 
         return result
 
@@ -67,5 +67,3 @@ class Map:
         return str(self.tiles)
 
 Test = Map(2)
-
-print(Test)

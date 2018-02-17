@@ -23,8 +23,6 @@ class Game_state:
 
         self.create_game_log()
 
-        print(self.map)
-
     def create_game_log(self):
         game_log = open("guru99.txt","w+")
 

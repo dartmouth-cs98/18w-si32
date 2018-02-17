@@ -11,6 +11,12 @@ class Player:
         self.user_code = user_code
         self.winner = False
 
+        starting_x = int((self.map.width / 2) + (0.5 - self.playerID) * starting_distance)
+        starting_y = int((self.map.height / 2) + (0.5 - self.playerID) *starting_distance)
+
+        starting_tile = self.map.get_tile([starting_x, starting_y])
+        starting_tile.increment_units(playerId)
+
     def make_move(self):
         # 1 = move north, 2 = move east, 3 = move south, 4 = move west, 5 = build north, 6 = build east, 7 = build south, 8 = build west, 9 = mine
 
@@ -26,8 +32,6 @@ class Player:
     # Find all tiles in which player has units to control
     def get_occupied_tiles(self):
         tiles = []
-
-        print(self.map.tiles)
 
         for col in self.map.tiles:
             for tile in col:
@@ -70,15 +74,15 @@ class Player:
 
 
     def get_random_direction(self):
-        rand_number = random.uniform(0,1)
+        rand_number = randint(0,100)
 
-        if rand_number > 0.75:
+        if rand_number > 75:
             return (0,-1)
 
-        elif rand_number > 0.5:
+        elif rand_number > 50:
             return (0, 1)
 
-        elif rand_number > 0.25:
+        elif rand_number > 25:
             return (-1, 0)
 
         else:
