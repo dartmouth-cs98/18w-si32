@@ -5,6 +5,8 @@ import { connect } from "react-redux";
 import Link from "../layout/link";
 import Page from "../layout/page";
 
+import UserSearch from "./UserSearch";
+
 import { fetchBots } from "../../data/bot/botActions";
 import { fetchMatches } from "../../data/match/matchActions";
 import { getProfile } from "../../data/user/userActions";
@@ -50,7 +52,7 @@ class DashboardPage extends React.PureComponent {
   render() {
     return (
       <Page>
-        <div style={{paddingTop: 20}}>
+        <div style={styles.wrapper}>
           <MainTitle>Dashboard</MainTitle>
           <h3>Your user id: {this.state.user}</h3>
 
@@ -61,6 +63,9 @@ class DashboardPage extends React.PureComponent {
           <SubTitle>Your Latest Matches</SubTitle>
           <DashMatchList matches={this.props.matches} />
           <Link href="/matches">View all &rarr;</Link>
+
+          <UserSearch />
+
         </div>
       </Page>
     );
@@ -77,5 +82,15 @@ const mapStateToProps = state => ({
   matches: getMatchesForUser(state, state.session.userId),
   bots: getBotsForUser(state, state.session.userId),
 });
+
+const styles = {
+  wrapper: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingTop: "20px"
+  }
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(DashboardPage);
