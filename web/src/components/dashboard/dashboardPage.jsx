@@ -5,11 +5,11 @@ import { connect } from "react-redux";
 import Link from "../layout/link";
 import Page from "../layout/page";
 
-import UserSearch from "./userSearch";
+import UserSearch from "./UserSearch";
 
 import { fetchBots } from "../../data/bot/botActions";
 import { fetchMatches } from "../../data/match/matchActions";
-import { getProfile, resetUsers } from "../../data/user/userActions";
+import { getProfile } from "../../data/user/userActions";
 import { getMatchesForUser } from "../../data/match/matchSelectors";
 import { getBotsForUser } from "../../data/bot/botSelectors";
 

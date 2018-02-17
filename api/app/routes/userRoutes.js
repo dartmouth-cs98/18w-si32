@@ -11,8 +11,8 @@ const userRouter = Router();
 
 userRouter.get("/", auth.loggedIn, async (ctx) => {
   let users;
-  if (ctx.query.userQuery) {
-    users = await User.find({ "username": { "$regex": `${ctx.query.userQuery}`, "$options": "i" } });
+  if (ctx.query.q) {
+    users = await User.find({ "username": { "$regex": `${ctx.query.q}`, "$options": "i" } });
   } else {
     users = await User.find();
   }

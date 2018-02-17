@@ -1,9 +1,8 @@
 import React from "react";
-import { connect } from "react-redux";
 import Radium from "radium";
 import Color from "color";
 
-import { fetchUsers } from "../../data/user/userActions";
+import { getUsersForSearch } from "../../data/user/userActions";
 
 import Link from "../layout/link";
 
@@ -14,24 +13,25 @@ import {
   constants,
 } from "../../style";
 
-const UserList = ({ users }) => {
-  if (_.size(users) < 1) {
-    return <div>No Users Match Your Query</div>;
-  }
-
-  const items = _.map(users, u =>
-    <Link key={u._id} href={`/users/${u._id}`}>{u.username}</Link>
+const UserSearchEntry = ({ u, r }) => {
+  return (
+    <div style={styles.searchEntryContainer}>
+      <div style={styles.searchEntryNumeric}>{r}</div>
+      <div style={styles.searchEntryString}>
+        <Link key={u._id} href={`/users/${u._id}`}>{u.username}</Link>
+      </div>
+      <div style={styles.searchEntryNumeric}>{r}</div>
+    </div>
   );
-
-  return <div>{items}</div>;
-};
+}
 
 class UserSearch extends React.PureComponent {
   constructor(props) {
     super(props)
 
     this.state = {
-      query: ""
+      query: "",
+      results: [],
     };
   }
 
@@ -43,7 +43,40 @@ class UserSearch extends React.PureComponent {
 
   doUserQuery = (event) => {
     event.preventDefault();
-    this.props.fetchUsers(this.state.query);
+    if (this.state.query === "") return;
+    getUsersForSearch(this.state.query)
+      .then(results => {
+        this.setState({
+          results: results
+        });
+      });
+  }
+
+  renderUserList() {
+    if (this.state.results.length < 1) {
+      return (
+        <div style={styles.emptyResultsContainer}>
+          Results
+        </div>
+      );
+    }
+
+    const items = _.map(this.state.results, (u, i) =>
+      <UserSearchEntry key={u._id} u={u} r={i} />
+    );
+
+    return (
+
+      <div>
+        <div style={styles.searchResultsHeaderContainer}>
+          <span style={styles.searchEntryNumeric}>Rank</span>
+          <span style={styles.searchEntryString}>Username</span>
+          <span style={styles.searchEntryNumeric}>Rating</span>
+        </div>
+        {items}
+      </div>
+    )
+
   }
 
   render() {
@@ -65,7 +98,9 @@ class UserSearch extends React.PureComponent {
                style={styles.submitButton}
           />
         </form>
-        <UserList users={this.props.users} />
+
+        {this.renderUserList()}
+
       </div>
     );
   }
@@ -107,14 +142,50 @@ const styles = {
       cursor: "pointer"
     }
   },
+  emptyResultsContainer: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    color: colors.detail
+  },
+  searchResultsHeaderContainer: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
+    marginBottom: "5px"
+  },
+  searchEntryContainer: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
+    borderRadius: "1px",
+    borderStyle: "solid",
+    borderWidth: "1px",
+    borderColor: Color(colors.detail).lighten(0.7).string(),
+    padding: "5px 0 5px 0",
+    marginBottom: "5px"
+  },
+  searchEntryNumeric: {
+    width: "15%",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  searchEntryString: {
+    width: "65%",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    borderStyle: "hidden solid hidden solid",
+    borderWidth: "1px",
+    borderColor: Color(colors.detail).lighten(0.7).string(),
+    paddingLeft: "2.5%",
+    paddingRight: "2.5%",
+  }
 }
 
-const mapStateToProps = state => ({
-  users: state.users.records,
-});
-
-const mapDispatchToProps = (dispatch, props) => ({
-  fetchUsers: (userQuery) => dispatch(fetchUsers(userQuery)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Radium(UserSearch));
+export default Radium(UserSearch);
