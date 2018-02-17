@@ -44,8 +44,12 @@ def run_worker():
             }
             log = False
 
-        for b in bots:
-            b.cleanup()
+        try:
+            for b in bots:
+                b.cleanup()
+        except Exception as err:
+            print("Issue cleaning up.")
+            print(err)
 
         print("Done cleaning up.")
 
