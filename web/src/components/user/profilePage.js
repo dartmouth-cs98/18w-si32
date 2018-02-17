@@ -53,8 +53,8 @@ const mapDispatchToProps = (dispatch, props) => ({
   followUser: () => dispatch(followUser(props.id)),
   unfollowUser: () => dispatch(unfollowUser(props.id)),
   fetchUsers: () => dispatch(fetchUsers()), // TODO this should load only this user
-  fetchMatches: () => dispatch(fetchMatches(props.id)), // TODO this should only load matches for this user
-  fetchBots: () => dispatch(fetchBots(props.id)), // TODO this should only load bots for this user
+  fetchMatches: () => dispatch(fetchMatches(props.id)),
+  fetchBots: () => dispatch(fetchBots(props.id)), 
 });
 
 const mapStateToProps = (state, props) => ({
