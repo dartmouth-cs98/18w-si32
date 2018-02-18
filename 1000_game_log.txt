@@ -1,4 +1,4 @@
 Replay log of game 1000
 50,50,[40, 40],[10, 10]
-{"playerId": 0, "tile": {"position": [40, 40], "resource": 5, "units": [1, 0], "building": null, "units_mining": 0, "units_building": 0}, "command": "move", "number_of_units": 1, "direction": [-1, 0]}
-{"playerId": 1, "tile": {"position": [10, 10], "resource": 23, "units": [0, 1], "building": null, "units_mining": 0, "units_building": 0}, "command": "move", "number_of_units": 1, "direction": [0, 1]}
+{"playerId": 0, "tile": {"position": [40, 40], "resource": 54, "units": [0, 0], "building": null, "units_mining": 0, "units_building": 0}, "command": "move", "number_of_units": 1, "direction": [1, 0]}
+{"playerId": 1, "tile": {"position": [10, 10], "resource": 42, "units": [0, 0], "building": null, "units_mining": 0, "units_building": 0}, "command": "move", "number_of_units": 1, "direction": [0, -1]}

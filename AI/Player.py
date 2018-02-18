@@ -10,6 +10,7 @@ class Player:
         self.map = map
         self.user_code = user_code
         self.winner = False
+        self.resources = 100
 
         self.starting_x = int((self.map.width / 2) + (0.5 - self.playerId) * starting_distance)
         self.starting_y = int((self.map.height / 2) + (0.5 - self.playerId) *starting_distance)
@@ -90,6 +91,12 @@ class Player:
 
     def add_building(self, building):
         self.buildings.append(building)
+
+    def increment_resources(self, number):
+        self.resources += number
+
+    def decrement_resource(self, number):
+        self.resources -= number
 
     def __str__(self):
         string = "Player " + str(self.playerId) + "\n"
