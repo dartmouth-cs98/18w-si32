@@ -61,7 +61,7 @@ class Game_state:
     def execute_move(self, move):
         if self.rules.verify_move(move):
 
-            print(self.rules.verify_move(move))
+            self.rules.update_by_move(move)
             self.log_move(move)
 
 

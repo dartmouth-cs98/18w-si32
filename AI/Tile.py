@@ -1,4 +1,5 @@
 from random import randint
+from Building import Building
 
 
 class Tile:
@@ -35,7 +36,8 @@ class Tile:
 
     # ---------------- BUILDING METHODS  ----------------------------
 
-    def add_building(self, building):  # store buildng ID if there's a building
+    def create_building(self, playerId):  # store buildng ID if there's a building
+        new_building = Building(self, self.playerId)
         self.building = building
 
     def destroy_building(self):  # remove building reference
