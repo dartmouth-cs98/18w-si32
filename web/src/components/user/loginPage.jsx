@@ -40,7 +40,6 @@ class LoginPage extends React.PureComponent {
       })
       .catch((err) => {
         /* eslint-disable no-console */
-        console.log(err)
         console.log("FAIL");
         /* eslint-enable no-console */
       });
