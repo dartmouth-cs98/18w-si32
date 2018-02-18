@@ -28,6 +28,11 @@ class Tile:
     def set_units(self, player, number_of_units):
         self.units[player] = number_of_units
 
+    def update_units_number(self):
+        while (self.units[0] > 0) and (self.units[1] > 0):
+            self.decrement_units(0)
+            self.decrement_units(1)
+
     # ---------------- BUILDING METHODS  ----------------------------
 
     def add_building(self, building):  # store buildng ID if there's a building
@@ -41,10 +46,10 @@ class Tile:
     def initialize_units_list(self, number_of_players):  # We want to store the number of units a player has in each square, initialized to 0 for each player
         units = []
 
-        for i in range(number_of_plaByers):
+        for i in range(number_of_players):
             units.append(0)
 
         return units
 
     def __str__(self):
-        return "Units A at " + str(self.position) + ":" + str(self.units_A) + "\n" + "Units B at " + str(self.position) + ":" + str(self.units_B)
+        return "Units A at " + str(self.position) + ":" + str(self.units[0]) + "\n" + "Units B at " + str(self.position) + ":" + str(self.units[1])
