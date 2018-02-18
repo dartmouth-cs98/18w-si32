@@ -8,7 +8,7 @@ from json_helpers import json_to_object_list
 
 class Game_state:
 
-    def __init__(self, map, rules, number_of_players, user_code, gameId=1000):
+    def __init__(self, map, rules, number_of_players, user_code, gameId=1000, replay=False):
 
         # Game state is determined by map, players, and rules. Higher level
         # game state takes these objects and runs games, allowing for a
@@ -24,7 +24,10 @@ class Game_state:
 
         self.gameId = gameId
 
+        self.replay = replay
+
         self.game_log_file = self.initialize_game_log()
+
 
     # ------------------ Main Functions ---------------------
 
@@ -78,17 +81,19 @@ class Game_state:
     # ------------ REPLAY FILE FUNCTIONS ----------------
 
     def initialize_game_log(self):
-        file_name = str(self.gameId) + "_game_log.txt"
-        game_log = open(file_name,"w+")
-        game_log.write("Replay log of game " + str(self.gameId) + "\n")
-        game_log.close()
+        if not self.replay:
+            file_name = str(self.gameId) + "_game_log.txt"
+            game_log = open(file_name,"w+")
+            game_log.write("Replay log of game " + str(self.gameId) + "\n")
+            game_log.close()
 
-        return file_name
+            return file_name
 
     def log_move(self, move):
-        game_log = open(self.game_log_file,"a")
-        game_log.write(move.to_json() + "\n")
-        game_log.close()
+        if not self.replay:
+            game_log = open(self.game_log_file,"a")
+            game_log.write(move.to_json() + "\n")
+            game_log.close()
 
 
 

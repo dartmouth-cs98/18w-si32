@@ -28,6 +28,11 @@ class Tile:
     def set_units(self, player, number_of_units):
         self.units[player] = number_of_units
 
+    def update_units_number(self):
+        while (self.units[0] > 0) and (self.units[1] > 0):
+            self.decrement_units(0)
+            self.decrement_units(1)
+
     # ---------------- BUILDING METHODS  ----------------------------
 
     def add_building(self, building):  # store buildng ID if there's a building
