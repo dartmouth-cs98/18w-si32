@@ -7,7 +7,7 @@ from json_helpers import json_to_object_list
 
 class Game_state:
 
-    def __init__(self, map, rules, number_of_players, user_code):
+    def __init__(self, map, rules, number_of_players, user_code, gameId=1000):
 
         # Game state is determined by map, players, and rules. Higher level
         # game state takes these objects and runs games, allowing for a
@@ -21,10 +21,13 @@ class Game_state:
 
         self.game_over = False
 
-        self.create_game_log()
+        self.gameId = gameId
 
-    def create_game_log(self):
-        game_log = open("guru99.txt","w+")
+        self.initialize_game_log()
+
+    def initialize_game_log(self):
+        game_log = open(str(self.gameId) + "_game_log.txt","w+")
+        game_log.write("Replay log of game " + str(self.gameId) + "\n")
 
     # ------------------ Main Functions ---------------------
 
@@ -41,9 +44,8 @@ class Game_state:
             #TODO: Replace the get random moves with real calls to user code
             moves.append(player.get_random_moves())
 
-        #while i < self.number_of_players:
-        #    self.execute_moves(moves[i], i)
-        #    i += 1
+        #TODO: Update() - updates game state given player moves
+        # Update() will have two parts,
 
     def execute_moves(self, moves, player):
         moves = json_to_object_list(moves)
@@ -67,5 +69,9 @@ class Game_state:
 
 
 test = Game_state(Map, Rules, 2, 'hi')
+print(test.players[0].get_occupied_tiles()[0])
+print(test.players[1].get_occupied_tiles()[0])
 
 test.play_a_turn()
+print(test.players[0].get_occupied_tiles()[0])
+print(test.players[1].get_occupied_tiles()[0])

@@ -47,4 +47,4 @@ class Tile:
         return units
 
     def __str__(self):
-        return "Units A at " + str(self.position) + ":" + str(self.units_A) + "\n" + "Units B at " + str(self.position) + ":" + str(self.units_B)
+        return "Units A at " + str(self.position) + ":" + str(self.units[0]) + "\n" + "Units B at " + str(self.position) + ":" + str(self.units[1])

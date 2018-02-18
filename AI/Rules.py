@@ -1,6 +1,6 @@
 
 class Rules:
 
-    def __init__(self, map, number_of_players):
+    def __init__(self, map, players):
         self.map = map
-        self.number_of_players = number_of_players
+        self.players = players
