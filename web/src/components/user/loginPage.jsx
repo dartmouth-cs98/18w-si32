@@ -38,8 +38,9 @@ class LoginPage extends React.PureComponent {
       .then(() => {
         history.push("/dashboard");
       })
-      .catch(() => {
+      .catch((err) => {
         /* eslint-disable no-console */
+        console.log(err)
         console.log("FAIL");
         /* eslint-enable no-console */
       });

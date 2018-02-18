@@ -9,6 +9,10 @@ const { AuthError } = require("../errors");
 
 const userRouter = Router();
 
+/**
+ * @api GET path /users
+ * Get users with username similar to query (username contains query as subtring). 
+ */
 userRouter.get("/", auth.loggedIn, async (ctx) => {
   let users;
   if (ctx.query.q) {
@@ -19,6 +23,15 @@ userRouter.get("/", auth.loggedIn, async (ctx) => {
     users = await User.find();
   }
   ctx.body = users;
+});
+
+/**
+ * @api GET path /users/:userId 
+ * Get a single user by ID. 
+ */
+userRouter.get("/:userId", auth.loggedIn, async (ctx) => {
+  let user = await User.findById(ctx.params.userId);
+  ctx.body = user;
 });
 
 // trying to be RESTful here. Imagine we're creating some "follows" resource/link
@@ -69,6 +82,7 @@ userRouter.post("/register", async (ctx) => {
       token: s.token,
       userId: u._id,
     },
+    user: u
   };
 });
 
@@ -92,6 +106,7 @@ userRouter.post("/login", async (ctx) => {
       token: s.token,
       userId: user._id,
     },
+    user: user
   };
 });
 
