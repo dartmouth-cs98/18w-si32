@@ -84,7 +84,11 @@ class Game_state:
         if not self.replay:
             file_name = str(self.gameId) + "_game_log.txt"
             game_log = open(file_name,"w+")
+
+            starting_1 = [self.players[0].starting_x, self.players[0].starting_y]
+            starting_2 = [self.players[1].starting_x, self.players[1].starting_y]
             game_log.write("Replay log of game " + str(self.gameId) + "\n")
+            game_log.write(str(self.map.width)+ ',' +str(self.map.height)+ ',' +str(starting_1)+ ',' +str(starting_2)+ '\n')
             game_log.close()
 
             return file_name

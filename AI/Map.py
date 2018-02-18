@@ -3,7 +3,6 @@ from Tile import Tile
 width = 50  # width of map
 height = 50  # height of map
 
-
 class Map:
     def __init__(self, number_of_players):
 
@@ -65,5 +64,3 @@ class Map:
 
     def __str__(self):
         return str(self.tiles)
-
-Test = Map(2)

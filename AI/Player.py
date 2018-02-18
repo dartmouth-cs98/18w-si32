@@ -11,10 +11,10 @@ class Player:
         self.user_code = user_code
         self.winner = False
 
-        starting_x = int((self.map.width / 2) + (0.5 - self.playerId) * starting_distance)
-        starting_y = int((self.map.height / 2) + (0.5 - self.playerId) *starting_distance)
+        self.starting_x = int((self.map.width / 2) + (0.5 - self.playerId) * starting_distance)
+        self.starting_y = int((self.map.height / 2) + (0.5 - self.playerId) *starting_distance)
 
-        starting_tile = self.map.get_tile([starting_x, starting_y])
+        starting_tile = self.map.get_tile([self.starting_x, self.starting_y])
         starting_tile.increment_units(playerId)
 
     def make_move(self):
