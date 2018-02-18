@@ -1,1 +1,3 @@
 Replay log of game 1000
+{"playerId": 0, "tile": {"position": [40, 40], "resource": 36, "units": [1, 0], "building": null, "units_mining": 0, "units_building": 0}, "command": "move", "number_of_units": 1, "direction": [0, -1]}
+{"playerId": 1, "tile": {"position": [10, 10], "resource": 58, "units": [0, 1], "building": null, "units_mining": 0, "units_building": 0}, "command": "move", "number_of_units": 1, "direction": [0, -1]}

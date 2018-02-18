@@ -4,7 +4,8 @@ from Tile import Tile
 
 class Unit_command:
 
-    def __init__(self, tile, command, number_of_units, direction):
+    def __init__(self, playerId, tile, command, number_of_units, direction):
+        self.playerId = playerId
         self.tile = tile
         self.command = command
         self.number_of_units = number_of_units
@@ -13,7 +14,9 @@ class Unit_command:
     def to_json(self):  # turns command into json object for stdstreams
         return json.dumps(self, default=lambda o: o.__dict__)
 
+    def __str__(self):
+        return "Player "+str(self.playerId) + " moving " + str(self.number_of_units) + " units from tile " + str(self.tile)
 
-test = Unit_command(Tile([0, 0], 2), 'move', 5, 90)
+test = Unit_command(0, Tile([0, 0], 2), 'move', 5, 90)
 
 print(test.to_json())

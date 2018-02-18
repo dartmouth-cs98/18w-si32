@@ -32,9 +32,9 @@ class Map:
 
         return result
 
-    def tile_in_range(self, pos):  # check if coordinates are contained by map
+    def tile_in_range(self, tile):  # check if coordinates are contained by map
 
-        if (pos[0] < 0) | (pos[0] >= (self.width-1)) | (pos[1] < 0) | (pos[1] >= (self.height-1)):
+        if (tile.position[0] < 0) | (tile.position[0] >= (self.width-1)) | (tile.position[1] < 0) | (tile.position[1] >= (self.height-1)):
             return False
 
         else:

@@ -6,13 +6,13 @@ starting_distance = 30
 
 class Player:
     def __init__(self, playerId, map, user_code):
-        self.playerID = playerId
+        self.playerId = playerId
         self.map = map
         self.user_code = user_code
         self.winner = False
 
-        starting_x = int((self.map.width / 2) + (0.5 - self.playerID) * starting_distance)
-        starting_y = int((self.map.height / 2) + (0.5 - self.playerID) *starting_distance)
+        starting_x = int((self.map.width / 2) + (0.5 - self.playerId) * starting_distance)
+        starting_y = int((self.map.height / 2) + (0.5 - self.playerId) *starting_distance)
 
         starting_tile = self.map.get_tile([starting_x, starting_y])
         starting_tile.increment_units(playerId)
@@ -35,7 +35,7 @@ class Player:
 
         for col in self.map.tiles:
             for tile in col:
-                if tile.units[self.playerID] != 0:
+                if tile.units[self.playerId] != 0:
                     tiles.append(tile)
 
         return tiles
@@ -53,7 +53,7 @@ class Player:
     # Method for making random moves on a specific tile
     def random_moves_by_tile(self, tile):
         moves = []
-        units = tile.units[self.playerID]
+        units = tile.units[self.playerId]
 
         while units != 0:
             move = self.make_random_move(tile, units)
@@ -68,7 +68,7 @@ class Player:
 
         direction = self.get_random_direction()
 
-        random_move = Unit_command(tile, 'move', units, direction)
+        random_move = Unit_command(self.playerId, tile, 'move', units, direction)
 
         return random_move
 
