@@ -1,17 +1,18 @@
 from random import randint
-from Building import Building
 
 
 class Tile:
 
     def __init__(self, position, number_of_players):
 
+        self.number_of_players = number_of_players
         self.position = position
-        self.resource = randint(0, 100)  # amount of resource in the tile (will be randomized for now)
-        self.units = self.initialize_units_list(number_of_players)
+        self.resource = randint(0, 10)  # amount of resource in the tile (will be randomized for now)
+        self.units = self.initialize_units_list()
         self.building = None  # Tiles initialized to not have a building
-        self.units_mining = 0
-        self.units_building = 0
+
+        #self.units_mining = 0
+        #self.units_building = 0
 
     # ---------------- RESOURCE METHODS ------------------------
 
@@ -20,7 +21,7 @@ class Tile:
 
     # ---------------- PLAYER UNIT METHODS  -------------------------
 
-    def increment_units(self, player, number=1):  # Useful for when buildings create unit
+    def increment_units(self, player, number=1):  # Useful for when buildings create units
         self.units[player] += number
 
     def decrement_units(self, player, number=1):
@@ -29,29 +30,30 @@ class Tile:
     def set_units(self, player, number_of_units):
         self.units[player] = number_of_units
 
-    def update_units_number(self):
-        while (self.units[0] > 0) and (self.units[1] > 0):
-            self.decrement_units(0)
-            self.decrement_units(1)
-
     # ---------------- BUILDING METHODS  ----------------------------
 
-    def create_building(self, playerId):  # store buildng ID if there's a building
-        new_building = Building(self, self.playerId)
+    def add_building(self, building):  #add building reference
         self.building = building
 
-    def destroy_building(self):  # remove building reference
+    def destroy_building(self):  #remove building reference
         self.building = None
 
     # --------------- INITIALIZING FUNCTION ----------------------
 
-    def initialize_units_list(self, number_of_players):  # We want to store the number of units a player has in each square, initialized to 0 for each player
+    def initialize_units_list(self):  #we want to store the number of units a player has in each square, initialized to 0 for each player
         units = []
 
-        for i in range(number_of_players):
+
+        for i in range(self.number_of_players):
             units.append(0)
 
         return units
 
     def __str__(self):
-        return "Units A at " + str(self.position) + ":" + str(self.units[0]) + "\n" + "Units B at " + str(self.position) + ":" + str(self.units[1])
+        string = ""
+        string += "Position: " + str(self.position)
+
+        for i in range(self.number_of_players):
+            string += "Units of Player " + str(i) + ":" + str(self.units[i]) + "\n"
+
+        return string
