@@ -2,7 +2,7 @@ import React from "react";
 import Radium from "radium";
 import Color from "color";
 
-import { getUsersForSearch } from "../../data/user/userActions";
+import { getUsersForSearch } from "../../data/user/userRoutes";
 
 import Link from "../layout/link";
 

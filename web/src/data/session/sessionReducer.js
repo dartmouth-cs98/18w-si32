@@ -1,4 +1,9 @@
-import { SESSION_START, SESSION_DESTROY } from "./sessionActions";
+import {
+  SESSION_START,
+  SESSION_DESTROY,
+  SET_USER_FOR_SESSION,
+  RESET_USER_FOR_SESSION
+} from "./sessionActions";
 
 // TODO replace hacky localStorage and initial state stuff for persisting
 // the session token. Should be in a cookie (?) and part of some actual bootstrap process
@@ -19,6 +24,14 @@ export default function sessionReducer(state = INITIAL_STATE, action) {
       INITIAL_STATE.userId = "";
 
       return Object.assign({}, INITIAL_STATE);
+
+    case SET_USER_FOR_SESSION:
+      return Object.assign({}, state, {
+        user: action.user
+      });
+
+    case RESET_USER_FOR_SESSION:
+      return Object.assign({}, state, { user: null });
   }
 
   return state;

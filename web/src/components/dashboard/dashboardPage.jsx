@@ -39,9 +39,6 @@ class DashboardPage extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {};
-    getProfile().then(profile => {
-      this.setState(profile);
-    });
   }
 
   componentDidMount() {
@@ -50,11 +47,14 @@ class DashboardPage extends React.PureComponent {
   }
 
   render() {
+    if (!this.props.user) return <div></div>;
+
     return (
       <Page>
         <div style={styles.wrapper}>
           <MainTitle>Dashboard</MainTitle>
-          <h3>Your user id: {this.state.user}</h3>
+          <h3>Your username: {this.props.user.username}</h3>
+          <h3>Your user id: {this.props.userId}</h3>
 
           <SubTitle>Your Bots</SubTitle>
           <DashBotList bots={this.props.bots} />
@@ -78,6 +78,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const mapStateToProps = state => ({
+  user: state.session.user,
   userId: state.session.userId,
   matches: getMatchesForUser(state, state.session.userId),
   bots: getBotsForUser(state, state.session.userId),

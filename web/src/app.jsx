@@ -1,5 +1,8 @@
 import React from "react";
+import { connect } from "react-redux";
 import { initRouter } from "./router";
+
+import { setUserForSession } from "./data/session/sessionActions";
 
 import Footer from "./components/layout/footer";
 import Navigation from "./components/layout/navigation";
@@ -11,6 +14,10 @@ class App extends React.Component {
 
   componentWillMount() {
     initRouter(this.updateMain);
+    if (this.props.userId && !this.props.user) {
+      // if a session is active, but the user is not in state
+      this.props.setUserForSession(this.props.userId);
+    }
   }
 
   updateMain = (html) => {
@@ -32,4 +39,13 @@ class App extends React.Component {
   }
 }
 
-export default App;
+const mapDispatchToProps = dispatch => ({
+  setUserForSession: (userId) => dispatch(setUserForSession(userId))
+});
+
+const mapStateToProps = state => ({
+  user: state.session.user,
+  userId: state.session.userId,
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

@@ -82,7 +82,4 @@ const httpDeleteAction = (collectionName, endpoint, body={}, options={}) => (dis
     });
 };
 
-
-
-
 export { httpGetAction, httpPostAction, httpPutAction, httpDeleteAction };
