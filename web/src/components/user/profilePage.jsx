@@ -10,8 +10,7 @@ import BotList from "../bots/BotList";
 
 import { MainTitle, SubTitle } from "../dashboard/titles";
 
-import { fetchUsers, followUser, unfollowUser } from "../../data/user/userActions";
-import { getUser } from "../../data/user/userRoutes";
+import { fetchUsers, fetchUser, followUser, unfollowUser } from "../../data/user/userActions";
 import { fetchBots } from "../../data/bot/botActions";
 import { fetchMatches } from "../../data/match/matchActions";
 import { getMatchesForUser } from "../../data/match/matchSelectors";
@@ -20,35 +19,22 @@ import { getBotsForUser } from "../../data/bot/botSelectors";
 class ProfilePage extends React.PureComponent {
   constructor(props) {
     super(props);
-
-    this.state = {
-      profileUser: null
-    };
   }
 
   componentDidMount() {
-    getUser(this.props.id)
-      .then(user => {
-        this.setState({ profileUser: user });
-      });
     this.props.fetchMatches();
     this.props.fetchBots();
+    this.props.fetchUser();
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.id !== nextProps.id) {
-      getUser(nextProps.id)
-        .then(user => {
-          this.setState({ profileUser: user });
-        })
-    }
   }
 
   renderFollowLink = () => {
-    if (this.props.sessionUser._id === this.state.profileUser._id) {
+    if (this.props.sessionUser._id === this.props.profileUser._id) {
       // if session user is identical to profile user, this is our profile
       return;
-    } else if (_.includes(this.props.sessionUser.following, this.state.profileUser._id)) {
+    } else if (_.includes(this.props.profileUser.followers, this.props.sessionUser._id)) {
       // if the session user is currently following the profile user
       return <Link onClick={this.props.unfollowUser}>Unfollow</Link>;
     } else {
@@ -58,12 +44,12 @@ class ProfilePage extends React.PureComponent {
   }
 
   render() {
-    if (!this.state.profileUser) return <div></div>;
+    if (!this.props.profileUser) return <div></div>;
 
     return (
       <Page>
         { this.renderFollowLink() }
-        <MainTitle>Profile: { this.state.profileUser.username }</MainTitle>
+        <MainTitle>Profile: { this.props.profileUser.username }</MainTitle>
         <SubTitle>Bots</SubTitle>
         <BotList bots={this.props.bots} />
 
@@ -80,10 +66,12 @@ const mapDispatchToProps = (dispatch, props) => ({
   unfollowUser: () => dispatch(unfollowUser(props.id)),
   fetchMatches: () => dispatch(fetchMatches(props.id)),
   fetchBots: () => dispatch(fetchBots(props.id)),
+  fetchUser: () => dispatch(fetchUser(props.id)),
 });
 
 const mapStateToProps = (state, props) => ({
-  sessionUser: state.session.user,
+  sessionUser: state.session.user || {},
+  profileUser: state.users.records[props.id] || {},
   matches: getMatchesForUser(state, props.id),
   bots: getBotsForUser(state, props.id),
 });
