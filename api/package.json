@@ -10,7 +10,7 @@
     "test": "export DB_EXTENSION='/si32_test' && mocha --reporter spec --exit",
     "lint": "eslint app/",
     "start": "nodemon app/index.js",
-    "prepush": "npm test"
+    "prepush": "npm test && npm lint"
   },
   "author": "",
   "license": "ISC",
