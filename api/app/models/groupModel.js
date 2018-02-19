@@ -35,9 +35,7 @@ _Group.methods._addRemoveMember = async function(targetUserId, op) {
   }
 
   // user contains targetUser correctly
-  console.log(this._id);
   const group = await Group.findOneAndUpdate({ _id: this._id }, { [op]: { "members": targetUserId }}, { new: true });
-  console.log(group);
 
   return { user, group };
 };
