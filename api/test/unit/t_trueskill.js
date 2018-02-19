@@ -9,8 +9,6 @@ const trueskill = require("../../app/lib/trueskill");
 const models = require("../../app/models");
 
 suite("TrueSkill Update Unit Test", function() {
-  const test_username = "test_u";
-
   setup(async function() {
     await resetCollections();
   });
