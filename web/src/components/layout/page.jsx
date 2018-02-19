@@ -14,6 +14,7 @@ const pageHeight = vh - constants.NAVBAR_HEIGHT*2;
 
 const styles = {
   base: {
+    height: "100%",
     minHeight: pageHeight,
     maxWidth: 1080,
     marginTop: constants.NAVBAR_HEIGHT,
