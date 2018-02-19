@@ -11,12 +11,17 @@ class Unit_command:
         self.number_of_units = number_of_units
         self.direction = direction
 
+    def decrement_units(self, number):
+        if number <= self.number_of_units:
+            self.number_of_units -= number
+
+    def increment_units(self, number):
+        self.number_of_units += number
+
     def to_json(self):  # turns command into json object for stdstreams
         return json.dumps(self, default=lambda o: o.__dict__)
 
     def __str__(self):
-        return "Player "+str(self.playerId) + " moving " + str(self.number_of_units) + " units from tile " + str(self.tile)
+        return "Player "+str(self.playerId) + " moving " + str(self.number_of_units) + " units from tile " + str(self.tile.position) + " in direction " + str(self.direction)
 
 test = Unit_command(0, Tile([0, 0], 2), 'move', 5, 90)
-
-print(test.to_json())

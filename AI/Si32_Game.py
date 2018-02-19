@@ -44,11 +44,33 @@ class Game_state:
             #TODO: Replace the get random moves with real calls to user code
             moves.append(player.get_random_moves())
 
+        self.map.get_tile([9,10]).increment_units(0, 2)
+        moves[0].append(Unit_command(0, self.map.get_tile([9,10]), 'move', 2, [1,0]))
+        moves = self.rules.update_combat_phase(moves)  # Run both players moves through combat phase, return updated list of moves
+        for move in moves:
+            for m in move:
+                print(m)
+
+        tile1 = self.players[0].get_occupied_tiles()
+        tile2 = self.players[1].get_occupied_tiles()
+
+        for tile in tile1:
+            print(tile)
+
+        for tile in tile2:
+            print(tile)
+
         for player_moves in moves:
             self.execute_moves(player_moves)
 
+
         #TODO: Update() - updates game state given player moves
         # Update() will have two parts,
+
+    def update_units_numbers(self):
+        for tiles in self.map.tiles:
+            for tile in tiles:
+                tile.update_units_number()
 
     # ---------------- PLAYER MOVES FUNCTIONS ----------------
 
@@ -61,8 +83,8 @@ class Game_state:
     def execute_move(self, move):
         if self.rules.verify_move(move):
 
-            self.rules.update_by_move(move)
             self.log_move(move)
+            self.rules.update_by_move(move)
 
 
     # ------------ Initializing function ------------------
@@ -100,14 +122,22 @@ class Game_state:
             game_log.close()
 
 
-
 test = Game_state(Map, Rules, 2, 'hi')
-print(test.players[0].get_occupied_tiles()[0])
-print(test.players[1].get_occupied_tiles()[0])
+#print(test.players[0].get_occupied_tiles()[0])
+#print(test.players[1].get_occupied_tiles()[0])
 
-test_tile = Tile([40,40], 2)
+#test_tile = Tile([40,40], 2)
 
 test.play_a_turn()
-print(test.players[0].get_occupied_tiles()[0])
-print(test.players[1].get_occupied_tiles()[0])
+p1 = test.players[0].get_occupied_tiles()
+p2 = test.players[1].get_occupied_tiles()
+
+print('tesdf ')
+
+for x in p1:
+    print(x)
+
+for b in p2:
+    print(b)
+
 #print(test.rules.verify_move(Unit_command(0, test_tile, 'move', 2, [1,0])))

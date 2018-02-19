@@ -36,7 +36,7 @@ class Player:
 
         for col in self.map.tiles:
             for tile in col:
-                if tile.units[self.playerId] != 0:
+                if tile.units[self.playerId] > 0:
                     tiles.append(tile)
 
         return tiles

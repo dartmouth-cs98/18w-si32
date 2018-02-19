@@ -16,20 +16,29 @@ class Map:
     def get_tile(self, position):  # helper function for getting files
         return self.tiles[position[0]][position[1]]
 
-    def get_adjacent_squares(self, position):  # returns list of adjacent tiles
-        result = []
-        squares = []
+    def get_adjacent_squares(self, position, direction=None):  # returns list of adjacent tiles
 
-        squares.append([position[0]+1, position[1]])  # Square to the right
-        squares.append([position[0]-1, position[1]])  # Square to the left
-        squares.append([position[0], position[1]+1])  # Square below
-        squares.append([position[0], position[1]-1])  # Square down
+        # If we don't need a specific direction, return all adjacent squares
+        if direction is None:
 
-        for square in squares:  # return legal tiles
-            if self.tile_in_range(square):
-                result.append(self.tiles.get_tile(square))
+            result = []
+            squares = []
 
-        return result
+            squares.append([position[0]+1, position[1]])  # Square to the right
+            squares.append([position[0]-1, position[1]])  # Square to the left
+            squares.append([position[0], position[1]+1])  # Square below
+            squares.append([position[0], position[1]-1])  # Square down
+
+            for square in squares:  # return legal tiles
+                if self.tile_in_range(square):
+                    result.append(self.get_tile(square))
+
+            return result
+
+        else:
+            new_pos = (position[0] + direction[0], position[1] + direction[1])
+            if self.tile_in_range(new_pos):
+                return self.get_tile(new_pos)
 
     def tile_in_range(self, tile):  # check if coordinates are contained by map
 
