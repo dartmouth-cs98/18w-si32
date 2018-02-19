@@ -20,6 +20,13 @@ const mergeRecords = (existingRecords, newRecords, doMerge) => {
 const createHttpReducer = (collectionName, collectionReducer) => {
   return function collection(state = INITIAL_STATE, action) {
     switch (action.type) {
+      case `POSTED_${collectionName}`:
+      case `PUT_${collectionName}`:
+      case `DELETE_${collectionName}`:
+        return {
+          ...state,
+          isUpdating: true
+        };
       case `REQUESTED_${collectionName}`:
         return {
           ...state,
@@ -29,6 +36,12 @@ const createHttpReducer = (collectionName, collectionReducer) => {
         return {
           ...state,
           isLoading: false,
+          records: mergeRecords(state.records, action.payload, action.doMerge),
+        };
+      case `UPDATED_${collectionName}`:
+        return {
+          ...state,
+          isUpdating: false,
           records: mergeRecords(state.records, action.payload, action.doMerge),
         };
     }

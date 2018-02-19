@@ -8,12 +8,15 @@ const koaBody = require("koa-body");
 const db = require("./db");
 /* eslint-enable no-unused-vars */
 const fileMiddleware = require("./files/fileMiddleware");
+const { errorMiddleware } = require("./errors");
 
 const rootRouter = require("./routes");
 
 const PORT = process.env.PORT || 5000;
 
 const app = new Koa();
+
+app.use(errorMiddleware);
 
 app.use(async (ctx, next) => {
   await next();

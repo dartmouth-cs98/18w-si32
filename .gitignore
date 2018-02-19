@@ -16,3 +16,4 @@ __pycache__
 .dbdata
 node_modules
 .env
+.eslintcache

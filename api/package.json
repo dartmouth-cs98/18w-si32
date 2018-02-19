@@ -9,6 +9,8 @@
   "scripts": {
     "test": "export DB_EXTENSION='/si32_test' && mocha --reporter spec --exit",
     "lint": "eslint app/",
+    "build": "docker-compose build",
+    "up": "docker-compose up",
     "start": "nodemon app/index.js",
     "prepush": "npm test && npm run lint"
   },

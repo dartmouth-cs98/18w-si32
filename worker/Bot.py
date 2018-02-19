@@ -58,14 +58,7 @@ class DockerBot(Bot):
     def cleanup(self):
         container = client.containers.get(self.name)
         container.remove(force=True)
-
-        # Do we prefer direct calls or using the docker lib?
-        # call("docker stop %s > /dev/null" % self.name, shell=True)
-        docker_client.containers.get(self.name).stop()
-        call("docker rm %s > /dev/null" % self.name, shell=True)
-
-        print("Killed bot %d." % self.playerNum)
-
+        print("Killed and removed bot %d." % self.playerNum)
 
         # remove bot code from volume that is persistent
         call("rm -r /bot%d/*" % self.playerNum, shell=True)

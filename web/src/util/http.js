@@ -1,9 +1,10 @@
 import request from "superagent";
 import store from "../store";
+
 import { history } from "../router";
 import { SESSION_DESTROY } from "../data/session/sessionActions";
 
-// TODO put this into env
+// TODO: put this into env
 const BASE_URL = "http://localhost:3000";
 
 const agent = request.agent();
@@ -38,4 +39,8 @@ const put = url => {
   return agent.put(BASE_URL + url);
 };
 
-export { get, post, put };
+const del = url => {
+  return agent.del(BASE_URL + url);
+};
+
+export { get, post, put, del };

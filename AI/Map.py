@@ -3,19 +3,18 @@ from Tile import Tile
 width = 50  # width of map
 height = 50  # height of map
 
-
 class Map:
     def __init__(self, number_of_players):
 
         self.number_of_players = number_of_players
-        self.map = self.initialize_map(width, height)
+        self.tiles = self.initialize_map(width, height)
         self.width = width
         self.height = height
 
     # --------- Helper functions -------------
 
     def get_tile(self, position):  # helper function for getting files
-        return self.map[position[0]][position[1]]
+        return self.tiles[position[0]][position[1]]
 
     def get_adjacent_squares(self, position):  # returns list of adjacent tiles
         result = []
@@ -28,13 +27,13 @@ class Map:
 
         for square in squares:  # return legal tiles
             if self.tile_in_range(square):
-                result.append(self.map.get_tile(square))
+                result.append(self.tiles.get_tile(square))
 
         return result
 
-    def tile_in_range(self, pos):  # check if coordinates are contained by map
+    def tile_in_range(self, tile):  # check if coordinates are contained by map
 
-        if (pos[0] < 0) | (pos[0] >= (self.width-1)) | (pos[1] < 0) | (pos[1] >= (self.height-1)):
+        if (tile.position[0] < 0) | (tile.position[0] >= (self.width-1)) | (tile.position[1] < 0) | (tile.position[1] >= (self.height-1)):
             return False
 
         else:
@@ -58,6 +57,10 @@ class Map:
                 col.append(new_tile)
                 h += 1
 
+            tiles.append(col)
             w += 1
 
         return tiles
+
+    def __str__(self):
+        return str(self.tiles)

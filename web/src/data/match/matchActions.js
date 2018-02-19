@@ -1,6 +1,6 @@
 import { httpGetAction, httpPostAction } from "../httpCollectionActions";
 
-const fetchMatches = () => httpGetAction("MATCH", "/matches", null);
+const fetchMatches = (userId) => httpGetAction("MATCH", "/matches", { userId });
 
 const createMatch = (bots) => httpPostAction("MATCH", "/matches", { botIds: bots });
 
