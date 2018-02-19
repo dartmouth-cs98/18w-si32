@@ -17,4 +17,5 @@ class Building:
         self.tile.destroy_building()
 
     def __str__(self):
-        return ("Building " + str(self.buildingID))
+        return ("Building " + str(self.buildingID) +", owned by player " + str(self.owner))
+

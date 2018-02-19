@@ -18,35 +18,30 @@ class Map:
     def get_tile(self, position):  # helper function for getting files
         return self.tiles[position[0]][position[1]]
 
-    '''
-    def get_adjacent_squares(self, position):  # returns list of adjacent tiles
-        legal_adjacent_square_positions = []
-        possible_adjacent_square_positions = []
+    def get_adjacent_squares(self, position, direction=None):  # returns list of adjacent tiles
 
-        right_square_pos = [position[0]+1, position[1]]
-        left_square_pos = [position[0]-1, position[1]]
-        above_square_pos = [position[0], position[1]+1]
-        below_square_pos = [position[0], position[1]-1]
+        # If we don't need a specific direction, return all adjacent squares
+        if direction is None:
 
-        possible_adjacent_square_positions.append(right_square_pos)  # Square to the right
-        possible_adjacent_square_positions.append(left_square_pos)  # Square to the left
-        possible_adjacent_square_positions.append(above_square_pos)  # Square below
-        possible_adjacent_square_positions.append(below_square_pos)  # Square down
+            result = []
+            squares = []
 
-        for square_position in possible_adjacent_square_positions:  # return legal tiles
-            if self.tile_in_range(possible_adjacent_square_positions):
-                legal_adjacent_square_positions.append(self.get_tile(square_position))
+            squares.append([position[0]+1, position[1]])  # Square to the right
+            squares.append([position[0]-1, position[1]])  # Square to the left
+            squares.append([position[0], position[1]+1])  # Square below
+            squares.append([position[0], position[1]-1])  # Square down
 
-        return legal_adjacent_square_positions
-    '''
+            for square in squares:  # return legal tiles
+                if self.tile_in_range(square):
+                    result.append(self.get_tile(square))
 
-    def get_adjacent_position(self, position, direction):
-        adjacent_square_pos = ((position[0] + direction[0]), (position[1] + direction[1]))
+            return result
 
-        if self.tile_in_range(adjacent_square_pos):
-            return adjacent_square_pos
+        else:
+            new_pos = (position[0] + direction[0], position[1] + direction[1])
+            if self.tile_in_range(new_pos):
+                return self.get_tile(new_pos)
 
-        return None
 
     def tile_in_range(self, pos):  # check if coordinates are contained by map
 
