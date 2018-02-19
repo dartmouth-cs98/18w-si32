@@ -48,6 +48,9 @@ class GameState:
             i += 1
         '''
 
+        print("Turn " + str(self.turn))
+        print("-------------------------------------------------------------------------")
+        print("\n")
         moves = []
 
         for player in self.players:
@@ -57,12 +60,15 @@ class GameState:
         k = 0
         for move in moves:
             print("Player " + str(k) + " commands")
+            print("---------------------------------------")
             for command in move:
                 print(command)
+            print("---------------------------------------")
 
             k += 1
 
         print("\n")
+
 
 
         i = 0
@@ -133,6 +139,10 @@ class GameState:
         resultant_moves.append(player0resultantmove)
         resultant_moves.append(player1resultantmove)
 
+        #clear dictionaries
+        for player in self.players:
+            player.action_commands_from_position_dictionary = {}
+
         # execute the resultant moves
         for resultant_move in resultant_moves:
             for command in resultant_move:
@@ -199,7 +209,7 @@ class GameState:
                 else:
                     defending_player = tile.building.ownerID
                     if ((tile.units[1] > 0) & (defending_player == 0)) | ((tile.units[0] > 0) & (defending_player == 1)):
-
+                        print("\n")
                         if defending_player == 0:
 
                             if tile.units[1] <= tile.building.defense:
@@ -299,6 +309,7 @@ class GameState:
 
         for player in self.players:
             string += str(player) + "\n"
+            string += "---------------------------------------" + "\n"
 
         return string
 
@@ -308,4 +319,5 @@ print(g)
 while (True):
     g.play_a_turn()
     print(g)
-    sleep(2)
+
+    sleep(4)

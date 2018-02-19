@@ -1,7 +1,7 @@
 from Tile import Tile
 
-width = 10 # width of map
-height = 10  # height of map
+width = 5 # width of map
+height = 5  # height of map
 
 
 class Map:
