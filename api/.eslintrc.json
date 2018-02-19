@@ -1,5 +1,9 @@
 {
     "plugins": [ "node" ],
+    "env": {
+      "node": true,
+      "mocha": true
+    },
     "extends": [
       "eslint:recommended",
       "plugin:node/recommended"
@@ -31,5 +35,12 @@
           "allowModules": [ "lodash" ]
         }
       ]
-    }
+    },
+    "overrides": [{
+      "files": "test/**/*.js",
+      "rules": {
+          "node/no-unpublished-require": 0,
+          "node/no-missing-require": 0
+      }
+    }]
 }

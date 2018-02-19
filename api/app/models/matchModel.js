@@ -83,6 +83,9 @@ _Match.statics.getNext = () => {
 _Match.statics.handleWorkerResponse = (id, result, log) => {
   // TODO if result was our fault, set status back to queued and try again?
 
+  // TODO parse the game result, and if it was a completed game then compute new mu and sigma from players using
+  // lib/trueskill
+
   return Match.update({ "_id": id }, {
     "$set": {
       result,

@@ -1,15 +1,17 @@
 from Tile import Tile
 
-width = 50  # width of map
-height = 50  # height of map
+width = 5 # width of map
+height = 5  # height of map
+
 
 class Map:
     def __init__(self, number_of_players):
 
         self.number_of_players = number_of_players
-        self.tiles = self.initialize_map(width, height)
+        self.tiles = self.initialize_tiles(width, height)
         self.width = width
         self.height = height
+        self.number_of_tiles = width * height
 
     # --------- Helper functions -------------
 
@@ -40,9 +42,10 @@ class Map:
             if self.tile_in_range(new_pos):
                 return self.get_tile(new_pos)
 
-    def tile_in_range(self, tile):  # check if coordinates are contained by map
 
-        if (tile.position[0] < 0) | (tile.position[0] >= (self.width-1)) | (tile.position[1] < 0) | (tile.position[1] >= (self.height-1)):
+    def tile_in_range(self, pos):  # check if coordinates are contained by map
+
+        if (pos[0] < 0) | (pos[0] > (self.width-1)) | (pos[1] < 0) | (pos[1] > (self.height-1)):
             return False
 
         else:
@@ -50,7 +53,7 @@ class Map:
 
     # ------ Initializing function ---------------
 
-    def initialize_map(self, width, height):
+    def initialize_tiles(self, width, height):
         tiles = []
 
         w = 0
@@ -61,7 +64,7 @@ class Map:
 
             while h < height:  # create rows
 
-                new_tile = Tile([w, h], self.number_of_players)
+                new_tile = Tile((w, h), self.number_of_players)
 
                 col.append(new_tile)
                 h += 1
@@ -70,6 +73,3 @@ class Map:
             w += 1
 
         return tiles
-
-    def __str__(self):
-        return str(self.tiles)
