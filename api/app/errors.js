@@ -55,13 +55,10 @@ const errorMiddleware = async (ctx, next) =>  {
     // assertions only used for internal purposes (worker/sanity checking) so we
     // want to just pass the error straight through for debugging
     if (err instanceof assert.AssertionError) {
-      ctx.body = {
-        ...err,
-        stack: err.stack
-      };
+      ctx.body = Object.assign({}, err, {stack: err.stack});
       ctx.status = 500;
       return;
-    };
+    }
 
     const mappedErr = handleBuiltInError(err);
     if (mappedErr.constructor.name in module.exports) {

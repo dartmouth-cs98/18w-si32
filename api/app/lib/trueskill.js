@@ -15,7 +15,6 @@ const DEFAULT_SIGMA = 25.0 / 3;
 module.exports.returnNewSkillOfPlayers = (playersInRankedOrder) => {
   const playerSkills = playersInRankedOrder.map((playerObj, idx) => {
     const skillScore = playerObj.skill || {mu: DEFAULT_MU, sigma: DEFAULT_SIGMA};
-    console.log("s", skillScore);
     return {
       id: playerObj.id.toString(),
       skill: [skillScore.mu || DEFAULT_MU, skillScore.sigma || DEFAULT_SIGMA],

@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const TrueSkill = require("../lib/trueskill");
 const _ = require("lodash");
-const { MalformedError } = require("../errors");
+const assert = require("assert");
 
 const Schema = mongoose.Schema;
 
@@ -47,7 +47,7 @@ _Bot.statics.updateSkillByRankedFinish = async (rankedBotIds, matchId) => {
 
   assert(bots.length == rankedBotIds.length);
 
-  const botsById = _.reduce(bots, (acc, bot) => { acc[bot._id] = bot; return acc }, {});
+  const botsById = _.reduce(bots, (acc, bot) => { acc[bot._id] = bot; return acc; }, {});
 
   // set up bots in format needed for trueskill
   const botsToSkill = _.map(rankedBotIds, botId =>  ({

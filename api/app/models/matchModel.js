@@ -3,7 +3,6 @@ const Schema = mongoose.Schema;
 const _ = require("lodash");
 const Bot = require("./botModel");
 const s3 = require("../files/s3");
-const TrueSkill = require("../lib/trueskill");
 const { MalformedError } = require("../errors");
 const assert = require("assert");
 
@@ -103,7 +102,6 @@ _Match.statics.handleWorkerResponse = async (id, result, gameOutput) => {
 
   // store the individual bots' skills and rank in this match
   const newBots = _.map(match.bots, b => {
-    console.log("bot", b._id, botSkills);
     const skill = botSkills[b._id];
     b.skill = {
       mu: skill.prior.mu,
