@@ -43,7 +43,6 @@ class Rules:
 
             new_position = (current_move.tile.position[0] + current_move.direction[0],
             current_move.tile.position[1] + current_move.direction[1])
-            print('his')
             if new_position in enemy_set:  # Check if opposing player has moves coming from new position
                 i = 0
 
@@ -110,7 +109,7 @@ class Rules:
                 sets[0][tuple(move.tile.position)].append(move)
 
         for move in moves[1]:
-            if move.direction not in sets[1]:
+            if tuple(move.direction) not in sets[1]:
                 sets[1][tuple(move.tile.position)] = [move]
             else:
                 sets[1][tuple(move.tile.position)].append(move)
