@@ -28,14 +28,16 @@ const _Group = new Schema({
 // generic add/remove helper. pass in which op to do and updates both target and source
 _Group.methods._addRemoveMember = async function(targetUserId, op) {
   // targetUser contains user correctly
-  const user = await User.findOneAndUpdate({ _id: targetUserId }, { [op]: { "memberOf": this._id }}, { new: true });
+  const user = await User.findOneAndUpdate({ _id: targetUserId }, { [op]: { "groups": this._id }}, { new: true });
 
   if (!user) {
     throw new MalformedError("Couldn't find that user");
   }
 
   // user contains targetUser correctly
+  console.log(this._id);
   const group = await Group.findOneAndUpdate({ _id: this._id }, { [op]: { "members": targetUserId }}, { new: true });
+  console.log(group);
 
   return { user, group };
 };

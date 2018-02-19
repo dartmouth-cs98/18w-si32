@@ -16,7 +16,7 @@ module.exports.returnNewSkillOfPlayers = (playersInRankedOrder) => {
   const playerSkills = playersInRankedOrder.map((playerObj, idx) => {
     const skillScore = playerObj.trueSkillScore || {mu: DEFAULT_MU, sigma: DEFAULT_SIGMA};
     return {
-      id: playerObj.id.toString(),
+      id: playerObj._id.toString(),
       skill: [skillScore.mu, skillScore.sigma],
       rank: idx,    // players index in playersInRankedOrder gives their relative rank in this game
     };
@@ -25,7 +25,7 @@ module.exports.returnNewSkillOfPlayers = (playersInRankedOrder) => {
   trueskill.AdjustPlayers(playerSkills);
 
   const playerIdsToNewMuSig = playerSkills.reduce((obj, player) => {
-    obj[player.id.toString()] = player.skill;
+    obj[player._id.toString()] = player.skill;
     return obj;
   }, {});
 

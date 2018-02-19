@@ -43,13 +43,13 @@ suite("TrueSkill Update Unit Test", function() {
     const newScores = trueskill.returnNewSkillOfPlayers(users);
 
     // ensure all ids of users are in the new scores object
-    const hasAllUserIds = _.isEqual(Object.keys(newScores), users.map(u => u.id.toString()));
+    const hasAllUserIds = _.isEqual(Object.keys(newScores), users.map(u => u._id.toString()));
     expect(hasAllUserIds).to.be.true();
 
     // since all users had same mu/sig going in, the first player in array should now have highest mu, second player 2nd highest, etc
     let prevMu = Number.POSITIVE_INFINITY;
     users.forEach(u => {
-      const userScore = newScores[u.id.toString()];
+      const userScore = newScores[u._id.toString()];
       expect(userScore < prevMu);
       prevMu = userScore;
     });
