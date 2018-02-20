@@ -47,8 +47,8 @@ class Game_state:
             #TODO: Replace the get random moves with real calls to user code
             moves.append(player.get_random_moves())
 
-        #self.map.get_tile([39,40]).increment_units(1, 2)
-        #moves[1].append(Unit_command(1, self.map.get_tile([39,40]), 'move', 2, [1,0]))
+        self.map.get_tile([39,40]).increment_units(1, 2)
+        moves[1].append(Unit_command(1, self.map.get_tile([39,40]), 'move', 2, [1,0]))
 
         moves = self.rules.update_combat_phase(moves)  # Run both players moves through combat phase, return updated list of moves
 
@@ -126,12 +126,6 @@ class Game_state:
     def json_log_move(self, move):
         if not self.replay:
             self.json_log['commands'].append(move.to_json())
-
-    def log_move(self, move):
-        if not self.replay:
-            game_log = open(self.game_log_file,"a")
-            game_log.write(move.to_json() + "\n")
-            game_log.close()
 
 
 test = Game_state(Map, Rules, 2, 'hi')
