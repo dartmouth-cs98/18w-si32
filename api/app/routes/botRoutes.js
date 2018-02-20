@@ -25,6 +25,7 @@ botRouter.post("/", async (ctx) => {
   const bot = await Bot.create({
     name: ctx.request.body.fields.name,
     user: ctx.state.userId,
+    trueSkill: {},
   });
 
   // upload the code async. Better to return faster and do the 2 db calls than

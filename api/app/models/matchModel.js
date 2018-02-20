@@ -33,7 +33,7 @@ const _Match = new Schema({
 _Match.statics.createWithBots = (userId, botIds) => {
   return Bot.find({
     "_id": { $in: botIds }
-  }).lean().then(bots => {
+  }).select({ code: 1, _id: 1, name: 1, user: 1, version: 1 }).lean().then(bots => {
     if (bots.length != botIds.length) {
       throw new MalformedError("not all bots found");
     }
@@ -88,7 +88,7 @@ _Match.statics.handleWorkerResponse = async (id, result, gameOutput) => {
   const match = await Match.findById(id);
 
   assert(match);
-  assert(match.status != "DONE");
+  // assert(match.status != "DONE");
   assert(rankedBots.length == match.bots.length);
 
   // update the bots' skills
@@ -100,10 +100,12 @@ _Match.statics.handleWorkerResponse = async (id, result, gameOutput) => {
     botRankById[b] = i + 1;
   });
 
+  console.log("skills", botSkills);
+
   // store the individual bots' skills and rank in this match
   const newBots = _.map(match.bots, b => {
     const skill = botSkills[b._id];
-    b.skill = {
+    b.trueSkill = {
       mu: skill.prior.mu,
       sigma: skill.prior.sigma,
       delta: skill.mu - skill.prior.mu // how much this match changed the bot's skill

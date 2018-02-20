@@ -1,7 +1,9 @@
 const mongoose = require("mongoose");
-const TrueSkill = require("../lib/trueskill");
 const _ = require("lodash");
 const assert = require("assert");
+
+const TrueSkill = require("../lib/trueskill");
+const TrueSkillSchema = require("./trueskill");
 
 const Schema = mongoose.Schema;
 
@@ -15,17 +17,17 @@ const _Bot = new Schema({
     type: Number,
     default: 1,
   },
-  skill: { mu: Schema.Types.Number, sigma: Schema.Types.Number }, // these numbers should always match the last entry in skillHistory
-  skillHistory: [{
-    mu: Schema.Types.Number,
-    sigma: Schema.Types.Number,
-    timestamp: Schema.Types.Date,
-    match: { type: Schema.Types.ObjectId, ref: "Match" } // the match that resulted in this skill
-  }],
   name: {
     type: String,
     required: true
   },
+  trueSkill: { type: TrueSkillSchema, required: true },
+  trueSkillHistory: [{
+    score: TrueSkillSchema,
+    match: { type: Schema.Types.ObjectId, ref: "Match" },
+    timestamp: Date,
+    _id: false
+  }],
   code: {
     url: { type: String, },
     key: { type: String, }
@@ -52,7 +54,7 @@ _Bot.statics.updateSkillByRankedFinish = async (rankedBotIds, matchId) => {
   // set up bots in format needed for trueskill
   const botsToSkill = _.map(rankedBotIds, botId =>  ({
     id: botId,
-    skill: botsById[botId].skill,
+    skill: botsById[botId].trueSkill,
   }));
 
   // compute the new skills
@@ -60,19 +62,21 @@ _Bot.statics.updateSkillByRankedFinish = async (rankedBotIds, matchId) => {
 
   // update the bots in the database
   _.each(bots, async b => {
-    updatedSkills[b._id].prior = b.skill; // store prior skill on newSkills, for output
+    // store prior skill on newSkills, so it's available for front-end
+    updatedSkills[b._id].prior = b.trueSkill;
 
     // set the bot's new skill
-    b.skill = {
+    b.trueSkill = {
       mu: updatedSkills[b._id].mu,
       sigma: updatedSkills[b._id].sigma,
     };
 
     // add an entry to the skill history list
-    b.skillHistory.push(Object.assign({}, b.skill, {
+    b.trueSkillHistory.push({
+      score: b.trueSkill,
       timestamp: new Date(),
       match: matchId,
-    }));
+    });
 
     // save the bot
     await b.save();
