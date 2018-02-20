@@ -11,9 +11,6 @@ class Tile:
         self.units = self.initialize_units_list()
         self.building = None  # Tiles initialized to not have a building
 
-        #self.units_mining = 0
-        #self.units_building = 0
-
     # ---------------- RESOURCE METHODS ------------------------
 
     def decrement_resource(self, number=1):  # reduces the resource in the tile (i.e. when a unit mines the resource)
@@ -51,9 +48,8 @@ class Tile:
 
     def __str__(self):
         string = ""
-        string += "Position: " + str(self.position)
+        string += "Tile at position: " + str(self.position) + '\n'
 
-        for i in range(self.number_of_players):
-            string += "Units of Player " + str(i) + ":" + str(self.units[i]) + "\n"
-
+        string += "Player 1 units: " +str(self.units[0]) + "\n"
+        string+= "Player 2 units: " +str(self.units[1])
         return string
