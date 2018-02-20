@@ -10,7 +10,6 @@ import ProfilePage from "./components/user/profilePage";
 import RegisterPage from "./components/user/registerPage";
 import DashboardPage from "./components/dashboard/dashboardPage";
 
-import DocsPage from "./components/docs/docsPage";
 import LeaderboardPage from "./components/leaderboard/leaderboardPage";
 import ReplayPage from "./components/replay/replayPage";
 import FeedPage from "./components/feed/feedPage";
@@ -43,12 +42,8 @@ const routes = [
     action: () => <DashboardPage />
   },
   {
-    path: "/feed", 
+    path: "/feed",
     action: () => <FeedPage />
-  },
-  {
-    path: "/docs",
-    action: () => <DocsPage />
   },
   {
     path: "/leaderboard",
