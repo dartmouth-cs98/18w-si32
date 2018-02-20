@@ -10,7 +10,7 @@ import { fetchUsers } from "../../data/user/userActions";
 
 const RankedList = ({ users }) => {
   return _.map(users, (u) => (
-    <Link key={u._id} href={`/users/${u._id}`}>{u.username}</Link>
+    <Link key={u._id} href={`/users/${u._id}`}>{u.username} ({u.trueSkill.mu.toFixed(1)})</Link>
   ));
 };
 
