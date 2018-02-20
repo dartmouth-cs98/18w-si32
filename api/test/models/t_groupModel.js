@@ -3,6 +3,7 @@ const expect = require("chai").expect;
 const bcrypt = require("bcryptjs");
 const _ = require("lodash");
 
+const containsObjectId = require("../helpers/containsObjectId");
 const resetCollections = require("../pretest/reset_collections");
 const trueskill = require("../../app/lib/trueskill");
 
@@ -13,7 +14,7 @@ suite("Test Group Model", function() {
     await resetCollections();
   });
 
-  test("Can Create One", async function() {
+  test("Can Create One Manually", async function() {
     const groupName = "Robin & Co";
     const group = await models.Group.create({
       // create the user in the db
@@ -23,6 +24,31 @@ suite("Test Group Model", function() {
 
     expect(group).to.exist();
     expect(group.name).to.equal(groupName);
+  });
+
+  test("createGroupWithFoundingMember", async function() {
+    const founder = await models.User.create({
+      // create the user in the db
+      username: "test_u",
+      password: await bcrypt.hash("password", 10),
+    });
+
+    const groupInfo = {
+      name: "Robin & Co",
+      description: "Spoiler alert: its just Robin and no one else",
+      public: true,
+    };
+
+    const {group, user} = await models.Group.createGroupWithFoundingMember(groupInfo, founder._id);
+
+    // user has new group in groups
+    expect(containsObjectId(user.groups, group._id)).to.be.true();
+
+    // group created correctly
+    expect(group.name).to.equal(groupInfo.name);
+    expect(group.description).to.equal(groupInfo.description);
+    expect(group.public).to.equal(groupInfo.public);
+    expect(containsObjectId(group.members, user._id));
   });
 
 

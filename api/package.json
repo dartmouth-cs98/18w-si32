@@ -7,7 +7,7 @@
   "description": "The web API for Si32.",
   "main": "index.js",
   "scripts": {
-    "test": "export DB_EXTENSION='/si32_test' && mocha --reporter spec --exit",
+    "test": "export DB_URI='mongodb://localhost:27017' && export DB_EXTENSION='/si32_test' && mocha --reporter spec --exit",
     "lint": "eslint app/",
     "build": "docker-compose build",
     "up": "docker-compose up",

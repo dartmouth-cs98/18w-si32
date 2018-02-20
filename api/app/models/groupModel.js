@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const User = require("./userModel");
+const ensureRequiredProps = require("../lib/ensureRequiredProps");
 
 const { MalformedError } = require("../errors");
 
@@ -11,6 +12,10 @@ const _Group = new Schema({
     index: {
       unique: true
     }
+  },
+  description: {
+    type: String,
+    default: "",
   },
   public: {
     type: Boolean,
@@ -48,6 +53,24 @@ _Group.methods.addMember = async function(targetUserId) {
 // this instance of a user stops following targetUser
 _Group.methods.removeMember = async function(targetUserId) {
   return await this._addRemoveMember(targetUserId, "$pull");
+};
+
+_Group.statics.createGroupWithFoundingMember = async function(groupInfo, foundingUserId) {
+  const missingProperties = ensureRequiredProps(groupInfo, ["name"]);
+  if (missingProperties.length) {
+    throw new MalformedError("'name' is required for a group");
+  }
+
+  const group = await Group.create({
+    name: groupInfo.name,
+    description: groupInfo.description,
+    public: groupInfo.public,
+    members: [foundingUserId],
+  });
+
+  const user = await User.findOneAndUpdate({ _id: foundingUserId }, { $addToSet: { "groups": group._id }}, { new: true });
+
+  return { user, group };
 };
 
 
