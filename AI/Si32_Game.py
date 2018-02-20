@@ -1,3 +1,4 @@
+import json
 from unit_command import Unit_command
 from Player import Player
 from Map import Map
@@ -26,6 +27,8 @@ class Game_state:
 
         self.replay = replay
 
+        self.json_log = self.initialize_json_log()
+
         self.game_log_file = self.initialize_game_log()
 
 
@@ -44,13 +47,13 @@ class Game_state:
             #TODO: Replace the get random moves with real calls to user code
             moves.append(player.get_random_moves())
 
-        self.map.get_tile([39,40]).increment_units(1, 2)
-        moves[1].append(Unit_command(1, self.map.get_tile([39,40]), 'move', 2, [1,0]))
+        #self.map.get_tile([39,40]).increment_units(1, 2)
+        #moves[1].append(Unit_command(1, self.map.get_tile([39,40]), 'move', 2, [1,0]))
+
         moves = self.rules.update_combat_phase(moves)  # Run both players moves through combat phase, return updated list of moves
 
         for player_moves in moves:
             self.execute_moves(player_moves)
-
 
     def update_units_numbers(self):
         for tiles in self.map.tiles:
@@ -68,7 +71,7 @@ class Game_state:
     def execute_move(self, move):
         if self.rules.verify_move(move):
 
-            self.log_move(move)
+            self.json_log_move(move)
             self.rules.update_by_move(move)
 
 
@@ -87,6 +90,14 @@ class Game_state:
 
     # ------------ REPLAY FILE FUNCTIONS ----------------
 
+    def write_game_log(self):
+        temp = json.dumps(self.json_log)
+        json_log = json.loads(temp)
+
+        with open('data.txt', 'w') as outfile:
+            json.dump(json_log, outfile)
+
+
     def initialize_game_log(self):
         if not self.replay:
             file_name = str(self.gameId) + "_game_log.txt"
@@ -99,6 +110,22 @@ class Game_state:
             game_log.close()
 
             return file_name
+
+    def initialize_json_log(self):
+        json_log = {}
+        board_info = {}
+        board_info['width'] = self.map.width
+        board_info['height'] = self.map.height
+        board_info['player1'] = [self.players[0].starting_x, self.players[0].starting_y]
+        json_log['board_state'] = board_info
+        json_log['commands'] = []
+        json_log['rank'] = []
+
+        return json_log
+
+    def json_log_move(self, move):
+        if not self.replay:
+            self.json_log['commands'].append(move.to_json())
 
     def log_move(self, move):
         if not self.replay:
@@ -113,8 +140,9 @@ test = Game_state(Map, Rules, 2, 'hi')
 test.play_a_turn()
 p1 = test.players[0].get_occupied_tiles()
 p2 = test.players[1].get_occupied_tiles()
+test.write_game_log()
 
-print('tesdf ')
+print('tesdf')
 
 for x in p1:
     print(x)

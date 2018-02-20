@@ -19,6 +19,12 @@ class Rules:
         if move.command == 'move':
             self.update_move_command(move)
 
+        if move.command == 'build':
+            self.update_build_command(move)
+
+        if move.command == 'mine':
+            self.update_mine_command(move)
+
     def update_move_command(self, move):
         old_tile = move.tile
         new_tile = self.map.get_tile([old_tile.position[0] + move.direction[0], old_tile.position[1] + move.direction[1]])
@@ -43,6 +49,7 @@ class Rules:
 
             new_position = (current_move.tile.position[0] + current_move.direction[0],
             current_move.tile.position[1] + current_move.direction[1])
+
             if new_position in enemy_set:  # Check if opposing player has moves coming from new position
                 i = 0
 
@@ -92,6 +99,7 @@ class Rules:
             index += 1
 
         enemy_moves = []
+
         for moves in enemy_set.values():
             for move in moves:
                 enemy_moves.append(move)

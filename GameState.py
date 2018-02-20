@@ -4,7 +4,8 @@ from random import randint
 from Building import Building
 from Building import resource_cost
 from ActionCommand import ActionCommand
-from Player import Player
+from Player import Player=
+
 from Map import Map
 
 from collections import deque
