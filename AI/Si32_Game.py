@@ -6,7 +6,6 @@ from Tile import Tile
 from Rules import Rules
 from json_helpers import json_to_object_list
 
-
 class Game_state:
 
     def __init__(self, map, rules, number_of_players, user_code, gameId=1000, replay=False):
@@ -29,8 +28,6 @@ class Game_state:
 
         self.json_log = self.initialize_json_log()
 
-        self.game_log_file = self.initialize_game_log()
-
 
     # ------------------ Main Functions ---------------------
 
@@ -39,21 +36,32 @@ class Game_state:
         while not self.game_over:  # Main loop. Simulates both players taking a turn until someone wins
             self.play_a_turn()
 
-    def play_a_turn(self):  # gets moves from both players and executes them
+    def get_random_player_moves(self):
         moves = []
-        i = 0
 
         for player in self.players:
-            #TODO: Replace the get random moves with real calls to user code
             moves.append(player.get_random_moves())
 
-        #self.map.get_tile([39,40]).increment_units(1, 2)
-        #moves[1].append(Unit_command(1, self.map.get_tile([39,40]), 'move', 2, [1,0]))
+        return moves
 
+
+    def play_a_turn(self):  # gets moves from both players and executes them
+        moves = self.get_random_player_moves()
+
+        self.map.get_tile([39,40]).increment_units(1, 2)
+        moves[1].append(Unit_command(1, self.map.get_tile([39,40]), 'move', 2, [1,0]))
+
+        # Check moves for combat, and sort by type of command
         moves = self.rules.update_combat_phase(moves)  # Run both players moves through combat phase, return updated list of moves
+        moves = sort_moves(moves)
 
         for player_moves in moves:
             self.execute_moves(player_moves)
+
+        # Update statuses/unit numbers, etc.
+        for col in self.map.tiles:
+            for tile in col:
+                tile.update_tile()
 
     def update_units_numbers(self):
         for tiles in self.map.tiles:
@@ -97,26 +105,13 @@ class Game_state:
         with open('data.txt', 'w') as outfile:
             json.dump(json_log, outfile)
 
-
-    def initialize_game_log(self):
-        if not self.replay:
-            file_name = str(self.gameId) + "_game_log.txt"
-            game_log = open(file_name,"w+")
-
-            starting_1 = [self.players[0].starting_x, self.players[0].starting_y]
-            starting_2 = [self.players[1].starting_x, self.players[1].starting_y]
-            game_log.write("Replay log of game " + str(self.gameId) + "\n")
-            game_log.write(str(self.map.width)+ ',' +str(self.map.height)+ ',' +str(starting_1)+ ',' +str(starting_2)+ '\n')
-            game_log.close()
-
-            return file_name
-
     def initialize_json_log(self):
         json_log = {}
         board_info = {}
         board_info['width'] = self.map.width
         board_info['height'] = self.map.height
         board_info['player1'] = [self.players[0].starting_x, self.players[0].starting_y]
+        board_info['player2'] = [self.players[1].starting_x, self.players[1].starting_y]
         json_log['board_state'] = board_info
         json_log['commands'] = []
         json_log['rank'] = []
@@ -127,12 +122,26 @@ class Game_state:
         if not self.replay:
             self.json_log['commands'].append(move.to_json())
 
-    def log_move(self, move):
-        if not self.replay:
-            game_log = open(self.game_log_file,"a")
-            game_log.write(move.to_json() + "\n")
-            game_log.close()
+# We want to execute commmands in the following order: move, build, mine
+def sort_moves(moves):
+    sorted_moves = []
 
+    for player in moves:
+        move = []
+        build = []
+        mine = []
+
+        for command in player:
+            if command.command == 'move':
+                move.append(command)
+            elif command.command == 'build':
+                build.append(command)
+            else:
+                mine.append(command)
+
+        sorted_moves.append(move + build + mine)
+
+    return sorted_moves
 
 test = Game_state(Map, Rules, 2, 'hi')
 

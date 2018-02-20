@@ -7,7 +7,7 @@ class Tile:
 
         self.number_of_players = number_of_players
         self.position = position
-        self.resource = randint(0, 10)  # amount of resource in the tile (will be randomized for now)
+        self.resource = randint(0, 50)  # amount of resource in the tile (will be randomized for now)
         self.units = self.initialize_units_list()
         self.building = None  # Tiles initialized to not have a building
 
@@ -34,6 +34,37 @@ class Tile:
 
     def destroy_building(self):  #remove building reference
         self.building = None
+
+    # --------------- UPDATE FUNCTIONS ----------------------------
+
+    def update_tile(self):
+        self.update_units_number()
+        self.update_building_status()
+
+    def update_units_number(self):
+        while (self.units[0] > 0) and (self.units[1] > 0):
+            self.units[0] -= 1
+            self.units[1] -= 1
+
+    def update_building_status(self):
+        if self.building is not None:
+            building_owner = self.building.ownerId
+            enemy_player = 1 - building_owner
+
+            #  Check if building will be destroyed by enemy units
+            if self.units[enemy_player] > 0:
+
+                if self.units[enemy_player] >= 10:
+                    self.destroy_building()
+                    self.units[enemy_player] -= 10
+
+                else:
+                    self.units[enemy_player] = 0
+
+            # Check if new units should be produced
+            while self.building.production_progress >= 5:
+                self.increment_units(building_owner, 1)
+                self.building.production_progress -= 5
 
     # --------------- INITIALIZING FUNCTION ----------------------
 

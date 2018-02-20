@@ -95,7 +95,7 @@ class Player:
     def increment_resources(self, number):
         self.resources += number
 
-    def decrement_resource(self, number):
+    def decrement_resources(self, number):
         self.resources -= number
 
     def __str__(self):
