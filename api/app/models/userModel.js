@@ -5,8 +5,6 @@ const Schema = mongoose.Schema;
 const TrueSkillSchema = require("./trueskill");
 const TrueSkill = require("../lib/trueskill");
 
-const { MalformedError } = require("../errors");
-
 const _User = new Schema({
   username: {
     type: String,
@@ -34,6 +32,10 @@ const _User = new Schema({
     type: Schema.Types.ObjectId,
     ref: "User"
   }],
+  groups: [{
+    type: Schema.Types.ObjectId,
+    ref: "Group"
+  }]
 }, {
   timestamps: true
 });

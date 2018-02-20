@@ -88,11 +88,11 @@ _Match.statics.handleWorkerResponse = async (id, result, gameOutput) => {
   const match = await Match.findById(id);
 
   assert(match);
-  // assert(match.status != "DONE");
+  assert(match.status != "DONE");
   assert(rankedBots.length == match.bots.length);
 
   // update the bot AND user skills. Because bots are own by users, this function will always
-  // update both as needed. 
+  // update both as needed.
   const botSkills = await Bot.updateSkillByRankedFinish(gameOutput.rankedBots, match._id);
 
   // turn array of bots into obj keyed on bot ID storing ranked finish

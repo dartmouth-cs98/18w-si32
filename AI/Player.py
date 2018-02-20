@@ -1,109 +1,114 @@
-import random
-from random import randint
-from ActionCommand import ActionCommand
-from Tile import Tile
-from collections import deque
+from random import random, randint
+from unit_command import Unit_command
 
 starting_distance = 30
 
+
 class Player:
     def __init__(self, playerId, map, user_code):
-        self.playerID = playerId
+        self.playerId = playerId
         self.map = map
         self.user_code = user_code
         self.winner = False
-        self.buildings = []
-        self.resource = 0
+        self.resources = 100
 
-        self.positions_with_units = []
-        self.action_commands_from_position_dictionary = {}
+        self.starting_x = int((self.map.width / 2) + (0.5 - self.playerId) * starting_distance)
+        self.starting_y = int((self.map.height / 2) + (0.5 - self.playerId) *starting_distance)
 
-    def get_move(self):
+        starting_tile = self.map.get_tile([self.starting_x, self.starting_y])
+        starting_tile.increment_units(playerId)
 
-        move = set()
+    def make_move(self):
+        # 1 = move north, 2 = move east, 3 = move south, 4 = move west, 5 = build north, 6 = build east, 7 = build south, 8 = build west, 9 = mine
 
-        for position in self.positions_with_units:
-            tile = self.map.get_tile(position)
+        move_as_list = []
 
-            number_of_tile_units_controlled_by_player = tile.units[self.playerID]
+        # the numbers in the tuple will correspond to commands given to each unit
+        for unit in self.units:
+            move_as_list.append(randint(1, 10))
 
-            number_of_units_to_move = randint(0, number_of_tile_units_controlled_by_player)
-            number_of_units_to_build = randint(0, number_of_tile_units_controlled_by_player - number_of_units_to_move)
-            number_of_units_to_mine = number_of_tile_units_controlled_by_player - number_of_units_to_move - number_of_units_to_build
+        move_as_tuple = tuple(move_as_list)
+        return move_as_tuple
 
-            number_of_units_to_move_north = randint(0, number_of_units_to_move)
-            number_of_units_to_move_east = randint(0, number_of_units_to_move - number_of_units_to_move_north)
-            number_of_units_to_move_south = randint(0, number_of_units_to_move - number_of_units_to_move_north - number_of_units_to_move_east)
-            number_of_units_to_move_west = number_of_units_to_move - number_of_units_to_move_north - number_of_units_to_move_east - number_of_units_to_move_south
+    # Find all tiles in which player has units to control
+    def get_occupied_tiles(self):
+        tiles = []
 
-            '''
-            if (self.playerID == 0):
-                number_of_units_to_build = 0
-                number_of_units_to_mine = 0
-                number_of_units_to_move_north = 1
-                number_of_units_to_move_east = 0
-                number_of_units_to_move_south = 0
-                number_of_units_to_move_west = 0
-            elif (self.playerID == 1):
-                number_of_units_to_build = 0
-                number_of_units_to_mine = 0
-                number_of_units_to_move_north = 0
-                number_of_units_to_move_east = 0
-                number_of_units_to_move_south = 1
-                number_of_units_to_move_west = 0
-            '''
+        for col in self.map.tiles:
+            for tile in col:
+                if tile.units[self.playerId] > 0:
+                    tiles.append(tile)
+
+        return tiles
+
+    # Top level method for getting all moves
+    def get_random_moves(self):
+        tiles = self.get_occupied_tiles()
+        moves = []
+
+        for tile in tiles:
+            moves += self.random_moves_by_tile(tile)
+
+        return moves
+
+    # Method for making random moves on a specific tile
+    def random_moves_by_tile(self, tile):
+        moves = []
+        units = tile.units[self.playerId]
+
+        while units != 0:
+            move = self.make_random_move(tile, units)
+            moves.append(move)
+            units -= move.number_of_units
+
+        return moves
+
+    def make_random_move(self, tile, units_available):
+
+        units = randint(1, units_available)
+
+        direction = self.get_random_direction()
+
+        random_move = Unit_command(self.playerId, tile, 'move', units, direction)
+
+        return random_move
 
 
-            action_command_set = set()
+    def get_random_direction(self):
+        rand_number = randint(0,100)
 
+        if rand_number > 75:
+            return (0,-1)
 
+        elif rand_number > 50:
+            return (0, 1)
 
-            if (number_of_units_to_move_north > 0):
-                action_command_north = ActionCommand(tile, 'move', number_of_units_to_move_north, (0, 1))
-                action_command_set.add(action_command_north)
+        elif rand_number > 25:
+            return (-1, 0)
 
-            if (number_of_units_to_move_east > 0):
-                action_command_east = ActionCommand(tile, 'move', number_of_units_to_move_east, (1, 0))
-                action_command_set.add(action_command_east)
-
-            if (number_of_units_to_move_south > 0):
-                action_command_south = ActionCommand(tile, 'move', number_of_units_to_move_south, (0, -1))
-                action_command_set.add(action_command_south)
-
-            if (number_of_units_to_move_west > 0):
-                action_command_west = ActionCommand(tile, 'move', number_of_units_to_move_west, (-1, 0))
-                action_command_set.add(action_command_west)
-
-            if (number_of_units_to_build > 0):
-                action_command_build = ActionCommand(tile, 'build', number_of_units_to_build, None)
-                action_command_set.add(action_command_build)
-
-            if (number_of_units_to_mine > 0):
-                action_command_mine = ActionCommand(tile, 'mine', number_of_units_to_mine, None)
-                action_command_set.add(action_command_mine)
-
-            for action_command in action_command_set:
-                move.add(action_command)
-
-            self.action_commands_from_position_dictionary[position] = action_command_set
-
-        return move
+        else:
+            return (1, 0)
 
     def add_building(self, building):
         self.buildings.append(building)
 
+    def increment_resources(self, number):
+        self.resources += number
+
+    def decrement_resource(self, number):
+        self.resources -= number
+
     def __str__(self):
-        string = "Player " + str(self.playerID) + "\n"
+        string = "Player " + str(self.playerId) + "\n"
 
         string += "Resource: " + str(self.resource) + "\n"
 
-        for pos in self.positions_with_units:
-            tile = self.map.get_tile(pos)
-            string += str(tile.units[self.playerID]) + " units at " + str(tile.position)
+        for unit in self.units:
+            string += str(unit)
             string += "\n"
 
         for building in self.buildings:
-            string += str(building) + " at " + str(building.position)
+            string += str(building)
             string += "\n"
 
         return string
