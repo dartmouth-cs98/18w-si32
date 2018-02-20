@@ -4,6 +4,7 @@ const _ = require("lodash");
 const Schema = mongoose.Schema;
 const TrueSkillSchema = require("./trueskill");
 const TrueSkill = require("../lib/trueskill");
+const { MalformedError } = require("../errors");
 
 const _User = new Schema({
   username: {
