@@ -6,6 +6,7 @@ RUN apk --no-cache add --virtual native-deps \
 
 WORKDIR /tmp
 COPY package.json /tmp
+COPY package-lock.json /tmp
 RUN npm install
 RUN npm install -g nodemon
 

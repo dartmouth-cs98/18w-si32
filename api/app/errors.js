@@ -1,3 +1,5 @@
+const assert = require("assert");
+
 // for when authenticated user attempts to do something they're not allowed to
 class AccessError extends Error {
   getStatus() {
@@ -49,6 +51,14 @@ const errorMiddleware = async (ctx, next) =>  {
   } catch(err) {
     // log for debugging
     console.log(err); // eslint-disable-line
+
+    // assertions only used for internal purposes (worker/sanity checking) so we
+    // want to just pass the error straight through for debugging
+    if (err instanceof assert.AssertionError) {
+      ctx.body = Object.assign({}, err, {stack: err.stack});
+      ctx.status = 500;
+      return;
+    }
 
     const mappedErr = handleBuiltInError(err);
     if (mappedErr.constructor.name in module.exports) {

@@ -4,6 +4,7 @@ const _ = require("lodash");
 const Bot = require("./botModel");
 const s3 = require("../files/s3");
 const { MalformedError } = require("../errors");
+const assert = require("assert");
 
 const _Match = new Schema({
   createdBy: {
@@ -32,7 +33,7 @@ const _Match = new Schema({
 _Match.statics.createWithBots = (userId, botIds) => {
   return Bot.find({
     "_id": { $in: botIds }
-  }).lean().then(bots => {
+  }).select({ code: 1, _id: 1, name: 1, user: 1, version: 1 }).lean().then(bots => {
     if (bots.length != botIds.length) {
       throw new MalformedError("not all bots found");
     }
@@ -80,19 +81,51 @@ _Match.statics.getNext = () => {
   });
 };
 
-_Match.statics.handleWorkerResponse = (id, result, log) => {
-  // TODO if result was our fault, set status back to queued and try again?
+_Match.statics.handleWorkerResponse = async (id, result, gameOutput) => {
+  // pull the things we need from gameOutput
+  const { rankedBots, log } = gameOutput;
+
+  const match = await Match.findById(id);
+
+  assert(match);
+  assert(match.status != "DONE");
+  assert(rankedBots.length == match.bots.length);
+
+  // update the bot AND user skills. Because bots are own by users, this function will always
+  // update both as needed.
+  const botSkills = await Bot.updateSkillByRankedFinish(gameOutput.rankedBots, match._id);
+
+  // turn array of bots into obj keyed on bot ID storing ranked finish
+  const botRankById = {};
+  _.each(rankedBots, (b, i) => {
+    botRankById[b] = i + 1;
+  });
+
+  // store the individual bots' skills and rank in this match
+  const newBots = _.map(match.bots, b => {
+    const skill = botSkills[b._id];
+    b.trueSkill = {
+      mu: skill.prior.mu,
+      sigma: skill.prior.sigma,
+      delta: skill.mu - skill.prior.mu // how much this match changed the bot's skill
+    };
+    b.rank = botRankById[b._id];
+    return b;
+  });
+
+  // update and save the match back into the db
+  match.bots = newBots;
+  match.status = "DONE";
+  match.log = log;
+  match.result = result;
+  match.markModified("bots"); // need to alert mongoose that the array is different
+
+  return match.save();
 
   // TODO parse the game result, and if it was a completed game then compute new mu and sigma from players using
   // lib/trueskill
 
-  return Match.update({ "_id": id }, {
-    "$set": {
-      result,
-      log,
-      status: "DONE",
-    }
-  });
+  // TODO if result was our fault, set status back to queued and try again?
 };
 
 const Match = mongoose.model("Match", _Match);

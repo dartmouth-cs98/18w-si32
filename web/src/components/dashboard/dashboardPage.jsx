@@ -18,7 +18,7 @@ import { MainTitle, SubTitle } from "./titles";
 const DashBotList = ({ bots }) => {
   const items = _.map(bots, b =>
     <div key={b._id}>
-      <Link href={`/bots/${b._id}`}>{b.name}</Link>
+      <Link href={`/bots/${b._id}`}>{b.name} ({b.trueSkill.mu.toFixed(1)})</Link>
     </div>
   );
 
