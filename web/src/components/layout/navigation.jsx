@@ -12,11 +12,18 @@ import {
   constants,
 } from "../../style";
 
+// TODO: determine this based on environment var
+const DOCS_URL = "http://localhost:4001";
+
 class Navigation extends React.PureComponent {
   logout = () => {
     this.props.logout().then(() => {
       history.push("/");
     });
+  }
+
+  openDocs = () => {
+    window.open(DOCS_URL, "_blank");
   }
 
   renderUserArea() {
@@ -48,7 +55,7 @@ class Navigation extends React.PureComponent {
         <Link style={styles.link} href="/leaderboard">Leaderboard</Link>
         <Link style={styles.link} href="/feed">Feed</Link>
 
-        <Link style={styles.link} href="/docs">Docs</Link>
+        <Link style={styles.link} href="#" onClick={this.openDocs}>Docs</Link>
         <Link style={styles.link} href="/replay">Replay</Link>
       </div>
     );
@@ -79,8 +86,8 @@ const styles = {
   wrapper: {
     width: "100%",
     height: constants.NAVBAR_HEIGHT,
-    position: "fixed", 
-    top: "0", 
+    position: "fixed",
+    top: "0",
     left: "0",
     display: "flex",
     alignItems: "center",
