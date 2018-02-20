@@ -23,6 +23,9 @@ import MatchListPage from "./components/matches/listPage";
 import MatchCreatePage from "./components/matches/createPage";
 import MatchSinglePage from "./components/matches/singlePage";
 
+import GroupCreatePage from "./components/groups/createPage";
+
+
 // TODO split these out into modules?
 /* eslint-disable react/display-name */
 const routes = [
@@ -103,6 +106,19 @@ const routes = [
         path: "/:id",
         action: ({ params: { id }}) => <ProfilePage id={id} />
       },
+    ],
+  },
+  {
+    path: "/groups",
+    children: [
+      {
+        path: "/create",
+        action: () => <GroupCreatePage />,
+      },
+      // {
+      //   path: "/:id",
+      //   action: ({ params: { id }}) => <GroupPage id={id} />
+      // },
     ],
   },
 

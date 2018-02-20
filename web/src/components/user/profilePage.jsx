@@ -7,6 +7,8 @@ import Link from "../layout/link";
 
 import MatchList from "../matches/MatchList";
 import BotList from "../bots/BotList";
+import GroupList from "../groups/GroupList";
+import groupSearchbar from "../groups/groupSearchbar";
 
 import { MainTitle, SubTitle } from "../dashboard/titles";
 
@@ -16,9 +18,13 @@ import { fetchMatches } from "../../data/match/matchActions";
 import { getMatchesForUser } from "../../data/match/matchSelectors";
 import { getBotsForUser } from "../../data/bot/botSelectors";
 
-class ProfilePage extends React.PureComponent {
+class ProfilePage extends React.Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      selectedGroup: null
+    };
   }
 
   componentDidMount() {
@@ -28,6 +34,10 @@ class ProfilePage extends React.PureComponent {
   }
 
   componentWillReceiveProps(nextProps) {
+  }
+
+  didSelectGroup = (selectedGroup) => {
+    this.setState({selectedGroup});
   }
 
   renderFollowLink = () => {
@@ -43,8 +53,14 @@ class ProfilePage extends React.PureComponent {
     }
   }
 
+  renderJoinGroupLink = () => {
+
+  }
+
   render() {
     if (!this.props.profileUser) return <div></div>;
+
+    console.log(this.props.profileUser);
 
     return (
       <Page>
@@ -56,6 +72,9 @@ class ProfilePage extends React.PureComponent {
         <SubTitle>Matches</SubTitle>
         <MatchList matches={this.props.matches} />
 
+        <SubTitle>Groups</SubTitle>
+        <GroupList groups={this.props.profileUser.groups} />
+        {groupSearchbar(this.state.selectedGroup, this.didSelectGroup, {placeholder: "Search for new groups to join"})}
       </Page>
     );
   }
