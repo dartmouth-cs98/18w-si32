@@ -7,7 +7,7 @@ class Tile:
 
         self.number_of_players = number_of_players
         self.position = position
-        self.resource = randint(0, 10)  # amount of resource in the tile (will be randomized for now)
+        self.resource = randint(0, 50)  # amount of resource in the tile (will be randomized for now)
         self.units = self.initialize_units_list()
         self.building = None  # Tiles initialized to not have a building
 
@@ -36,6 +36,10 @@ class Tile:
         self.building = None
 
     # --------------- UPDATE FUNCTIONS ----------------------------
+
+    def update_tile(self):
+        self.update_units_number()
+        self.update_building_status()
 
     def update_units_number(self):
         while (self.units[0] > 0) and (self.units[1] > 0):

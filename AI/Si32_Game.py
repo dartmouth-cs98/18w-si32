@@ -6,7 +6,6 @@ from Tile import Tile
 from Rules import Rules
 from json_helpers import json_to_object_list
 
-
 class Game_state:
 
     def __init__(self, map, rules, number_of_players, user_code, gameId=1000, replay=False):
@@ -37,20 +36,32 @@ class Game_state:
         while not self.game_over:  # Main loop. Simulates both players taking a turn until someone wins
             self.play_a_turn()
 
-    def play_a_turn(self):  # gets moves from both players and executes them
+    def get_random_player_moves(self):
         moves = []
 
         for player in self.players:
-            #TODO: Replace the get random moves with real calls to user code
             moves.append(player.get_random_moves())
+
+        return moves
+
+
+    def play_a_turn(self):  # gets moves from both players and executes them
+        moves = self.get_random_player_moves()
 
         self.map.get_tile([39,40]).increment_units(1, 2)
         moves[1].append(Unit_command(1, self.map.get_tile([39,40]), 'move', 2, [1,0]))
 
+        # Check moves for combat, and sort by type of command
         moves = self.rules.update_combat_phase(moves)  # Run both players moves through combat phase, return updated list of moves
+        moves = sort_moves(moves)
 
         for player_moves in moves:
             self.execute_moves(player_moves)
+
+        # Update statuses/unit numbers, etc.
+        for col in self.map.tiles:
+            for tile in col:
+                tile.update_tile()
 
     def update_units_numbers(self):
         for tiles in self.map.tiles:
@@ -111,6 +122,26 @@ class Game_state:
         if not self.replay:
             self.json_log['commands'].append(move.to_json())
 
+# We want to execute commmands in the following order: move, build, mine
+def sort_moves(moves):
+    sorted_moves = []
+
+    for player in moves:
+        move = []
+        build = []
+        mine = []
+
+        for command in player:
+            if command.command == 'move':
+                move.append(command)
+            elif command.command == 'build':
+                build.append(command)
+            else:
+                mine.append(command)
+
+        sorted_moves.append(move + build + mine)
+
+    return sorted_moves
 
 test = Game_state(Map, Rules, 2, 'hi')
 

@@ -35,6 +35,32 @@ class Rules:
     def update_mine_command(self, move):
         tile = move.tile
 
+        if tile.resource > 0:
+
+            # Each unit gathers one unit of resource from the tile when mining
+            if tile.resource >= move.number_of_units:
+                tile.decrement_resource(number_of_units)
+                self.players[move.playerId].increment_resources(number_of_units)
+
+            # If there are more miners than resources, take whatever remains
+            else:
+                self.players[move.playerId].increment_resources(tile.resource)
+                tile.resource = 0
+
+    def update_build_command(self, move):
+
+        # Two cases for building: either they're making a new building or they're
+        # increasing the production count of an existing one
+
+        # If there is no building, create one
+        if move.tile.building is None:
+            if (self.player_has_enough_resources(move.playerId)) and (self.map.get_tile(move.tile.position).units[playerId] > 0):
+                move.tile.create_building(move.playerId)
+                self.players[move.playerId].decrement_resource(100)
+
+        # If there is a building, increase its production count
+        elif move.tile.building.ownerId == move.playerId:
+            move.tile.building.increment_production_progress(move.number_of_units)
 
 
     def update_combat_phase(self, moves):
@@ -131,21 +157,6 @@ class Rules:
         temp = (direction1[0]*-1, direction1[1]*-1)
 
         return (temp[0] == direction2[0]) and (temp[1] == direction2[1])
-
-    def update_build_command(self, move):
-
-        # Two cases for building: either they're making a new building or they're
-        # increasing the production count of an existing one
-
-        # If there is no building, create one
-        if move.tile.building is None:
-            if (self.player_has_enough_resources(move.playerId)) and (self.map.get_tile(move.tile.position).units[playerId] > 0):
-                move.tile.create_building(move.playerId)
-                self.players[move.playerId].decrement_resource(100)]
-
-        # If there is a building, increase its production count
-        elif move.tile.building.ownerId == move.playerId:
-            move.tile.building.increment_production_progress(move.number_of_units)
 
     def player_has_enough_resources(self, playerId):
         return self.players[playerId].resources >= 100
