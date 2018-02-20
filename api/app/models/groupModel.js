@@ -33,7 +33,7 @@ const _Group = new Schema({
 // generic add/remove helper. pass in which op to do and updates both target and source
 _Group.methods._addRemoveMember = async function(targetUserId, op) {
   // targetUser contains user correctly
-  const user = await User.findOneAndUpdate({ _id: targetUserId }, { [op]: { "groups": this._id }}, { new: true });
+  const user = await User.findOneAndUpdate({ _id: targetUserId }, { [op]: { "groups": this._id }}, { new: true }).populate("groups");
 
   if (!user) {
     throw new MalformedError("Couldn't find that user");
@@ -68,7 +68,7 @@ _Group.statics.createGroupWithFoundingMember = async function(groupInfo, foundin
     members: [foundingUserId],
   });
 
-  const user = await User.findOneAndUpdate({ _id: foundingUserId }, { $addToSet: { "groups": group._id }}, { new: true });
+  const user = await User.findOneAndUpdate({ _id: foundingUserId }, { $addToSet: { "groups": group._id }}, { new: true }).populate("groups");
 
   return { user, group };
 };

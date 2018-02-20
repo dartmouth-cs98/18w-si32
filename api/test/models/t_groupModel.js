@@ -42,7 +42,8 @@ suite("Test Group Model", function() {
     const {group, user} = await models.Group.createGroupWithFoundingMember(groupInfo, founder._id);
 
     // user has new group in groups
-    expect(containsObjectId(user.groups, group._id)).to.be.true();
+    const groupIds = user.groups.map(g => g._id);
+    expect(containsObjectId(groupIds, group._id)).to.be.true();
 
     // group created correctly
     expect(group.name).to.equal(groupInfo.name);
@@ -75,11 +76,14 @@ suite("Test Group Model", function() {
     expect(updated.group).to.exist();
     expect(updated.user).to.exist();
 
-    const groupMembers = updated.group.members.map(member => member.toString());
-    expect(groupMembers).to.contain(user._id.toString());
 
-    const userGroups = updated.user.groups.map(group => group.toString());
-    expect(userGroups).to.contain(group._id.toString());
+    expect(containsObjectId(updated.group.members, user._id));
+    // const groupMembers = updated.group.members.map(member => member.toString());
+    // expect(groupMembers).to.contain(user._id.toString());
+
+    // user has new group in groups
+    const groupIds = updated.user.groups.map(g => g._id);
+    expect(containsObjectId(groupIds, group._id)).to.be.true();
   });
 
   test("Removing user to public group", async function() {

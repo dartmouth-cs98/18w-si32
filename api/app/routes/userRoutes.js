@@ -68,10 +68,10 @@ userRouter.put("/memberships/:targetGroupId", auth.loggedIn, async (ctx) => {
     throw new MalformedError(`Group with id ${ctx.params.targetGroupId} does not exist`);
   }
 
-  let { user, group } = await toJoin.addMember(ctx.state.userId);
+  let { user } = await toJoin.addMember(ctx.state.userId);
 
   ctx.body = {
-    updatedRecords: [user, group],
+    updatedRecords: [user],
   };
 });
 
@@ -84,10 +84,10 @@ userRouter.delete("/memberships/:targetGroupId", auth.loggedIn, async (ctx) => {
     throw new MalformedError(`Group with id ${ctx.params.targetGroupId} does not exist`);
   }
 
-  let { user, group } = await toJoin.removeMember(ctx.state.userId);
+  let { user } = await toJoin.removeMember(ctx.state.userId);
 
   ctx.body = {
-    updatedRecords: [user, group],
+    updatedRecords: [user],
   };
 });
 
