@@ -2,6 +2,12 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const { MalformedError } = require("../errors");
+const { DEFAULT_MU, DEFAULT_SIGMA } = require("../lib/trueskill");
+
+const TrueSkillSchema = new Schema({
+  mu: {type: Number, required: true},
+  sigma: {type: Number, required: true}
+},{ _id: false, timestamps: { createdAt: "createdAt", updatedAt: "updatedAt" } });
 
 const _User = new Schema({
   username: {
@@ -15,6 +21,19 @@ const _User = new Schema({
     type: String,
     required: true
   },
+  trueSkillScore: {
+    type: TrueSkillSchema,
+    required: true,
+    default: {
+      mu: DEFAULT_MU, sigma: DEFAULT_SIGMA
+    }
+  },
+  pastSkillScores: [
+    {
+      score: TrueSkillSchema,
+      date: Date
+    }
+  ],
   following: [{
     type: Schema.Types.ObjectId,
     ref: "User"
@@ -23,6 +42,10 @@ const _User = new Schema({
     type: Schema.Types.ObjectId,
     ref: "User"
   }],
+  groups: [{
+    type: Schema.Types.ObjectId,
+    ref: "Group"
+  }]
 }, {
   timestamps: true
 });
