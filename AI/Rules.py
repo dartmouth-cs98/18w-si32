@@ -32,6 +32,10 @@ class Rules:
         old_tile.decrement_units(move.playerId, move.number_of_units)
         new_tile.increment_units(move.playerId, move.number_of_units)
 
+    def update_mine_command(self, move):
+        tile = move.tile
+
+
 
     def update_combat_phase(self, moves):
         sets = self.moves_to_dictionary(moves)
@@ -39,7 +43,6 @@ class Rules:
         moves[0], moves[1] = self.combat(moves[0], sets[1])
 
         return moves
-
 
     def combat(self, player_moves, enemy_set):
         index = 0
@@ -130,9 +133,19 @@ class Rules:
         return (temp[0] == direction2[0]) and (temp[1] == direction2[1])
 
     def update_build_command(self, move):
-        if (self.player_has_enough_resources(move.playerId)) and (self.map.get_tile(move.tile.position).units[playerId] > 0):
-            move.tile.create_building(move.playerId)
-            self.players[move.playerId].decrement_resource(100)
+
+        # Two cases for building: either they're making a new building or they're
+        # increasing the production count of an existing one
+
+        # If there is no building, create one
+        if move.tile.building is None:
+            if (self.player_has_enough_resources(move.playerId)) and (self.map.get_tile(move.tile.position).units[playerId] > 0):
+                move.tile.create_building(move.playerId)
+                self.players[move.playerId].decrement_resource(100)]
+
+        # If there is a building, increase its production count
+        elif move.tile.building.ownerId == move.playerId:
+            move.tile.building.increment_production_progress(move.number_of_units)
 
     def player_has_enough_resources(self, playerId):
         return self.players[playerId].resources >= 100

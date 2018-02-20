@@ -39,7 +39,6 @@ class Game_state:
 
     def play_a_turn(self):  # gets moves from both players and executes them
         moves = []
-        i = 0
 
         for player in self.players:
             #TODO: Replace the get random moves with real calls to user code
@@ -101,6 +100,7 @@ class Game_state:
         board_info['width'] = self.map.width
         board_info['height'] = self.map.height
         board_info['player1'] = [self.players[0].starting_x, self.players[0].starting_y]
+        board_info['player2'] = [self.players[1].starting_x, self.players[1].starting_y]
         json_log['board_state'] = board_info
         json_log['commands'] = []
         json_log['rank'] = []

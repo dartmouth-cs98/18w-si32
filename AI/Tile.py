@@ -35,6 +35,33 @@ class Tile:
     def destroy_building(self):  #remove building reference
         self.building = None
 
+    # --------------- UPDATE FUNCTIONS ----------------------------
+
+    def update_units_number(self):
+        while (self.units[0] > 0) and (self.units[1] > 0):
+            self.units[0] -= 1
+            self.units[1] -= 1
+
+    def update_building_status(self):
+        if self.building is not None:
+            building_owner = self.building.ownerId
+            enemy_player = 1 - building_owner
+
+            #  Check if building will be destroyed by enemy units
+            if self.units[enemy_player] > 0:
+
+                if self.units[enemy_player] >= 10:
+                    self.destroy_building()
+                    self.units[enemy_player] -= 10
+
+                else:
+                    self.units[enemy_player] = 0
+
+            # Check if new units should be produced
+            while self.building.production_progress >= 5:
+                self.increment_units(building_owner, 1)
+                self.building.production_progress -= 5
+
     # --------------- INITIALIZING FUNCTION ----------------------
 
     def initialize_units_list(self):  #we want to store the number of units a player has in each square, initialized to 0 for each player
