@@ -8,9 +8,14 @@ const fetchUser = (userId) => httpGetAction("USER", `/users/${userId}`, null, { 
 const followUser = (targetUserId) => httpPutAction("USER", `/users/follows/${targetUserId}`);
 const unfollowUser = (targetUserId) => httpDeleteAction("USER", `/users/follows/${targetUserId}`);
 
+const joinGroup = (groupId) => httpPutAction("USER", `/users/memberships/${groupId}`);
+const leaveGroup = (groupId) => httpDeleteAction("USER", `/users/memberships/${groupId}`);
+
 export {
   fetchUsers,
   fetchUser,
   followUser,
   unfollowUser,
+  joinGroup,
+  leaveGroup,
 };

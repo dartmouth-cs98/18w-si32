@@ -12,7 +12,7 @@ import groupSearchbar from "../groups/groupSearchbar";
 
 import { MainTitle, SubTitle } from "../dashboard/titles";
 
-import { fetchUsers, fetchUser, followUser, unfollowUser } from "../../data/user/userActions";
+import { fetchUsers, fetchUser, followUser, unfollowUser, joinGroup, leaveGroup } from "../../data/user/userActions";
 import { fetchBots } from "../../data/bot/botActions";
 import { fetchMatches } from "../../data/match/matchActions";
 import { getMatchesForUser } from "../../data/match/matchSelectors";
@@ -53,8 +53,19 @@ class ProfilePage extends React.Component {
     }
   }
 
+  joinGroup = () => {
+    const groupId = this.state.selectedGroup ? this.state.selectedGroup.value : null;
+
+    if (groupId) {
+      this.props.joinGroup(this.state.selectedGroup.value);
+      this.setState({
+        selectedGroup: null,
+      });
+    }
+  }
+
   renderJoinGroupLink = () => {
-    return <button onClick={this.props.joinGroup} disabled={!this.state.selectedGroup}>Join Group</button>;
+    return <button onClick={this.joinGroup} disabled={!this.state.selectedGroup}>Join Group</button>;
   }
 
   renderExploreGroupLink = () => {
@@ -90,7 +101,7 @@ class ProfilePage extends React.Component {
         <MatchList matches={this.props.matches} />
 
         <SubTitle>Groups</SubTitle>
-        <GroupList groups={this.props.profileUser.groups} />
+        <GroupList groups={this.props.profileUser.groups} leaveGroup={this.props.leaveGroup} />
         {groupSearchbar(this.state.selectedGroup, this.didSelectGroup, {placeholder: "Search for new groups to join"})}
         {this.renderGroupActionBox()}
       </Page>
@@ -101,6 +112,8 @@ class ProfilePage extends React.Component {
 const mapDispatchToProps = (dispatch, props) => ({
   followUser: () => dispatch(followUser(props.id)),
   unfollowUser: () => dispatch(unfollowUser(props.id)),
+  joinGroup: (groupId) => dispatch(joinGroup(groupId)),
+  leaveGroup: (groupId) => dispatch(leaveGroup(groupId)),
   fetchMatches: () => dispatch(fetchMatches(props.id)),
   fetchBots: () => dispatch(fetchBots(props.id)),
   fetchUser: () => dispatch(fetchUser(props.id)),
