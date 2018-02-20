@@ -54,13 +54,30 @@ class ProfilePage extends React.Component {
   }
 
   renderJoinGroupLink = () => {
+    return <button onClick={this.props.joinGroup} disabled={!this.state.selectedGroup}>Join Group</button>;
+  }
 
+  renderExploreGroupLink = () => {
+    const groupId = this.state.selectedGroup ? this.state.selectedGroup.value : null;
+
+    if (groupId) {
+      return <button><a style={{color: "black", textDecoration: "none"}} href={`/group/${groupId}`} target="_blank">Explore Group</a></button>;
+    } else {
+      return <button disabled={true}>Explore Group</button>;
+    }
+  }
+
+  renderGroupActionBox = () => {
+    return (
+      <div style={styles.groupActionBox}>
+        {this.renderJoinGroupLink()}
+        {this.renderExploreGroupLink()}
+      </div>
+    );
   }
 
   render() {
     if (!this.props.profileUser) return <div></div>;
-
-    console.log(this.props.profileUser);
 
     return (
       <Page>
@@ -75,6 +92,7 @@ class ProfilePage extends React.Component {
         <SubTitle>Groups</SubTitle>
         <GroupList groups={this.props.profileUser.groups} />
         {groupSearchbar(this.state.selectedGroup, this.didSelectGroup, {placeholder: "Search for new groups to join"})}
+        {this.renderGroupActionBox()}
       </Page>
     );
   }
@@ -96,3 +114,14 @@ const mapStateToProps = (state, props) => ({
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProfilePage);
+
+const styles = {
+  groupActionBox: {
+    width: "100%",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingTop: "20px"
+  },
+};
