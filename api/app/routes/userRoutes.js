@@ -11,7 +11,7 @@ const userRouter = Router();
 
 /**
  * @api GET path /users
- * Get users with username similar to query (username contains query as subtring). 
+ * Get users with username similar to query (username contains query as subtring).
  */
 userRouter.get("/", auth.loggedIn, async (ctx) => {
   let users;
@@ -19,15 +19,15 @@ userRouter.get("/", auth.loggedIn, async (ctx) => {
     users = await User.find({ "username": { "$regex": `${ctx.query.q}`, "$options": "i" } });
   } else {
     // TODO: probably dont want to be doing a find on all users in the event there is no query...
-    // what do we want to do here? 
+    // what do we want to do here?
     users = await User.find();
   }
   ctx.body = users;
 });
 
 /**
- * @api GET path /users/:userId 
- * Get a single user by ID. 
+ * @api GET path /users/:userId
+ * Get a single user by ID.
  */
 userRouter.get("/:userId", auth.loggedIn, async (ctx) => {
   let user = await User.findById(ctx.params.userId);
@@ -72,7 +72,8 @@ userRouter.post("/register", async (ctx) => {
   const u = await User.create({
     // create the user in the db
     username: ctx.request.body.username,
-    password: hash
+    password: hash,
+    trueSkill: {}
   });
 
   const s = await session.create(u, ctx.ip);

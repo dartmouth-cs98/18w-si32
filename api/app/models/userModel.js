@@ -1,6 +1,9 @@
 const mongoose = require("mongoose");
+const assert = require("assert");
+const _ = require("lodash");
 const Schema = mongoose.Schema;
 const TrueSkillSchema = require("./trueskill");
+const TrueSkill = require("../lib/trueskill");
 
 const { MalformedError } = require("../errors");
 
@@ -16,8 +19,13 @@ const _User = new Schema({
     type: String,
     required: true
   },
-  trueSkill: { type: TrueSkillSchema },
-  trueSkillHistory: [{ score: TrueSkillSchema, timestamp: Date }],
+  trueSkill: { type: TrueSkillSchema, required: true },
+  trueSkillHistory: [{
+    score: TrueSkillSchema,
+    match: { type: Schema.Types.ObjectId, ref: "Match" },
+    timestamp: Date,
+    _id: false
+  }],
   following: [{
     type: Schema.Types.ObjectId,
     ref: "User"
@@ -29,6 +37,40 @@ const _User = new Schema({
 }, {
   timestamps: true
 });
+
+_User.statics.updateSkillByRankedFinish = async function(rankedUserIds, matchId) {
+  const users = await User.find({ "_id": { "$in": rankedUserIds }});
+  assert(users.length == rankedUserIds.length);
+
+  const usersById = _.reduce(users, (acc, user) => { acc[user._id] = user; return acc; }, {});
+
+  // set up bots in format needed for trueskill
+  const usersToSkill = _.map(rankedUserIds, userId =>  ({
+    id: userId,
+    skill: usersById[userId].trueSkill,
+  }));
+
+  // compute the new skills
+  const updatedSkills = TrueSkill.returnNewSkillOfPlayers(usersToSkill);
+
+  _.each(users, async u => {
+    // set the bot's new skill
+    u.trueSkill = {
+      mu: updatedSkills[u._id].mu,
+      sigma: updatedSkills[u._id].sigma,
+    };
+
+    // add an entry to the skill history list
+    u.trueSkillHistory.push({
+      score: u.trueSkill,
+      timestamp: new Date(),
+      match: matchId,
+    });
+
+    // save the user
+    await u.save();
+  });
+};
 
 // generic follow/unfollow helper. pass in which op to do and updates both target and source
 _User.methods._followUnfollow = async function(targetUserId, op) {
