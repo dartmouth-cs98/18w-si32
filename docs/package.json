@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "serve": "./node_modules/gitbook-cli/bin/gitbook.js serve",
-    "build": "./node_modules/gitbook-cli/bin/gitbook.js build"
+    "build": "./node_modules/gitbook-cli/bin/gitbook.js build",
+    "deploy": "./node_modules/gitbook-cli/bin/gitbook.js build && surge _book"
   },
   "author": "",
   "license": "ISC",
