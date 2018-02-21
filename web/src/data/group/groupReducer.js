@@ -1,6 +1,6 @@
 import httpCollectionReducer from "../httpCollectionReducer";
 
-const botReducer = httpCollectionReducer("BOT", (state) => {
+const botReducer = httpCollectionReducer("GROUP", (state) => {
   // implement any non-standard collection reducers here
   return state;
 });

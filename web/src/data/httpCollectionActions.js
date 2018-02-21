@@ -63,6 +63,30 @@ const httpPutAction = (collectionName, endpoint, body={}, options={}) => (dispat
     });
 };
 
+const httpPutActionMultipleUpdate = (collectionNames, endpoint, body={}, options={}) => (dispatch, getState) => {
+  collectionNames.forEach(collectionName => {
+    dispatch({
+      type: `PUT_${collectionName}`
+    });
+  });
+  return http
+    .put(endpoint)
+    .send(body)
+    .then(res => {
+      const updatedCollections = res.body.updatedCollections || [];
+      updatedCollections.forEach(collection => {
+        dispatch({
+          type: `UPDATED_${collection.collection}`,
+          doMerge: true, // whatever we get back, merge in without replacing everything still there
+          payload: collection.updatedRecords
+        });
+      });
+    }).catch(err => {
+      // TODO what to do in the store here?
+      console.log("HTTP error", collectionName, endpoint, body, err); // eslint-disable-line
+    });
+};
+
 const httpDeleteAction = (collectionName, endpoint, body={}, options={}) => (dispatch, getState) => {
   dispatch({
     type: `DELETE_${collectionName}`

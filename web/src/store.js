@@ -7,12 +7,14 @@ import session from "./data/session/sessionReducer";
 import bots from "./data/bot/botReducer";
 import users from "./data/user/userReducer";
 import matches from "./data/match/matchReducer";
+import groups from "./data/group/groupReducer";
 
 const reducer = combineReducers({
   session,
   bots,
   matches,
   users,
+  groups,
   form: formReducer,
 });
 

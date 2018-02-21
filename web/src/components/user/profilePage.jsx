@@ -72,7 +72,7 @@ class ProfilePage extends React.Component {
     const groupId = this.state.selectedGroup ? this.state.selectedGroup.value : null;
 
     if (groupId) {
-      return <button><a style={{color: "black", textDecoration: "none"}} href={`/group/${groupId}`} target="_blank">Explore Group</a></button>;
+      return <button><a style={{color: "black", textDecoration: "none"}} href={`/groups/${groupId}`} target="_blank">Explore Group</a></button>;
     } else {
       return <button disabled={true}>Explore Group</button>;
     }
@@ -83,6 +83,7 @@ class ProfilePage extends React.Component {
       <div style={styles.groupActionBox}>
         {this.renderJoinGroupLink()}
         {this.renderExploreGroupLink()}
+        <button><Link style={{color: "black", textDecoration: "none"}} href="/groups/create">Create Group</Link></button>;
       </div>
     );
   }

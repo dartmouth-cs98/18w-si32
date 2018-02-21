@@ -24,6 +24,7 @@ import MatchCreatePage from "./components/matches/createPage";
 import MatchSinglePage from "./components/matches/singlePage";
 
 import GroupCreatePage from "./components/groups/createPage";
+import GroupSinglePage from "./components/groups/singlePage";
 
 
 // TODO split these out into modules?
@@ -115,10 +116,10 @@ const routes = [
         path: "/create",
         action: () => <GroupCreatePage />,
       },
-      // {
-      //   path: "/:id",
-      //   action: ({ params: { id }}) => <GroupPage id={id} />
-      // },
+      {
+        path: "/:id",
+        action: ({ params: { id }}) => <GroupSinglePage id={id} />
+      },
     ],
   },
 
