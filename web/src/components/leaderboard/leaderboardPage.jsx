@@ -3,9 +3,9 @@ import _ from "lodash";
 import { connect } from "react-redux";
 
 import Page from "../layout/page";
-import Link from "../layout/link";
+import Link from "../common/link";
 
-import { MainTitle, SubTitle } from "../dashboard/titles";
+import { MainTitle, SubTitle } from "../common/titles";
 import { fetchUsers } from "../../data/user/userActions";
 
 const RankedList = ({ users }) => {

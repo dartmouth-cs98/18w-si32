@@ -1,5 +1,5 @@
 import { Wrapper } from "./wrappers";
-import Link from "./link";
+import Link from "../common/link";
 import Page from "./page";
 
 export {

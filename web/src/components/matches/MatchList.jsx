@@ -1,6 +1,6 @@
 import React from "react";
 import _ from "lodash";
-import Link from "../layout/link";
+import Link from "../common/link";
 
 const MatchList = ({ matches }) => {
   const items = _.map(matches, m =>

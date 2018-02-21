@@ -39,7 +39,7 @@ groupRouter.get("/", auth.loggedIn, async (ctx) => {
  * @api GET path /groups/leaderboard/:groupId
  * Get leaderboard for a specific group
  */
-groupRouter.get("/leaderboard/:groupId", auth.loggedIn, async (ctx) => {
+groupRouter.get("/leaderboard/:groupId", auth.loggedIn, async () => {
   // TODO: return users ranked by score. if :groupId is `global` or something, then query for all users
 });
 
@@ -48,8 +48,6 @@ groupRouter.get("/leaderboard/:groupId", auth.loggedIn, async (ctx) => {
  * Create group
  */
 groupRouter.post("/", auth.loggedIn, async (ctx) => {
-  console.log(ctx.request.body);
-  console.log(ctx.state.userId);
   const {group, user} = await Group.createGroupWithFoundingMember(ctx.request.body.groupInfo, ctx.state.userId);
 
   ctx.body = { success: true, updatedRecords: [user, group] };

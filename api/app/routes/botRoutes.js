@@ -32,7 +32,7 @@ botRouter.post("/", async (ctx) => {
   // wait for code to make it to s3 before responding. Also, want an id to use as
   // key for the bot's code, so that there are no filename collisions
   // TODO need some error handling/retrying here
-  s3.uploadBot(ctx.state.userId, bot._id, ctx.request.body.files.code).then(({ url, key }) => {
+  s3.uploadBot(ctx.state.userId, bot._id, ctx.request.body.files.code).then(({ key }) => {
     // update bot in db w/ code's url
     bot.set("code", key);
     bot.save();

@@ -3,7 +3,7 @@ import _ from "lodash";
 import { connect } from "react-redux";
 
 import Page from "../layout/page";
-import Link from "../layout/link";
+import Link from "../common/link";
 import { Wrapper } from "../layout/wrappers";
 
 import MatchList from "../matches/MatchList";
@@ -12,7 +12,7 @@ import GroupList from "../groups/GroupList";
 import groupSearchbar from "../groups/groupSearchbar";
 
 
-import { MainTitle, SubTitle } from "../dashboard/titles";
+import { MainTitle, SubTitle } from "../common/titles";
 
 import { fetchUsers, fetchUser, followUser, unfollowUser, joinGroup, leaveGroup } from "../../data/user/userActions";
 import { fetchBots } from "../../data/bot/botActions";

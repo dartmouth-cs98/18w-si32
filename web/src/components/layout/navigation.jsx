@@ -3,7 +3,7 @@ import Radium from "radium";
 import { connect } from "react-redux";
 import Color from "color";
 
-import Link from "./link";
+import Link from "../common/link";
 import history from "../../history";
 import { logout } from "../../data/session/sessionActions";
 import Logo from "../common/logo";

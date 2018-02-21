@@ -17,7 +17,7 @@ import { getSessionUser } from "../../data/user/userSelectors";
 import { getMatchesForUser } from "../../data/match/matchSelectors";
 import { getBotsForUser } from "../../data/bot/botSelectors";
 
-import { MainTitle, SubTitle } from "./titles";
+import { MainTitle, SubTitle } from "../common/titles";
 
 import { colors, fontStyles, colorStyles } from "../../style";
 

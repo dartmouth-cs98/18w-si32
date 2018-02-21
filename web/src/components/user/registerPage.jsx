@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import Color from "color";
 
-import Link from "../layout/link";
+import Link from "../common/link";
 import Page from "../layout/page";
 import history from "../../history";
 import { register } from "../../data/session/sessionActions";
