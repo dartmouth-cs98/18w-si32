@@ -31,7 +31,6 @@ class Player:
         try:
             move_list = json.loads(move_str)
             commands = [ Command.from_dict(d) for d in move_list ]
-            print(commands[0])
         except Exception as err:
             print(err)
             # TODO: if invalid command sent, should probably just kick this noob out of the game

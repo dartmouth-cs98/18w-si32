@@ -72,7 +72,6 @@ class Game_state(Game):
 
     # read all moves from the players and update state accordingly
     def read_moves(self):
-        print("Play turn")
 
         moves = []
         for p in self.players:
@@ -133,7 +132,7 @@ class Game_state(Game):
         board_info['player2'] = self.players[1].starting_pos
         json_log['board_state'] = board_info
         json_log['turns'] = []
-        json_log['rank'] = []
+        json_log['rankedBots'] = [p.bot.name for p in  self.players] # TODO actual ranking based on finish order
 
         return json_log
 
