@@ -33,7 +33,10 @@ class ProfilePage extends React.Component {
     this.props.fetchUser();
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentDidUpdate(prevProps) {
+    if (prevProps.id !== this.props.id) {
+      this.props.fetchUser();
+    }
   }
 
   didSelectGroup = (selectedGroup) => {
