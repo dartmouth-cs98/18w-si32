@@ -12,6 +12,7 @@ import UserSearch from "./UserSearch";
 import { fetchBots } from "../../data/bot/botActions";
 import { fetchMatches } from "../../data/match/matchActions";
 import { getProfile } from "../../data/user/userActions";
+import { getSessionUser } from "../../data/user/userSelectors";
 import { getMatchesForUser } from "../../data/match/matchSelectors";
 import { getBotsForUser } from "../../data/bot/botSelectors";
 
@@ -101,7 +102,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const mapStateToProps = state => ({
-  user: state.session.user,
+  user: getSessionUser(state) || state.session.user || {},
   userId: state.session.userId,
   matches: getMatchesForUser(state, state.session.userId),
   bots: getBotsForUser(state, state.session.userId),
@@ -121,6 +122,6 @@ const styles = {
     marginBottom: 15,
     marginTop: 30,
   },
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(DashboardPage);

@@ -7,18 +7,24 @@ import Link from "../layout/link";
 
 import MatchList from "../matches/MatchList";
 import BotList from "../bots/BotList";
+import GroupList from "../groups/GroupList";
+import groupSearchbar from "../groups/groupSearchbar";
 
 import { MainTitle, SubTitle } from "../dashboard/titles";
 
-import { fetchUsers, fetchUser, followUser, unfollowUser } from "../../data/user/userActions";
+import { fetchUsers, fetchUser, followUser, unfollowUser, joinGroup, leaveGroup } from "../../data/user/userActions";
 import { fetchBots } from "../../data/bot/botActions";
 import { fetchMatches } from "../../data/match/matchActions";
 import { getMatchesForUser } from "../../data/match/matchSelectors";
 import { getBotsForUser } from "../../data/bot/botSelectors";
 
-class ProfilePage extends React.PureComponent {
+class ProfilePage extends React.Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      selectedGroup: null
+    };
   }
 
   componentDidMount() {
@@ -28,6 +34,10 @@ class ProfilePage extends React.PureComponent {
   }
 
   componentWillReceiveProps(nextProps) {
+  }
+
+  didSelectGroup = (selectedGroup) => {
+    this.setState({selectedGroup});
   }
 
   renderFollowLink = () => {
@@ -41,6 +51,41 @@ class ProfilePage extends React.PureComponent {
       // if the session user is not currently following the profile user
       return <Link onClick={this.props.followUser}>Follow</Link>;
     }
+  }
+
+  joinGroup = () => {
+    const groupId = this.state.selectedGroup ? this.state.selectedGroup.value : null;
+
+    if (groupId) {
+      this.props.joinGroup(this.state.selectedGroup.value);
+      this.setState({
+        selectedGroup: null,
+      });
+    }
+  }
+
+  renderJoinGroupLink = () => {
+    return <button onClick={this.joinGroup} disabled={!this.state.selectedGroup}>Join Group</button>;
+  }
+
+  renderExploreGroupLink = () => {
+    const groupId = this.state.selectedGroup ? this.state.selectedGroup.value : null;
+
+    if (groupId) {
+      return <button><a style={{color: "black", textDecoration: "none"}} href={`/groups/${groupId}`} target="_blank">Explore Group</a></button>;
+    } else {
+      return <button disabled={true}>Explore Group</button>;
+    }
+  }
+
+  renderGroupActionBox = () => {
+    return (
+      <div style={styles.groupActionBox}>
+        {this.renderJoinGroupLink()}
+        {this.renderExploreGroupLink()}
+        <button><Link style={{color: "black", textDecoration: "none"}} href="/groups/create">Create Group</Link></button>;
+      </div>
+    );
   }
 
   render() {
@@ -59,6 +104,10 @@ class ProfilePage extends React.PureComponent {
         <SubTitle>Matches</SubTitle>
         <MatchList matches={this.props.matches} />
 
+        <SubTitle>Groups</SubTitle>
+        <GroupList groups={this.props.profileUser.groups} leaveGroup={this.props.leaveGroup} />
+        {groupSearchbar(this.state.selectedGroup, this.didSelectGroup, {placeholder: "Search for new groups to join"})}
+        {this.renderGroupActionBox()}
       </Page>
     );
   }
@@ -67,6 +116,8 @@ class ProfilePage extends React.PureComponent {
 const mapDispatchToProps = (dispatch, props) => ({
   followUser: () => dispatch(followUser(props.id)),
   unfollowUser: () => dispatch(unfollowUser(props.id)),
+  joinGroup: (groupId) => dispatch(joinGroup(groupId)),
+  leaveGroup: (groupId) => dispatch(leaveGroup(groupId)),
   fetchMatches: () => dispatch(fetchMatches(props.id)),
   fetchBots: () => dispatch(fetchBots(props.id)),
   fetchUser: () => dispatch(fetchUser(props.id)),
@@ -80,3 +131,14 @@ const mapStateToProps = (state, props) => ({
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProfilePage);
+
+const styles = {
+  groupActionBox: {
+    width: "100%",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingTop: "20px"
+  },
+};
