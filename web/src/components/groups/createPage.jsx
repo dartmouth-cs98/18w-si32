@@ -1,5 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
+import history from "../../history";
 import Page from "../layout/page";
 import { createGroup } from "../../data/group/groupActions";
 import { fetchBots } from "../../data/bot/botActions";
@@ -19,7 +20,10 @@ class GroupCreatePage extends React.PureComponent {
     const groupInfo = Object.assign({}, values, {
       public: values.public === "public"
     });
-    this.props.create(groupInfo);
+    this.props.create(groupInfo).then((res) => {
+      // TODO use keyed collections instead of just happening to know that 1 is the group
+      history.push(`/groups/${res[1]._id}`);
+    });
   }
 
   render() {
