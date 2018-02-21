@@ -5,20 +5,20 @@ starting_distance = 30
 
 
 class Player:
-    def __init__(self, playerId, map, user_code):
+    def __init__(self, playerId, map, bot, starting_pos):
+        # self.bot = bot
+
         self.playerId = playerId
         self.map = map
-        self.user_code = user_code
         self.winner = False
         self.resources = 100
 
-        self.starting_x = int((self.map.width / 2) + (0.5 - self.playerId) * starting_distance)
-        self.starting_y = int((self.map.height / 2) + (0.5 - self.playerId) *starting_distance)
+        self.starting_pos = starting_pos
 
-        starting_tile = self.map.get_tile([self.starting_x, self.starting_y])
+        starting_tile = self.map.get_tile(self.starting_pos)
         starting_tile.increment_units(playerId)
 
-    def make_move(self):
+    def get_move(self):
         # 1 = move north, 2 = move east, 3 = move south, 4 = move west, 5 = build north, 6 = build east, 7 = build south, 8 = build west, 9 = mine
 
         move_as_list = []
@@ -101,7 +101,7 @@ class Player:
     def __str__(self):
         string = "Player " + str(self.playerId) + "\n"
 
-        string += "Resource: " + str(self.resource) + "\n"
+        string += "Resource: " + str(self.resources) + "\n"
 
         for unit in self.units:
             string += str(unit)

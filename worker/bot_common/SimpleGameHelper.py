@@ -22,7 +22,6 @@ class SimpleGameHelper():
             l = sys.stdin.readline()
         state = json.loads(l)
 
-
         for player, attributes in state.items():
             attributes = json.loads(attributes)
             player = int(player)

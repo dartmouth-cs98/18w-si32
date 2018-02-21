@@ -80,7 +80,5 @@ class Tile:
     def __str__(self):
         string = ""
         string += "Tile at position: " + str(self.position) + '\n'
-
-        string += "Player 1 units: " +str(self.units[0]) + "\n"
-        string+= "Player 2 units: " +str(self.units[1])
+        string += "Units:" + str(self.units)
         return string
