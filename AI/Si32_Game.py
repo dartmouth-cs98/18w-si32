@@ -1,5 +1,5 @@
 import json
-from unit_command import Unit_command
+from Command import Command
 from Game import Game
 from Player import Player
 from Map import Map
@@ -137,8 +137,8 @@ test = Game_state(Map, Rules, [1,2])
 
 # self.map.get_tile([39,40]).increment_units(1, 2)
 moves = [ [], [] ]
-moves[0].append(Unit_command(0, test.map.get_tile([0,0]), 'move', 1, [1,0]))
-moves[1].append(Unit_command(1, test.map.get_tile([5,5]), 'move', 1, [1,0]))
+moves[0].append(Command(0, test.map.get_tile([0,0]), 'move', 1, [1,0]))
+moves[1].append(Command(1, test.map.get_tile([5,5]), 'move', 1, [1,0]))
 
 test.play_a_turn(moves)
 p1 = test.players[0].get_occupied_tiles()
