@@ -12,10 +12,10 @@ RUN apk add bash
 WORKDIR /app
 
 # for now, just copy everything in this dir into the container
-ADD . /app
+ADD ./worker /app
 
 # add the game engine in
-ADD ../AI /app/game
+ADD ./AI /app/game
 
 # install python modules needed
 RUN pip install -r ./requirements.txt

@@ -7,7 +7,7 @@ from waitForGame import pollUntilGameReady
 from endpoints import post_match_result
 
 gameClasses = {
-    'SimpleGame': SimpleGame
+    'SimpleGame': Game_state
 }
 
 def run_worker():
@@ -56,6 +56,6 @@ def run_worker():
         print("Done cleaning up.")
 
         # send the results back to the server
-        post_match_result(matchId, result, log)
+        post_match_result(matchId, result, game.get_log())
 
 run_worker()
