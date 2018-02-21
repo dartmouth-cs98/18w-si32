@@ -62,7 +62,9 @@ const styles = {
   },
   primary: {
     wrapper: {
-      border: `2px solid ${colors.blue}`,
+      borderWidth: 3,
+      borderStyle: "solid",
+      borderColor: colors.blue,
       borderRadius: "100px", // just something large to make a pill
       padding: "5px 10px",
       height: 50,
