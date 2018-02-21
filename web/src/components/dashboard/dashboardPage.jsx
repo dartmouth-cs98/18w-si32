@@ -59,32 +59,36 @@ class DashboardPage extends React.PureComponent {
           <span>Your stats at a glance</span>
         </Wrapper>
         <Wrapper style={{ marginTop: 10 }}>
-          <MainTitle>
-            Bots
+          <div style={styles.sectionHeader}>
+            <MainTitle>
+                Bots
+            </MainTitle>
             <Button style={{margin: "0 20px"}} kind="secondary" size="small" href="/bots/create">
               + Create a new bot
             </Button>
             <Button kind="tertiary" size="small" href="/bots">
               See all your bots &rarr;
             </Button>
-          </MainTitle>
+          </div>
 
-        <div style={styles.wrapper}>
-          <MainTitle>Dashboard</MainTitle>
-          <h3>Your username: {this.props.user.username}</h3>
-          <h3>Your user id: {this.props.userId}</h3>
-
-          <SubTitle>Your Bots</SubTitle>
           <DashBotList bots={this.props.bots} />
-          <Link href="/bots/create">+ Create a new bot</Link>
 
-          <SubTitle>Your Latest Matches</SubTitle>
+          <div style={styles.sectionHeader}>
+            <MainTitle>
+                Recent Matches
+            </MainTitle>
+            <Button style={{margin: "0 20px"}} kind="secondary" size="small" href="/matches/create">
+              + Start a match
+            </Button>
+            <Button kind="tertiary" size="small" href="/matches">
+              See more matches &rarr;
+            </Button>
+          </div>
+
           <DashMatchList matches={this.props.matches} />
-          <Link href="/matches">View all &rarr;</Link>
 
           <UserSearch />
 
-        </div>
         </Wrapper>
       </Page>
     );
@@ -110,7 +114,13 @@ const styles = {
     justifyContent: "center",
     alignItems: "center",
     paddingTop: "20px"
-  }
+  },
+  sectionHeader: {
+    display: "flex",
+    alignItems: "center",
+    marginBottom: 15,
+    marginTop: 30,
+  },
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(DashboardPage);

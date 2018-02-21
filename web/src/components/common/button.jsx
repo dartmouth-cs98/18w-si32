@@ -29,8 +29,8 @@ class _Button extends React.PureComponent {
     const { style, kind, href, children } = this.props;
     return (
       // using anchor to be able to get native browser behavior when we want it
-      <a href={href} onClick={this.onClick} style={{...styles.base.wrapper, ...styles[kind].wrapper, ...style}}>
-        <span style={{...styles.base.inner, ...styles[kind].inner}}>
+      <a href={href} onClick={this.onClick} style={[styles.base.wrapper, styles[kind].wrapper, style]}>
+        <span style={[styles.base.inner, styles[kind].inner]}>
           { children }
         </span>
       </a>
