@@ -20,33 +20,20 @@ class SimpleGameHelper():
         l = sys.stdin.readline()
         while l == '':
             l = sys.stdin.readline()
-        state = json.loads(l)
 
+        board_state = json.loads(l)
 
-        for player, attributes in state.items():
-            attributes = json.loads(attributes)
-            player = int(player)
+        self.board = board_state
 
-            if player not in self.players:
-                self.players[player] = self.SimpleGamePlayer()
-            self.log(attributes)
-            self.log(type(attributes))
-            self.log(player)
-            self.log(type(player))
-            self.players[player].position = attributes['position']
+        return self.board
 
-        return self.format_state()
-
-    def format_state(self):
-        state = {
-            'players': self.players,
-            'myId': self.players[self.myId]
-        }
-
-    def create_move_command(self, direction):
+    def create_move_command(self, location, direction):
         return {
-            'player': self.myId,
-            'direction': direction
+            'playerId': self.myId,
+            'location': [0,0],
+            'command': 'move',
+            'number_of_units': 1,
+            'direction': [1,0]
         }
 
     def send_commands(self, commands):

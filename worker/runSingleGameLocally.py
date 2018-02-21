@@ -1,11 +1,11 @@
 import sys
 from Bot import LocalBot
-from SimpleGame import SimpleGame
+from game.Si32_Game import Game_state
 from waitForGame import pollUntilGameReady
 
 
 gameClasses = {
-    'SimpleGame': SimpleGame
+    'SimpleGame': Game_state
 }
 
 # called whenever there would be a game that this worker needs to run
@@ -29,7 +29,7 @@ def execGame():
     for bot in bots:
         bot.cleanup()
 
-
-    # get results from game and post to server
+    result = game.get_log()
+    print(result) # warning: long!
 
 execGame()

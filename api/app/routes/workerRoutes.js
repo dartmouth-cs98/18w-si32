@@ -32,7 +32,8 @@ workerRouter.get("/nextTask", async (ctx, next) => {
 
 workerRouter.post("/result", async (ctx, next) => {
   /* eslint-disable no-unused-vars */
-  const matchResult = await Match.handleWorkerResponse(ctx.request.body.matchId, ctx.request.body.result, ctx.request.body.gameOutput);
+  console.log(Object.keys(ctx.request.body));
+  const matchResult = await Match.handleWorkerResponse(ctx.request.body.matchId, ctx.request.body.result, JSON.parse(ctx.request.body.gameOutput));
   /* eslint-disable no-unused-vars */
 
   ctx.body = {message: "thanks bud"};

@@ -1,10 +1,10 @@
-from unit_command import Unit_command
+from .Command import Command
 
 
 def json_to_object(json_object, type):  # helper function for json -> object
 
     if type == "unit_command":
-        return Unit_command(json_object['tile'], json_object['unit_command'], json_object['number_of_units'], json_object['direction'])
+        return Command(json_object['tile'], json_object['unit_command'], json_object['number_of_units'], json_object['direction'])
 
 
 def json_to_object_list(json_list, type):  # turn list of json to list of objects

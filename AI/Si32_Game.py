@@ -1,55 +1,81 @@
 import json
-from unit_command import Unit_command
-from Player import Player
-from Map import Map
-from Tile import Tile
-from Rules import Rules
-from json_helpers import json_to_object_list
+from .Command import Command
+from .Game import Game
+from .Player import Player
+from .Map import Map
+from .Tile import Tile
+from .Rules import Rules
+from .json_helpers import json_to_object_list
 
-class Game_state:
+class Game_state(Game):
 
-    def __init__(self, map, rules, number_of_players, user_code, gameId=1000, replay=False):
-
+    def __init__(self, bots):
         # Game state is determined by map, players, and rules. Higher level
         # game state takes these objects and runs games, allowing for a
         # game agnostic framework
+        # GB - I'm more tightly coupling these at the moment to get things off
+        # the ground. Won't be hard to abstract back out when needed.
 
-        self.map = map(number_of_players)
+        num_players = len(bots)
 
-        self.players = self.initialize_players(number_of_players, self.map, user_code)
+        self.map = Map(num_players)
 
-        self.rules = rules(self.map, self.players)
+        self.initialize_players(bots, self.map)
 
         self.game_over = False
 
-        self.gameId = gameId
-
-        self.replay = replay
-
         self.json_log = self.initialize_json_log()
 
+        self.rules = Rules(self.map, self.players)
+
+        self.iter = 0
+
+        self.state_log = []
+        super().__init__(bots)
+
+
+    # ------------ Initializing function ------------------
+
+    def initialize_players(self, bots, map):  # initalizes players
+        i = 0
+        self.players = []
+        for i, bot in enumerate(bots):
+            self.players.append(Player(i, self.map, bot, (i*5, i*5)))
 
     # ------------------ Main Functions ---------------------
+    def start(self):
+        self.game_loop()
 
-    def play_game(self):
+    def game_loop(self):
+        # loop until somebody wins, or we time out!
+        while not self.game_over and self.iter < 30:
+            # reset log for this turn
+            self.turn_log = {
+                'state': self.map.get_state(),
+                'moves': []
+            }
 
-        while not self.game_over:  # Main loop. Simulates both players taking a turn until someone wins
-            self.play_a_turn()
+            self.send_state()
+            self.read_moves()
 
-    def get_random_player_moves(self):
+            # add full turn to the log
+            self.log_turn()
+
+            self.iter += 1
+
+        return self.json_log
+
+    # send all players the updated game state so they can make decisions
+    def send_state(self):
+        for p in self.players:
+            p.send_state()
+
+    # read all moves from the players and update state accordingly
+    def read_moves(self):
+
         moves = []
-
-        for player in self.players:
-            moves.append(player.get_random_moves())
-
-        return moves
-
-
-    def play_a_turn(self):  # gets moves from both players and executes them
-        moves = self.get_random_player_moves()
-
-        self.map.get_tile([39,40]).increment_units(1, 2)
-        moves[1].append(Unit_command(1, self.map.get_tile([39,40]), 'move', 2, [1,0]))
+        for p in self.players:
+            moves.append(p.get_move())
 
         # Check moves for combat, and sort by type of command
         moves = self.rules.update_combat_phase(moves)  # Run both players moves through combat phase, return updated list of moves
@@ -78,25 +104,17 @@ class Game_state:
 
     def execute_move(self, move):
         if self.rules.verify_move(move):
-
-            self.json_log_move(move)
+            self.turn_log["moves"].append(move)
             self.rules.update_by_move(move)
 
 
-    # ------------ Initializing function ------------------
-
-    def initialize_players(self, number_of_players, map, user_code):  # initalizes players
-        i = 0
-        players = []
-
-        while i < number_of_players:
-            temp_player = Player(i, self.map, user_code[i])
-            i += 1
-            players.append(temp_player)
-
-        return players
-
     # ------------ REPLAY FILE FUNCTIONS ----------------
+    def get_log(self):
+        j = json.dumps(self.json_log, default=lambda o: o.__dict__)
+        return j
+
+    def log_turn(self):
+        self.json_log["turns"].append(self.turn_log)
 
     def write_game_log(self):
         temp = json.dumps(self.json_log)
@@ -110,17 +128,16 @@ class Game_state:
         board_info = {}
         board_info['width'] = self.map.width
         board_info['height'] = self.map.height
-        board_info['player1'] = [self.players[0].starting_x, self.players[0].starting_y]
-        board_info['player2'] = [self.players[1].starting_x, self.players[1].starting_y]
+        board_info['player1'] = self.players[0].starting_pos
+        board_info['player2'] = self.players[1].starting_pos
         json_log['board_state'] = board_info
-        json_log['commands'] = []
-        json_log['rank'] = []
+        json_log['turns'] = []
+        json_log['rankedBots'] = [p.bot.name for p in  self.players] # TODO actual ranking based on finish order
 
         return json_log
 
     def json_log_move(self, move):
-        if not self.replay:
-            self.json_log['commands'].append(move.to_json())
+        self.json_log['commands'].append(move.to_json())
 
 # We want to execute commmands in the following order: move, build, mine
 def sort_moves(moves):
@@ -143,18 +160,19 @@ def sort_moves(moves):
 
     return sorted_moves
 
-test = Game_state(Map, Rules, 2, 'hi')
 
+# test = Game_state([1,2])
 
-test.play_a_turn()
-p1 = test.players[0].get_occupied_tiles()
-p2 = test.players[1].get_occupied_tiles()
-test.write_game_log()
+# moves = self.get_random_player_moves()
 
-print('tesdf')
+# self.map.get_tile([39,40]).increment_units(1, 2)
+# moves = [ [], [] ]
+# moves[0].append(Command(0, test.map.get_tile([0,0]), 'move', 1, [1,0]))
+# moves[1].append(Command(1, test.map.get_tile([5,5]), 'move', 1, [1,0]))
 
-for x in p1:
-    print(x)
+# test.play_a_turn(moves)
+# p1 = test.players[0].get_occupied_tiles()
+# p2 = test.players[1].get_occupied_tiles()
+# test.write_game_log()
 
-for b in p2:
-    print(b)
+# print(test.map.tiles[1][0])

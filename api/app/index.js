@@ -23,7 +23,10 @@ app.use(async (ctx, next) => {
 });
 
 app.use(cors());
-app.use(koaBody({multipart: true}));
+app.use(koaBody({
+  multipart: true,
+  jsonLimit: "15mb", // TODO we definitely want to turn this down, but needed for logs right now
+}));
 
 app.use(fileMiddleware);
 

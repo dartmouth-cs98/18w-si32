@@ -9,10 +9,10 @@ class Rules:
         return self.within_bounds(move) and self.enough_units(move)
 
     def within_bounds(self, move):
-        return self.map.tile_in_range(move.tile)
+        return self.map.position_in_range(move.position)
 
     def enough_units(self, move):
-        tile = self.map.get_tile(move.tile.position)
+        tile = self.map.get_tile(move.position)
         return tile.units[move.playerId] >= move.number_of_units
 
     def update_by_move(self, move):
@@ -26,14 +26,14 @@ class Rules:
             self.update_mine_command(move)
 
     def update_move_command(self, move):
-        old_tile = move.tile
+        old_tile = self.map.get_tile(move.position)
         new_tile = self.map.get_tile([old_tile.position[0] + move.direction[0], old_tile.position[1] + move.direction[1]])
 
         old_tile.decrement_units(move.playerId, move.number_of_units)
         new_tile.increment_units(move.playerId, move.number_of_units)
 
     def update_mine_command(self, move):
-        tile = move.tile
+        tile = self.map.get_tile(move.position)
 
         if tile.resource > 0:
 
@@ -48,19 +48,20 @@ class Rules:
                 tile.resource = 0
 
     def update_build_command(self, move):
+        tile = self.map.get_tile(move.position)
 
         # Two cases for building: either they're making a new building or they're
         # increasing the production count of an existing one
 
         # If there is no building, create one
-        if move.tile.building is None:
-            if (self.player_has_enough_resources(move.playerId)) and (self.map.get_tile(move.tile.position).units[playerId] > 0):
-                move.tile.create_building(move.playerId)
+        if tile.building is None:
+            if (self.player_has_enough_resources(move.playerId)) and (self.map.get_tile(tile.position).units[playerId] > 0):
+                tile.create_building(move.playerId)
                 self.players[move.playerId].decrement_resource(100)
 
         # If there is a building, increase its production count
-        elif move.tile.building.ownerId == move.playerId:
-            move.tile.building.increment_production_progress(move.number_of_units)
+        elif tile.building.ownerId == move.playerId:
+            tile.building.increment_production_progress(move.number_of_units)
 
 
     def update_combat_phase(self, moves):
@@ -75,9 +76,10 @@ class Rules:
 
         while index < len(player_moves):
             current_move = player_moves[index]
+            tile = self.map.get_tile(current_move.position)
 
-            new_position = (current_move.tile.position[0] + current_move.direction[0],
-            current_move.tile.position[1] + current_move.direction[1])
+            new_position = (tile.position[0] + current_move.direction[0],
+            tile.position[1] + current_move.direction[1])
 
             if new_position in enemy_set:  # Check if opposing player has moves coming from new position
                 i = 0
@@ -90,7 +92,7 @@ class Rules:
 
                         print('collision detected')
 
-                        current_tile = self.map.get_tile(current_move.tile.position)
+                        current_tile = self.map.get_tile(tile.position)
                         enemy_tile = self.map.get_tile(enemy_move.tile.position)
 
                         if current_move.number_of_units > enemy_move.number_of_units:
@@ -141,15 +143,15 @@ class Rules:
 
         for move in moves[0]:
             if tuple(move.direction) not in sets[0]:
-                sets[0][tuple(move.tile.position)] = [move]
+                sets[0][tuple(move.position)] = [move]
             else:
-                sets[0][tuple(move.tile.position)].append(move)
+                sets[0][tuple(move.position)].append(move)
 
         for move in moves[1]:
             if tuple(move.direction) not in sets[1]:
-                sets[1][tuple(move.tile.position)] = [move]
+                sets[1][tuple(move.position)] = [move]
             else:
-                sets[1][tuple(move.tile.position)].append(move)
+                sets[1][tuple(move.position)].append(move)
 
         return sets
 
