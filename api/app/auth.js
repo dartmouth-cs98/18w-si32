@@ -20,8 +20,6 @@ const loggedIn = async (ctx, next) => {
   ctx.state.userId = userId;
   ctx.state.token = token;
 
-  console.log(userId, token);
-
   return next();
 };
 
