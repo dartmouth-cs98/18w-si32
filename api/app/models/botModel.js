@@ -29,10 +29,7 @@ const _Bot = new Schema({
     timestamp: Date,
     _id: false
   }],
-  code: {
-    url: { type: String, },
-    key: { type: String, }
-  }
+  code: { type: String, },
 }, {
   timestamps: true
 });

@@ -68,7 +68,7 @@ _Match.statics.getNext = () => {
         name: bot.name,
         id: bot._id,
         index: i,
-        url: s3.getBotUrl(bot.code.key),
+        url: s3.getBotUrl(bot.code),
       }
     ));
 
