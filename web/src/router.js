@@ -131,6 +131,7 @@ const initRouter = renderFn => {
 
   /* eslint-disable no-unused-vars */
   history.listen((location, action) => {
+    window.scrollTo(0,0); // on every url change, reset to the top
     router.resolve(location).then(html => renderFn(html));
   });
   /* eslint-disable no-unused-vars */
