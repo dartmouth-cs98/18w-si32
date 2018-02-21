@@ -1,8 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 
-import Page from "../layout/page";
-import Link from "../layout/link";
+import { Page, Link, Wrapper } from "../layout";
 import { fetchMatches } from "../../data/match/matchActions";
 
 import MatchList from "./MatchList";
@@ -19,9 +18,11 @@ class MatchListPage extends React.PureComponent {
   render() {
     return (
       <Page>
-        <h1>Your Matches</h1>
-        <Link href="/matches/create">Create a new match</Link>
-        <MatchList matches={this.props.matches} />
+        <Wrapper>
+          <h1>Your Matches</h1>
+          <Link href="/matches/create">Create a new match</Link>
+          <MatchList matches={this.props.matches} />
+        </Wrapper>
       </Page>
     );
   }

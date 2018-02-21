@@ -53,7 +53,7 @@ const styles = {
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
-      fontSize: constants.fontSizes.medium,
+      fontSize: constants.fontSizes.small,
       color: colors.blue,
       textDecoration: "none",
     },
@@ -62,7 +62,7 @@ const styles = {
   },
   primary: {
     wrapper: {
-      border: `2px solid ${colors.blue}`,
+      border: `3px solid ${colors.blue}`,
       borderRadius: "100px", // just something large to make a pill
       padding: "5px 10px",
       height: 50,
@@ -77,6 +77,7 @@ const styles = {
     small: {
       wrapper: {
         fontSize: constants.fontSizes.small,
+        borderWidth: 2,
         fontWeight: 400,
         height: "initial",
         padding: "5px 20px",

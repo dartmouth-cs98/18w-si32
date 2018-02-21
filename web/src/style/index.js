@@ -17,7 +17,8 @@ _.each(Object.keys(constants.fontSizes), size => {
 });
 
 // helper styles for font weights
-fontStyles.bold = { fontWeight: 500 };
+fontStyles.bold = { fontWeight: 600 };
+fontStyles.medBold = { fontWeight: 500 };
 fontStyles.regular = { fontWeight: 400 };
 fontStyles.light = { fontWeight: 300 };
 fontStyles.bodyText = { lineHeight: 1.6 };

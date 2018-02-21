@@ -25,7 +25,7 @@ const BotCard = ({ bot, style, hasDivider }) => (
     <table style={styles.rankTable}>
       <tbody>
         <tr style={styles.rankTableRow}>
-          <td style={[colorStyles.medGray, fontStyles.bold, fontStyles.small]}>
+          <td style={[colorStyles.medGray, fontStyles.medBold, fontStyles.small]}>
             Global
           </td>
           <td style={[colorStyles.darkGray, fontStyles.large]}>
@@ -36,7 +36,7 @@ const BotCard = ({ bot, style, hasDivider }) => (
           </td>
         </tr>
         <tr style={styles.rankTableRow}>
-          <td style={[colorStyles.medGray, fontStyles.bold, fontStyles.small]}>
+          <td style={[colorStyles.medGray, fontStyles.medBold, fontStyles.small]}>
             Dartmouth
           </td>
           <td style={[colorStyles.darkGray, fontStyles.large]}>
