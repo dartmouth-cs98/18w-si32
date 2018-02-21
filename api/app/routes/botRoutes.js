@@ -34,7 +34,7 @@ botRouter.post("/", async (ctx) => {
   // TODO need some error handling/retrying here
   s3.uploadBot(ctx.state.userId, bot._id, ctx.request.body.files.code).then(({ url, key }) => {
     // update bot in db w/ code's url
-    bot.set("code", { url, key });
+    bot.set("code", key);
     bot.save();
   });
 
@@ -62,13 +62,13 @@ botRouter.post("/:botId", async (ctx) => {
     throw new AccessError("That's not your bot");
   }
 
-  const { url, key } = await s3.uploadBot(ctx.state.userId, bot._id, ctx.request.body.files.code);
+  const { key } = await s3.uploadBot(ctx.state.userId, bot._id, ctx.request.body.files.code);
 
   // delete this file to mark it as handled
   delete ctx.request.body.files.code;
 
   // update bot in db w/ code's url
-  bot.set("code", { url, key });
+  bot.set("code", key);
   bot.set("version", bot.version + 1);
   bot.save();
 
