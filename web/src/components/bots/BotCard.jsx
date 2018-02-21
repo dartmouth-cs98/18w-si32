@@ -59,7 +59,7 @@ const styles = {
   },
   rankTable: {
     width: "100%",
-    marginTop: 10,
+    marginTop: 5,
   },
   rankTableRow: {
     height: 30,
@@ -96,7 +96,7 @@ const styles = {
   skillWrapper: {
     display: "flex",
     alignItems: "center",
-    margin: "10px 0 20px 0",
+    margin: "10px 0 25px 0",
     justifyContent: "space-between",
   },
 };
