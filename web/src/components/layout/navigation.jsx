@@ -6,6 +6,7 @@ import Color from "color";
 import Link from "./link";
 import history from "../../history";
 import { logout } from "../../data/session/sessionActions";
+import Logo from "../common/logo";
 
 import {
   colors,
@@ -66,17 +67,17 @@ class Navigation extends React.PureComponent {
 
     return (
       <nav style={styles.wrapper}>
-        <div style={styles.mainNav}>
-          <Link style={styles.mainLinkContainer} href={mainLinkDest}>
-            <div key="main-logo" style={styles.logoContainer}>
-              <div style={styles.logoOuter}><div style={styles.logoInner}></div></div>
-            </div>
-            <div key="main-title" style={{...styles.link, ...styles.homeLink}}>MONAD</div>
-          </Link>
-          {this.renderMainNav()}
-        </div>
+        <div style={styles.inner}>
+          <div style={styles.mainNav}>
+            <Link style={{...styles.link, ...styles.homeLink}} href={mainLinkDest}>
+              <Logo style={styles.logo} />
+              <span style={styles.logoText}>MONAD</span>
+            </Link>
+            {this.renderMainNav()}
+          </div>
 
-        {this.renderUserArea()}
+          {this.renderUserArea()}
+        </div>
       </nav>
     );
   }
@@ -89,72 +90,48 @@ const styles = {
     position: "fixed",
     top: "0",
     left: "0",
+    backgroundColor: colors.background,
+    borderBottom: `2px solid ${colors.sand}`,
+    borderColor: colors.sand,
+  },
+  inner: {
+    width: constants.BODY_WIDTH,
+    height: constants.NAVBAR_HEIGHT,
+    margin: "0px auto",
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
-    padding: "0 10px",
-    backgroundColor: colors.background,
-    borderStyle: "hidden hidden solid hidden",
-    borderWidth: "1px",
-    borderColor: colors.primary,
   },
   mainNav: {
     display: "flex",
     alignItems: "center"
-  },
-  mainLinkContainer: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    ":hover": {
-      cursor: "pointer"
-    }
   },
   userAreaContainer: {
     display: "flex",
     flexDirection: "row"
   },
   link: {
-    color: colors.detail,
-    fontSize: 16,
-    fontWeight: 200,
+    color: colors.medGray,
+    fontSize: 18,
+    fontWeight: 300,
     textDecoration: "none",
-    textTransform: "uppercase",
     margin: "0 10px",
     ":hover": {
-      color: Color(colors.primary).lighten(0.2).string(),
-      cursor: "pointer"
+      opacity: .8,
     }
   },
+  logoText: {
+    marginLeft: 10,
+  },
   homeLink: {
-    color: colors.primary,
-    fontSize: 24
+    color: colors.red,
+    fontSize: 25,
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    marginLeft: 0,
+    alignItems: "center",
   },
-  logoContainer: {
-    position: "relative",
-    width: "30px",
-    height: "30px"
-  },
-  logoOuter: {
-    position: "absolute",
-    width: "100%",
-    height: "100%",
-    borderRadius: "50%",
-    borderStyle: "solid",
-    borderWidth: "1px",
-    borderColor: colors.primary,
-    backgroundColor: "#FFFFFF"
-  },
-  logoInner: {
-    position: "absolute",
-    marginTop: "40%",
-    marginLeft: "40%",
-    width: "20%",
-    height: "20%",
-    borderRadius: "50%",
-    backgroundColor: colors.primary
-  }
 };
 
 const mapStateToProps = state => ({
@@ -165,5 +142,6 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   logout: () => dispatch(logout())
 });
+
 
 export default connect(mapStateToProps, mapDispatchToProps)(Radium(Navigation));

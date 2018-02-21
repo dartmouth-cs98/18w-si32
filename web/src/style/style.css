@@ -63,13 +63,11 @@ body {
   background-color: #FFFFFF;
   font-family: "Rubik", sans-serif;
 	font-weight: 400;
-	-webkit-font-smoothing: antialiased;
-	font-smooth: antialiased;
   color: #000000;
 }
 
 a {
-	color: white;
+	text-decoration: none;
 }
 
 textarea:focus, input:focus{

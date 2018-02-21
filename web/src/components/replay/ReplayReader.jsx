@@ -132,7 +132,7 @@ const styles = {
     paddingTop: "40px"
   },
   uploadHeader: {
-    color: colors.primary,
+    color: colors.red,
     fontSize: "30px"
   },
   dropZoneBase: {
@@ -149,7 +149,7 @@ const styles = {
     alignItems: "center"
   },
   dropZoneLit: {
-    backgroundColor: Color(colors.primary).lighten(0.9).string()
+    backgroundColor: Color(colors.red).lighten(0.9).string()
   },
   buttonContainer: {
     width: "50%"
@@ -170,13 +170,13 @@ const styles = {
     alignItems: "center",
     margin: "15px 0",
     backgroundColor: colors.background,
-    color: colors.primary,
+    color: colors.red,
     borderWidth: "1px",
     borderStyle: "solid",
-    borderColor: colors.primary,
+    borderColor: colors.red,
     borderRadius: "2px",
     ":hover": {
-      backgroundColor: colors.primary,
+      backgroundColor: colors.red,
       color: colors.background,
       cursor: "pointer"
     }

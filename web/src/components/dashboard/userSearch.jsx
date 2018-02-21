@@ -122,7 +122,7 @@ const styles = {
     fontSize: "16px",
     margin: "10px 0",
     ":focus": {
-      borderColor: Color(colors.primary).lighten(0.7).string(),
+      borderColor: Color(colors.red).lighten(0.7).string(),
       borderStyle: "solid",
       borderWidth: "1px"
     }
@@ -131,13 +131,13 @@ const styles = {
     width: "20%",
     height: constants.INPUT_HEIGHT,
     backgroundColor: colors.background,
-    color: colors.primary,
+    color: colors.red,
     borderWidth: "1px",
     borderStyle: "solid",
-    borderColor: colors.primary,
+    borderColor: colors.red,
     borderRadius: "2px",
     ":hover": {
-      backgroundColor: colors.primary,
+      backgroundColor: colors.red,
       color: colors.background,
       cursor: "pointer"
     }

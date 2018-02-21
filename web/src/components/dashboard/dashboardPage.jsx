@@ -1,11 +1,15 @@
 import React from "react";
+import Radium from "radium";
 import _ from "lodash";
 import { connect } from "react-redux";
 
 import Link from "../layout/link";
+import Button from "../common/button";
 import Page from "../layout/page";
+import { Wrapper } from "../layout/wrappers";
 
 import UserSearch from "./UserSearch";
+import BotCard from "../bots/BotCard";
 
 import { fetchBots } from "../../data/bot/botActions";
 import { fetchMatches } from "../../data/match/matchActions";
@@ -16,15 +20,31 @@ import { getBotsForUser } from "../../data/bot/botSelectors";
 
 import { MainTitle, SubTitle } from "./titles";
 
-const DashBotList = ({ bots }) => {
-  const items = _.map(bots, b =>
-    <div key={b._id}>
-      <Link href={`/bots/${b._id}`}>{b.name} ({b.trueSkill.mu.toFixed(1)})</Link>
-    </div>
-  );
+import { colors, fontStyles, colorStyles } from "../../style";
 
-  return <div>{items}</div>;
-};
+
+const DashBotList = Radium(({ bots }) => {
+  const items = _.map(bots, (b,i) => (
+    <BotCard hasDivider={i != 0} key={b._id} bot={b} style={{flex: 1}} />
+  ));
+
+  if (bots.length == 1) {
+    items.push(
+      <div key={"create"} style={[fontStyles.bodyText, styles.botCreateCard]}>
+        <p style={[
+          colorStyles.lightGray,
+          fontStyles.medium,
+          { marginBottom: 10 },
+        ]}>
+          You can have more than one bot, to test out multiple strategies at the same time!
+        </p>
+        <Button href="/bots/create" size="small" kind="primary">+ Upload a second bot now</Button>
+      </div>
+    );
+  }
+
+  return (<div style={styles.botCards}>{items}</div>);
+});
 
 const DashMatchList = ({ matches }) => {
   const items = _.map(matches, m =>
@@ -47,27 +67,64 @@ class DashboardPage extends React.PureComponent {
     this.props.fetchMatches(this.props.userId);
   }
 
+  renderHeaderStats = () => (
+    <Wrapper style={{ paddingTop: 10, paddingBottom: 10, backgroundColor: colors.sand }}>
+      <span>Your stats at a glance</span>
+    </Wrapper>
+  )
+
+  renderNoBots = () => {
+    return (
+      <p>You don't have any bots yet! To get started playing Monad, <Link href="/bots/create">upload a bot first &rarr;</Link></p>
+    );
+  }
+
+  renderTopBots = () => (
+    <Wrapper innerStyle={styles.dashSection}>
+      <div style={styles.sectionHeader}>
+        <MainTitle>
+            Your Top Bots
+        </MainTitle>
+        <Button style={{margin: "0 20px"}} kind="secondary" size="small" href="/bots/create">
+          + Create a new bot
+        </Button>
+        <Button kind="tertiary" size="small" href="/bots">
+          See all your bots &rarr;
+        </Button>
+      </div>
+
+      { this.props.bots.length > 0 ? <DashBotList bots={this.props.bots} /> : this.renderNoBots() }
+
+    </Wrapper>
+  )
+
   render() {
     if (!this.props.user) return <div></div>;
 
     return (
       <Page>
-        <div style={styles.wrapper}>
-          <MainTitle>Dashboard</MainTitle>
-          <h3>Your username: {this.props.user.username}</h3>
-          <h3>Your user id: {this.props.userId}</h3>
+        { this.renderHeaderStats() }
 
-          <SubTitle>Your Bots</SubTitle>
-          <DashBotList bots={this.props.bots} />
-          <Link href="/bots/create">+ Create a new bot</Link>
+        { this.renderTopBots() }
 
-          <SubTitle>Your Latest Matches</SubTitle>
+        <Wrapper style={styles.dashSection}>
+          <div style={styles.sectionHeader}>
+            <MainTitle>
+                Recent Matches
+            </MainTitle>
+            <Button style={{margin: "0 20px"}} kind="secondary" size="small" href="/matches/create">
+              + Start a match
+            </Button>
+            <Button kind="tertiary" size="small" href="/matches">
+              See more matches &rarr;
+            </Button>
+          </div>
+
           <DashMatchList matches={this.props.matches} />
-          <Link href="/matches">View all &rarr;</Link>
 
           <UserSearch />
 
-        </div>
+        </Wrapper>
       </Page>
     );
   }
@@ -82,17 +139,36 @@ const mapStateToProps = state => ({
   user: getSessionUser(state) || state.session.user || {},
   userId: state.session.userId,
   matches: getMatchesForUser(state, state.session.userId),
-  bots: getBotsForUser(state, state.session.userId),
+  bots: getBotsForUser(state, state.session.userId, { limit: 3 }),
 });
 
 const styles = {
-  wrapper: {
+  dashSection: {
+    borderBottom: `2px solid ${colors.border}`,
+    paddingBottom: 20,
+  },
+  botCards: {
     display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
+    justifyContent: "space-between",
+  },
+  botCreateCard: {
+    border: `4px dashed ${colors.sand}`,
+    width: "50%",
+    borderRadius: 15,
+    padding: "20px 60px 20px 60px",
+    marginLeft: 30,
     alignItems: "center",
-    paddingTop: "20px"
-  }
+    justifyContent: "center",
+    display: "flex",
+    textAlign: "center",
+    flexDirection: "column",
+  },
+  sectionHeader: {
+    display: "flex",
+    alignItems: "center",
+    marginBottom: 20,
+    marginTop: 30,
+  },
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(DashboardPage);
