@@ -19,6 +19,7 @@ const httpGetAction = (collectionName, endpoint, params, options={}) => (dispatc
         doMerge: options.doMerge || options.isSingle,
         payload: options.isSingle ? [res.body] : res.body,
       });
+      return res;
     }).catch(err => {
       // TODO what to do in the store here?
       console.log("HTTP error", collectionName, endpoint, params, err); // eslint-disable-line
@@ -38,6 +39,7 @@ const httpPostAction = (collectionName, endpoint, body={}, options={}) => (dispa
         doMerge: true, // whatever we get back, merge in without replacing everything still there
         payload: res.body.updatedRecords
       });
+      return res.body.updatedRecords;
     }).catch(err => {
       // TODO what to do in the store here?
       console.log("HTTP error", collectionName, endpoint, body, err); // eslint-disable-line
@@ -57,6 +59,7 @@ const httpPutAction = (collectionName, endpoint, body={}, options={}) => (dispat
         doMerge: true, // whatever we get back, merge in without replacing everything still there
         payload: res.body.updatedRecords
       });
+      return res.body.updatedRecords;
     }).catch(err => {
       // TODO what to do in the store here?
       console.log("HTTP error", collectionName, endpoint, body, err); // eslint-disable-line
@@ -81,6 +84,7 @@ const httpPutActionMultipleUpdate = (collectionNames, endpoint, body={}, options
           payload: collection.updatedRecords
         });
       });
+      return updatedCollections;
     }).catch(err => {
       // TODO what to do in the store here?
       console.log("HTTP error", collectionName, endpoint, body, err); // eslint-disable-line
