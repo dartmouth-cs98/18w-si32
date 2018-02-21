@@ -1,3 +1,4 @@
+import json
 from .Tile import Tile
 
 width = 50  # width of map
@@ -40,13 +41,15 @@ class Map:
             if self.tile_in_range(new_pos):
                 return self.get_tile(new_pos)
 
-    def tile_in_range(self, tile):  # check if coordinates are contained by map
-
-        if (tile.position[0] < 0) | (tile.position[0] >= (self.width-1)) | (tile.position[1] < 0) | (tile.position[1] >= (self.height-1)):
+    def position_in_range(self, position):  # check if coordinates are contained by map
+        if (position[0] < 0) | (position[0] >= (self.width-1)) | (position[1] < 0) | (position[1] >= (self.height-1)):
             return False
 
         else:
             return True
+
+    def tile_in_range(self, tile):  # check if tile is within map
+        return self.position_in_range(tile.position)
 
     # ------ Initializing function ---------------
 
@@ -70,6 +73,9 @@ class Map:
             w += 1
 
         return tiles
+
+    def to_json(self):
+        return json.dumps({})
 
     def __str__(self):
         return str(self.tiles)

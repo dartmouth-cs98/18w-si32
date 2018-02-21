@@ -42,6 +42,7 @@ class Tile:
         self.update_building_status()
 
     def update_units_number(self):
+        # TODO no need for this loop, do some math
         while (self.units[0] > 0) and (self.units[1] > 0):
             self.units[0] -= 1
             self.units[1] -= 1

@@ -39,14 +39,17 @@ class SimpleGameHelper():
 
     def format_state(self):
         state = {
-            'players': self.players,
-            'myId': self.players[self.myId]
+            # 'players': self.players,
+            # 'myId': self.players[self.myId]
         }
 
-    def create_move_command(self, direction):
+    def create_move_command(self, location, direction):
         return {
-            'player': self.myId,
-            'direction': direction
+            'playerId': self.myId,
+            'location': [0,0],
+            'command': 'move',
+            'number_of_units': 1,
+            'direction': [1,0]
         }
 
     def send_commands(self, commands):

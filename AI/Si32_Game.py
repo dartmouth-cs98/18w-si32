@@ -38,26 +38,33 @@ class Game_state(Game):
 
     def initialize_players(self, bots, map):  # initalizes players
         i = 0
-        self.players = {}
+        self.players = []
         for i, bot in enumerate(bots):
-            self.players[i] = Player(i, self.map, bot, (i*5, i*5))
+            self.players.append(Player(i, self.map, bot, (i*5, i*5)))
 
     # ------------------ Main Functions ---------------------
     def start(self):
-        print("STARTING!")
-        pass
+        self.game_loop()
 
-    def game_loop():
-        pass
-
-    def play_game(self):
-        while not self.game_over and self.iter < 30:  # Main loop. Simulates both players taking a turn until someone wins
-            self.play_a_turn()
+    def game_loop(self):
+        # loop until somebody wins, or we time out!
+        while not self.game_over and self.iter < 30:
+            self.send_state()
+            self.read_moves()
             self.iter += 1
 
-    # gets moves from both players and executes them
-    def play_a_turn(self, moves):
+    # send all players the updated game state so they can make decisions
+    def send_state(self):
+        for p in self.players:
+            p.send_state()
+
+    # read all moves from the players and update state accordingly
+    def read_moves(self):
         print("Play turn")
+
+        moves = []
+        for p in self.players:
+            moves.append(p.get_move())
 
         # Check moves for combat, and sort by type of command
         moves = self.rules.update_combat_phase(moves)  # Run both players moves through combat phase, return updated list of moves
