@@ -1,5 +1,5 @@
 from random import random, randint
-from Command import Command
+from .Command import Command
 
 starting_distance = 30
 

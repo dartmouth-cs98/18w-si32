@@ -1,21 +1,24 @@
 import json
-from Command import Command
-from Game import Game
-from Player import Player
-from Map import Map
-from Tile import Tile
-from Rules import Rules
-from json_helpers import json_to_object_list
+from .Command import Command
+from .Game import Game
+from .Player import Player
+from .Map import Map
+from .Tile import Tile
+from .Rules import Rules
+from .json_helpers import json_to_object_list
 
 class Game_state(Game):
 
-    def __init__(self, map, rules, bots):
+    def __init__(self, bots):
         # Game state is determined by map, players, and rules. Higher level
         # game state takes these objects and runs games, allowing for a
         # game agnostic framework
+        # GB - I'm more tightly coupling these at the moment to get things off
+        # the ground. Won't be hard to abstract back out when needed.
+
         num_players = len(bots)
 
-        self.map = map(num_players)
+        self.map = Map(num_players)
 
         self.initialize_players(bots, self.map)
 
@@ -23,12 +26,12 @@ class Game_state(Game):
 
         self.json_log = self.initialize_json_log()
 
-        self.rules = rules(self.map, self.players)
+        self.rules = Rules(self.map, self.players)
 
         self.iter = 0
 
         self.state_log = []
-        # super().__init__(bots)
+        super().__init__(bots)
 
 
     # ------------ Initializing function ------------------
@@ -40,7 +43,8 @@ class Game_state(Game):
             self.players[i] = Player(i, self.map, bot, (i*5, i*5))
 
     # ------------------ Main Functions ---------------------
-    def start():
+    def start(self):
+        print("STARTING!")
         pass
 
     def game_loop():
@@ -134,18 +138,19 @@ def sort_moves(moves):
 
     return sorted_moves
 
-test = Game_state(Map, Rules, [1,2])
+
+# test = Game_state([1,2])
 
 # moves = self.get_random_player_moves()
 
 # self.map.get_tile([39,40]).increment_units(1, 2)
-moves = [ [], [] ]
-moves[0].append(Command(0, test.map.get_tile([0,0]), 'move', 1, [1,0]))
-moves[1].append(Command(1, test.map.get_tile([5,5]), 'move', 1, [1,0]))
+# moves = [ [], [] ]
+# moves[0].append(Command(0, test.map.get_tile([0,0]), 'move', 1, [1,0]))
+# moves[1].append(Command(1, test.map.get_tile([5,5]), 'move', 1, [1,0]))
 
-test.play_a_turn(moves)
-p1 = test.players[0].get_occupied_tiles()
-p2 = test.players[1].get_occupied_tiles()
-test.write_game_log()
+# test.play_a_turn(moves)
+# p1 = test.players[0].get_occupied_tiles()
+# p2 = test.players[1].get_occupied_tiles()
+# test.write_game_log()
 
-print(test.map.tiles[1][0])
+# print(test.map.tiles[1][0])

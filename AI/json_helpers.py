@@ -1,4 +1,4 @@
-from Command import Command
+from .Command import Command
 
 
 def json_to_object(json_object, type):  # helper function for json -> object

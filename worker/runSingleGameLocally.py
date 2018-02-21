@@ -1,11 +1,11 @@
 import sys
 from Bot import LocalBot
-from SimpleGame import SimpleGame
+from game.Si32_Game import Game_state
 from waitForGame import pollUntilGameReady
 
 
 gameClasses = {
-    'SimpleGame': SimpleGame
+    'SimpleGame': Game_state
 }
 
 # called whenever there would be a game that this worker needs to run

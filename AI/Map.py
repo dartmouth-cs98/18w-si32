@@ -1,4 +1,4 @@
-from Tile import Tile
+from .Tile import Tile
 
 width = 50  # width of map
 height = 50  # height of map

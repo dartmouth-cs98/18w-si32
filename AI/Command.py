@@ -1,5 +1,5 @@
 import json
-from Tile import Tile
+from .Tile import Tile
 
 
 class Command:

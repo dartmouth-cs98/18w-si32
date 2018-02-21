@@ -1,5 +1,7 @@
 import traceback
-from SimpleGame import SimpleGame
+# from SimpleGame import SimpleGame
+from game.Si32_Game import Game_state
+
 from Bot import DockerBot
 from waitForGame import pollUntilGameReady
 from endpoints import post_match_result
