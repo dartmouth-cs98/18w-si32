@@ -27,7 +27,10 @@ class ProfilePage extends React.PureComponent {
     this.props.fetchUser();
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentDidUpdate(prevProps) {
+    if (prevProps.id !== this.props.id) {
+      this.props.fetchUser();
+    }
   }
 
   renderFollowLink = () => {
