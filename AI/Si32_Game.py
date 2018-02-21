@@ -25,6 +25,8 @@ class Game_state(Game):
 
         self.rules = rules(self.map, self.players)
 
+        self.iter = 0
+
         self.state_log = []
         # super().__init__(bots)
 
@@ -45,8 +47,9 @@ class Game_state(Game):
         pass
 
     def play_game(self):
-        while not self.game_over:  # Main loop. Simulates both players taking a turn until someone wins
+        while not self.game_over and self.iter < 30:  # Main loop. Simulates both players taking a turn until someone wins
             self.play_a_turn()
+            self.iter += 1
 
     # gets moves from both players and executes them
     def play_a_turn(self, moves):
