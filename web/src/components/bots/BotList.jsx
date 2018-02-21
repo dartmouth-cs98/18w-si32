@@ -1,6 +1,6 @@
 import React from "react";
 import _ from "lodash";
-import Link from "../layout/link";
+import Link from "../common/link";
 
 const BotList = ({ bots }) => {
   const items = _.map(bots, b =>

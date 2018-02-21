@@ -1,7 +1,7 @@
 import React from "react";
 import Radium from "radium";
 import _ from "lodash";
-import Link from "../layout/link";
+import Link from "../common/link";
 
 import { colors, constants, colorStyles, fontStyles } from "../../style";
 

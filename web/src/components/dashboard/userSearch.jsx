@@ -4,9 +4,8 @@ import Color from "color";
 
 import { getUsersForSearch } from "../../data/user/userRoutes";
 
-import Link from "../layout/link";
-
-import { SubTitle } from "./titles";
+import Link from "../common/link";
+import { SubTitle } from "../common/titles";
 
 import {
   colors,

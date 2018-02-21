@@ -1,6 +1,6 @@
 import React from "react";
 import _ from "lodash";
-import Link from "../layout/link";
+import Link from "../common/link";
 
 const GroupList = ({ groups, leaveGroup }) => {
   console.log(groups);

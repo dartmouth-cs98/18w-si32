@@ -4,7 +4,7 @@ import {
   colors,
   constants,
 } from "../../style";
-import Link from "../layout/link";
+import Link from "../common/link";
 
 const Logo = (props) => {
   return (
