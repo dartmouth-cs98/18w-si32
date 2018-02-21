@@ -49,9 +49,21 @@ class Game_state(Game):
     def game_loop(self):
         # loop until somebody wins, or we time out!
         while not self.game_over and self.iter < 30:
+            # reset log for this turn
+            self.turn_log = {
+                'state': self.map.get_state(),
+                'moves': []
+            }
+
             self.send_state()
             self.read_moves()
+
+            # add full turn to the log
+            self.log_turn()
+
             self.iter += 1
+
+        return self.json_log
 
     # send all players the updated game state so they can make decisions
     def send_state(self):
@@ -93,12 +105,20 @@ class Game_state(Game):
 
     def execute_move(self, move):
         if self.rules.verify_move(move):
-
-            self.json_log_move(move)
+            self.turn_log["moves"].append(move)
             self.rules.update_by_move(move)
+        else:
+            print("ILLEGAL!")
 
 
     # ------------ REPLAY FILE FUNCTIONS ----------------
+
+    def get_log(self):
+        j = json.dumps(self.json_log, default=lambda o: o.__dict__)
+        return j
+
+    def log_turn(self):
+        self.json_log["turns"].append(self.turn_log)
 
     def write_game_log(self):
         temp = json.dumps(self.json_log)
@@ -115,7 +135,7 @@ class Game_state(Game):
         board_info['player1'] = self.players[0].starting_pos
         board_info['player2'] = self.players[1].starting_pos
         json_log['board_state'] = board_info
-        json_log['commands'] = []
+        json_log['turns'] = []
         json_log['rank'] = []
 
         return json_log

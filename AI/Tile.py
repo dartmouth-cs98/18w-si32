@@ -4,11 +4,9 @@ from random import randint
 class Tile:
 
     def __init__(self, position, number_of_players):
-
-        self.number_of_players = number_of_players
         self.position = position
         self.resource = randint(0, 50)  # amount of resource in the tile (will be randomized for now)
-        self.units = self.initialize_units_list()
+        self.units = self.initialize_units_list(number_of_players)
         self.building = None  # Tiles initialized to not have a building
 
     # ---------------- RESOURCE METHODS ------------------------
@@ -69,11 +67,11 @@ class Tile:
 
     # --------------- INITIALIZING FUNCTION ----------------------
 
-    def initialize_units_list(self):  #we want to store the number of units a player has in each square, initialized to 0 for each player
+    def initialize_units_list(self, number_of_players):  #we want to store the number of units a player has in each square, initialized to 0 for each player
         units = []
 
 
-        for i in range(self.number_of_players):
+        for i in range(number_of_players):
             units.append(0)
 
         return units

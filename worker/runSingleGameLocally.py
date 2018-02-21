@@ -29,7 +29,7 @@ def execGame():
     for bot in bots:
         bot.cleanup()
 
-
-    # get results from game and post to server
+    result = game.get_log()
+    print(result) # warning: long!
 
 execGame()
