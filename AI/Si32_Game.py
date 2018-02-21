@@ -107,12 +107,9 @@ class Game_state(Game):
         if self.rules.verify_move(move):
             self.turn_log["moves"].append(move)
             self.rules.update_by_move(move)
-        else:
-            print("ILLEGAL!")
 
 
     # ------------ REPLAY FILE FUNCTIONS ----------------
-
     def get_log(self):
         j = json.dumps(self.json_log, default=lambda o: o.__dict__)
         return j
@@ -141,7 +138,6 @@ class Game_state(Game):
         return json_log
 
     def json_log_move(self, move):
-        print("LOGGING", move)
         self.json_log['commands'].append(move.to_json())
 
 # We want to execute commmands in the following order: move, build, mine
