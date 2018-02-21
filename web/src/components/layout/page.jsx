@@ -16,7 +16,6 @@ const styles = {
   base: {
     height: "100%",
     minHeight: pageHeight,
-    maxWidth: 1080,
     marginTop: constants.NAVBAR_HEIGHT,
     marginBottom: "0",
     marginLeft: "auto",

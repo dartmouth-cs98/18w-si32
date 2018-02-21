@@ -26,7 +26,7 @@ const styles = {
     padding: "0 15px",
     borderStyle: "solid hidden hidden hidden",
     borderWidth: "1px",
-    borderColor: colors.primary,
+    borderColor: colors.red,
   }
 };
 

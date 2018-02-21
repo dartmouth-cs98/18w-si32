@@ -120,7 +120,7 @@ const styles = {
     fontSize: "16px",
     margin: "10px 0",
     ":focus": {
-      borderColor: Color(colors.primary).lighten(0.7).string(),
+      borderColor: Color(colors.red).lighten(0.7).string(),
       borderStyle: "solid",
       borderWidth: "1px"
     }
@@ -130,13 +130,13 @@ const styles = {
     height: constants.BUTTON_HEIGHT,
     margin: "15px 0",
     backgroundColor: colors.background,
-    color: colors.primary,
+    color: colors.red,
     borderWidth: "1px",
     borderStyle: "solid",
-    borderColor: colors.primary,
+    borderColor: colors.red,
     borderRadius: "2px",
     ":hover": {
-      backgroundColor: colors.primary,
+      backgroundColor: colors.red,
       color: colors.background,
       cursor: "pointer"
     }
@@ -151,7 +151,7 @@ const styles = {
     marginRight: "5px"
   },
   registerLink: {
-    color: colors.primary,
+    color: colors.red,
     ":hover": {
       cursor: "pointer",
       textDecoration: "underline"

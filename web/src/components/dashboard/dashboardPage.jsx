@@ -3,7 +3,9 @@ import _ from "lodash";
 import { connect } from "react-redux";
 
 import Link from "../layout/link";
+import Button from "../common/button";
 import Page from "../layout/page";
+import { Wrapper } from "../layout/wrappers";
 
 import UserSearch from "./UserSearch";
 
@@ -14,6 +16,8 @@ import { getMatchesForUser } from "../../data/match/matchSelectors";
 import { getBotsForUser } from "../../data/bot/botSelectors";
 
 import { MainTitle, SubTitle } from "./titles";
+
+import { colors } from "../../style";
 
 const DashBotList = ({ bots }) => {
   const items = _.map(bots, b =>
@@ -51,6 +55,20 @@ class DashboardPage extends React.PureComponent {
 
     return (
       <Page>
+        <Wrapper style={{ paddingTop: 10, paddingBottom: 10, backgroundColor: colors.sand }}>
+          <span>Your stats at a glance</span>
+        </Wrapper>
+        <Wrapper style={{ marginTop: 10 }}>
+          <MainTitle>
+            Bots
+            <Button style={{margin: "0 20px"}} kind="secondary" size="small" href="/bots/create">
+              + Create a new bot
+            </Button>
+            <Button kind="tertiary" size="small" href="/bots">
+              See all your bots &rarr;
+            </Button>
+          </MainTitle>
+
         <div style={styles.wrapper}>
           <MainTitle>Dashboard</MainTitle>
           <h3>Your username: {this.props.user.username}</h3>
@@ -67,6 +85,7 @@ class DashboardPage extends React.PureComponent {
           <UserSearch />
 
         </div>
+        </Wrapper>
       </Page>
     );
   }
