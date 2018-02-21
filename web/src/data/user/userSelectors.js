@@ -1,5 +1,4 @@
 import { createSelector } from "reselect";
-import _ from "lodash";
 
 const getSessionUser = createSelector(
   state => state.users.records,
