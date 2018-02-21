@@ -16,7 +16,7 @@ const httpGetAction = (collectionName, endpoint, params, options={}) => (dispatc
     .then(res => {
       dispatch({
         type: `RECEIVED_${collectionName}`,
-        doMerge: options.doMerge,
+        doMerge: options.doMerge || options.isSingle,
         payload: options.isSingle ? [res.body] : res.body,
       });
     }).catch(err => {
