@@ -4,11 +4,9 @@ from random import randint
 class Tile:
 
     def __init__(self, position, number_of_players):
-
-        self.number_of_players = number_of_players
         self.position = position
         self.resource = randint(0, 50)  # amount of resource in the tile (will be randomized for now)
-        self.units = self.initialize_units_list()
+        self.units = self.initialize_units_list(number_of_players)
         self.building = None  # Tiles initialized to not have a building
 
     # ---------------- RESOURCE METHODS ------------------------
@@ -42,6 +40,7 @@ class Tile:
         self.update_building_status()
 
     def update_units_number(self):
+        # TODO no need for this loop, do some math
         while (self.units[0] > 0) and (self.units[1] > 0):
             self.units[0] -= 1
             self.units[1] -= 1
@@ -68,11 +67,11 @@ class Tile:
 
     # --------------- INITIALIZING FUNCTION ----------------------
 
-    def initialize_units_list(self):  #we want to store the number of units a player has in each square, initialized to 0 for each player
+    def initialize_units_list(self, number_of_players):  #we want to store the number of units a player has in each square, initialized to 0 for each player
         units = []
 
 
-        for i in range(self.number_of_players):
+        for i in range(number_of_players):
             units.append(0)
 
         return units
@@ -80,7 +79,5 @@ class Tile:
     def __str__(self):
         string = ""
         string += "Tile at position: " + str(self.position) + '\n'
-
-        string += "Player 1 units: " +str(self.units[0]) + "\n"
-        string+= "Player 2 units: " +str(self.units[1])
+        string += "Units:" + str(self.units)
         return string

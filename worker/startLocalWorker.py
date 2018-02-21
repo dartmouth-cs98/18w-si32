@@ -2,7 +2,7 @@ import sys
 from Bot import LocalBot
 from SimpleGame import SimpleGame
 from waitForGame import pollUntilGameReady
-from endpoints import post_game_result
+from endpoints import post_match_result
 from time import sleep
 
 
@@ -30,7 +30,7 @@ def run_worker():
             for bot in bots:
                 bot.cleanup()
 
-            post_game_result(botNumToPlayerIds, result)
+            post_match_result(botNumToPlayerIds, result)
 
 
             sleep(10)
