@@ -25,6 +25,7 @@ botRouter.post("/", async (ctx) => {
   const bot = await Bot.create({
     name: ctx.request.body.fields.name,
     user: ctx.state.userId,
+    trueSkill: {},
   });
 
   // upload the code async. Better to return faster and do the 2 db calls than
@@ -33,7 +34,7 @@ botRouter.post("/", async (ctx) => {
   // TODO need some error handling/retrying here
   s3.uploadBot(ctx.state.userId, bot._id, ctx.request.body.files.code).then(({ url, key }) => {
     // update bot in db w/ code's url
-    bot.set("code", { url, key });
+    bot.set("code", key);
     bot.save();
   });
 
@@ -61,13 +62,13 @@ botRouter.post("/:botId", async (ctx) => {
     throw new AccessError("That's not your bot");
   }
 
-  const { url, key } = await s3.uploadBot(ctx.state.userId, bot._id, ctx.request.body.files.code);
+  const { key } = await s3.uploadBot(ctx.state.userId, bot._id, ctx.request.body.files.code);
 
   // delete this file to mark it as handled
   delete ctx.request.body.files.code;
 
   // update bot in db w/ code's url
-  bot.set("code", { url, key });
+  bot.set("code", key);
   bot.set("version", bot.version + 1);
   bot.save();
 

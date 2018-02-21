@@ -105,7 +105,8 @@ userRouter.post("/register", async (ctx) => {
   const u = await User.create({
     // create the user in the db
     username: ctx.request.body.username,
-    password: hash
+    password: hash,
+    trueSkill: {}
   });
 
   const s = await session.create(u, ctx.ip);

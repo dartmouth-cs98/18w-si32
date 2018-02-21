@@ -95,6 +95,9 @@ class ProfilePage extends React.Component {
       <Page>
         { this.renderFollowLink() }
         <MainTitle>Profile: { this.props.profileUser.username }</MainTitle>
+        <SubTitle>Score</SubTitle>
+        <p>{ this.props.profileUser.trueSkill.mu.toFixed(1) }</p>
+
         <SubTitle>Bots</SubTitle>
         <BotList bots={this.props.bots} />
 
@@ -122,7 +125,7 @@ const mapDispatchToProps = (dispatch, props) => ({
 
 const mapStateToProps = (state, props) => ({
   sessionUser: state.session.user || {},
-  profileUser: state.users.records[props.id] || {},
+  profileUser: state.users.records[props.id],
   matches: getMatchesForUser(state, props.id),
   bots: getBotsForUser(state, props.id),
 });
