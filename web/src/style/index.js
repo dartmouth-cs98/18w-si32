@@ -8,7 +8,6 @@ import _ from "lodash";
 const colorStyles = {};
 const fontStyles = {};
 
-console.log(colors)
 _.each(Object.keys(colors), c => {
   colorStyles[c] = { color: colors[c] };
 });
