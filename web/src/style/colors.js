@@ -1,3 +1,5 @@
+import Color from "color";
+
 export default {
   // primary colors. Naming these after what they really are; it's an easy find-replace
   // when the names change or the color changes so the name no longer matches
@@ -5,7 +7,7 @@ export default {
   green: "#219653",
   blue: "#2D95D6",
 
-  sand: "#F2EFEE", // light gray background
+  sand: Color("#F2EFEE").lighten(0.03).string(), // light gray background
   border: "#F0EBEB", // gray color for most borders
 
   // gray shades for foreground text

@@ -3,7 +3,7 @@ const FOOTER_HEIGHT = 65;
 const INPUT_HEIGHT = 30;
 const BUTTON_HEIGHT = 35;
 
-const BODY_WIDTH = 1080;
+const BODY_WIDTH = 1280;
 
 // TODO: add font sizes to this to keep consistent across app?
 // would we want them to be absolute (px, pt) or relative (vw)?

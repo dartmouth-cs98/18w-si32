@@ -113,7 +113,7 @@ const styles = {
   link: {
     color: colors.medGray,
     fontSize: 18,
-    fontWeight: 400,
+    fontWeight: 300,
     textDecoration: "none",
     margin: "0 10px",
     ":hover": {
