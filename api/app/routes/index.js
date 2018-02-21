@@ -3,6 +3,7 @@ const userRouter = require("./userRoutes");
 const botRouter = require("./botRoutes");
 const workerRouter = require("./workerRoutes");
 const matchRouter = require("./matchRoutes");
+const groupRouter = require("./groupRoutes");
 
 const rootRouter = new Router();
 
@@ -10,5 +11,6 @@ rootRouter.use("/bots", botRouter.routes(), botRouter.allowedMethods());
 rootRouter.use("/matches", matchRouter.routes(), matchRouter.allowedMethods());
 rootRouter.use("/users", userRouter.routes(), userRouter.allowedMethods());
 rootRouter.use("/worker", workerRouter.routes(), workerRouter.allowedMethods());
+rootRouter.use("/groups", groupRouter.routes(), groupRouter.allowedMethods());
 
 module.exports = rootRouter;

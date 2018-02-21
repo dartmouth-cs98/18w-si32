@@ -4,8 +4,9 @@ const bcrypt = require("bcryptjs");
 const session = require("../session");
 const auth = require("../auth");
 const User = require("../models").User;
+const Group = require("../models").Group;
 
-const { AuthError } = require("../errors");
+const { AuthError, MalformedError } = require("../errors");
 
 const userRouter = Router();
 
@@ -30,7 +31,7 @@ userRouter.get("/", auth.loggedIn, async (ctx) => {
  * Get a single user by ID.
  */
 userRouter.get("/:userId", auth.loggedIn, async (ctx) => {
-  let user = await User.findById(ctx.params.userId);
+  let user = await User.findById(ctx.params.userId).populate("groups");
   ctx.body = user;
 });
 
@@ -55,6 +56,38 @@ userRouter.delete("/follows/:targetUserId", auth.loggedIn, async (ctx) => {
 
   ctx.body = {
     updatedRecords: [userFrom, userTo],
+  };
+});
+
+// trying to be RESTful here. Imagine we're creating some "is member" resource/link
+// from logged in user to targetGroupId, which is passed in the body.
+userRouter.put("/memberships/:targetGroupId", auth.loggedIn, async (ctx) => {
+  let toJoin = await Group.findById(ctx.params.targetGroupId);
+
+  if (!toJoin) {
+    throw new MalformedError(`Group with id ${ctx.params.targetGroupId} does not exist`);
+  }
+
+  let { user } = await toJoin.addMember(ctx.state.userId);
+
+  ctx.body = {
+    updatedRecords: [user],
+  };
+});
+
+// trying to be RESTful here. Imagine we're deleting some "is member" resource/link
+// from logged in user to targetGroupId, which is passed in the body.
+userRouter.delete("/memberships/:targetGroupId", auth.loggedIn, async (ctx) => {
+  let toJoin = await Group.findById(ctx.params.targetGroupId);
+
+  if (!toJoin) {
+    throw new MalformedError(`Group with id ${ctx.params.targetGroupId} does not exist`);
+  }
+
+  let { user } = await toJoin.removeMember(ctx.state.userId);
+
+  ctx.body = {
+    updatedRecords: [user],
   };
 });
 
