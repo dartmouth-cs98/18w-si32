@@ -12,4 +12,4 @@ const MatchList = ({ matches }) => {
   return <div>{items}</div>;
 };
 
-export default MatchList; 
+export default MatchList;

@@ -115,7 +115,8 @@ const styles = {
     fontSize: 18,
     fontWeight: 300,
     textDecoration: "none",
-    margin: "0 10px",
+    marginLeft: 10,
+    marginRight: 10,
     ":hover": {
       opacity: .8,
     }

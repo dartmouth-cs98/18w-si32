@@ -3,13 +3,12 @@ import Radium from "radium";
 import _ from "lodash";
 import { connect } from "react-redux";
 
-import Link from "../layout/link";
+import { Link, Page, Wrapper } from "../layout";
 import Button from "../common/button";
-import Page from "../layout/page";
-import { Wrapper } from "../layout/wrappers";
 
 import UserSearch from "./UserSearch";
 import BotCard from "../bots/BotCard";
+import HeaderStatsBar from "./HeaderStatsBar";
 
 import { fetchBots } from "../../data/bot/botActions";
 import { fetchMatches } from "../../data/match/matchActions";
@@ -67,12 +66,6 @@ class DashboardPage extends React.PureComponent {
     this.props.fetchMatches(this.props.userId);
   }
 
-  renderHeaderStats = () => (
-    <Wrapper style={{ paddingTop: 10, paddingBottom: 10, backgroundColor: colors.sand }}>
-      <span>Your stats at a glance</span>
-    </Wrapper>
-  )
-
   renderNoBots = () => {
     return (
       <p>You don't have any bots yet! To get started playing Monad, <Link href="/bots/create">upload a bot first &rarr;</Link></p>
@@ -100,10 +93,11 @@ class DashboardPage extends React.PureComponent {
 
   render() {
     if (!this.props.user) return <div></div>;
+    console.log(this.props.user);
 
     return (
       <Page>
-        { this.renderHeaderStats() }
+        <HeaderStatsBar user={this.props.user} />
 
         { this.renderTopBots() }
 
@@ -136,7 +130,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const mapStateToProps = state => ({
-  user: getSessionUser(state) || state.session.user || {},
+  user: getSessionUser(state) || state.session.user,
   userId: state.session.userId,
   matches: getMatchesForUser(state, state.session.userId),
   bots: getBotsForUser(state, state.session.userId, { limit: 3 }),

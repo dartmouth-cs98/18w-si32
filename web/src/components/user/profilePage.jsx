@@ -4,11 +4,13 @@ import { connect } from "react-redux";
 
 import Page from "../layout/page";
 import Link from "../layout/link";
+import { Wrapper } from "../layout/wrappers";
 
 import MatchList from "../matches/MatchList";
 import BotList from "../bots/BotList";
 import GroupList from "../groups/GroupList";
 import groupSearchbar from "../groups/groupSearchbar";
+
 
 import { MainTitle, SubTitle } from "../dashboard/titles";
 
@@ -96,21 +98,23 @@ class ProfilePage extends React.Component {
 
     return (
       <Page>
-        { this.renderFollowLink() }
-        <MainTitle>Profile: { this.props.profileUser.username }</MainTitle>
-        <SubTitle>Score</SubTitle>
-        <p>{ this.props.profileUser.trueSkill.mu.toFixed(1) }</p>
+        <Wrapper>
+          { this.renderFollowLink() }
+          <MainTitle>Profile: { this.props.profileUser.username }</MainTitle>
+          <SubTitle>Score</SubTitle>
+          <p>{ this.props.profileUser.trueSkill.mu.toFixed(1) }</p>
 
-        <SubTitle>Bots</SubTitle>
-        <BotList bots={this.props.bots} />
+          <SubTitle>Bots</SubTitle>
+          <BotList bots={this.props.bots} />
 
-        <SubTitle>Matches</SubTitle>
-        <MatchList matches={this.props.matches} />
+          <SubTitle>Matches</SubTitle>
+          <MatchList matches={this.props.matches} />
 
-        <SubTitle>Groups</SubTitle>
-        <GroupList groups={this.props.profileUser.groups} leaveGroup={this.props.leaveGroup} />
-        {groupSearchbar(this.state.selectedGroup, this.didSelectGroup, {placeholder: "Search for new groups to join"})}
-        {this.renderGroupActionBox()}
+          <SubTitle>Groups</SubTitle>
+          <GroupList groups={this.props.profileUser.groups} leaveGroup={this.props.leaveGroup} />
+          {groupSearchbar(this.state.selectedGroup, this.didSelectGroup, {placeholder: "Search for new groups to join"})}
+          {this.renderGroupActionBox()}
+        </Wrapper>
       </Page>
     );
   }

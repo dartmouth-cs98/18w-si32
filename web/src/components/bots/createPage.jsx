@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 
-import Page from "../layout/page";
+import { Page, Wrapper } from "../layout";
 import { createBot } from "../../data/bot/botActions";
 
 class BotCreatePage extends React.PureComponent {
@@ -37,29 +37,31 @@ class BotCreatePage extends React.PureComponent {
   render() {
     return (
       <Page>
-        <h1>Create a Bot</h1>
-        <form onSubmit={this.submit}>
-          <label>
-            Bot name:
-            <input
-              name="botName"
-              type="text"
-              value={this.state.botName}
-              onChange={this.handleInputChange}
-            />
-          </label>
-          <br/>
-          <label>
-            Bot file (zip only):
-            <input
-              name="botFile"
-              type="file"
-              onChange={this.handleFileChange}
-            />
-          </label>
+        <Wrapper>
+          <h1>Create a Bot</h1>
+          <form onSubmit={this.submit}>
+            <label>
+              Bot name:
+              <input
+                name="botName"
+                type="text"
+                value={this.state.botName}
+                onChange={this.handleInputChange}
+              />
+            </label>
+            <br/>
+            <label>
+              Bot file (zip only):
+              <input
+                name="botFile"
+                type="file"
+                onChange={this.handleFileChange}
+              />
+            </label>
 
-          <input type="submit" value="Submit" />
-        </form>
+            <input type="submit" value="Submit" />
+          </form>
+        </Wrapper>
       </Page>
     );
   }

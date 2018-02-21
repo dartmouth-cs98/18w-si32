@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import Page from "../layout/page";
+import { Page, Wrapper} from "../layout";
 import { fetchMatches } from "../../data/match/matchActions";
 
 class MatchSinglePage extends React.PureComponent {
@@ -16,10 +16,12 @@ class MatchSinglePage extends React.PureComponent {
   render() {
     return (
       <Page>
-        <h1>Match {this.props.match._id}</h1>
-        <p>status: {this.props.match.status}</p>
-        <p>created: {this.props.match.createdAt}</p>
-        { this.props.match.status === "DONE" ? <p>log: {JSON.stringify(this.props.match.log)}</p> : "" }
+        <Wrapper>
+          <h1>Match {this.props.match._id}</h1>
+          <p>status: {this.props.match.status}</p>
+          <p>created: {this.props.match.createdAt}</p>
+          { this.props.match.status === "DONE" ? <p>log: {JSON.stringify(this.props.match.log)}</p> : "" }
+        </Wrapper>
       </Page>
     );
   }

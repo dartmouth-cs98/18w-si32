@@ -18,7 +18,8 @@ const Wrapper = Radium((props) => (
 
 const styles = {
   wrapper: {
-    padding: "0 10px",
+    paddingTop: 10,
+    paddingBottom: 10,
   },
   row: {
     maxWidth: constants.BODY_WIDTH,

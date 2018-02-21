@@ -53,7 +53,7 @@ const styles = {
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
-      fontSize: constants.fontSizes.medium,
+      fontSize: constants.fontSizes.small,
       color: colors.blue,
       textDecoration: "none",
     },
@@ -79,6 +79,7 @@ const styles = {
     small: {
       wrapper: {
         fontSize: constants.fontSizes.small,
+        borderWidth: 2,
         fontWeight: 400,
         height: "initial",
         padding: "5px 20px",
