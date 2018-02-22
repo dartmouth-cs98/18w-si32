@@ -39,7 +39,7 @@ class Map:
         # Check if adjacent tile in desired direction exists
         else:
             new_pos = (position[0] + direction[0], position[1] + direction[1])
-            if self.tile_in_range(new_pos):
+            if self.position_in_range(new_pos):
                 return self.get_tile(new_pos)
 
     def position_in_range(self, position):  # check if coordinates are contained by map
