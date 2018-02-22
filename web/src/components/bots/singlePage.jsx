@@ -1,6 +1,8 @@
 import React from "react";
+import Radium from "radium";
 import { connect } from "react-redux";
-import Page from "../layout/page";
+import { MainTitle, SubTitle } from "../common/titles";
+import { Page, Wrapper, TitleBar } from "../layout";
 import { fetchBot, updateBotCode } from "../../data/bot/botActions";
 
 class BotSinglePage extends React.PureComponent {
@@ -15,50 +17,49 @@ class BotSinglePage extends React.PureComponent {
 
   handleFileChange = (event) => {
     // store handle to the selected file
-    this.setState({
-      botFile: event.target.files[0]
-    });
+    // TODO check on client side that this is valid
+    this.props.upload(event.target.files[0]);
+  }
+
+  // when upload button pressed, open the file input
+  uploadNewBot = () => {
+    const fileInput = document.getElementById("botfile");
+    fileInput.click();
   }
 
   submit = (event) => {
     event.preventDefault();
     // TODO validation
 
-    this.props.upload(this.state.botFile);
-  }
 
-  renderForm = () => {
-    if (this.props.userId != this.props.bot.user) {
-      return null;
-    }
-
-    return (
-      <form onSubmit={this.submit}>
-        <label>
-          Bot file (zip only):
-          <input
-            name="botFile"
-            type="file"
-            onChange={this.handleFileChange}
-          />
-        </label>
-        <input type="submit" value="Submit" />
-      </form>
-    );
   }
 
   render() {
     return (
       <Page>
-        <h1>Bot: {this.props.bot.name}</h1>
-        <h3>{this.props.id}</h3>
-        <p>Version {this.props.bot.version}</p>
-        { this.renderForm() }
-
+        <input id="botfile" type="file" style={styles.inputFile} onChange={this.handleFileChange} />
+        <TitleBar
+          title={this.props.bot.name}
+          right={`v${this.props.bot.version}`}
+          buttonLabel={(this.props.userId == this.props.bot.user) && "Upload a new version"}
+          buttonAction={this.uploadNewBot}
+        />
+        <Wrapper>
+        </Wrapper>
       </Page>
     );
   }
 }
+
+const styles = {
+  inputFile: {
+    width: 0,
+    height: 0,
+    position: "absolute",
+    top: -10,
+    left: -10,
+  }
+};
 
 const mapDispatchToProps = (dispatch, props) => ({
   fetchBot: () => dispatch(fetchBot(props.id)),
@@ -70,4 +71,5 @@ const mapStateToProps = (state, props) => ({
   userId: state.session.userId,
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(BotSinglePage);
+
+export default connect(mapStateToProps, mapDispatchToProps)(Radium(BotSinglePage));
