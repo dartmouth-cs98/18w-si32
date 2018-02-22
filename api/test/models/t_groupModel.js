@@ -1,11 +1,9 @@
 "use strict";
 const expect = require("chai").expect;
 const bcrypt = require("bcryptjs");
-const _ = require("lodash");
 
 const containsObjectId = require("../helpers/containsObjectId");
 const resetCollections = require("../pretest/reset_collections");
-const trueskill = require("../../app/lib/trueskill");
 
 const models = require("../../app/models");
 
