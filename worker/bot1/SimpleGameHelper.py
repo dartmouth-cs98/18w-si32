@@ -3,6 +3,13 @@ import sys
 from time import time
 
 # THIS IS THE EXTERNAL LIBRARY THAT WE LET USERS DOWNLOAD AND IMPORT INTO THEIR CODE
+directions = {
+    'up': [-1,0],
+    'down': [1,0],
+    'left': [0,-1],
+    'right': [0,1]
+}
+
 class SimpleGameHelper():
 
     def __init__(self):
@@ -16,7 +23,7 @@ class SimpleGameHelper():
         self.log_file.write(str(time()) + '\n')
 
 
-    def get_state(self):
+    def load_state(self):
         l = sys.stdin.readline()
         while l == '':
             l = sys.stdin.readline()
@@ -27,13 +34,26 @@ class SimpleGameHelper():
 
         return self.board
 
-    def create_move_command(self, location, direction):
+    # returns a list of all tiles that have units for this player on them
+    def get_my_units(self):
+        self.tiles = []
+
+        for r in self.board:
+            for c in r:
+                if c['units'][self.myId] > 0:
+                    self.tiles.append(c)
+
+        self.log(self.tiles)
+
+        return self.tiles
+
+    def create_move_command(self, location, direction, n_units):
         return {
             'playerId': self.myId,
-            'location': [0,0],
+            'location': location,
             'command': 'move',
-            'number_of_units': 1,
-            'direction': [1,0]
+            'number_of_units': n_units,
+            'direction': directions[direction]
         }
 
     def send_commands(self, commands):
@@ -42,6 +62,7 @@ class SimpleGameHelper():
 
     def log(self, log):
         self.log_file.write(str(log) + '\n')
+        self.log_file.flush()
 
 
     class SimpleGamePlayer():
