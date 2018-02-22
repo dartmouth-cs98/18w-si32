@@ -36,6 +36,7 @@ class Map:
 
             return result
 
+        # Check if adjacent tile in desired direction exists
         else:
             new_pos = (position[0] + direction[0], position[1] + direction[1])
             if self.tile_in_range(new_pos):
