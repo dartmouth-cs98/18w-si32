@@ -30,7 +30,8 @@ class ReplayPage extends React.PureComponent {
 
   render() {
     let main;
-    if (this.state.replay) {
+    // this.state.replay
+    if (true) {
       main = <ReplayVisualizer replay={this.state.replay} />;
     } else {
       main = <ReplayReader setReplayFile={this.setReplayFile} />;

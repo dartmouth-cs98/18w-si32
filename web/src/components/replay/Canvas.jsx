@@ -11,11 +11,14 @@ const GRID_OUTLINE_COLOR = 0x56666b;
 const ROWS = 20;
 const COLS = 20;
 
-const CELL_W = 20;
-const CELL_H = 20;
+const CELL_W = 25;
+const CELL_H = 25;
 
-const SCENE_W = CELL_W * COLS;
-const SCENE_H = CELL_H * ROWS;
+const X_OFFSET = 2;
+const Y_OFFSET = 2;
+
+const SCENE_W = CELL_W * COLS + X_OFFSET * COLS;
+const SCENE_H = CELL_H * ROWS + Y_OFFSET * ROWS;
 
 const APP_OPTIONS = {
   width: SCENE_W,
@@ -35,11 +38,16 @@ class Canvas extends React.PureComponent {
     this.stage = this.app.stage;
     this.renderer = this.app.renderer;
 
-    this.refs.gameCanvas.appendChild(this.app.view);
-
     this.renderer.backgroundColor = SCENE_BACKGROUND_COLOR;
     this.renderer.autoResize = true;
 
+    // create the root graphics and add it as child of the stage
+    this.mapGraphics = new PIXI.Graphics();
+    this.stage.addChild(this.mapGraphics);
+
+    this.refs.gameCanvas.appendChild(this.app.view);
+
+    // start the animation
     this.animate();
   }
 
@@ -58,23 +66,26 @@ class Canvas extends React.PureComponent {
   }
 
   addGridToStage = () => {
-    let rect = new PIXI.Graphics();
-    rect.lineStyle(1, GRID_OUTLINE_COLOR, 1);
+    this.mapGraphics.clear();
 
     for (let i = 0; i < ROWS; i++) {
       for (let j = 0; j < COLS; j++) {
-        rect.drawRect(CELL_H * i, CELL_W * j, CELL_W, CELL_W);
-        this.stage.addChild(rect);
+        this.mapGraphics.beginFill(0x000000, ((i+j)/(ROWS+COLS)))
+        const xpos = CELL_W * j + X_OFFSET * j;
+        const ypos = CELL_H * i + Y_OFFSET * i;
+        this.mapGraphics.drawRect(xpos, ypos, CELL_W, CELL_H);
+        this.mapGraphics.endFill();
       }
     }
   }
 
   // recursively render the stage with renderer
   animate() {
-    // render the stage container
     this.addGridToStage();
+
+    // render the stage container
     this.renderer.render(this.stage);
-    //this.frame = requestAnimationFrame(this.animate);
+    this.frame = setTimeout(() => requestAnimationFrame(this.animate), 2000);
   }
 
   render() {
