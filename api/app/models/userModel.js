@@ -49,7 +49,7 @@ _User.statics.updateSkillByRankedFinish = async function(rankedUserIds, matchId)
 
   // set up bots in format needed for trueskill
   const usersToSkill = _.map(rankedUserIds, userId =>  ({
-    id: userId,
+    _id: userId,
     skill: usersById[userId].trueSkill,
   }));
 

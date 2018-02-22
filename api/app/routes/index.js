@@ -5,8 +5,6 @@ const workerRouter = require("./workerRoutes");
 const matchRouter = require("./matchRoutes");
 const groupRouter = require("./groupRoutes");
 const leaderboardRouter = require("./leaderboardRoutes");
-console.log(leaderboardRouter);
-console.log(groupRouter);
 
 const rootRouter = new Router();
 
