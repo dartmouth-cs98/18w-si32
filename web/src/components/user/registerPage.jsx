@@ -36,7 +36,7 @@ class RegisterPage extends React.PureComponent {
     event.preventDefault();
     this.props.register(this.state.username, this.state.password)
       .then(() => {
-        history.push("/profile");
+        history.push("/dashboard");
       })
       .catch((err) => {
         /* eslint-disable no-console */
