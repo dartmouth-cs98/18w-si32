@@ -8,6 +8,7 @@ const PIXI = require("pixi.js");
 const SCENE_BACKGROUND_COLOR = 0xFFFFFF;
 const GRID_OUTLINE_COLOR = 0xec0b43;
 const NEUTRAL_CELL_COLOR = 0x56666b;
+const ACTIVE_CELL_COLOR = 0xec0b43;
 
 const CELL_OFFSET_X = 1;
 const CELL_OFFSET_Y = 1;
@@ -57,9 +58,11 @@ class Canvas extends React.PureComponent {
   computeSceneParameters = () => {
     this.sp = {};
 
-    this.sp.rows = this.props.map.width;
-    this.sp.cols = this.props.map.height;
+    // rows and columns derived explicitly from height and width
+    this.sp.rows = this.props.map.height;
+    this.sp.cols = this.props.map.width;
 
+    // define cell width and height as function of # and the base values
     this.sp.cell_w = Math.floor(BASE_SCENE_W / this.sp.cols);
     this.sp.cell_h = Math.floor(BASE_SCENE_H / this.sp.rows);
 
@@ -83,7 +86,10 @@ class Canvas extends React.PureComponent {
   addGridToStage = () => {
     for (let i = 0; i < this.sp.rows; i++) {
       for (let j = 0; j < this.sp.cols; j++) {
-        this.mapGraphics.beginFill(NEUTRAL_CELL_COLOR, 0.1)
+        const cellColor = (i+j == this.frame) ? ACTIVE_CELL_COLOR : NEUTRAL_CELL_COLOR;
+        const cellAlpha = (i+j == this.frame) ? 1 : 0.1;
+        this.mapGraphics.beginFill(cellColor, cellAlpha);
+
         const xpos = j * (this.sp.cell_w + CELL_OFFSET_X) + BORDER_OFFSET_X;
         const ypos = i * (this.sp.cell_h + CELL_OFFSET_Y) + BORDER_OFFSET_Y;
         this.mapGraphics.drawRect(xpos, ypos, this.sp.cell_w, this.sp.cell_h);
@@ -102,7 +108,7 @@ class Canvas extends React.PureComponent {
     this.renderer.render(this.stage);
 
     // and setup to render again in the future
-    setTimeout(() => requestAnimationFrame(this.animate), 2000);
+    setTimeout(() => requestAnimationFrame(this.animate), 500);
 
     this.frame = this.props.play ? this.frame + 1 : this.frame;
   }
