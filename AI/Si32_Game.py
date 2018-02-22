@@ -30,6 +30,8 @@ class Game_state(Game):
 
         self.iter = 0
 
+        self.winner = None
+
         self.state_log = []
         super().__init__(bots)
 
@@ -48,7 +50,7 @@ class Game_state(Game):
 
     def game_loop(self):
         # loop until somebody wins, or we time out!
-        while not self.game_over and self.iter < 30:
+        while self.winner is None:
             # reset log for this turn
             self.turn_log = {
                 'state': self.map.get_state(),
@@ -62,6 +64,8 @@ class Game_state(Game):
             self.log_turn()
 
             self.iter += 1
+
+            self.check_game_over()
 
         return self.json_log
 
@@ -87,12 +91,46 @@ class Game_state(Game):
         # Update statuses/unit numbers, etc.
         for col in self.map.tiles:
             for tile in col:
-                tile.update_tile()
+                tile.update_tile(self.players)
 
     def update_units_numbers(self):
         for tiles in self.map.tiles:
             for tile in tiles:
                 tile.update_units_number()
+
+    def check_game_over(self):
+        return (self.check_unit_victory_condition()) or (self.time_limit_reached())
+
+    def check_unit_victory_condition(self):
+        player1_units = self.players[0].total_units()
+        player2_units = self.players[1].total_units()
+
+        if (player1_units and not player2_units):
+            self.winner = self.players[0]
+            return True
+
+        if (player2_units and not player1_units):
+            self.winner = self.players[1]
+            return True
+
+        else: return False
+
+
+    def time_limit_reached(self):
+        if self.iter > 30:
+            p1units = self.players[0].total_units()
+            p2units = self.players[1].total_units()
+
+            if p1units > p2units:
+                self.winner = self.players[0]
+
+            else:
+                self.winner = self.players[1]
+
+            return True
+
+        else:
+            return False
 
     # ---------------- PLAYER MOVES FUNCTIONS ----------------
 
