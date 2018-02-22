@@ -12,7 +12,7 @@ const HeaderStatsBar = ({ user }) => (
     <div style={styles.statContainer}>
       <h3 style={styles.title}>Your skill rating</h3>
       <div style={styles.statRow}>
-        <span style={styles.stat}>{ user.trueSkill.mu.toFixed(1) }</span>
+        <span style={styles.stat}>{user.trueSkill.mu.toFixed(1)}</span>
         <span style={styles.adjustment}>
           <span style={colorStyles.green}>+14</span> since last week
         </span>

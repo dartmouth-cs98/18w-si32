@@ -102,7 +102,7 @@ class ProfilePage extends React.Component {
           { this.renderFollowLink() }
           <MainTitle>Profile: { this.props.profileUser.username }</MainTitle>
           <SubTitle>Score</SubTitle>
-          <p>{ this.props.profileUser.trueSkill.mu.toFixed(1) }</p>
+          <p>{this.props.profileUser.trueSkill.mu.toFixed(1)}</p>
 
           <SubTitle>Bots</SubTitle>
           <BotList bots={this.props.bots} />

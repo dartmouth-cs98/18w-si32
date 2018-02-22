@@ -8,13 +8,12 @@ export default {
   blue: "#2D95D6",
 
   sand: Color("#F2EFEE").lighten(0.03).string(), // light gray background
-  border: "#F0EBEB", // gray color for most borders
+  border: "#F0EBEB",                             // gray color for most borders
 
   // gray shades for foreground text
   lightGray: "#B8B2B2",
   medGray: "#595454",
   darkGray: "#141414",
-
 
   primary: "#ec0b43",       // red
   detail: "#56666b",        // gray
