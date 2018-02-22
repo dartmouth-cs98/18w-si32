@@ -8,6 +8,8 @@ const { NotFoundError } = require("../errors");
 
 const groupRouter = Router();
 
+const LEADERBOARD_PAGE_SIZE = 20;
+
 /**
  * @api GET path /groups
  * Get groups with name similar to query (name contains query as subtring).
@@ -63,7 +65,9 @@ groupRouter.post("/", auth.loggedIn, async (ctx) => {
 /***** local methods *****/
 // QUESTION: not sure this is actually the best place for this, but did not seem to currently be a different file suited for this.
 
-const leaderboardQuery = async function({groupId}) {
+const leaderboardQuery = async function({groupId, page}) {
+  page = page || 0;
+
   let userQuery;
   if (groupId) {
     const group = await Group.findById(groupId);
@@ -86,7 +90,9 @@ const leaderboardQuery = async function({groupId}) {
         ]
       }
     }},
-    {$sort: {rank: 1}}
+    {$sort: {rank: -1}},
+    {$skip: LEADERBOARD_PAGE_SIZE * page},
+    {$limit: LEADERBOARD_PAGE_SIZE},
   ]).exec();
 
   return users;
