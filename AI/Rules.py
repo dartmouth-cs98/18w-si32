@@ -39,8 +39,8 @@ class Rules:
 
             # Each unit gathers one unit of resource from the tile when mining
             if tile.resource >= move.number_of_units:
-                tile.decrement_resource(number_of_units)
-                self.players[move.playerId].increment_resources(number_of_units)
+                tile.decrement_resource(move.number_of_units)
+                self.players[move.playerId].increment_resources(move.number_of_units)
 
             # If there are more miners than resources, take whatever remains
             else:
@@ -55,7 +55,7 @@ class Rules:
 
         # If there is no building, create one
         if tile.building is None:
-            if (self.player_has_enough_resources(move.playerId)) and (self.map.get_tile(tile.position).units[playerId] > 0):
+            if (self.player_has_enough_resources(move.playerId)) and (self.map.get_tile(tile.position).units[move.playerId] > 0):
                 tile.create_building(move.playerId)
                 self.players[move.playerId].decrement_resource(100)
 
@@ -117,10 +117,10 @@ class Rules:
                             player_moves.pop(index)
                             enemy_set[new_position].pop(i)
 
-                            current_move = False
-
                             current_tile.decrement_units(0, current_move.number_of_units)
                             enemy_tile.decrement_units(1, current_move.number_of_units)
+
+                            current_move = False
 
                             i -= 1
                             index -= 1
