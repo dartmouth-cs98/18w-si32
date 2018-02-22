@@ -15,6 +15,8 @@ class Player:
 
         self.starting_pos = starting_pos
 
+        self.units_produced = 0
+
         starting_tile = self.map.get_tile(self.starting_pos)
         starting_tile.increment_units(playerId)
 
@@ -37,6 +39,14 @@ class Player:
 
         return commands
 
+    def total_units(self):
+        units = 0
+        tiles = self.get_occupied_tiles()
+        for tile in tiles:
+            units += tile.units[self.playerId]
+
+        return units
+
     # Find all tiles in which player has units to control
     def get_occupied_tiles(self):
         tiles = []
@@ -47,6 +57,9 @@ class Player:
                     tiles.append(tile)
 
         return tiles
+
+    def increment_units_produced(self):
+        self.units_produced += 1
 
     def add_building(self, building):
         self.buildings.append(building)

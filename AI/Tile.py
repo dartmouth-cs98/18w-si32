@@ -35,9 +35,9 @@ class Tile:
 
     # --------------- UPDATE FUNCTIONS ----------------------------
 
-    def update_tile(self):
+    def update_tile(self, players):
         self.update_units_number()
-        self.update_building_status()
+        self.update_building_status(players)
 
     def update_units_number(self):
         # TODO no need for this loop, do some math
@@ -45,7 +45,7 @@ class Tile:
             self.units[0] -= 1
             self.units[1] -= 1
 
-    def update_building_status(self):
+    def update_building_status(self, players):
         if self.building is not None:
             building_owner = self.building.ownerId
             enemy_player = 1 - building_owner
@@ -64,6 +64,7 @@ class Tile:
             while self.building.production_progress >= 5:
                 self.increment_units(building_owner, 1)
                 self.building.production_progress -= 5
+                players[self.building.ownerID].increment_units_produced()
 
     # --------------- INITIALIZING FUNCTION ----------------------
 
