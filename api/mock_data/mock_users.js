@@ -3,7 +3,7 @@ const bcrypt = require("bcryptjs");
 require("../app/db");
 const User = require("../app/models").User;
 
-const NUM_USERS = 1;
+const NUM_USERS = 50;
 
 const createUsers = async function() {
   const userCreations = [];
