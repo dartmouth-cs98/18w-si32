@@ -11,7 +11,7 @@ const leaderboardQuery = leaderboardRoutes.__get__("leaderboardQuery");
 
 const NUM_USERS = 10;
 
-suite.only("Test Leaderboard Query", function() {
+suite("Test Leaderboard Query", function() {
   let users;
   setup(async function() {
     await resetCollections();

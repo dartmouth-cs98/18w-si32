@@ -29,6 +29,7 @@ suite("Test Group Model", function() {
       // create the user in the db
       username: "test_u",
       password: await bcrypt.hash("password", 10),
+      trueSkill: {},
     });
 
     const groupInfo = {
@@ -62,7 +63,8 @@ suite("Test Group Model", function() {
     const user = await models.User.create({
       // create the user in the db
       username: "test_u",
-      password: await bcrypt.hash("password", 10)
+      password: await bcrypt.hash("password", 10),
+      trueSkill: {}
     });
 
 
@@ -95,7 +97,8 @@ suite("Test Group Model", function() {
     const user = await models.User.create({
       // create the user in the db
       username: "test_u",
-      password: await bcrypt.hash("password", 10)
+      password: await bcrypt.hash("password", 10),
+      trueSkill: {}
     });
 
     const afterAdd = await group.addMember(user._id);
