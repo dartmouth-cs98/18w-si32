@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import Page from "../layout/page";
 import Link from "../common/link";
 import groupSearchbar from "../groups/groupSearchbar";
+import LeaderboardTable from "./LeaderboardTable";
 
 import capitalize from "../../util/capitalize";
 
@@ -32,6 +33,10 @@ class LeaderboardPage extends React.PureComponent {
     this.props.fetchLeaderboard(null, 0);
   }
 
+  getSelectedGroupId = () => {
+    return this.state.selectedGroup ? this.state.selectedGroup.value : "global";
+  }
+
   didSelectGroup = (selectedGroup) => {
     const groupId = selectedGroup ? selectedGroup.value : null;
     this.props.fetchLeaderboard(groupId, 0);
@@ -45,19 +50,24 @@ class LeaderboardPage extends React.PureComponent {
 
   }
 
+  onFetchPage = (state) => {
+    const groupId = this.state.selectedGroup ? this.state.selectedGroup.value : null;
+    this.props.fetchLeaderboard(groupId, state.page);
+  }
+
   render() {
     const groupLabel = this.state.selectedGroup ? capitalize(this.state.selectedGroup.label) : "Global";
     const groupId = this.state.selectedGroup ? this.state.selectedGroup.value : "global";
     const leaderboard = this.props.leaderboards[groupId] || {users: []};
     const users = leaderboard.users;
-    
+
     return (
       <Page>
         <div style={styles.wrapper}>
           <MainTitle>Leaderboard</MainTitle>
           <SubTitle>{groupLabel}</SubTitle>
           {groupSearchbar(this.state.selectedGroup, this.didSelectGroup, {placeholder: "Choose A Specific Group"})}
-          <RankedList users={users} />
+          <LeaderboardTable users={users} totalPages={2} loading={false} fetchPage={this.onFetchPage} />
         </div>
       </Page>
     );
