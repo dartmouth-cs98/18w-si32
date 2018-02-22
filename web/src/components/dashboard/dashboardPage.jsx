@@ -101,7 +101,7 @@ class DashboardPage extends React.PureComponent {
 
         { this.renderTopBots() }
 
-        <Wrapper style={styles.dashSection}>
+        <Wrapper innerStyle={styles.dashSection}>
           <div style={styles.sectionHeader}>
             <MainTitle>
                 Recent Matches

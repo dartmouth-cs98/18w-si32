@@ -10,7 +10,6 @@ class Footer extends React.PureComponent {
   render() {
     return (
       <div style={styles.wrapper}>
-        Footer Content
       </div>
     );
   }
@@ -24,9 +23,6 @@ const styles = {
     justifyContent: "center",
     alignItems: "center",
     padding: "0 15px",
-    borderStyle: "solid hidden hidden hidden",
-    borderWidth: "1px",
-    borderColor: colors.red,
   }
 };
 
