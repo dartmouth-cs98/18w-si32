@@ -2,13 +2,10 @@ const Router = require("koa-router");
 
 const auth = require("../auth");
 const Group = require("../models").Group;
-const User = require("../models").User;
 
-const { NotFoundError } = require("../errors");
+const { MalformedError } = require("../errors");
 
 const groupRouter = Router();
-
-const LEADERBOARD_PAGE_SIZE = 20;
 
 /**
  * @api GET path /groups
@@ -17,7 +14,7 @@ const LEADERBOARD_PAGE_SIZE = 20;
 groupRouter.get("/:id", auth.loggedIn, async (ctx) => {
   const group = await Group.findById(ctx.params.id);
   if (!group) {
-    throw new NotFoundError(`Group with id ${ctx.params.id} does not exist.`);
+    throw new MalformedError(`Group with id ${ctx.params.id} does not exist.`);
   }
   ctx.body = group;
 });
@@ -39,19 +36,6 @@ groupRouter.get("/", auth.loggedIn, async (ctx) => {
 });
 
 /**
- * @api GET path /groups/leaderboard/:groupId
- * Get leaderboard for a specific group
- */
-groupRouter.get("/leaderboard/:groupId?", auth.loggedIn, async (ctx) => {
-  // TODO: return users ranked by score. if :groupId is `global` or something, then query for all users
-  const users = leaderboardQuery({groupId: ctx.params.groupId});
-
-  return users;
-
-
-});
-
-/**
  * @api POST path /groups/
  * Create group
  */
@@ -60,44 +44,6 @@ groupRouter.post("/", auth.loggedIn, async (ctx) => {
 
   ctx.body = { success: true, updatedRecords: [user, group] };
 });
-
-
-/***** local methods *****/
-// QUESTION: not sure this is actually the best place for this, but did not seem to currently be a different file suited for this.
-
-const leaderboardQuery = async function({groupId, page}) {
-  page = page || 0;
-
-  let userQuery;
-  if (groupId) {
-    const group = await Group.findById(groupId);
-    userQuery = {_id: {$in: group.members}}; // only users in this group
-  } else {
-    userQuery = {}; // all users
-  }
-
-  const users = await User.aggregate([
-    {$match: userQuery},
-    { $addFields: {
-      rank: {
-        $subtract: [
-          "$trueSkill.mu",
-          {
-            $multiply: [
-              3, "$trueSkill.sigma"
-            ]
-          }
-        ]
-      }
-    }},
-    {$sort: {rank: -1}},
-    {$skip: LEADERBOARD_PAGE_SIZE * page},
-    {$limit: LEADERBOARD_PAGE_SIZE},
-  ]).exec();
-
-  return users;
-};
-
 
 
 module.exports = groupRouter;

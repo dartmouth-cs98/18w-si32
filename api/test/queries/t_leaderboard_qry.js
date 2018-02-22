@@ -3,12 +3,11 @@ const expect = require("chai").expect;
 const bcrypt = require("bcryptjs");
 const rewire = require("rewire");
 
-const containsObjectId = require("../helpers/containsObjectId");
 const resetCollections = require("../pretest/reset_collections");
 
 const models = require("../../app/models");
-const groupRoutes = rewire("../../app/routes/groupRoutes");
-const leaderboardQuery = groupRoutes.__get__("leaderboardQuery");
+const leaderboardRoutes = rewire("../../app/routes/leaderboardRoutes");
+const leaderboardQuery = leaderboardRoutes.__get__("leaderboardQuery");
 
 const NUM_USERS = 10;
 
