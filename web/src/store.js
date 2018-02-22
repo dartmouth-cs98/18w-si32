@@ -8,6 +8,7 @@ import bots from "./data/bot/botReducer";
 import users from "./data/user/userReducer";
 import matches from "./data/match/matchReducer";
 import groups from "./data/group/groupReducer";
+import leaderboards from "./data/leaderboard/leaderboardReducer";
 
 const reducer = combineReducers({
   session,
@@ -15,6 +16,7 @@ const reducer = combineReducers({
   matches,
   users,
   groups,
+  leaderboards,
   form: formReducer,
 });
 

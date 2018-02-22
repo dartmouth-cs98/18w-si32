@@ -1,11 +1,9 @@
 "use strict";
 const expect = require("chai").expect;
 const bcrypt = require("bcryptjs");
-const _ = require("lodash");
 
 const containsObjectId = require("../helpers/containsObjectId");
 const resetCollections = require("../pretest/reset_collections");
-const trueskill = require("../../app/lib/trueskill");
 
 const models = require("../../app/models");
 
@@ -31,6 +29,7 @@ suite("Test Group Model", function() {
       // create the user in the db
       username: "test_u",
       password: await bcrypt.hash("password", 10),
+      trueSkill: {},
     });
 
     const groupInfo = {
@@ -64,7 +63,8 @@ suite("Test Group Model", function() {
     const user = await models.User.create({
       // create the user in the db
       username: "test_u",
-      password: await bcrypt.hash("password", 10)
+      password: await bcrypt.hash("password", 10),
+      trueSkill: {}
     });
 
 
@@ -97,7 +97,8 @@ suite("Test Group Model", function() {
     const user = await models.User.create({
       // create the user in the db
       username: "test_u",
-      password: await bcrypt.hash("password", 10)
+      password: await bcrypt.hash("password", 10),
+      trueSkill: {}
     });
 
     const afterAdd = await group.addMember(user._id);

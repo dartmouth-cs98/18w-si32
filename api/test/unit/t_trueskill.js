@@ -18,11 +18,12 @@ suite("TrueSkill Update Unit Test", function() {
     const user = await models.User.create({
       // create the user in the db
       username: "test_u",
-      password: hash
+      password: hash,
+      trueSkill: {},
     });
-    expect(user.trueSkillScore).to.exist();
-    expect(user.trueSkillScore.mu).to.equal(trueskill.DEFAULT_MU);
-    expect(user.trueSkillScore.sigma).to.equal(trueskill.DEFAULT_SIGMA);
+    expect(user.trueSkill).to.exist();
+    expect(user.trueSkill.mu).to.equal(trueskill.DEFAULT_MU);
+    expect(user.trueSkill.sigma).to.equal(trueskill.DEFAULT_SIGMA);
   });
 
   test("Returns new mu and sigma for each player in a game result", async function() {
@@ -30,12 +31,14 @@ suite("TrueSkill Update Unit Test", function() {
     const user1Promise = models.User.create({
       // create the user in the db
       username: "test_u1",
-      password: hash
+      password: hash,
+      trueSkill: {},
     });
     const user2Promise = models.User.create({
       // create the user in the db
       username: "test_u2",
-      password: hash
+      password: hash,
+      trueSkill: {},
     });
 
     const users = [await user1Promise, await user2Promise];

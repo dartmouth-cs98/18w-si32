@@ -10,6 +10,7 @@ class AccessError extends Error {
 // resource not found
 class NotFoundError extends Error {
   getStatus() {
+    console.log("not found");
     return 404;
   }
 }

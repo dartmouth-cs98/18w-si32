@@ -1,8 +1,8 @@
 import httpCollectionReducer from "../httpCollectionReducer";
 
-const groupReducer = httpCollectionReducer("GROUP", (state) => {
+const leaderboardReducer = httpCollectionReducer("LEADERBOARD", (state) => {
   // implement any non-standard collection reducers here
   return state;
 });
 
-export default groupReducer;
+export default leaderboardReducer;
