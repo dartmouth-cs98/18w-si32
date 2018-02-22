@@ -33,6 +33,7 @@ class Game_state(Game):
         self.winner = None
 
         self.state_log = []
+
         super().__init__(bots)
 
 
@@ -99,7 +100,10 @@ class Game_state(Game):
                 tile.update_units_number()
 
     def check_game_over(self):
-        return (self.check_unit_victory_condition()) or (self.time_limit_reached())
+        if (self.check_unit_victory_condition()) or (self.time_limit_reached()):
+            self.log_result()
+
+        else: return False
 
     def check_unit_victory_condition(self):
         player1_units = self.players[0].total_units()
@@ -176,6 +180,17 @@ class Game_state(Game):
 
     def json_log_move(self, move):
         self.json_log['commands'].append(move.to_json())
+
+    def log_result(self):
+        if self.winner:
+            result = self.players
+            if result[0] != self.winner:
+                temp = result[0]
+                result[0] = result[1]
+                result[1] = temp
+
+            for player in result:
+                self.json_log['rankedBots'].append(player.bot)
 
 # We want to execute commmands in the following order: move, build, mine
 def sort_moves(moves):
