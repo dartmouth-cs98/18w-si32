@@ -6,24 +6,17 @@ import { colors } from "../../style";
 const PIXI = require("pixi.js");
 
 const SCENE_BACKGROUND_COLOR = 0xFFFFFF;
-const GRID_OUTLINE_COLOR = 0x56666b;
+const GRID_OUTLINE_COLOR = 0xec0b43;
+const NEUTRAL_CELL_COLOR = 0x56666b;
 
-const ROWS = 20;
-const COLS = 20;
+const CELL_OFFSET_X = 1;
+const CELL_OFFSET_Y = 1;
 
-const CELL_W = 25;
-const CELL_H = 25;
+const BORDER_OFFSET_X = 20;
+const BORDER_OFFSET_Y = 20;
 
-const X_OFFSET = 2;
-const Y_OFFSET = 2;
-
-const SCENE_W = CELL_W * COLS + X_OFFSET * COLS;
-const SCENE_H = CELL_H * ROWS + Y_OFFSET * ROWS;
-
-const APP_OPTIONS = {
-  width: SCENE_W,
-  height: SCENE_H,
-}
+const BASE_SCENE_W = 500;
+const BASE_SCENE_H = 500;
 
 class Canvas extends React.PureComponent {
   constructor(props) {
@@ -33,47 +26,67 @@ class Canvas extends React.PureComponent {
   }
 
   componentDidMount() {
+    // compute scene parameters based on game map dimensions
+    this.computeSceneParameters();
+
     // setup pixi canvas
-    this.app = new PIXI.Application(APP_OPTIONS);
+    this.app = new PIXI.Application({
+      width: this.sp.w,
+      height: this.sp.h
+    });
     this.stage = this.app.stage;
     this.renderer = this.app.renderer;
 
-    this.renderer.backgroundColor = SCENE_BACKGROUND_COLOR;
     this.renderer.autoResize = true;
+    this.renderer.backgroundColor = SCENE_BACKGROUND_COLOR;
 
     // create the root graphics and add it as child of the stage
     this.mapGraphics = new PIXI.Graphics();
     this.stage.addChild(this.mapGraphics);
 
+    // inject the canvas
     this.refs.gameCanvas.appendChild(this.app.view);
+
+    this.frame = 0;
 
     // start the animation
     this.animate();
   }
 
-  addBorderToStage = () => {
-    let border = new PIXI.Graphics();
-    border.lineStyle(1, GRID_OUTLINE_COLOR, 1);
-    border.drawPolygon([
-      0, 0,
-      SCENE_W - 1, 1,
-      SCENE_W - 1, SCENE_H - 1,
-      1, SCENE_H - 1,
-      0, 0
-    ]);
+  // compute the scene parameters based on map dimensions
+  computeSceneParameters = () => {
+    this.sp = {};
 
-    this.stage.addChild(border);
+    this.sp.rows = this.props.map.width;
+    this.sp.cols = this.props.map.height;
+
+    this.sp.cell_w = Math.floor(BASE_SCENE_W / this.sp.cols);
+    this.sp.cell_h = Math.floor(BASE_SCENE_H / this.sp.rows);
+
+    this.sp.w = this.sp.cols * (this.sp.cell_w + CELL_OFFSET_X) + BORDER_OFFSET_X*2;
+    this.sp.h = this.sp.rows * (this.sp.cell_h + CELL_OFFSET_Y) + BORDER_OFFSET_Y*2;
   }
 
-  addGridToStage = () => {
-    this.mapGraphics.clear();
+  // add the border to main map graphics
+  addBorderToStage = () => {
+    this.mapGraphics.lineStyle(1, GRID_OUTLINE_COLOR, 1);
+    this.mapGraphics.drawPolygon([
+      0, 0,
+      this.sp.w - 1, 1,
+      this.sp.w - 1, this.sp.h - 1,
+      1, this.sp.h - 1,
+      0, 0
+    ]);
+  }
 
-    for (let i = 0; i < ROWS; i++) {
-      for (let j = 0; j < COLS; j++) {
-        this.mapGraphics.beginFill(0x000000, ((i+j)/(ROWS+COLS)))
-        const xpos = CELL_W * j + X_OFFSET * j;
-        const ypos = CELL_H * i + Y_OFFSET * i;
-        this.mapGraphics.drawRect(xpos, ypos, CELL_W, CELL_H);
+  // add the grid to main map graphics
+  addGridToStage = () => {
+    for (let i = 0; i < this.sp.rows; i++) {
+      for (let j = 0; j < this.sp.cols; j++) {
+        this.mapGraphics.beginFill(NEUTRAL_CELL_COLOR, 0.1)
+        const xpos = j * (this.sp.cell_w + CELL_OFFSET_X) + BORDER_OFFSET_X;
+        const ypos = i * (this.sp.cell_h + CELL_OFFSET_Y) + BORDER_OFFSET_Y;
+        this.mapGraphics.drawRect(xpos, ypos, this.sp.cell_w, this.sp.cell_h);
         this.mapGraphics.endFill();
       }
     }
@@ -81,11 +94,17 @@ class Canvas extends React.PureComponent {
 
   // recursively render the stage with renderer
   animate() {
+    this.mapGraphics.clear();
     this.addGridToStage();
+    this.addBorderToStage();
 
     // render the stage container
     this.renderer.render(this.stage);
-    this.frame = setTimeout(() => requestAnimationFrame(this.animate), 2000);
+
+    // and setup to render again in the future
+    setTimeout(() => requestAnimationFrame(this.animate), 2000);
+
+    this.frame = this.props.play ? this.frame + 1 : this.frame;
   }
 
   render() {
@@ -100,7 +119,7 @@ const styles = {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    padding: "40px 5px 5px 5px",
+    padding: "10px",
   }
 }
 
