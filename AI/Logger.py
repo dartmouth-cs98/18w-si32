@@ -1,6 +1,7 @@
 from copy import copy
 import json
 import msgpack
+import gzip
 
 # logger strips out unneeded properties and stores/logs only the information needed
 # and in the format expected by the front-end. By maintaining this independently,
@@ -9,13 +10,11 @@ class Logger:
     def __init__(self, map, players):
         self.log = {}
 
-        board_info = {}
-        board_info['width'] = map.width
-        board_info['height'] = map.height
-        board_info['player1'] = players[0].starting_pos
-        board_info['player2'] = players[1].starting_pos
+        self.width = map.width
+        self.height = map.height
 
-        self.log['board_state'] = board_info
+        self.log['w'] = map.width
+        self.log['h'] = map.height
         self.log['turns'] = []
         self.log['rankedBots'] = []
 
@@ -53,10 +52,19 @@ class Logger:
         self.log['turns'].append(self.turn_log)
 
     def add_move(self, command):
+        coded_directions = {
+            (1,0): 0,
+            (0,1): 1,
+            (-1,0): 2,
+            (0,-1): 3,
+        }
+
+        coded_position = command.position[0] * self.width + command.position[1]
+
         clean_command = {
             'u': command.playerId,
-            'p': command.position,
-            'd': command.direction,
+            'p': coded_position,
+            'd': coded_directions[tuple(command.direction)],
             'n': command.number_of_units,
         }
 
@@ -66,11 +74,12 @@ class Logger:
         self.log['rankedBots'].append(bot.name)
 
     def get_log(self):
-        return self.log
+        return gzip.compress(msgpack.packb(self.log))
 
     def write(self, fileName=None):
         if not fileName:
             print(self.log)
             return
-        with open(fileName, 'wb') as log_file:
-            msgpack.pack(self.log, log_file)
+
+        with gzip.open("%s.mp.gz"%fileName, 'w') as log_file:
+            log_file.write(msgpack.packb(self.log))
