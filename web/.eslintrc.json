@@ -14,6 +14,9 @@
       "experimentalObjectRestSpread": true
     }
   },
+  "globals": {
+    "PRODUCTION": true
+  },
   "rules": {
     "quotes": [
       "error",
