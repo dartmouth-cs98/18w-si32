@@ -19,8 +19,8 @@ const LeaderboardTable = ({ users, totalPages, loading, fetchPage }) => {
               accessor: "username"
             },
             {
-              Header: "Rank",
-              accessor: "rank"
+              Header: "Rating",
+              accessor: "rating"
             },
           ]}
           manual // Forces table not to paginate or sort automatically, so we can handle it server-side
