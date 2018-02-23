@@ -15,7 +15,7 @@ const LEADERBOARD_PAGE_SIZE = 20;
  * Get leaderboard for a specific group
  */
 leaderboardRouter.get("/:groupId?", auth.loggedIn, async (ctx) => {
-  const {users, userCount} = await leaderboardQuery({groupId: ctx.params.groupId});
+  const {users, userCount} = await leaderboardQuery({groupId: ctx.params.groupId, page: ctx.query.page});
   const numPages = Math.ceil(userCount / LEADERBOARD_PAGE_SIZE);
 
   ctx.body = {
@@ -44,19 +44,7 @@ const leaderboardQuery = async function({groupId, page}) {
   const userCountP = User.count(userQuery).exec();
   const usersP = User.aggregate([
     {$match: userQuery},
-    { $addFields: {
-      rank: {
-        $subtract: [
-          "$trueSkill.mu",
-          {
-            $multiply: [
-              3, "$trueSkill.sigma"
-            ]
-          }
-        ]
-      }
-    }},
-    {$sort: {rank: -1}},
+    {$sort: {rating: -1, _id: 1}},
     {$skip: LEADERBOARD_PAGE_SIZE * page},
     {$limit: LEADERBOARD_PAGE_SIZE},
   ]).exec();

@@ -25,6 +25,11 @@ const _User = new Schema({
     timestamp: Date,
     _id: false
   }],
+  rating: {
+    type: Number,
+    default: 0,
+    required: true
+  },
   following: [{
     type: Schema.Types.ObjectId,
     ref: "User"
@@ -39,6 +44,11 @@ const _User = new Schema({
   }]
 }, {
   timestamps: true
+});
+
+_User.pre("save", function(next) {
+  this.rating = this.trueSkill.mu - 3 * this.trueSkill.sigma;
+  next();
 });
 
 _User.statics.updateSkillByRankedFinish = async function(rankedUserIds, matchId) {

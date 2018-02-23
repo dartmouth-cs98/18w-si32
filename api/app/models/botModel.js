@@ -29,9 +29,19 @@ const _Bot = new Schema({
     timestamp: Date,
     _id: false
   }],
+  rating: {
+    type: Number,
+    default: 0,
+    required: true
+  },
   code: { type: String, },
 }, {
   timestamps: true
+});
+
+_Bot.pre("save", function(next) {
+  this.rating = this.trueSkill.mu - 3 * this.trueSkill.sigma;
+  next();
 });
 
 _Bot.statics.findByUser = (userId) => {
