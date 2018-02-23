@@ -1,10 +1,11 @@
 const RedisSessions = require("redis-sessions");
+const redis = require("redis");
 const { AuthError } = require("./errors");
 
 const RS_APPNAME = "si32";
 
 const rs = new RedisSessions({
-  host: "redis"
+  client: redis.createClient(process.env.REDIS_URL)
 });
 
 // resolves with session object

@@ -93,8 +93,6 @@ class DashboardPage extends React.PureComponent {
 
   render() {
     if (!this.props.user) return <div></div>;
-    console.log('THISISISISISI')
-    console.log(this.props.user);
 
     return (
       <Page>

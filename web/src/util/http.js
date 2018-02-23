@@ -1,11 +1,11 @@
 import request from "superagent";
 import store from "../store";
 
+import config from "../config";
 import { history } from "../router";
 import { SESSION_DESTROY } from "../data/session/sessionActions";
 
-// TODO: put this into env
-const BASE_URL = "http://localhost:3000";
+const { API_URL } = config;
 
 const agent = request.agent();
 
@@ -28,19 +28,19 @@ agent.use(req => {
 
 // small wrappers around base get/post calls
 const get = url => {
-  return agent.get(BASE_URL + url);
+  return agent.get(API_URL + url);
 };
 
 const post = url => {
-  return agent.post(BASE_URL + url);
+  return agent.post(API_URL + url);
 };
 
 const put = url => {
-  return agent.put(BASE_URL + url);
+  return agent.put(API_URL + url);
 };
 
 const del = url => {
-  return agent.del(BASE_URL + url);
+  return agent.del(API_URL + url);
 };
 
 export { get, post, put, del };
