@@ -1,8 +1,15 @@
 const Router = require("koa-router");
+const zlib = require("zlib");
+const util = require("util");
+const msgpack = require("msgpack-lite");
+const fs = require("fs");
+const s3 = require("../files/s3");
 const auth = require("../auth");
 const Match = require("../models").Match;
 
 const workerRouter = Router();
+
+const readFile = util.promisify(fs.readFile);
 
 // every bot route requires login
 workerRouter.use(auth.workerAuth);
@@ -30,13 +37,33 @@ workerRouter.get("/nextTask", async (ctx, next) => {
   return next();
 });
 
-workerRouter.post("/result", async (ctx, next) => {
+workerRouter.post("/result/:matchId", async (ctx, next) => {
   /* eslint-disable no-unused-vars */
-  const matchResult = await Match.handleWorkerResponse(ctx.request.body.matchId, ctx.request.body.result, JSON.parse(ctx.request.body.gameOutput));
+  const matchId = ctx.params.matchId;
+
+  // read the log file
+  const logData = await readFile(ctx.request.body.files.log.path);
+
+  // unzip it
+  zlib.unzip(logData, async (err, res) => {
+    const gameOutput = msgpack.decode(res); // ... finally unpack it
+
+    // this is the key where the log _will_ live, even though it's not uploaded yet
+    // we don't want to have to upload first and then delete from s3 if db update fails
+    const logKey = `${matchId}.mp.gz`;
+
+    // update the match in the db
+    const matchResult = await Match.handleWorkerResponse(matchId, gameOutput.rankedBots, logKey);
+
+    // if that was all successful, put the log in s3
+    await s3.uploadLog(matchId, logData);
+
+    ctx.body = {message: "thanks bud"};
+    return next();
+
+  });
   /* eslint-disable no-unused-vars */
 
-  ctx.body = {message: "thanks bud"};
-  return next();
 });
 
 module.exports = workerRouter;
