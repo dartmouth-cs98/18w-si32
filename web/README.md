@@ -18,6 +18,8 @@ Use `npm start` to run a dev server.
 
 `npm build` will build the app for deployment into the `/dist` folder.
 
+After you `npm install -g surge`, running `surge` from the dist folder will
+let you quickly deploy to surge.sh.
 
 ## Anatomy
 
