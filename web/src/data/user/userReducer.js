@@ -2,7 +2,6 @@ import httpCollectionReducer from "../httpCollectionReducer";
 
 const userReducer = httpCollectionReducer("USER", (state, action) => {
   // implement any non-standard collection reducers here
-  console.log(action.payload);
   switch (action.type) {
     case "RECEIVED_RANK":
       if (!action.payload.userId) {
