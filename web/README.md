@@ -16,7 +16,7 @@ Use `npm start` to run a dev server.
 
 ## Deploying
 
-`npm build` will build the app for deployment into the `/dist` folder
+`npm build` will build the app for deployment into the `/dist` folder.
 
 
 ## Anatomy
