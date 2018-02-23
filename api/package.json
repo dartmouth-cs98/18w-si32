@@ -12,7 +12,7 @@
     "build": "docker-compose build",
     "up": "docker-compose up",
     "start": "nodemon app/index.js",
-    "prepush": "npm test && npm run lint"
+    "prepush": "npm run lint"
   },
   "author": "",
   "license": "ISC",
