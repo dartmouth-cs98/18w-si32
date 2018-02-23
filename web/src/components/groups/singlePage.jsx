@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import Page from "../layout/page";
 import { fetchGroup } from "../../data/group/groupActions";
-import { joinGroup, leaveGroup } from "../../data/user/userActions";
+import { joinGroup, leaveGroup, fetchGroupRank } from "../../data/user/userActions";
 import { getSessionUser } from "../../data/user/userSelectors";
 
 class Group extends React.PureComponent {
@@ -12,7 +12,13 @@ class Group extends React.PureComponent {
   }
 
   componentDidMount() {
-    this.props.fetchGroup(this.props.id);
+    this.props.fetchGroup();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.user._id !== this.props.user._id) {
+      this.props.fetchGroupRank(nextProps.user._id);
+    }
   }
 
   renderLeaveButton() {
@@ -25,11 +31,8 @@ class Group extends React.PureComponent {
 
   renderJoinLeaveButton() {
     let userInGroup = false;
-    console.log(this.props.user);
     if (this.props.user.groups) {
       const groupIds = this.props.user.groups.map(g => g._id);
-      console.log(groupIds);
-      console.log(this.props.id);
       userInGroup = groupIds.includes(this.props.id);
     }
 
@@ -40,6 +43,7 @@ class Group extends React.PureComponent {
     if (!this.props.group || !this.props.group._id) {
       return <div></div>;
     }
+    console.log(this.props.user);
     return (
       <Page>
         <h1>{this.props.group.name}</h1>
@@ -56,6 +60,7 @@ class Group extends React.PureComponent {
 
 const mapDispatchToProps = (dispatch, props) => ({
   fetchGroup: () => dispatch(fetchGroup(props.id)),
+  fetchGroupRank: (userId) => dispatch(fetchGroupRank(props.id, userId)),
   joinGroup: () => dispatch(joinGroup(props.id)),
   leaveGroup: () => dispatch(leaveGroup(props.id)),
 });
