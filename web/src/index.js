@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
+import { API_URL } from "./config";
 
 import "./style/style.css";
 import App from "./app";
