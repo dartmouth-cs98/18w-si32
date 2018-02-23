@@ -26,14 +26,11 @@ def execGame():
 
     game.start()
 
-    # result = game.get_log()
-    # print(result) # warning: long!
-
-    # print("Cleaning up...")
+    print("Cleaning up...")
     for bot in bots:
         bot.cleanup()
-
+        
     # game.write_log("gameLog")
-    print(game.get_log())
+    # print(game.get_log())
 
 execGame()
