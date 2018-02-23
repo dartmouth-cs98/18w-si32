@@ -10,7 +10,7 @@ class AccessError extends Error {
 // resource not found
 class NotFoundError extends Error {
   getStatus() {
-    console.log("not found");
+    console.log("not found"); // eslint-disable-line
     return 404;
   }
 }

@@ -16,9 +16,8 @@ def get_bot_file(url, bnum):
 
 # on success, just send the messagepack+gzipped game log
 def post_match_success(matchId, log):
-    print("sending")
-    print(log)
-    return requests.post(API + '/result/' + matchId, data=log)
+    files = {'log': ('log.mp.gz', log)}
+    return requests.post(API + '/result/' + matchId, files=files)
 
 
 # on failure, send reasoning why

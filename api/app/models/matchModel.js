@@ -25,7 +25,7 @@ const _Match = new Schema({
     default: "QUEUED",
   },
   result: Object, // some stats on the game we can have without reading the log
-  log: Object, // complete game log stored on S3
+  logKey: String, // complete game log stored on S3
 }, {
   timestamps: true
 });
@@ -81,10 +81,8 @@ _Match.statics.getNext = () => {
   });
 };
 
-_Match.statics.handleWorkerResponse = async (id, result, gameOutput) => {
+_Match.statics.handleWorkerResponse = async (id, rankedBots, logKey) => {
   // pull the things we need from gameOutput
-  const { rankedBots, log } = gameOutput;
-
   const match = await Match.findById(id);
 
   assert(match);
@@ -93,7 +91,7 @@ _Match.statics.handleWorkerResponse = async (id, result, gameOutput) => {
 
   // update the bot AND user skills. Because bots are own by users, this function will always
   // update both as needed.
-  const botSkills = await Bot.updateSkillByRankedFinish(gameOutput.rankedBots, match._id);
+  const botSkills = await Bot.updateSkillByRankedFinish(rankedBots, match._id);
 
   // turn array of bots into obj keyed on bot ID storing ranked finish
   const botRankById = {};
@@ -116,8 +114,7 @@ _Match.statics.handleWorkerResponse = async (id, result, gameOutput) => {
   // update and save the match back into the db
   match.bots = newBots;
   match.status = "DONE";
-  match.log = log;
-  match.result = result;
+  match.logKey = logKey;
   match.markModified("bots"); // need to alert mongoose that the array is different
 
   return match.save();

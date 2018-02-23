@@ -10,10 +10,10 @@ const purgeFiles = async (ctx, next) => {
   // TODO prevent people from uploading them to begin with
   if (!_.isEmpty(ctx.request.body.files)) {
     /* eslint-disable no-console */
-    console.log("deleting remaining files", ctx.request.body.files);
     /* eslint-enable no-console */
-    
+
     _.each(ctx.request.body.files, f => {
+      console.log("deleting remaining file", f.path); // eslint-disable-line
       fs.unlink(f.path, _.noop);
     });
   }
