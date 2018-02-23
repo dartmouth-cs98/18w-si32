@@ -1,8 +1,5 @@
 import { httpGetAction, httpPutAction, httpDeleteAction } from "../httpCollectionActions";
 
-// TODO: do we still need / want this?
-const fetchUsers = () => httpGetAction("USER", "/users", null);
-
 const fetchUser = (userId) => httpGetAction("USER", `/users/${userId}`, null, { isSingle: true });
 
 const followUser = (targetUserId) => httpPutAction("USER", `/users/follows/${targetUserId}`);
@@ -12,7 +9,6 @@ const joinGroup = (groupId) => httpPutAction("USER", `/users/memberships/${group
 const leaveGroup = (groupId) => httpDeleteAction("USER", `/users/memberships/${groupId}`);
 
 export {
-  fetchUsers,
   fetchUser,
   followUser,
   unfollowUser,
