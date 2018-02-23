@@ -7,6 +7,7 @@ const auth = require("../auth");
 const User = require("../models").User;
 const Group = require("../models").Group;
 
+const { allRanksQuery } = require("./leaderboardQueries");
 const { AuthError, MalformedError } = require("../errors");
 
 const userRouter = Router();
@@ -32,7 +33,17 @@ userRouter.get("/", auth.loggedIn, async (ctx) => {
  * Get a single user by ID.
  */
 userRouter.get("/:userId", auth.loggedIn, async (ctx) => {
-  let user = await User.findById(ctx.params.userId).populate("groups");
+  const getProms = [
+    User.findById(ctx.params.userId).populate("groups"),
+  ];
+
+  if (ctx.query.withranks) {
+    getProms.push(allRanksQuery(ctx.params.userId));
+  }
+  
+  let [user, ranks] = await Promise.all(getProms);
+  user._doc.ranks = ranks;
+
   ctx.body = user;
 });
 

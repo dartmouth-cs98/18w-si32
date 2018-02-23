@@ -3,7 +3,7 @@ import { httpGetAction, httpPutAction, httpDeleteAction } from "../httpCollectio
 // TODO: do we still need / want this?
 const fetchUsers = () => httpGetAction("USER", "/users", null);
 
-const fetchUser = (userId) => httpGetAction("USER", `/users/${userId}`, null, { isSingle: true });
+const fetchUser = (userId, withranks) => httpGetAction("USER", `/users/${userId}`, { withranks }, { isSingle: true });
 
 const followUser = (targetUserId) => httpPutAction("USER", `/users/follows/${targetUserId}`);
 const unfollowUser = (targetUserId) => httpDeleteAction("USER", `/users/follows/${targetUserId}`);
