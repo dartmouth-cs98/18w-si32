@@ -20,6 +20,7 @@ class Player:
         starting_tile = self.map.get_tile(self.starting_pos)
         starting_tile.increment_units(playerId)
 
+
     def send_state(self):
         self.bot.write(self.map.to_json())
         self.bot.write("\n")
@@ -61,26 +62,8 @@ class Player:
     def increment_units_produced(self):
         self.units_produced += 1
 
-    def add_building(self, building):
-        self.buildings.append(building)
-
     def increment_resources(self, number):
         self.resources += number
 
     def decrement_resources(self, number):
         self.resources -= number
-
-    def __str__(self):
-        string = "Player " + str(self.playerId) + "\n"
-
-        string += "Resource: " + str(self.resources) + "\n"
-
-        for unit in self.units:
-            string += str(unit)
-            string += "\n"
-
-        for building in self.buildings:
-            string += str(building)
-            string += "\n"
-
-        return string
