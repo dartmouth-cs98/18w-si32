@@ -59,8 +59,8 @@ class Canvas extends React.PureComponent {
     this.sp = {};
 
     // rows and columns derived explicitly from height and width
-    this.sp.rows = this.props.map.height;
-    this.sp.cols = this.props.map.width;
+    this.sp.rows = this.props.replay.h;
+    this.sp.cols = this.props.replay.w;
 
     // define cell width and height as function of # and the base values
     this.sp.cell_w = Math.floor(BASE_SCENE_W / this.sp.cols);

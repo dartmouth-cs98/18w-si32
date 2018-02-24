@@ -13,7 +13,7 @@ class ReplayReader extends React.PureComponent {
 
     this.state = {
       dragOver: false,
-      showBadFileModal: true
+      showBadFileModal: false
     };
   }
 
@@ -42,8 +42,17 @@ class ReplayReader extends React.PureComponent {
   setupFileReader = () => {
     const reader = new FileReader();
     reader.onload = (f) => {
-      if (this.verifyReplayFile(JSON.parse(f.target.result))) {
-        this.props.setReplayFile(JSON.parse(f.target.result));
+      let result;
+      try {
+        result = JSON.parse(f.target.result);
+      } catch(SyntaxError) {
+        // thrown by failed JSON.parse()
+        this.setState({ showBadFileModal: true });
+        return;
+      }
+
+      if (this.verifyReplayFile(result)) {
+        this.props.setReplayFile(result);
       } else {
         this.setState({ showBadFileModal: true });
       }
@@ -52,13 +61,13 @@ class ReplayReader extends React.PureComponent {
     return reader;
   };
 
-  // TODO: more strict file verification 
+  // TODO: more rigorous file verification
   verifyReplayFile = (json) => {
-    if (!json.board_state) {
+    if (!json.w || !json.h) {
+      // must have width and height properties
       return false;
-    } else if (!json.board_state.width) {
-      return false;
-    } else if (!json.board_state.height) {
+    } else if (!json.turns || !Array.isArray(json.turns)) {
+      // turns array must be present
       return false;
     }
     return true;
@@ -113,8 +122,8 @@ class ReplayReader extends React.PureComponent {
              style={styles.modal}
              ariaHideApp={false}
              contentLabel="Example Modal">
-        <div>This is not a valid replay file!</div>
-        <div>Please select another file to visualize.</div>
+        <div style={styles.modalText}>This is not a valid replay file!</div>
+        <div style={styles.modalText}>Please select another file to visualize.</div>
       </Modal>
     );
   }
@@ -235,8 +244,12 @@ const styles = {
       flexDirection: "column",
       justifyContent: "center",
       alignItems: "center",
-      color: colors.detail
-    }
+      color: colors.detail,
+      borderColor: colors.primary
+    },
+  },
+  modalText: {
+    padding: "5px 0 5px 0"
   }
 };
 
