@@ -64,6 +64,11 @@ const setUserForSession = (userId) => dispatch => {
         type: SET_USER_FOR_SESSION,
         user: res.body
       });
+      dispatch({
+        type: "RECEIVED_USER",
+        payload: [res.body],
+        doMerge: true,
+      });
     });
 };
 

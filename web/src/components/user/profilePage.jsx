@@ -14,7 +14,7 @@ import groupSearchbar from "../groups/groupSearchbar";
 
 import { MainTitle, SubTitle } from "../common/titles";
 
-import { fetchUsers, fetchUser, followUser, unfollowUser, joinGroup, leaveGroup } from "../../data/user/userActions";
+import { fetchRankings, fetchUser, followUser, unfollowUser, joinGroup, leaveGroup } from "../../data/user/userActions";
 import { fetchBots } from "../../data/bot/botActions";
 import { fetchMatches } from "../../data/match/matchActions";
 import { getMatchesForUser } from "../../data/match/matchSelectors";
@@ -33,6 +33,7 @@ class ProfilePage extends React.Component {
     this.props.fetchMatches();
     this.props.fetchBots();
     this.props.fetchUser();
+    // this.props.fetchRankings();
   }
 
   componentDidUpdate(prevProps) {
@@ -96,13 +97,18 @@ class ProfilePage extends React.Component {
   render() {
     if (!this.props.profileUser) return <div></div>;
 
+    const globalRank = this.props.profileUser.ranks ? this.props.profileUser.ranks.global : "...";
+
     return (
       <Page>
         <Wrapper>
           { this.renderFollowLink() }
           <MainTitle>Profile: { this.props.profileUser.username }</MainTitle>
-          <SubTitle>Score</SubTitle>
-          <p>{this.props.profileUser.trueSkill.mu.toFixed(1)}</p>
+          <SubTitle>Rating</SubTitle>
+          <p>{this.props.profileUser.rating}</p>
+
+          <SubTitle>Global Rank</SubTitle>
+          <p>{globalRank}</p>
 
           <SubTitle>Bots</SubTitle>
           <BotList bots={this.props.bots} />
@@ -111,7 +117,7 @@ class ProfilePage extends React.Component {
           <MatchList matches={this.props.matches} />
 
           <SubTitle>Groups</SubTitle>
-          <GroupList groups={this.props.profileUser.groups} leaveGroup={this.props.leaveGroup} />
+          <GroupList groups={this.props.profileUser.groups} ranks={this.props.profileUser.ranks} leaveGroup={this.props.leaveGroup} />
           {groupSearchbar(this.state.selectedGroup, this.didSelectGroup, {placeholder: "Search for new groups to join"})}
           {this.renderGroupActionBox()}
         </Wrapper>
@@ -126,8 +132,9 @@ const mapDispatchToProps = (dispatch, props) => ({
   joinGroup: (groupId) => dispatch(joinGroup(groupId)),
   leaveGroup: (groupId) => dispatch(leaveGroup(groupId)),
   fetchMatches: () => dispatch(fetchMatches(props.id)),
+  fetchRankings: () => dispatch(fetchRankings(props.id)),
   fetchBots: () => dispatch(fetchBots(props.id)),
-  fetchUser: () => dispatch(fetchUser(props.id)),
+  fetchUser: () => dispatch(fetchUser(props.id, true)),
 });
 
 const mapStateToProps = (state, props) => ({
