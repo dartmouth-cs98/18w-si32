@@ -1,4 +1,5 @@
 const Router = require("koa-router");
+const mongoose = require("mongoose");
 
 const auth = require("../auth");
 
@@ -13,11 +14,12 @@ const LEADERBOARD_PAGE_SIZE = 20;
  * Get leaderboard for a specific group
  */
 leaderboardRouter.get("/:groupId?", auth.loggedIn, async (ctx) => {
-  const {users, userCount} = await leaderboardQuery({groupId: ctx.params.groupId, page: ctx.query.page});
+  const groupId = mongoose.Types.ObjectId.isValid(ctx.params.groupId) ? ctx.params.groupId : "global";
+  const {users, userCount} = await leaderboardQuery({groupId: groupId, page: ctx.query.page});
   const numPages = Math.ceil(userCount / LEADERBOARD_PAGE_SIZE);
 
   ctx.body = {
-    _id: ctx.params.groupId || "global",
+    _id: groupId,
     users,
     numPages,
   };
@@ -28,10 +30,11 @@ leaderboardRouter.get("/:groupId?", auth.loggedIn, async (ctx) => {
  * Get rank for a single group. Supply no groupId to get global rank
  */
 leaderboardRouter.get("/rank/single/:groupId?", auth.loggedIn, async (ctx) => {
-  const rank = await rankingQuery({groupId: ctx.params.groupId, userId: ctx.state.userId});
+  const groupId = mongoose.Types.ObjectId.isValid(ctx.params.groupId) ? ctx.params.groupId : "global";
+  const rank = await rankingQuery({groupId: groupId, userId: ctx.state.userId});
 
   ctx.body = {
-    _id: ctx.params.groupId || "global",
+    _id: groupId,
     rank
   };
 });
