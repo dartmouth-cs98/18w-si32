@@ -1,6 +1,8 @@
 import React from "react";
 import { connect } from "react-redux";
 import Page from "../layout/page";
+import LeaderboardTable from "../leaderboard/LeaderboardTable";
+
 import { fetchGroup } from "../../data/group/groupActions";
 import { joinGroup, leaveGroup, fetchGroupRank } from "../../data/user/userActions";
 import { getSessionUser } from "../../data/user/userSelectors";
@@ -43,16 +45,17 @@ class Group extends React.PureComponent {
     if (!this.props.group || !this.props.group._id) {
       return <div></div>;
     }
-    console.log(this.props.user);
+    const userRank = this.props.user.ranks ? this.props.user.ranks[this.props.id] : null;
     return (
       <Page>
         <h1>{this.props.group.name}</h1>
         <p>{this.props.group.description}</p>
         <p>Number of Members: {this.props.group.members.length}</p>
+        <p>My Rank: {userRank}</p>
         <br/>
         {this.renderJoinLeaveButton()}
         <br/>
-        <h2>Leaderboard goes here. Coming January 2019</h2>
+        <LeaderboardTable groupId={this.props.group._id} />
       </Page>
     );
   }

@@ -8,7 +8,8 @@ import LeaderboardTable from "./LeaderboardTable";
 import capitalize from "../../util/capitalize";
 
 import { MainTitle, SubTitle } from "../common/titles";
-import { fetchLeaderboard } from "../../data/leaderboard/leaderboardActions";
+import { fetchGroupRank } from "../../data/user/userActions";
+import { getSessionUser } from "../../data/user/userSelectors";
 
 class LeaderboardPage extends React.PureComponent {
   constructor(props) {
@@ -16,42 +17,28 @@ class LeaderboardPage extends React.PureComponent {
 
     this.state = {
       selectedGroup: null,
-      page: 0,
     };
   }
 
-  componentDidMount() {
-    this.props.fetchLeaderboard(null, 0);
-  }
-
-  getSelectedGroupId = () => {
-    return this.state.selectedGroup ? this.state.selectedGroup.value : "global";
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.user._id !== this.props.user._id) {
+      const groupId = this.state.selectedGroup ? this.state.selectedGroup.value : null;
+      this.props.fetchGroupRank(groupId, nextProps.user._id);
+    }
   }
 
   didSelectGroup = (selectedGroup) => {
     const groupId = selectedGroup ? selectedGroup.value : null;
-    this.props.fetchLeaderboard(groupId, 0);
+    this.props.fetchGroupRank(groupId, this.props.user._id);
     this.setState({
       selectedGroup,
-      page: 0,
     });
-  }
-
-  onPageChange = () => {
-
-  }
-
-  onFetchPage = (state) => {
-    const groupId = this.state.selectedGroup ? this.state.selectedGroup.value : null;
-    this.props.fetchLeaderboard(groupId, state.page);
   }
 
   render() {
     const groupLabel = this.state.selectedGroup ? capitalize(this.state.selectedGroup.label) : "Global";
     const groupId = this.state.selectedGroup ? this.state.selectedGroup.value : "global";
-    const leaderboard = this.props.leaderboards[groupId] || {users: []};
-    const users = leaderboard.users;
-    const numPages = leaderboard.numPages;
+    const userRank = this.props.user.ranks ? this.props.user.ranks[groupId] : null;
 
     return (
       <Page>
@@ -59,7 +46,8 @@ class LeaderboardPage extends React.PureComponent {
           <MainTitle>Leaderboard</MainTitle>
           <SubTitle>{groupLabel}</SubTitle>
           {groupSearchbar(this.state.selectedGroup, this.didSelectGroup, {placeholder: "Choose A Specific Group"})}
-          <LeaderboardTable users={users} totalPages={numPages} loading={false} fetchPage={this.onFetchPage} />
+          <span>My Rank: {userRank}</span>
+          <LeaderboardTable groupId={groupId} />
         </div>
       </Page>
     );
@@ -67,11 +55,11 @@ class LeaderboardPage extends React.PureComponent {
 }
 
 const mapDispatchToProps = dispatch => ({
-  fetchLeaderboard: (groupId, page) => dispatch(fetchLeaderboard(groupId, page)),
+  fetchGroupRank: (groupId, userId) => dispatch(fetchGroupRank(groupId, userId)),
 });
 
 const mapStateToProps = state => ({
-  leaderboards: state.leaderboards.records,
+  user: getSessionUser(state) || state.session.user || {},
 });
 
 const styles = {
