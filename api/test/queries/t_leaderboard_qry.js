@@ -1,16 +1,12 @@
 "use strict";
 const expect = require("chai").expect;
 const bcrypt = require("bcryptjs");
-const rewire = require("rewire");
 const _ = require("lodash");
 
 const resetCollections = require("../pretest/reset_collections");
 
 const models = require("../../app/models");
-const leaderboardRoutes = rewire("../../app/routes/leaderboardRoutes");
-const leaderboardQuery = leaderboardRoutes.__get__("leaderboardQuery");
-const rankingQuery = leaderboardRoutes.__get__("rankingQuery");
-const allRanksQuery = leaderboardRoutes.__get__("allRanksQuery");
+const {leaderboardQuery, rankingQuery, allRanksQuery} = require("../../app/routes/leaderboardQueries");
 
 const NUM_USERS = 10;
 
@@ -40,12 +36,14 @@ suite("Test Leaderboard Query", function() {
   test("Can get global leaderboard and it is sorted", async function() {
     const leaderboardUsers = await leaderboardQuery({groupId: null});
 
-    expect(leaderboardUsers).to.be.of.length(NUM_USERS);
+    expect(leaderboardUsers.users).to.be.of.length(NUM_USERS);
+
+    expect(leaderboardUsers.userCount).to.equal(NUM_USERS);
 
     let prevRank = Number.POSITIVE_INFINITY;
-    leaderboardUsers.forEach(user => {
-      expect(user.rank <= prevRank).to.be.true();
-      prevRank = user.rank;
+    leaderboardUsers.users.forEach(user => {
+      expect(user.rating <= prevRank).to.be.true();
+      prevRank = user.rating;
     });
   });
 
@@ -64,16 +62,17 @@ suite("Test Leaderboard Query", function() {
 
     const leaderboardUsers = await leaderboardQuery({groupId: group.id});
 
-    expect(leaderboardUsers).to.be.of.length(members.length);
+    expect(leaderboardUsers.users).to.be.of.length(members.length);
+    expect(leaderboardUsers.userCount).to.equal(members.length);
 
     let prevRank = Number.POSITIVE_INFINITY;
-    leaderboardUsers.forEach(user => {
-      expect(user.rank <= prevRank).to.be.true();
-      prevRank = user.rank;
+    leaderboardUsers.users.forEach(user => {
+      expect(user.rating <= prevRank).to.be.true();
+      prevRank = user.rating;
     });
   });
 
-  test.only("Can get rank of a user within a specific group", async function() {
+  test("Can get rank of a user within a specific group", async function() {
     const groupName = "Robin & Co";
     const group = await models.Group.create({
       // create the user in the db
@@ -102,11 +101,10 @@ suite("Test Leaderboard Query", function() {
     const result = await rankingQuery({userId: user._id});
 
     // should be last since we chose user with min rating
-    console.log(users.length);
     expect(result).to.equal(users.length);
   });
 
-  test.only("Can get all ranks of a user", async function() {
+  test("Can get all ranks of a user", async function() {
     const groupName = "Robin & Co";
     const group = await models.Group.create({
       // create the user in the db
@@ -122,12 +120,12 @@ suite("Test Leaderboard Query", function() {
 
     const result = await allRanksQuery(user._id);
 
-    const global = result.filter(r => r._id === "global")[0];
-    expect(global.rank).to.equal(users.length);
+    const global = result.global;
+    expect(global).to.equal(users.length);
 
-    const groupRank = result.filter(r => r._id.toString() === group._id.toString())[0];
+    const groupRank = result[group._id.toString()];
     // should be last since we chose user with min rating
-    expect(groupRank.rank).to.equal(Math.floor(NUM_USERS / 2));
+    expect(groupRank).to.equal(Math.floor(NUM_USERS / 2));
 
   });
 });
