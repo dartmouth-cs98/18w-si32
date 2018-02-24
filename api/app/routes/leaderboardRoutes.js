@@ -1,5 +1,4 @@
 const Router = require("koa-router");
-const { MalformedError } = require("../errors");
 
 const auth = require("../auth");
 
@@ -28,7 +27,7 @@ leaderboardRouter.get("/:groupId?", auth.loggedIn, async (ctx) => {
  * @api GET path /rank/group/:groupId?
  * Get rank for a single group. Supply no groupId to get global rank
  */
-leaderboardRouter.get("rank/single/:groupId?", auth.loggedIn, async (ctx) => {
+leaderboardRouter.get("/rank/single/:groupId?", auth.loggedIn, async (ctx) => {
   const rank = await rankingQuery({groupId: ctx.params.groupId, userId: ctx.state.userId});
 
   ctx.body = {
@@ -41,7 +40,7 @@ leaderboardRouter.get("rank/single/:groupId?", auth.loggedIn, async (ctx) => {
  * @api GET path /rank/group/:groupId?
  * Get rank for a single group. Supply no groupId to get global rank
  */
-leaderboardRouter.get("rank/all", auth.loggedIn, async (ctx) => {
+leaderboardRouter.get("/rank/all", auth.loggedIn, async (ctx) => {
   ctx.body = await allRanksQuery(ctx.state.userId);
 });
 

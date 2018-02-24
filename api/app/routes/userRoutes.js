@@ -40,9 +40,9 @@ userRouter.get("/:userId", auth.loggedIn, async (ctx) => {
   if (ctx.query.withranks) {
     getProms.push(allRanksQuery(ctx.params.userId));
   }
-  
+
   let [user, ranks] = await Promise.all(getProms);
-  user._doc.ranks = ranks;
+  user._doc.ranks = ranks || {};
 
   ctx.body = user;
 });
