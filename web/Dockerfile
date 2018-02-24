@@ -4,7 +4,6 @@ FROM node:9.4-alpine
 WORKDIR /tmp
 COPY package.json /tmp
 RUN npm install
-RUN npm install --global --save-dev webpack-dev-server
 
 WORKDIR /app
 
@@ -16,4 +15,4 @@ COPY . /app
 
 EXPOSE 4000
 
-CMD ["webpack-dev-server", "-d"]
+CMD ["npm", "start"]

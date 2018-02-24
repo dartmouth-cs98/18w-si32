@@ -26,7 +26,8 @@ class ReplayVisualizer extends React.PureComponent {
     return (
       <div style={styles.wrapper}>
         <div style={styles.pageHeader}>Game Replay</div>
-        <Canvas map={this.props.replay.board_state} play={this.state.play} />
+        <Canvas replay={this.props.replay}
+                play={this.state.play} />
         <Button kind={"primary"} onClick={this.toggleReplayControl}>
           <div>{controlButtonText}</div>
         </Button>

@@ -14,12 +14,18 @@ def is_game_ready():
 def get_bot_file(url, bnum):
     urllib.request.urlretrieve(url, '/bot' + str(bnum) + '/bot.py')
 
-def post_match_result(matchId, result, log):
+# on success, just send the messagepack+gzipped game log
+def post_match_success(matchId, log):
+    files = {'log': ('log.mp.gz', log)}
+    return requests.post(API + '/result/' + matchId, files=files)
+
+
+# on failure, send reasoning why
+def post_match_failure(matchId, result, log):
     body = {
         'gameOutput': log,
         'matchId': matchId,
         'result': result
     }
 
-    # TODO retry on failure?
-    return requests.post(API + '/result', json=body)
+    return requests.post(API + '/result/' + matchId, json=body)

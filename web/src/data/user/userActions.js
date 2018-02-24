@@ -19,6 +19,7 @@ const fetchGroupRank = (groupId, userId) => httpGetAction(
   }
 );
 
+
 const followUser = (targetUserId) => httpPutAction("USER", `/users/follows/${targetUserId}`);
 const unfollowUser = (targetUserId) => httpDeleteAction("USER", `/users/follows/${targetUserId}`);
 
@@ -26,7 +27,6 @@ const joinGroup = (groupId) => httpPutAction("USER", `/users/memberships/${group
 const leaveGroup = (groupId) => httpDeleteAction("USER", `/users/memberships/${groupId}`);
 
 export {
-  fetchUsers,
   fetchUser,
   fetchGroupRank,
   followUser,

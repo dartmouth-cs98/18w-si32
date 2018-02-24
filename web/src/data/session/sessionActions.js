@@ -5,11 +5,7 @@ const SESSION_DESTROY = "SESSION_DESTROY";
 const SET_USER_FOR_SESSION = "SET_USER_FOR_SESSION";
 const RESET_USER_FOR_SESSION = "RESET_USER_FOR_SESSION";
 
-/* eslint-disable no-unused-vars */
-// TODO: getState creating eslint error here because it is not used,
-// do we need it?
-
-const login = (username, password) => (dispatch, getState) => {
+const login = (username, password) => dispatch => {
   return http
     .post("/users/login")
     .send({

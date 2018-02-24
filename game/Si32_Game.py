@@ -5,6 +5,7 @@ from .Player import Player
 from .Map import Map
 from .Tile import Tile
 from .Rules import Rules
+from .Logger import Logger
 from .json_helpers import json_to_object_list
 
 class Game_state(Game):
@@ -24,7 +25,7 @@ class Game_state(Game):
 
         self.game_over = False
 
-        self.json_log = self.initialize_json_log()
+        self.logger = Logger(self.map, self.players)
 
         self.rules = Rules(self.map, self.players)
 
@@ -33,6 +34,7 @@ class Game_state(Game):
         self.winner = None
 
         self.state_log = []
+
         super().__init__(bots)
 
 
@@ -52,22 +54,17 @@ class Game_state(Game):
         # loop until somebody wins, or we time out!
         while self.winner is None:
             # reset log for this turn
-            self.turn_log = {
-                'state': self.map.get_state(),
-                'moves': []
-            }
+            self.logger.new_turn(self.map)
 
             self.send_state()
             self.read_moves()
 
-            # add full turn to the log
-            self.log_turn()
+            # log that the turn is over
+            self.logger.end_turn()
 
             self.iter += 1
 
             self.check_game_over()
-
-        return self.json_log
 
     # send all players the updated game state so they can make decisions
     def send_state(self):
@@ -99,7 +96,10 @@ class Game_state(Game):
                 tile.update_units_number()
 
     def check_game_over(self):
-        return (self.check_unit_victory_condition()) or (self.time_limit_reached())
+        if (self.check_unit_victory_condition()) or (self.time_limit_reached()):
+            self.log_result()
+
+        else: return False
 
     def check_unit_victory_condition(self):
         player1_units = self.players[0].total_units()
@@ -117,20 +117,19 @@ class Game_state(Game):
 
 
     def time_limit_reached(self):
-        if self.iter > 30:
-            p1units = self.players[0].total_units()
-            p2units = self.players[1].total_units()
+        if self.iter < 30:
+            return False
 
-            if p1units > p2units:
-                self.winner = self.players[0]
+        p1units = self.players[0].total_units()
+        p2units = self.players[1].total_units()
 
-            else:
-                self.winner = self.players[1]
-
-            return True
+        if p1units > p2units:
+            self.winner = self.players[0]
 
         else:
-            return False
+            self.winner = self.players[1]
+
+        return True
 
     # ---------------- PLAYER MOVES FUNCTIONS ----------------
 
@@ -142,40 +141,25 @@ class Game_state(Game):
 
     def execute_move(self, move):
         if self.rules.verify_move(move):
-            self.turn_log["moves"].append(move)
+            self.logger.add_move(move)
             self.rules.update_by_move(move)
 
+    def write_log(self, file_name):
+        self.logger.write(file_name)
 
-    # ------------ REPLAY FILE FUNCTIONS ----------------
     def get_log(self):
-        j = json.dumps(self.json_log, default=lambda o: o.__dict__)
-        return j
+        return self.logger.get_log()
 
-    def log_turn(self):
-        self.json_log["turns"].append(self.turn_log)
+    def log_result(self):
+        if self.winner:
+            result = self.players
+            if result[0] != self.winner:
+                temp = result[0]
+                result[0] = result[1]
+                result[1] = temp
 
-    def write_game_log(self):
-        temp = json.dumps(self.json_log)
-        json_log = json.loads(temp)
-
-        with open('data.txt', 'w') as outfile:
-            json.dump(json_log, outfile)
-
-    def initialize_json_log(self):
-        json_log = {}
-        board_info = {}
-        board_info['width'] = self.map.width
-        board_info['height'] = self.map.height
-        board_info['player1'] = self.players[0].starting_pos
-        board_info['player2'] = self.players[1].starting_pos
-        json_log['board_state'] = board_info
-        json_log['turns'] = []
-        json_log['rankedBots'] = [p.bot.name for p in  self.players] # TODO actual ranking based on finish order
-
-        return json_log
-
-    def json_log_move(self, move):
-        self.json_log['commands'].append(move.to_json())
+            for player in result:
+                self.logger.add_ranked_bot(player.bot)
 
 # We want to execute commmands in the following order: move, build, mine
 def sort_moves(moves):
