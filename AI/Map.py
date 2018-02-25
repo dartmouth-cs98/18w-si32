@@ -81,6 +81,6 @@ class Map:
     # returns only the state we care about for the game log
     def get_state(self):
         return self.tiles
-
+        
     def __str__(self):
         return str(self.tiles)
