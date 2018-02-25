@@ -28,6 +28,7 @@ const leaveGroup = (groupId) => httpDeleteAction("USER", `/users/memberships/${g
 
 export {
   fetchUser,
+  fetchUsers,
   fetchGroupRank,
   followUser,
   unfollowUser,

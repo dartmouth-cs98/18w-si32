@@ -8,7 +8,7 @@ import history from "../../history";
 
 const fetchBots = (userId) => httpGetAction("BOT", "/bots", { userId });
 
-const fetchBot = (userId) => httpGetAction("BOT", `/bots/${userId}`, { userId }, { isSingle: true });
+const fetchBot = (botId) => httpGetAction("BOT", `/bots/${botId}`, null, { isSingle: true });
 
 const createBot = (name, code) => (dispatch, getState) => {
   return http

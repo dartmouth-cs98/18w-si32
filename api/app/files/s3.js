@@ -7,9 +7,10 @@ const s3 = new AWS.S3({signatureVersion: "v4"});
 const BOT_BUCKET = "si32-bots";
 const MATCH_BUCKET = "si32-matches";
 
-const SIGNED_URL_EXPIRE_SECONDS = 60 * 5;
+const BOT_EXPIRE = 60 * 5;
+const MATCH_EXPIRE = 60 * 60;
 
-const upload = (bucket, key, file) => {
+const upload = (bucket, key, file, options={}) => {
   let body = file;
   if ("path" in file) {
     body = fs.createReadStream(file.path);
@@ -20,6 +21,7 @@ const upload = (bucket, key, file) => {
       Bucket: bucket,
       Key: key,
       Body: body,
+      ...options
     }, (err, data) => {
       if (err) {
         reject(err);
@@ -46,18 +48,27 @@ const getBotUrl = (botKey) => {
   const url  = s3.getSignedUrl("getObject", {
     Bucket: BOT_BUCKET,
     Key: botKey,
-    Expires: SIGNED_URL_EXPIRE_SECONDS,
+    Expires: BOT_EXPIRE,
   });
 
   return url;
 };
 
 const uploadLog = (matchId, log) => {
-  return upload(MATCH_BUCKET, `${matchId}.mp.gz`, log);
+  return upload(MATCH_BUCKET, `${matchId}.mp`, log, { ContentEncoding: "gzip" });
+};
+
+const getLogUrl = (logKey) => {
+  return s3.getSignedUrl("getObject", {
+    Bucket: MATCH_BUCKET,
+    Key: logKey,
+    Expires: MATCH_EXPIRE,
+  });
 };
 
 module.exports = {
   uploadBot,
   getBotUrl,
   uploadLog,
+  getLogUrl,
 };

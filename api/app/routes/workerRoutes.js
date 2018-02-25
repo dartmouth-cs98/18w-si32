@@ -50,7 +50,7 @@ workerRouter.post("/result/:matchId", async (ctx, next) => {
 
     // this is the key where the log _will_ live, even though it's not uploaded yet
     // we don't want to have to upload first and then delete from s3 if db update fails
-    const logKey = `${matchId}.mp.gz`;
+    const logKey = `${matchId}.mp`;
 
     // update the match in the db
     const matchResult = await Match.handleWorkerResponse(matchId, gameOutput.rankedBots, logKey);

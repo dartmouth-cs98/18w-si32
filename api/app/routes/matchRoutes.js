@@ -1,10 +1,10 @@
 const Router = require("koa-router");
 const auth = require("../auth");
 
-/* eslint-disable no-unused-vars */
 const s3 = require("../files/s3");
 const { Bot, Match } = require("../models");
-/* eslint-enable no-unused-vars */
+
+const { NotFoundError } = require("../errors");
 
 const matchRouter = Router();
 
@@ -19,6 +19,20 @@ matchRouter.get("/", async (ctx) => {
   });
 
   ctx.body = matches;
+});
+
+matchRouter.get("/:matchId", async (ctx) => {
+  const match = await Match.findById(ctx.params.matchId).lean();
+
+  if (!match) {
+    throw new NotFoundError("couldn't find that match");
+  }
+
+  match.logUrl = s3.getLogUrl(match.logKey);
+
+  console.log("got", match.logUrl);
+
+  ctx.body = match;
 });
 
 matchRouter.post("/", async (ctx) => {
