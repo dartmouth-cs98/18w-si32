@@ -13,8 +13,8 @@ class MatchSinglePage extends React.PureComponent {
 
   componentDidMount() {
     this.props.fetchMatch().then(res => {
-      // load the game log from S3 now
-      console.log(res.body.logUrl);
+      // load the game log from S3
+      // TODO astract this?
       request.get(res.body.logUrl).responseType('arraybuffer').then(res => {
         this.setState({ log: msgpack.decode(new Uint8Array(res.body)) });
       });
