@@ -1,7 +1,9 @@
 import React from "react";
+import request from "superagent";
 import { connect } from "react-redux";
 import { Page, Wrapper} from "../layout";
-import { fetchMatches } from "../../data/match/matchActions";
+import { fetchMatch } from "../../data/match/matchActions";
+import msgpack from "msgpack-lite";
 
 class MatchSinglePage extends React.PureComponent {
   constructor(props) {
@@ -10,7 +12,13 @@ class MatchSinglePage extends React.PureComponent {
   }
 
   componentDidMount() {
-    this.props.fetchMatches();
+    this.props.fetchMatch().then(res => {
+      // load the game log from S3 now
+      console.log(res.body.logUrl);
+      request.get(res.body.logUrl).responseType('arraybuffer').then(res => {
+        this.setState({ log: msgpack.decode(new Uint8Array(res.body)) });
+      });
+    });
   }
 
   render() {
@@ -27,8 +35,8 @@ class MatchSinglePage extends React.PureComponent {
   }
 }
 
-const mapDispatchToProps = dispatch => ({
-  fetchMatches: () => dispatch(fetchMatches()),
+const mapDispatchToProps = (dispatch, props) => ({
+  fetchMatch: () => dispatch(fetchMatch(props.id)),
 });
 
 const mapStateToProps = (state, props) => ({
