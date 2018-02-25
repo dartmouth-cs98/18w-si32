@@ -8,7 +8,7 @@ def pollUntilGameReady():
     response_json = r.json()
 
     while not new_game_available(response_json):
-        time.sleep(5)
+        time.sleep(2)
         r = endpoints.is_game_ready()
         response_json = r.json()
 

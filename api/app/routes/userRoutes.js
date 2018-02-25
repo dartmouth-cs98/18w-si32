@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const Router = require("koa-router");
 const bcrypt = require("bcryptjs");
 
@@ -6,6 +7,7 @@ const auth = require("../auth");
 const User = require("../models").User;
 const Group = require("../models").Group;
 
+const { allRanksQuery } = require("./leaderboardQueries");
 const { AuthError, MalformedError } = require("../errors");
 
 const userRouter = Router();
@@ -31,7 +33,17 @@ userRouter.get("/", auth.loggedIn, async (ctx) => {
  * Get a single user by ID.
  */
 userRouter.get("/:userId", auth.loggedIn, async (ctx) => {
-  let user = await User.findById(ctx.params.userId).populate("groups");
+  const getProms = [
+    User.findById(ctx.params.userId).populate("groups"),
+  ];
+
+  if (ctx.query.withranks) {
+    getProms.push(allRanksQuery(ctx.params.userId));
+  }
+
+  let [user, ranks] = await Promise.all(getProms);
+  user._doc.ranks = ranks || {};
+
   ctx.body = user;
 });
 
@@ -149,5 +161,10 @@ userRouter.post("/logout", auth.loggedIn, async (ctx) => {
 
   ctx.body = {};
 });
+
+// IDEA: aggegation that filters users out by group, and counts at every step. But have to reset to all users somehow
+// before each filter
+// first match only all users that are before the user. then do a grouping for `each` group the user is in,
+// and then just count the groupings. each group has _id as userid being in the member group
 
 module.exports = userRouter;

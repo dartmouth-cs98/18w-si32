@@ -1,5 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
+import Modal from "react-modal";
 import Color from "color";
 
 import Page from "../layout/page";
@@ -11,7 +12,8 @@ class ReplayReader extends React.PureComponent {
     super(props);
 
     this.state = {
-      dragOver: false
+      dragOver: false,
+      showBadFileModal: false
     };
   }
 
@@ -40,11 +42,40 @@ class ReplayReader extends React.PureComponent {
   setupFileReader = () => {
     const reader = new FileReader();
     reader.onload = (f) => {
-      this.props.setReplayFile(JSON.parse(f.target.result));
+      let result;
+      try {
+        result = JSON.parse(f.target.result);
+      } catch(SyntaxError) {
+        // thrown by failed JSON.parse()
+        this.setState({ showBadFileModal: true });
+        return;
+      }
+
+      if (this.verifyReplayFile(result)) {
+        this.props.setReplayFile(result);
+      } else {
+        this.setState({ showBadFileModal: true });
+      }
     };
 
     return reader;
   };
+
+  // TODO: more rigorous file verification
+  verifyReplayFile = (json) => {
+    if (!json.w || !json.h) {
+      // must have width and height properties
+      return false;
+    } else if (!json.turns || !Array.isArray(json.turns)) {
+      // turns array must be present
+      return false;
+    }
+    return true;
+  };
+
+  closeBadFileModal = () => {
+    this.setState({ showBadFileModal: false });
+  }
 
   handleDragEnter = (event) => {
     event.stopPropagation();
@@ -84,6 +115,19 @@ class ReplayReader extends React.PureComponent {
     this.reader.readAsText(file, "utf-8");
   };
 
+  renderBadFileModal() {
+    return (
+      <Modal isOpen={this.state.showBadFileModal}
+             onRequestClose={this.closeBadFileModal}
+             style={styles.modal}
+             ariaHideApp={false}
+             contentLabel="Example Modal">
+        <div style={styles.modalText}>This is not a valid replay file!</div>
+        <div style={styles.modalText}>Please select another file to visualize.</div>
+      </Modal>
+    );
+  }
+
   renderFileSelectButton() {
     return (
       <div style={styles.buttonContainer}>
@@ -108,6 +152,7 @@ class ReplayReader extends React.PureComponent {
     return (
       <Page>
         <div style={styles.wrapper}>
+          {this.renderBadFileModal()}
           <div style={styles.uploadHeader}>Replay Your Bot</div>
 
           <div style={{...styles.dropZoneBase, ...dropZoneCnd}} id="dropZone">
@@ -180,6 +225,31 @@ const styles = {
       color: colors.background,
       cursor: "pointer"
     }
+  },
+  modal: {
+    overlay: {
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backgroundColor: 'rgba(255, 255, 255, 0.75)'
+    },
+    content: {
+      top: "30%",
+      left: "30%",
+      right: "30%",
+      bottom: "30%",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center",
+      color: colors.detail,
+      borderColor: colors.primary
+    },
+  },
+  modalText: {
+    padding: "5px 0 5px 0"
   }
 };
 

@@ -19,10 +19,6 @@ class Game(ABC):
         for i, b in enumerate(bots):
             b.write("%d\n" % (i))
 
-        # for b in bots:
-        #     print(b.read(),)
-        #     sys.stdout.flush()
-
         super().__init__()
 
 

@@ -22,7 +22,7 @@ RUN pip install -r ./requirements.txt
 ADD ./worker /app
 
 # add the game engine in
-ADD ./AI /app/game
+ADD ./game /app/game
 
 
 # accept a build arg for the api url to hit for games. set arg as env variable

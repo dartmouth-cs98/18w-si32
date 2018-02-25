@@ -13,9 +13,12 @@ Si32 Vocab
 
 **Player**: the user-uploaded piece of code which a bot executes. Unless in context of worker, "player" and "bot" can likely be used interchangeably
 
+**Rating**: a player's TrueSkill rating
+
+**Rank**: an ordinal number representing a player's relative positioning among others
+
 **UI/web**: front-end that users interact with
 
 **Worker**: Docker container that manages execution of games as needed and posts results to the server
-
 
 

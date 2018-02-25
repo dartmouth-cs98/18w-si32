@@ -1,10 +1,9 @@
 const Router = require("koa-router");
+const mongoose = require("mongoose");
 
 const auth = require("../auth");
-const Group = require("../models").Group;
-const User = require("../models").User;
 
-const { MalformedError } = require("../errors");
+const { leaderboardQuery, rankingQuery, allRanksQuery } = require("./leaderboardQueries");
 
 const leaderboardRouter = Router();
 
@@ -15,50 +14,38 @@ const LEADERBOARD_PAGE_SIZE = 20;
  * Get leaderboard for a specific group
  */
 leaderboardRouter.get("/:groupId?", auth.loggedIn, async (ctx) => {
-  const users = await leaderboardQuery({groupId: ctx.params.groupId});
+  const groupId = mongoose.Types.ObjectId.isValid(ctx.params.groupId) ? ctx.params.groupId : "global";
+  const {users, userCount} = await leaderboardQuery({groupId: groupId, page: ctx.query.page});
+  const numPages = Math.ceil(userCount / LEADERBOARD_PAGE_SIZE);
 
   ctx.body = {
-    _id: ctx.params.groupId || "global",
+    _id: groupId,
     users,
+    numPages,
   };
 });
 
-/***** local methods *****/
+/**
+ * @api GET path /rank/group/:groupId?
+ * Get rank for a single group. Supply no groupId to get global rank
+ */
+leaderboardRouter.get("/rank/single/:groupId?", auth.loggedIn, async (ctx) => {
+  const groupId = mongoose.Types.ObjectId.isValid(ctx.params.groupId) ? ctx.params.groupId : "global";
+  const rank = await rankingQuery({groupId: groupId, userId: ctx.state.userId});
 
-const leaderboardQuery = async function({groupId, page}) {
-  page = page || 0;
+  ctx.body = {
+    _id: groupId,
+    rank
+  };
+});
 
-  let userQuery;
-  if (groupId) {
-    const group = await Group.findById(groupId);
-    if (!group) {
-      throw new MalformedError(`Group with id ${groupId} does not exist.`);
-    }
-    userQuery = {_id: {$in: group.members}}; // only users in this group
-  } else {
-    userQuery = {}; // all users
-  }
+/**
+ * @api GET path /rank/group/:groupId?
+ * Get rank for a single group. Supply no groupId to get global rank
+ */
+leaderboardRouter.get("/rank/all", auth.loggedIn, async (ctx) => {
+  ctx.body = await allRanksQuery(ctx.state.userId);
+});
 
-  const users = await User.aggregate([
-    {$match: userQuery},
-    { $addFields: {
-      rank: {
-        $subtract: [
-          "$trueSkill.mu",
-          {
-            $multiply: [
-              3, "$trueSkill.sigma"
-            ]
-          }
-        ]
-      }
-    }},
-    {$sort: {rank: -1}},
-    {$skip: LEADERBOARD_PAGE_SIZE * page},
-    {$limit: LEADERBOARD_PAGE_SIZE},
-  ]).exec();
-
-  return users;
-};
 
 module.exports = leaderboardRouter;

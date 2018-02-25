@@ -14,10 +14,12 @@ const httpGetAction = (collectionName, endpoint, params, options={}) => (dispatc
     .get(endpoint)
     .query(params)
     .then(res => {
+      const payloadBody = options.isSingle ? [res.body] : res.body;
+      const payload = options.customPayloadFn ? options.customPayloadFn(res.body) : payloadBody;
       dispatch({
         type: `RECEIVED_${collectionName}`,
         doMerge: options.doMerge || options.isSingle,
-        payload: options.isSingle ? [res.body] : res.body,
+        payload,
       });
       return res;
     }).catch(err => {
