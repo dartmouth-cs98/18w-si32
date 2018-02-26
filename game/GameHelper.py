@@ -1,5 +1,6 @@
 from game.Command import Command
 from game.Map import Map
+from game.Building import resource_cost
 
 class GameHelper:
     def __init__(self, map, players):
@@ -77,13 +78,14 @@ class GameHelper:
             # if there is a free adjacent tile, move to the one with the greatest resource
             if greatest_pos is not None:
                 direction = (greatest_pos[0] - position[0], greatest_pos[1] - position[1])
-                if (position.building is not None):
+                #build if there's room on the tile
+                if (position.building is not None) | (self.players[playerId].resource < resource_cost):
                     commands.append(self.move(playerId, position, units_at_tile - resource_at_tile, direction))
                 else:
                     commands.append(self.move(playerId, position, units_at_tile - resource_at_tile - 1, direction))
                     commands.append(self.build(playerId, position, 1))
 
-        #else, have them all gather resource, then build
+        #else, have them all (minus one) gather resource, then build
         else:
             commands.append(self.mine(playerId, position, units_at_tile - 1))
             commands.append(self.build(playerId, position, 1))

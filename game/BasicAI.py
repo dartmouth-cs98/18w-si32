@@ -1,4 +1,3 @@
-from .Building import resource_cost
 class BasicAI:
 
     def __init__(self, GameHelper):
