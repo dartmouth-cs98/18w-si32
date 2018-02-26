@@ -5,25 +5,25 @@ class GameHelper:
         self.map = map
         self.players = players
 
-    #gets all tiles of player with specified playerId
+    #gets all tiles of a player with specified playerId where he has at least one unit
     def get_occupied_tiles(self, playerId):
         return self.players[playerId].get_occupied_tiles()
 
-    #gets Tile object at specified xy-coordinate
+    #gets tile at specified xy-coordinates
     def get_tile(self, x, y):
         return self.map.get_tile((x, y))
 
-    #get unit strength at specified square of specified player
+    #get the number of units at specified square of specified player
     def get_player_units(self, x, y, playerId):
         return self.map.get_tile((x, y)).units[playerId]
 
-    #returns True if player with playerId1 has higher strength at pos1 than player with playerId2 has higher strength at pos2
+    #returns True if player with playerId1 has higher unit count at pos1 than player with playerId2 has at pos2
     def compare_strength(self, pos1, pos2, playerId1, playerId2):
         if (self.get_tile(pos1[0], pos1[1]).units[playerId1] < self.get_tile(pos2[0], pos2[1]).units[playerId2]):
             return True
         return False
 
-    #returns True if player with playerId1 has higher resource than player with playerId2
+    #returns True if player with playerId1 has more resource than player with playerId2
     def compare_resource(self, playerId1, playerId2):
         if (self.players[playerId1].resource > self.players[playerId2].resource):
             return True
@@ -35,12 +35,14 @@ class GameHelper:
             return True
         return False
 
+    # gets the total number of units controlled by player with playerId
     def get_total_units(self, playerId):
         count = 0
         for tile in self.get_occupied_tiles(playerId):
             count += tile.units[playerId]
         return count
 
+    #returns True if player with playerId1 has more units than player with playerId2
     def compare_total_units(self, playerId1, playerId2):
         if (self.get_total_units(playerId1) > self.get_total_units(playerId2)):
             return True
@@ -59,7 +61,7 @@ class GameHelper:
         return Command(playerId, position_mine, 'mine', number_of_units, None)
 
 
-    #efficient delegation of units when mining - if a tile has resource less than number of units, send the unneeded units to the adjacent free tile with greatest resource; then, build on the tile if it's empty
+    #returns a command at a tile so that - if the tile has resource less than number of units, send the unneeded units to the adjacent free tile with greatest resource; then, build on the tile if it's empty
     def efficient_mine_and_build(self, playerId, position):
         commands = []
 
@@ -145,7 +147,7 @@ class GameHelper:
 
         return Command(playerId, position_from, 'move', number_of_units, direction)
 
-
+    #get the number of buildings belonging to player with playerId
     def get_number_of_buildings_belonging_to_player(self, playerId):
         number_buildings = 0
         i = 0
@@ -160,7 +162,8 @@ class GameHelper:
 
         return number_buildings
 
-    def get_nearest_building_and_distance_belonging_to_player(self, x, y, playerId):
+    #get the position of the nearest building from (x, y) that belongs to a player with playerId
+    def get_nearest_building_position_and_distance_belonging_to_player(self, x, y, playerId):
         if (self.get_number_of_buildings_belonging_to_player(playerId) > 0):
             current_search_distance = 1
 
