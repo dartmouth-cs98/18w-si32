@@ -97,7 +97,6 @@ class GameHelper:
                 for m in range(-1 * current_search_distance, current_search_distance + 1):
                     n = current_search_distance - abs(m)
 
-
                     if (self.get_tile(x + m, y + n).building is not None) & (self.get_tile(x + m, y + n).building.ownerId == playerId):
                         return ((x + m, y + n), current_search_distance)
                     elif (self.get_tile(x + m, y + n).building is not None) & (self.get_tile(x + m, y - n).building.ownerId == playerId):
