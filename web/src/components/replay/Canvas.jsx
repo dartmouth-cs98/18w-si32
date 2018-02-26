@@ -10,21 +10,20 @@ const GRID_OUTLINE_COLOR = 0xec0b43;
 const NEUTRAL_CELL_COLOR = 0x56666b;
 const NEUTRAL_CELL_ALPHA = 0.1;
 
-const ACTIVE_CELL_COLOR = 0xec0b43;
-
 const CELL_OFFSET_X = 1;
 const CELL_OFFSET_Y = 1;
 
-const BORDER_OFFSET_X = 20;
-const BORDER_OFFSET_Y = 20;
+const BORDER_OFFSET_X = 10;
+const BORDER_OFFSET_Y = 10;
 
 const BASE_SCENE_W = 500;
 const BASE_SCENE_H = 500;
 
+// TODO: generalize to n players?
 const COLOR_P0 = 0xec0b43;
 const COLOR_P1 = 0x274c77;
 
-// TODO: calibrate this value 
+// TODO: calibrate this value
 const MAX_UNITS = 5;
 
 class Canvas extends React.PureComponent {
@@ -132,6 +131,9 @@ class Canvas extends React.PureComponent {
     this.renderer.render(this.stage);
 
     // and setup to render again in the future
+    // TODO: how quickly can we clock this and still get a smooth animation?
+    // do we for sure want to do a new frame every timestep of the animation?
+    // or do we maybe want to uncouple these?
     setTimeout(() => requestAnimationFrame(this.animate), 500);
 
     if (this.props.play && (this.props.frame + 1) < this.props.replay.turns.length) {

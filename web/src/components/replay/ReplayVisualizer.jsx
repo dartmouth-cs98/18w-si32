@@ -12,25 +12,42 @@ class ReplayVisualizer extends React.PureComponent {
 
     this.state = {
       play: false,
-      currentFrame: 0
+      currentFrame: 0,
     };
   }
 
   toggleReplayControl = () => {
     this.setState({ play: !this.state.play });
+    if (this.state.currentFrame === (this.props.replay.turns.length - 1)) {
+      // if we have reached the final frame, reset on button click
+      this.setState({ currentFrame: 0 });
+    }
   }
 
   incrementCurrentFrame = () => {
-    this.setState({ currentFrame: this.state.currentFrame + 1 });
+    const nextFrame = this.state.currentFrame + 1
+    this.setState({ currentFrame: nextFrame });
+
+    if ((nextFrame + 1) === this.props.replay.turns.length) {
+      // if we have reached the end of the game
+      this.setState({ play: false });
+    }
   }
 
   render() {
-    const controlButtonText = this.state.play ? "Pause Replay" : "Play Replay"
-    const progressPercentage = this.state.currentFrame === 0 ? 0 : Math.floor(((this.state.currentFrame+1) / this.props.replay.turns.length)*100);
+    let controlButtonText;
+    if (this.state.play) {
+      controlButtonText = "Pause Replay";
+    } else if (this.state.currentFrame == 0 || this.state.currentFrame === (this.props.replay.turns.length - 1)) {
+      controlButtonText = "Start Replay";
+    } else {
+      controlButtonText = "Resume Replay";
+    }
+
+    const progressPercentage = this.state.currentFrame === 0 ? 0 : Math.floor((this.state.currentFrame / (this.props.replay.turns.length - 1  ))*100);
 
     return (
       <div style={styles.wrapper}>
-        <div style={styles.pageHeader}>Game Replay</div>
         <Canvas replay={this.props.replay}
                 frame={this.state.currentFrame}
                 incrementFrame={this.incrementCurrentFrame}
@@ -53,7 +70,7 @@ const styles = {
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    padding: "40px 0 0 0"
+    padding: "10px 0 0 0"
   },
   pageHeader: {
     color: colors.primary,
