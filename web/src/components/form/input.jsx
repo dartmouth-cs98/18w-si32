@@ -1,15 +1,12 @@
 import React from "react";
 import Radium from "radium";
 
-import Color from "color";
 import {
   colors,
   constants,
 } from "../../style";
 
 class Input extends React.PureComponent {
-
-
   render() {
     const {
       kind,
@@ -28,7 +25,7 @@ const styles = {
   base: {
     width: "100%",
     height: constants.INPUT_HEIGHT,
-    fontSize: "16px",
+    fontSize: constants.fontSizes.small,
     padding: 10,
     margin: "10px 0",
     borderColor: colors.border,
