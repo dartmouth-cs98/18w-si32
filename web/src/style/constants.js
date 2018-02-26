@@ -1,6 +1,6 @@
 const NAVBAR_HEIGHT = 54;
 const FOOTER_HEIGHT = 65;
-const INPUT_HEIGHT = 30;
+const INPUT_HEIGHT = 38;
 const BUTTON_HEIGHT = 35;
 
 const BODY_WIDTH = 1280;

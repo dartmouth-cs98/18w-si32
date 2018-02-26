@@ -5,6 +5,8 @@ import Color from "color";
 import Link from "../common/link";
 import Page from "../layout/page";
 import { history } from "../../router";
+import Input from "../form/input";
+import Button from "../common/button";
 import { login } from "../../data/session/sessionActions";
 
 import {
@@ -32,7 +34,10 @@ class LoginPage extends React.PureComponent {
   }
 
   doLogin = (event) => {
-    event.preventDefault();
+    if (event) {
+      event.preventDefault();
+    }
+
     this.props
       .login(this.state.username, this.state.password)
       .then(() => {
@@ -51,16 +56,15 @@ class LoginPage extends React.PureComponent {
         <div style={styles.wrapper}>
           <div style={styles.titleContainer}>Awesome tagline.</div>
           <form style={styles.form} onSubmit={this.doLogin}>
-            <input
+            <Input
               name="username"
               key="username"
               placeholder="Username"
               type="text"
-              style={styles.input}
               value={this.state.username}
               onChange={this.handleInputChange}
             />
-            <input
+            <Input
               name="password"
               key="password"
               placeholder="Password"
@@ -69,10 +73,10 @@ class LoginPage extends React.PureComponent {
               value={this.state.password}
               onChange={this.handleInputChange}
             />
-            <input type="submit"
-                 value="Log In"
-                 style={styles.submitButton}
-            />
+            <input type="submit" style={{display: "none"}} />
+            <Button kind="primary" style={{width: 200}} onClick={this.doLogin}>
+              Log In
+            </Button>
           </form>
           <div style={styles.registerContainer}>
             <span style={styles.registerText}>New to SI32? </span>
@@ -108,38 +112,12 @@ const styles = {
     padding: "15px 0"
   },
   form: {
-    width: "45%",
+    width: "400px",
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
-    alignItems: "center"
-  },
-  input: {
-    width: "100%",
-    height: constants.INPUT_HEIGHT,
-    fontSize: "16px",
-    margin: "10px 0",
-    ":focus": {
-      borderColor: Color(colors.red).lighten(0.7).string(),
-      borderStyle: "solid",
-      borderWidth: "1px"
-    }
-  },
-  submitButton: {
-    width: "50%",
-    height: constants.BUTTON_HEIGHT,
-    margin: "15px 0",
-    backgroundColor: colors.background,
-    color: colors.red,
-    borderWidth: "1px",
-    borderStyle: "solid",
-    borderColor: colors.red,
-    borderRadius: "2px",
-    ":hover": {
-      backgroundColor: colors.red,
-      color: colors.background,
-      cursor: "pointer"
-    }
+    alignItems: "center",
+    marginBottom: 50,
   },
   registerContainer: {
     display: "flex",

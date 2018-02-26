@@ -5,6 +5,8 @@ import Color from "color";
 import Link from "../common/link";
 import Page from "../layout/page";
 import history from "../../history";
+import Input from "../form/input";
+import Button from "../common/button";
 import { register } from "../../data/session/sessionActions";
 
 import {
@@ -33,7 +35,10 @@ class RegisterPage extends React.PureComponent {
   }
 
   doRegister = (event) => {
-    event.preventDefault();
+    if (event) {
+      event.preventDefault();
+    }
+
     this.props.register(this.state.username, this.state.password)
       .then(() => {
         history.push("/dashboard");
@@ -52,28 +57,26 @@ class RegisterPage extends React.PureComponent {
         <div style={styles.wrapper}>
           <div style={styles.titleContainer}>Different awesome tagline.</div>
           <form style={styles.form} onSubmit={this.doRegister}>
-            <input
+            <Input
               name="username"
               key="username"
               placeholder="Username"
               type="text"
-              style={styles.input}
               value={this.state.username}
               onChange={this.handleInputChange}
             />
-            <input
+            <Input
               name="password"
               key="password"
               placeholder="Password"
               type="password"
-              style={styles.input}
               value={this.state.password}
               onChange={this.handleInputChange}
             />
-            <input type="submit"
-                   value="Create Account"
-                   style={styles.submitButton}
-            />
+            <input type="submit" style={{display: "none"}} />
+            <Button kind="primary" style={{width: 200}} onClick={this.doRegister}>
+              Register
+            </Button>
           </form>
           <div style={styles.registerContainer}>
             <span style={styles.registerText}>Have an account?</span>
@@ -105,39 +108,12 @@ const styles = {
     padding: "15px 0"
   },
   form: {
-    width: "45%",
+    width: "400px",
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
-    alignItems: "center"
-  },
-  // TODO we should abstract an <input> into a separate component that defines its own styles
-  input: {
-    width: "100%",
-    height: constants.INPUT_HEIGHT,
-    fontSize: "16px",
-    margin: "10px 0",
-    ":focus": {
-      borderColor: Color(colors.red).lighten(0.7).string(),
-      borderStyle: "solid",
-      borderWidth: "1px"
-    }
-  },
-  submitButton: {
-    width: "50%",
-    height: constants.BUTTON_HEIGHT,
-    margin: "15px 0",
-    backgroundColor: colors.background,
-    color: colors.red,
-    borderWidth: "1px",
-    borderStyle: "solid",
-    borderColor: colors.red,
-    borderRadius: "2px",
-    ":hover": {
-      backgroundColor: colors.red,
-      color: colors.background,
-      cursor: "pointer"
-    }
+    alignItems: "center",
+    marginBottom: 50,
   },
   registerContainer: {
     display: "flex",
