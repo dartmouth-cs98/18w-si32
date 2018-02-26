@@ -46,6 +46,8 @@ const _User = new Schema({
   timestamps: true
 });
 
+_User.index({ rating: -1 });
+
 _User.pre("save", function(next) {
   this.rating = this.trueSkill.mu - 3 * this.trueSkill.sigma;
   next();
