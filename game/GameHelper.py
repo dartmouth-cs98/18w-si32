@@ -35,6 +35,19 @@ class GameHelper:
             return True
         return False
 
+    def get_total_units(self, playerId):
+        count = 0
+        for tile in self.get_occupied_tiles(playerId):
+            count += tile.units[playerId]
+        return count
+
+    def compare_total_units(self, playerId1, playerId2):
+        if (self.get_total_units(playerId1) > self.get_total_units(playerId2)):
+            return True
+        else:
+            return False
+
+
     #functions to return commands of various types
     def move(self, playerId, position_from, number_of_units, direction):
         return Command(playerId, position_from, 'move', number_of_units, direction)
@@ -46,26 +59,31 @@ class GameHelper:
         return Command(playerId, position_mine, 'mine', number_of_units, None)
 
 
-    #efficient delegation of units when mining - if a tile has resource less than number of units, send the unneeded units to the adjacent free tile with greatest resource
-    def efficient_mine(self, playerId, position_mine):
+    #efficient delegation of units when mining - if a tile has resource less than number of units, send the unneeded units to the adjacent free tile with greatest resource; then, build on the tile if it's empty
+    def efficient_mine_and_build(self, playerId, position):
         commands = []
 
-        resource_at_tile = self.get_tile(position_mine[0], position_mine[1]).resource
-        units_at_tile = self.get_tile(position_mine[0], position_mine[1]).units[playerId]
+        resource_at_tile = self.get_tile(position[0], position[1]).resource
+        units_at_tile = self.get_tile(position[0], position[1]).units[playerId]
+
+        #if there's more than enough units, move them to adjacent free tiles
         if (resource_at_tile < units_at_tile):
-            commands.append(self.mine(playerId, position_mine, resource_at_tile))
-            greatest_pos = self.get_free_position_with_greatest_resource_within_range(position_mine[0], position_mine[1], 1)
+            commands.append(self.mine(playerId, position, resource_at_tile))
+            greatest_pos = self.get_free_position_with_greatest_resource_of_range(position[0], position[1], 1)
 
-
+            # if there is a free adjacent tile, move to the one with the greatest resource
             if greatest_pos is not None:
-                direction = (greatest_pos[0] - position_mine[0], greatest_pos[1] - position_mine[1])
-                commands.append(self.move(playerId, position_mine, units_at_tile - resource_at_tile, direction))
+                direction = (greatest_pos[0] - position[0], greatest_pos[1] - position[1])
+                if (position.building is not None):
+                    commands.append(self.move(playerId, position, units_at_tile - resource_at_tile, direction))
+                else:
+                    commands.append(self.move(playerId, position, units_at_tile - resource_at_tile - 1, direction))
+                    commands.append(self.build(playerId, position, 1))
 
+        #else, have them all gather resource, then build
         else:
-            commands.append(self.mine(playerId, position_mine, units_at_tile))
-
-
-
+            commands.append(self.mine(playerId, position, units_at_tile - 1))
+            commands.append(self.build(playerId, position, 1))
 
 
     #makes a single move from position_from that tries to get closer to position_to while avoiding either enemy units, enemy buildings, or stronger enemy buildings
@@ -127,17 +145,6 @@ class GameHelper:
 
         return Command(playerId, position_from, 'move', number_of_units, direction)
 
-    def move_towards_tile_avoiding_things(self, playerId, position_from, position_to, number_of_units, things_to_avoid):
-        commands = []
-        while (position_from != position_to):
-            single_move = self.single_move_towards_tile_avoiding_things(playerId, position_from, position_to, number_of_units, things_to_avoid)
-
-            if (single_move.direction == (0, 0)):
-                commands.clear()
-                break
-
-            commands.append(single_move)
-
 
     def get_number_of_buildings_belonging_to_player(self, playerId):
         number_buildings = 0
@@ -170,7 +177,8 @@ class GameHelper:
         else:
             return None
 
-    def get_free_position_with_greatest_resource_within_range(self, x, y, range):
+    #return the position of the tile with the greatest resource of a specified distance away from a specified tile
+    def get_free_position_with_greatest_resource_of_range(self, x, y, range):
         greatest_resource = 0
         greatest_position = None
         for m in range(-1 * range, range + 1):
