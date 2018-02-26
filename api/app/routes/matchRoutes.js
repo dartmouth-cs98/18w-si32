@@ -2,7 +2,7 @@ const Router = require("koa-router");
 const auth = require("../auth");
 
 const s3 = require("../files/s3");
-const { Bot, Match } = require("../models");
+const { Match } = require("../models");
 
 const { NotFoundError } = require("../errors");
 
@@ -29,8 +29,6 @@ matchRouter.get("/:matchId", async (ctx) => {
   }
 
   match.logUrl = s3.getLogUrl(match.logKey);
-
-  console.log("got", match.logUrl);
 
   ctx.body = match;
 });
