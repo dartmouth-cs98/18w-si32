@@ -8,6 +8,8 @@ const PIXI = require("pixi.js");
 const SCENE_BACKGROUND_COLOR = 0xFFFFFF;
 const GRID_OUTLINE_COLOR = 0xec0b43;
 const NEUTRAL_CELL_COLOR = 0x56666b;
+const NEUTRAL_CELL_ALPHA = 0.1;
+
 const ACTIVE_CELL_COLOR = 0xec0b43;
 
 const CELL_OFFSET_X = 1;
@@ -18,6 +20,11 @@ const BORDER_OFFSET_Y = 20;
 
 const BASE_SCENE_W = 500;
 const BASE_SCENE_H = 500;
+
+const COLOR_P0 = 0xec0b43;
+const COLOR_P1 = 0x274c77;
+
+const MAX_UNITS = 10;
 
 class Canvas extends React.PureComponent {
   constructor(props) {
@@ -84,18 +91,36 @@ class Canvas extends React.PureComponent {
 
   // add the grid to main map graphics
   addGridToStage = () => {
+    // iterate over rows
     for (let i = 0; i < this.sp.rows; i++) {
+      // iterate over columns
       for (let j = 0; j < this.sp.cols; j++) {
-        const cellColor = (i+j == this.frame) ? ACTIVE_CELL_COLOR : NEUTRAL_CELL_COLOR;
-        const cellAlpha = (i+j == this.frame) ? 1 : 0.1;
-        this.mapGraphics.beginFill(cellColor, cellAlpha);
+        const r = this.getCellColorAlpha(i, j);
+        this.mapGraphics.beginFill(r.c, r.a);
 
         const xpos = j * (this.sp.cell_w + CELL_OFFSET_X) + BORDER_OFFSET_X;
         const ypos = i * (this.sp.cell_h + CELL_OFFSET_Y) + BORDER_OFFSET_Y;
+
         this.mapGraphics.drawRect(xpos, ypos, this.sp.cell_w, this.sp.cell_h);
         this.mapGraphics.endFill();
       }
     }
+  }
+
+  getCellColorAlpha = (r, c) => {
+    const units = this.props.replay.turns[this.frame].map[r][c].u
+    if (!units) {
+      return { "c": NEUTRAL_CELL_COLOR, "a": NEUTRAL_CELL_ALPHA };
+    }
+    let color, alpha;
+    if (units[0] > 0) {
+      color = COLOR_P0;
+      alpha = units[0] / MAX_UNITS;
+    } else if (units[1] > 0) {
+      color = COLOR_P1;
+      alpha = units[1] / MAX_UNITS;
+    }
+    return { "c": color, "a": alpha };
   }
 
   // recursively render the stage with renderer
@@ -110,7 +135,9 @@ class Canvas extends React.PureComponent {
     // and setup to render again in the future
     setTimeout(() => requestAnimationFrame(this.animate), 500);
 
-    this.frame = this.props.play ? this.frame + 1 : this.frame;
+    if (this.props.play && (this.frame + 1) < this.props.replay.turns.length) {
+      this.frame++;
+    }
   }
 
   render() {
