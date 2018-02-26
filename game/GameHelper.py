@@ -1,4 +1,5 @@
-from .Command import Command
+from game.Command import Command
+from game.Map import Map
 
 class GameHelper:
     def __init__(self, map, players):
@@ -18,7 +19,7 @@ class GameHelper:
         return self.map.get_tile((x, y)).units[playerId]
 
     #returns True if player with playerId1 has higher unit count at pos1 than player with playerId2 has at pos2
-    def compare_strength(self, pos1, pos2, playerId1, playerId2):
+    def compare_unit_count(self, pos1, pos2, playerId1, playerId2):
         if (self.get_tile(pos1[0], pos1[1]).units[playerId1] < self.get_tile(pos2[0], pos2[1]).units[playerId2]):
             return True
         return False
@@ -61,7 +62,7 @@ class GameHelper:
         return Command(playerId, position_mine, 'mine', number_of_units, None)
 
 
-    #returns a command at a tile so that - if the tile has resource less than number of units, send the unneeded units to the adjacent free tile with greatest resource; then, build on the tile if it's empty
+    #returns a sequence of commands at a tile so that - if the tile has resource less than number of units, send the unneeded units to the adjacent free tile with greatest resource; then, build on the tile if it's empty
     def efficient_mine_and_build(self, playerId, position):
         commands = []
 
