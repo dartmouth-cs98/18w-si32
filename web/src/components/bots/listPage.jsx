@@ -1,7 +1,9 @@
 import React from "react";
 import { connect } from "react-redux";
 
-import { Page, Link, Wrapper } from "../layout";
+import history from "../../history";
+
+import { Page, Link, Wrapper, TitleBar } from "../layout";
 import { fetchBots } from "../../data/bot/botActions";
 
 import BotList from "./BotList";
@@ -15,12 +17,19 @@ class BotListPage extends React.PureComponent {
     this.props.fetchBots();
   }
 
+  createBot = () => {
+    history.push("/bots/create");
+  }
+
   render() {
     return (
       <Page>
+        <TitleBar
+          title="Your Bots"
+          buttonLabel="Create a new bot"
+          buttonAction={this.createBot}
+        />
         <Wrapper>
-          <h1>Your Bots</h1>
-          <Link href="/bots/create">Create a new bot</Link>
           <BotList bots={this.props.bots} />
         </Wrapper>
       </Page>
