@@ -24,7 +24,8 @@ const BASE_SCENE_H = 500;
 const COLOR_P0 = 0xec0b43;
 const COLOR_P1 = 0x274c77;
 
-const MAX_UNITS = 10;
+// TODO: calibrate this value 
+const MAX_UNITS = 5;
 
 class Canvas extends React.PureComponent {
   constructor(props) {
@@ -54,8 +55,6 @@ class Canvas extends React.PureComponent {
 
     // inject the canvas
     this.refs.gameCanvas.appendChild(this.app.view);
-
-    this.frame = 0;
 
     // start the animation
     this.animate();
@@ -108,7 +107,7 @@ class Canvas extends React.PureComponent {
   }
 
   getCellColorAlpha = (r, c) => {
-    const units = this.props.replay.turns[this.frame].map[r][c].u
+    const units = this.props.replay.turns[this.props.frame].map[r][c].u
     if (!units) {
       return { "c": NEUTRAL_CELL_COLOR, "a": NEUTRAL_CELL_ALPHA };
     }
@@ -135,8 +134,8 @@ class Canvas extends React.PureComponent {
     // and setup to render again in the future
     setTimeout(() => requestAnimationFrame(this.animate), 500);
 
-    if (this.props.play && (this.frame + 1) < this.props.replay.turns.length) {
-      this.frame++;
+    if (this.props.play && (this.props.frame + 1) < this.props.replay.turns.length) {
+      this.props.incrementFrame();
     }
   }
 
