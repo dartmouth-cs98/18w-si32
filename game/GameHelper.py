@@ -94,12 +94,15 @@ class GameHelper:
     #makes a single move from position_from that tries to get closer to position_to while avoiding either enemy units, enemy buildings, or stronger enemy buildings
     def single_move_towards_tile_avoiding_things(self, playerId, position_from, position_to, number_of_units, things_to_avoid):
 
+        #returns True if tile at (x, y) contains an enemy building
         def tile_contains_enemy_building(x, y):
             return (self.get_tile(x, y).building is not None) & ((self.get_tile(x, y).building.ownerId + playerId) == 1)
 
+        #returns True if tile at (x, y) contains an enemy building whose defense value is higher than the number of our units to command
         def tile_contains_stronger_enemy_building(x, y):
             return (self.get_tile(x, y).building is not None) & ((self.get_tile(x, y).building.ownerId + playerId) == 1) & (self.get_tile(x, y).building.defense >= number_of_units)
 
+        #returns True of tile at (x, y) contains enemy units
         def tile_contains_enemy_units(x, y):
             return self.get_tile(x, y).units[(playerId ^ 1)] > 0
 
