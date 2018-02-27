@@ -1,12 +1,12 @@
 import json
-from .Command import Command
-from .Game import Game
-from .Player import Player
-from .Map import Map
-from .Tile import Tile
-from .Rules import Rules
-from .Logger import Logger
-from .json_helpers import json_to_object_list
+from game.Command import Command
+from game.Game import Game
+from game.Player import Player
+from game.Map import Map
+from game.Tile import Tile
+from game.Rules import Rules
+from game.Logger import Logger
+from game.json_helpers import json_to_object_list
 
 class Game_state(Game):
 
@@ -183,7 +183,7 @@ def sort_moves(moves):
     return sorted_moves
 
 
-# test = Game_state([1,2])
+#test = Game_state([1,2])
 
 # moves = self.get_random_player_moves()
 

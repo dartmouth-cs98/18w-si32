@@ -1,4 +1,6 @@
-from .Command import Command
+from game.Command import Command
+from game.Map import Map
+from game.Building import resource_cost
 
 class GameHelper:
     def __init__(self, map, players):
@@ -18,7 +20,7 @@ class GameHelper:
         return self.map.get_tile((x, y)).units[playerId]
 
     #returns True if player with playerId1 has higher unit count at pos1 than player with playerId2 has at pos2
-    def compare_strength(self, pos1, pos2, playerId1, playerId2):
+    def compare_unit_count(self, pos1, pos2, playerId1, playerId2):
         if (self.get_tile(pos1[0], pos1[1]).units[playerId1] < self.get_tile(pos2[0], pos2[1]).units[playerId2]):
             return True
         return False
@@ -61,7 +63,7 @@ class GameHelper:
         return Command(playerId, position_mine, 'mine', number_of_units, None)
 
 
-    #returns a command at a tile so that - if the tile has resource less than number of units, send the unneeded units to the adjacent free tile with greatest resource; then, build on the tile if it's empty
+    #returns a sequence of commands at a tile so that - if the tile has resource less than number of units, send the unneeded units to the adjacent free tile with greatest resource; then, build on the tile if it's empty
     def efficient_mine_and_build(self, playerId, position):
         commands = []
 
@@ -76,13 +78,14 @@ class GameHelper:
             # if there is a free adjacent tile, move to the one with the greatest resource
             if greatest_pos is not None:
                 direction = (greatest_pos[0] - position[0], greatest_pos[1] - position[1])
-                if (position.building is not None):
+                #build if there's room on the tile
+                if (position.building is not None) | (self.players[playerId].resource < resource_cost):
                     commands.append(self.move(playerId, position, units_at_tile - resource_at_tile, direction))
                 else:
                     commands.append(self.move(playerId, position, units_at_tile - resource_at_tile - 1, direction))
                     commands.append(self.build(playerId, position, 1))
 
-        #else, have them all gather resource, then build
+        #else, have them all (minus one) gather resource, then build
         else:
             commands.append(self.mine(playerId, position, units_at_tile - 1))
             commands.append(self.build(playerId, position, 1))
@@ -91,12 +94,15 @@ class GameHelper:
     #makes a single move from position_from that tries to get closer to position_to while avoiding either enemy units, enemy buildings, or stronger enemy buildings
     def single_move_towards_tile_avoiding_things(self, playerId, position_from, position_to, number_of_units, things_to_avoid):
 
+        #returns True if tile at (x, y) contains an enemy building
         def tile_contains_enemy_building(x, y):
             return (self.get_tile(x, y).building is not None) & ((self.get_tile(x, y).building.ownerId + playerId) == 1)
 
+        #returns True if tile at (x, y) contains an enemy building whose defense value is higher than the number of our units to command
         def tile_contains_stronger_enemy_building(x, y):
             return (self.get_tile(x, y).building is not None) & ((self.get_tile(x, y).building.ownerId + playerId) == 1) & (self.get_tile(x, y).building.defense >= number_of_units)
 
+        #returns True of tile at (x, y) contains enemy units
         def tile_contains_enemy_units(x, y):
             return self.get_tile(x, y).units[(playerId ^ 1)] > 0
 
@@ -196,6 +202,7 @@ class GameHelper:
                 greatest_position = self.get_tile(x + m, y - n).position
 
         return (greatest_resource, greatest_position)
+
 
 
 

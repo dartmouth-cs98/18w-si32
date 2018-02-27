@@ -41,24 +41,26 @@ class ReplayReader extends React.PureComponent {
 
   setupFileReader = () => {
     const reader = new FileReader();
-    reader.onload = (f) => {
-      let result;
-      try {
-        result = JSON.parse(f.target.result);
-      } catch(SyntaxError) {
-        // thrown by failed JSON.parse()
-        this.setState({ showBadFileModal: true });
-        return;
-      }
-
-      if (this.verifyReplayFile(result)) {
-        this.props.setReplayFile(result);
-      } else {
-        this.setState({ showBadFileModal: true });
-      }
-    };
-
+    reader.onload = this.onFileReaderLoad;
     return reader;
+  };
+
+  // file reader callback
+  onFileReaderLoad = (f) => {
+    let result;
+    try {
+      result = JSON.parse(f.target.result);
+    } catch(SyntaxError) {
+      // thrown by failed JSON.parse()
+      this.setState({ showBadFileModal: true });
+      return;
+    }
+
+    if (this.verifyReplayFile(result)) {
+      this.props.setReplayFile(result);
+    } else {
+      this.setState({ showBadFileModal: true });
+    }
   };
 
   // TODO: more rigorous file verification
@@ -75,7 +77,7 @@ class ReplayReader extends React.PureComponent {
 
   closeBadFileModal = () => {
     this.setState({ showBadFileModal: false });
-  }
+  };
 
   handleDragEnter = (event) => {
     event.stopPropagation();
