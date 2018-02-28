@@ -13,7 +13,11 @@ class MatchSinglePage extends React.PureComponent {
   componentDidMount() {
     this.props.fetchMatch().then(res => {
       // load the game log from S3
-      return fetchLog(res.body.logUrl);
+      if (res.body.logUrl) {
+        return fetchLog(res.body.logUrl);
+      } else {
+        return {};
+      }
     }).then(log => {
       this.setState({ log });
     });
