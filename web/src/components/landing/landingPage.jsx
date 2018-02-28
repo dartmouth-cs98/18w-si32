@@ -2,6 +2,9 @@ import React from "react";
 import { connect } from "react-redux";
 
 import Page from "../layout/page";
+import Canvas from "../replay/Canvas";
+
+const game = require("./game.json");
 
 class LandingPage extends React.PureComponent {
   constructor(props) {
@@ -12,7 +15,7 @@ class LandingPage extends React.PureComponent {
     return (
       <Page>
         <div style={styles.wrapper}>
-          Landing Page Content
+          <Canvas replay={game} />
         </div>
       </Page>
     );
