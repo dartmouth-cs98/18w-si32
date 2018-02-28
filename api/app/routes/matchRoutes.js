@@ -28,7 +28,9 @@ matchRouter.get("/:matchId", async (ctx) => {
     throw new NotFoundError("couldn't find that match");
   }
 
-  match.logUrl = s3.getLogUrl(match.logKey);
+  if (match.status == "DONE") {
+    match.logUrl = s3.getLogUrl(match.logKey);
+  }
 
   ctx.body = match;
 });

@@ -23,8 +23,7 @@ class BotSinglePage extends React.PureComponent {
 
   // when upload button pressed, open the file input
   uploadNewBot = () => {
-    const fileInput = document.getElementById("botfile");
-    fileInput.click();
+    this.input.click();
   }
 
   submit = (event) => {
@@ -37,13 +36,13 @@ class BotSinglePage extends React.PureComponent {
   render() {
     return (
       <Page>
-        <input id="botfile" type="file" style={styles.inputFile} onChange={this.handleFileChange} />
         <TitleBar
           title={this.props.bot.name}
           right={`v${this.props.bot.version}`}
           buttonLabel={(this.props.userId == this.props.bot.user) && "Upload a new version"}
           buttonAction={this.uploadNewBot}
         />
+        <input ref={(input) => this.input = input} type="file" style={styles.inputFile} onChange={this.handleFileChange} />
         <Wrapper>
         </Wrapper>
       </Page>
@@ -57,6 +56,7 @@ const styles = {
     height: 0,
     position: "absolute",
     top: -10,
+    display: "none",
     left: -10,
   }
 };
