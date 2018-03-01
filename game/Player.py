@@ -59,6 +59,19 @@ class Player:
 
         return tiles
 
+    def get_buildings(self):
+        tiles = []
+
+        for col in self.map.tiles:
+            for tile in col:
+                if tile.building and tile.building.ownerId == self.playerId:
+                    tiles.append(tile)
+
+        return tiles
+
+    def has_building(self):
+        return len(self.get_buildings()) > 0
+
     def increment_units_produced(self):
         self.units_produced += 1
 
