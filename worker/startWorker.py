@@ -13,6 +13,7 @@ gameClasses = {
 def run_worker():
     while True:
         log = False
+
         # get the next game
         (botSpecs, gameType, matchId) = pollUntilGameReady()
 
@@ -33,6 +34,10 @@ def run_worker():
             log = game.get_log()
 
             print("Got results.")
+            
+            # send the results back to the server
+            post_match_success(matchId, game.get_log())
+
         except Exception as err:
             print("GAME ERR")
             print(err)
@@ -50,7 +55,5 @@ def run_worker():
 
         print("Done cleaning up.")
 
-        # send the results back to the server
-        post_match_success(matchId, game.get_log())
 
 run_worker()
