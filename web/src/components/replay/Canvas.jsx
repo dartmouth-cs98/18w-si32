@@ -5,7 +5,7 @@ import { colors } from "../../style";
 
 const PIXI = require("pixi.js");
 
-const TICK_SPEED = 300;
+const TICK_SPEED = 30;
 
 const SCENE_BACKGROUND_COLOR = 0xFFFFFF;
 const GRID_OUTLINE_COLOR = 0xec0b43;

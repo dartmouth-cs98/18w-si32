@@ -90,8 +90,6 @@ class Rules:
 
                     if self.opposite_direction(current_move.direction, enemy_move.direction):
 
-                        print('collision detected')
-
                         current_tile = self.map.get_tile(tile.position)
                         enemy_tile = self.map.get_tile(enemy_move.tile.position)
 

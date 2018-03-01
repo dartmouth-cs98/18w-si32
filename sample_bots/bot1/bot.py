@@ -16,8 +16,23 @@ while True:
 
     units = game.get_my_units()
 
-    for s in units:
-        commands.append(game.create_move_command(s.position,'down', 1))
+    nUnits = game.get_total_units()
+
+    if nUnits < 11:
+        buildings = game.my_buildings()
+        if len(buildings) > 0:
+            for s in units:
+                m = game.move_towards(s.position,buildings[0].position)
+                if m:
+                    commands.append(m)
+    else:
+        buildings = game.enemy_buildings()
+        if len(buildings) > 0:
+            for s in units:
+                m = game.move_towards(s.position,buildings[0].position)
+                if m:
+                    commands.append(m)
+
 
     # done for this turn, send all my commands
     game.send_commands(commands)
