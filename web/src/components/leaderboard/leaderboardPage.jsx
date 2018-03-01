@@ -33,9 +33,6 @@ class LeaderboardPage extends React.PureComponent {
       this.props.fetchGroup();
     }
 
-    console.log(groupId);
-    console.log(groupLabel);
-
     this.props.setSelectedGroup(groupId, groupLabel);
     this.setState({
       selectedGroup: {
@@ -52,7 +49,6 @@ class LeaderboardPage extends React.PureComponent {
     }
 
     if (nextProps.id !== this.props.id) {
-      console.log(`refetching with id ${nextProps.id}`);
       this.props.fetchGroupRank(nextProps.id, this.props.user._id);
       if (nextProps.id !== "global") {
         this.props.fetchGroup(nextProps.id);
@@ -62,13 +58,6 @@ class LeaderboardPage extends React.PureComponent {
     if (nextProps.group.name !== this.props.group.name) {
       const label = nextProps.id === "global" ? "Global" : nextProps.group.name;
       this.props.setSelectedGroup(this.props.selectedGroup.id, label);
-
-      // this.setState({
-      //   selectedGroup: {
-      //     ...this.state.selectedGroup,
-      //     label: nextProps.group.name
-      //   }
-      // });
     }
 
   }
