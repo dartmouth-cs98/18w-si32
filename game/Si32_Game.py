@@ -6,7 +6,6 @@ from game.Map import Map
 from game.Tile import Tile
 from game.Rules import Rules
 from game.Logger import Logger
-from game.json_helpers import json_to_object_list
 
 class Game_state(Game):
 
@@ -139,8 +138,6 @@ class Game_state(Game):
     # ---------------- PLAYER MOVES FUNCTIONS ----------------
 
     def execute_moves(self, moves):
-        #moves = json_to_object_list(moves, 'move')
-
         for move in moves:
             self.execute_move(move)
 

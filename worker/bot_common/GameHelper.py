@@ -17,7 +17,6 @@ class GameHelper:
     def __init__(self):
         # first thing the game server sends us through STDIN is our player id
         self.myId = pickle.load(sys.stdin.buffer)
-        pass
 
     # reads in the game state and loads it
     def load_state(self):

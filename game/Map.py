@@ -1,4 +1,3 @@
-import json
 from .Tile import Tile
 
 width = 50  # width of map
@@ -75,12 +74,9 @@ class Map:
 
         return tiles
 
-    def to_json(self):
-        return json.dumps(self.get_state(), default=lambda o: o.__dict__)
-
     # returns only the state we care about for the game log
     def get_state(self):
         return self.tiles
-        
+
     def __str__(self):
         return str(self.tiles)

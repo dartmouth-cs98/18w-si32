@@ -1,4 +1,3 @@
-import json
 from .Tile import Tile
 
 class Command:
@@ -17,9 +16,6 @@ class Command:
 
     def increment_units(self, number):
         self.number_of_units += number
-
-    def to_json(self):  # turns command into json object for stdstreams
-        return json.dumps(self, default=lambda o: o.__dict__)
 
     @classmethod
     def from_dict(cls, playerId, d):
