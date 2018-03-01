@@ -1,6 +1,7 @@
 from random import random, randint
 import json
 from .Command import Command
+import pickle
 
 starting_distance = 30
 
@@ -21,9 +22,8 @@ class Player:
         starting_tile.increment_units(playerId)
 
 
-    def send_state(self):
-        self.bot.write(self.map.to_json())
-        self.bot.write("\n")
+    def send_state(self, players):
+        self.bot.write_binary(pickle.dumps(self.map))
 
     def get_move(self):
         # read a turn from the bot
@@ -33,7 +33,7 @@ class Player:
         # parse out the moves for this turn
         try:
             move_list = json.loads(move_str)
-            commands = [ Command.from_dict(d) for d in move_list ]
+            commands = [ Command.from_dict(self.playerId, d) for d in move_list ]
         except Exception as err:
             print(err)
             # TODO: if invalid command sent, should probably just kick this noob out of the game

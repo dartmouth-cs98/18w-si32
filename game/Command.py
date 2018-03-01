@@ -22,8 +22,8 @@ class Command:
         return json.dumps(self, default=lambda o: o.__dict__)
 
     @classmethod
-    def from_dict(cls, d):
-        return cls(d["playerId"], d["location"], d["command"], d["number_of_units"], d["direction"])
+    def from_dict(cls, playerId, d):
+        return cls(playerId, d["location"], d["command"], d["number_of_units"], d["direction"])
 
     def __str__(self):
         return "Player "+str(self.playerId) + " moving " + str(self.number_of_units) + " units from tile " + str(self.position) + " in direction " + str(self.direction)

@@ -38,6 +38,9 @@ class Logger:
                         cleaned_cell['u'] = copy(c.units)
                         break
 
+                if c.building:
+                    cleaned_cell['b'] = c.building.ownerId
+
                 if len(cleaned_cell) == 0:
                     cleaned_cell = None
 
@@ -75,6 +78,9 @@ class Logger:
 
     def get_log(self):
         return gzip.compress(msgpack.packb(self.log))
+
+    def get_raw_log(self):
+        return json.dumps(self.log)
 
     def write(self, fileName=None):
         if not fileName:
