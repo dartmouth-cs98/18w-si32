@@ -49,7 +49,7 @@ class DockerBot(Bot):
         get_bot_file(self.codeUrl, self.playerNum)
 
         # copy everything from bot_common (provided helpers, etc.) into bot dir
-        call("cp bot_common/* /bot%d" % self.playerNum, shell=True)
+        call("cp -R -L bot_common/* /bot%d" % self.playerNum, shell=True)
 
     def run(self):
         command = ["docker", "run", "-i",
