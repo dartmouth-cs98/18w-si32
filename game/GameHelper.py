@@ -16,7 +16,7 @@ class GameHelper:
         return self.map.get_tile((x, y))
 
     #get the number of units at specified square of specified player
-    def get_player_units(self, x, y, playerId):
+    def get_number_of_units__of_player_at_tile(self, x, y, playerId):
         return self.map.get_tile((x, y)).units[playerId]
 
     #returns True if player with playerId1 has higher unit count at pos1 than player with playerId2 has at pos2
@@ -38,7 +38,7 @@ class GameHelper:
         return False
 
     # gets the total number of units controlled by player with playerId
-    def get_total_units(self, playerId):
+    def get_total_number_of_units_of_player(self, playerId):
         count = 0
         for tile in self.get_occupied_tiles(playerId):
             count += tile.units[playerId]
@@ -46,7 +46,7 @@ class GameHelper:
 
     #returns True if player with playerId1 has more units than player with playerId2
     def compare_total_units(self, playerId1, playerId2):
-        if (self.get_total_units(playerId1) > self.get_total_units(playerId2)):
+        if (self.get_total_number_of_units_of_player(playerId1) > self.get_total_number_of_units_of_player(playerId2)):
             return True
         else:
             return False
@@ -163,7 +163,7 @@ class GameHelper:
                 if self.get_tile(i, j).building.ownerId == playerId:
                     number_buildings += 1
 
-            i += 1
+                i += 1
             j += 1
 
         return number_buildings
