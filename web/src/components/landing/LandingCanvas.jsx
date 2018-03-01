@@ -16,8 +16,7 @@ const CELL_OFFSET_Y = 2;
 const CELLS_IN_ROW = 12;
 const CELLS_IN_COL = 12;
 
-const COLOR_P0 = 0xec0b43;
-const COLOR_P1 = 0x274c77;
+const ACTIVE_CELL_COLOR = 0xec0b43;
 
 // TODO: can we abstract this out so it is only done in one place,
 // and always recomputed on resize
@@ -32,6 +31,8 @@ class LandingCanvas extends React.PureComponent {
     super(props);
 
     this.animate = this.animate.bind(this);
+    this.toBeMapped = null;
+    this.active = {};
   }
 
   componentDidMount() {
@@ -52,14 +53,9 @@ class LandingCanvas extends React.PureComponent {
     // create the root graphics and add it as child of the stage
     this.mapGraphics = new PIXI.Graphics();
     this.mapGraphics.interactive = true;
-    this.mapGraphics.hitArea = new PIXI.Rectangle(0, 0, pageWidth, pageHeight);
 
-    this.mapGraphics.mouseover = () => {
-      this.alpha = 1.0;
-    }
-
-    this.mapGraphics.mouseout = () => {
-      this.alpha = 0.1;
+    this.mapGraphics.click = (event) => {
+      this.toBeMapped = event.data.global;
     }
 
     this.stage.addChild(this.mapGraphics);
@@ -83,10 +79,16 @@ class LandingCanvas extends React.PureComponent {
     this.sp.h = CELLS_IN_COL * (this.sp.cell_h + CELL_OFFSET_Y);
   }
 
-  getCellColor = (x, y) => {
+  cellContainsPoint = (cX, cY, pX, pY) => {
+    return pX > cX && pX < cX + this.sp.cell_w && pY > cY && pY < cY + this.sp.cell_h;
+  }
+
+  getCellColor = (x, y, j, i) => {
     const m = this.renderer.plugins.interaction.mouse.global;
-    if (m.x > x && m.x < x + this.sp.cell_w && m.y > y && m.y < y + this.sp.cell_h) {
-      return COLOR_P0;
+    if (this.cellContainsPoint(x, y, m.x, m.y)) {
+      return ACTIVE_CELL_COLOR;
+    } else if (this.active[`${j} ${i}`]) {
+      return ACTIVE_CELL_COLOR;
     } else {
       return NEUTRAL_CELL_COLOR;
     }
@@ -101,12 +103,17 @@ class LandingCanvas extends React.PureComponent {
         const xpos = j * (this.sp.cell_w + CELL_OFFSET_X);
         const ypos = i * (this.sp.cell_h + CELL_OFFSET_Y);
 
-        const r = this.getCellColor(xpos, ypos);
+        const r = this.getCellColor(xpos, ypos, j, i);
 
         this.mapGraphics.beginFill(r, NEUTRAL_CELL_ALPHA);
 
         this.mapGraphics.drawRect(xpos, ypos, this.sp.cell_w, this.sp.cell_h);
         this.mapGraphics.endFill();
+
+        if (this.toBeMapped && this.cellContainsPoint(xpos, ypos, this.toBeMapped.x, this.toBeMapped.y)) {
+          this.active[`${j} ${i}`] = true;
+          this.toBeMapped = null;
+        }
       }
     }
   }
@@ -123,6 +130,7 @@ class LandingCanvas extends React.PureComponent {
     // do we for sure want to do a new frame every timestep of the animation?
     // or do we maybe want to uncouple these?
     requestAnimationFrame(this.animate);
+    //setTimeout(() => requestAnimationFrame(this.animate), 500)
 
     if (this.props.play && (this.props.frame + 1) < this.props.replay.turns.length) {
       this.props.incrementFrame();

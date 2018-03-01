@@ -22,7 +22,8 @@ const styles = {
     marginRight: "auto",
     display: "flex",
     flexDirection: "column",
-    alignItems: "center"
+    alignItems: "center",
+    position: "relative"
   }
 };
 
