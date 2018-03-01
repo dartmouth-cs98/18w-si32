@@ -1,6 +1,7 @@
 import React from "react";
 import Radium from "radium";
 import _ from "lodash";
+
 import Link from "../common/link";
 import Button from "../common/button";
 import { Wrapper } from "../layout/wrappers";
@@ -14,7 +15,7 @@ const HeaderStatsBar = ({ user }) => (
       <div style={styles.statRow}>
         <span style={styles.stat}>{user.trueSkill.mu.toFixed(1)}</span>
         <span style={styles.adjustment}>
-          <span style={colorStyles.green}>+14</span> since last week
+          <span style={colorStyles.green}>&uarr;14</span> since last week
         </span>
       </div>
 
@@ -46,9 +47,10 @@ const HeaderStatsBar = ({ user }) => (
 
 const styles = {
   wrapper: {
+    width: "100%",
     backgroundColor: colors.sand,
     paddingTop: 20,
-    paddingBottom: 20,
+    paddingBottom: 20
   },
   inner: {
     display: "flex",
@@ -64,7 +66,8 @@ const styles = {
   },
   statRow: {
     display: "flex",
-    justifyContent: "space-between",
+    flexDirection: "row",
+    justifyContent: "flex-start",
     alignItems: "center",
   },
   stat: {
@@ -72,6 +75,7 @@ const styles = {
   },
   adjustment: {
     color: colors.lightGray,
+    paddingLeft: "5px"
   },
   action: {
     width: 200,

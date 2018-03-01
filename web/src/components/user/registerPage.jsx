@@ -53,7 +53,7 @@ class RegisterPage extends React.PureComponent {
 
   render() {
     return (
-      <Page>
+      <Page style={styles.pageStyles}>
         <div style={styles.wrapper}>
           <div style={styles.titleContainer}>Different awesome tagline.</div>
           <form style={styles.form} onSubmit={this.doRegister}>
@@ -94,6 +94,9 @@ class RegisterPage extends React.PureComponent {
 }
 
 const styles = {
+  pageStyles: {
+    justifyContent: "center"
+  },
   wrapper: {
     width: "100%",
     height: "100%",
@@ -101,7 +104,6 @@ const styles = {
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    paddingBottom: "20%"
   },
   titleContainer: {
     fontSize: "30px",
