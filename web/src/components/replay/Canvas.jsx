@@ -5,6 +5,8 @@ import { colors } from "../../style";
 
 const PIXI = require("pixi.js");
 
+const TICK_SPEED = 300;
+
 const SCENE_BACKGROUND_COLOR = 0xFFFFFF;
 const GRID_OUTLINE_COLOR = 0xec0b43;
 const NEUTRAL_CELL_COLOR = 0x56666b;
@@ -16,12 +18,19 @@ const CELL_OFFSET_Y = 1;
 const BORDER_OFFSET_X = 10;
 const BORDER_OFFSET_Y = 10;
 
-const BASE_SCENE_W = 500;
-const BASE_SCENE_H = 500;
+const BASE_SCENE_W = 600;
+const BASE_SCENE_H = 600;
 
 // TODO: generalize to n players?
 const COLOR_P0 = 0xec0b43;
 const COLOR_P1 = 0x274c77;
+
+const getPlayerColor = (playerN) => {
+  if (playerN == 0) {
+    return COLOR_P0;
+  }
+  return COLOR_P1;
+};
 
 // TODO: calibrate this value
 const MAX_UNITS = 5;
@@ -106,7 +115,12 @@ class Canvas extends React.PureComponent {
   }
 
   getCellColorAlpha = (r, c) => {
-    const units = this.props.replay.turns[this.props.frame].map[r][c].u
+    const building = this.props.replay.turns[this.props.frame].map[r][c].b;
+    if (building != undefined) {
+      return { "c": getPlayerColor(building), "a": 1 };
+    }
+
+    const units = this.props.replay.turns[this.props.frame].map[r][c].u;
     if (!units) {
       return { "c": NEUTRAL_CELL_COLOR, "a": NEUTRAL_CELL_ALPHA };
     }
@@ -134,7 +148,7 @@ class Canvas extends React.PureComponent {
     // TODO: how quickly can we clock this and still get a smooth animation?
     // do we for sure want to do a new frame every timestep of the animation?
     // or do we maybe want to uncouple these?
-    setTimeout(() => requestAnimationFrame(this.animate), 500);
+    setTimeout(() => requestAnimationFrame(this.animate), TICK_SPEED);
 
     if (this.props.play && (this.props.frame + 1) < this.props.replay.turns.length) {
       this.props.incrementFrame();

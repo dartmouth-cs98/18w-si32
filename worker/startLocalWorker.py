@@ -5,9 +5,11 @@ from waitForGame import pollUntilGameReady
 from endpoints import post_match_success
 from time import sleep
 
+from game.Si32_Game import Game_state
+
 
 gameClasses = {
-    'SimpleGame': SimpleGame
+    'SimpleGame': Game_state
 }
 
 # called whenever there would be a game that this worker needs to run
@@ -15,7 +17,7 @@ def run_worker():
     bots = []
     try:
         while True:
-            (botNumToPlayerIds, gameType) = pollUntilGameReady()
+            (botNumToPlayerIds, gameType, matchId) = pollUntilGameReady()
 
             # setupBots()
             bots = [
@@ -25,13 +27,15 @@ def run_worker():
 
             game = gameClasses[gameType](bots)
 
-            result = game.start()
+            game.start()
+
+            log = game.get_log()
+
+
+            post_match_success(matchId, log)
 
             for bot in bots:
                 bot.cleanup()
-
-            post_match_success(botNumToPlayerIds, result)
-
 
             sleep(10)
     except KeyboardInterrupt: # we want to make it so pressing ctrl-c will cleanup the bots

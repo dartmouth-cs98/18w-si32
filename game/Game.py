@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 import sys
 from subprocess import Popen, PIPE
+import pickle
 
 class Game(ABC):
     def __init__(self, bots):
@@ -12,15 +13,17 @@ class Game(ABC):
         for b in bots:
             b.run()
 
-        for b in bots:
-            print(b.read())
-            sys.stdout.flush()
-
         for i, b in enumerate(bots):
-            b.write("%d\n" % (i))
+            b.write_binary(pickle.dumps(i))
 
         super().__init__()
 
+    @abstractmethod
+    def get_log(self):
+        pass
+
+    def get_raw_log(self):
+        return self.logger.get_raw_log()
 
     @abstractmethod
     def start(self):

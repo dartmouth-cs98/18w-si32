@@ -6,7 +6,6 @@ from game.Map import Map
 from game.Tile import Tile
 from game.Rules import Rules
 from game.Logger import Logger
-from game.json_helpers import json_to_object_list
 
 class Game_state(Game):
 
@@ -43,8 +42,13 @@ class Game_state(Game):
     def initialize_players(self, bots, map):  # initalizes players
         i = 0
         self.players = []
-        for i, bot in enumerate(bots):
-            self.players.append(Player(i, self.map, bot, (i*5, i*5)))
+
+        # hardcoded for two bots
+        self.players.append(Player(0, self.map, bots[0], (5, 5)))
+        self.players.append(Player(1, self.map, bots[1], (45, 45)))
+
+        self.map.get_tile((4,4)).create_building(0)
+        self.map.get_tile((46,46)).create_building(1)
 
     # ------------------ Main Functions ---------------------
     def start(self):
@@ -69,7 +73,7 @@ class Game_state(Game):
     # send all players the updated game state so they can make decisions
     def send_state(self):
         for p in self.players:
-            p.send_state()
+            p.send_state(self.players)
 
     # read all moves from the players and update state accordingly
     def read_moves(self):
@@ -134,8 +138,6 @@ class Game_state(Game):
     # ---------------- PLAYER MOVES FUNCTIONS ----------------
 
     def execute_moves(self, moves):
-        #moves = json_to_object_list(moves, 'move')
-
         for move in moves:
             self.execute_move(move)
 
