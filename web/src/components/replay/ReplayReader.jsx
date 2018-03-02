@@ -1,5 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
+import Radium from "radium";
 import Modal from "react-modal";
 import Color from "color";
 
@@ -152,18 +153,16 @@ class ReplayReader extends React.PureComponent {
     const fileSelectButton = this.state.dragOver ? null : this.renderFileSelectButton();
 
     return (
-      <Page>
-        <div style={styles.wrapper}>
-          {this.renderBadFileModal()}
-          <div style={styles.uploadHeader}>Replay Your Bot</div>
+      <div style={styles.wrapper}>
+        {this.renderBadFileModal()}
+        <div style={styles.uploadHeader}>Replay Your Bot</div>
 
-          <div style={{...styles.dropZoneBase, ...dropZoneCnd}} id="dropZone">
-            {fileSelectButton}
-            Drop a Replay File to Upload
-          </div>
-
+        <div style={{...styles.dropZoneBase, ...dropZoneCnd}} id="dropZone">
+          {fileSelectButton}
+          Drop a Replay File to Upload
         </div>
-      </Page>
+
+      </div>
     );
   }
 }
@@ -255,4 +254,4 @@ const styles = {
   }
 };
 
-export default connect(null, null)(ReplayReader);
+export default connect(null, null)(Radium(ReplayReader));
