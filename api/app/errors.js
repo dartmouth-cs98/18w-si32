@@ -1,7 +1,5 @@
 const assert = require("assert");
 
-const AssertionError = assert.AssertionError;
-
 // for when authenticated user attempts to do something they're not allowed to
 class AccessError extends Error {
   getStatus() {
@@ -39,7 +37,6 @@ const errorMap = {
 // if error is a built-in error, and we're mapping it onto something, return the mapping
 // otherwise just pass through the original error
 const handleBuiltInError = (err) => {
-  console.log(err.constructor.name);
   if (err.constructor.name in errorMap) {
     return new errorMap[err.constructor.name](err.message);
   }
