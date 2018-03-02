@@ -27,13 +27,15 @@ class _Button extends React.PureComponent {
   }
 
   render() {
-    const { style, kind, href, size, children } = this.props;
+    const { style, kind, href, size, children, disabled } = this.props;
+    console.log(disabled);
     return (
       // using anchor to be able to get native browser behavior when we want it
       <a href={href} onClick={this.onClick} style={[
         styles.base.wrapper,
         styles[kind].wrapper,
         (styles[kind][size] || {}).wrapper,
+        disabled ? styles.disabled : null,
         style
       ]}>
         <span style={[styles.base.inner, styles[kind].inner]}>
@@ -112,6 +114,10 @@ const styles = {
     },
     inner: {
     },
+  },
+  disabled: {
+    opacity: .3,
+    pointerEvents: "none",
   },
 };
 

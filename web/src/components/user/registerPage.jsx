@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import Color from "color";
 
 import Link from "../common/link";
+import Message from "../common/message";
 import Page from "../layout/page";
 import history from "../../history";
 import Input from "../form/input";
@@ -39,15 +40,23 @@ class RegisterPage extends React.PureComponent {
       event.preventDefault();
     }
 
+    this.setState({
+      submitting: true,
+      error: false,
+    });
+
     this.props.register(this.state.username, this.state.password)
       .then(() => {
         history.push("/dashboard");
       })
       .catch((err) => {
-        /* eslint-disable no-console */
-        console.log(err);
-        console.log("FAIL");
-        /* eslint-enable no-console */
+        this.setState({
+          error: err.response.body.error
+        });
+      }).finally(() => {
+        this.setState({
+          submitting: false,
+        });
       });
   }
 
@@ -57,6 +66,7 @@ class RegisterPage extends React.PureComponent {
         <div style={styles.wrapper}>
           <div style={styles.titleContainer}>Different awesome tagline.</div>
           <form style={styles.form} onSubmit={this.doRegister}>
+            <Message kind="error">{ this.state.error }</Message>
             <Input
               name="username"
               key="username"
@@ -74,8 +84,8 @@ class RegisterPage extends React.PureComponent {
               onChange={this.handleInputChange}
             />
             <input type="submit" style={{display: "none"}} />
-            <Button kind="primary" style={{width: 200}} onClick={this.doRegister}>
-              Register
+            <Button kind="primary" style={{width: 200}} onClick={this.doRegister} disabled={this.state.submitting || !this.state.username || !this.state.password}>
+              { this.state.submitting ? "Registering...": "Register" }
             </Button>
           </form>
           <div style={styles.registerContainer}>

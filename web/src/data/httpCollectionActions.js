@@ -25,6 +25,7 @@ const httpGetAction = (collectionName, endpoint, params, options={}) => (dispatc
     }).catch(err => {
       // TODO what to do in the store here?
       console.log("HTTP error", collectionName, endpoint, params, err); // eslint-disable-line
+      return Promise.reject(err);
     });
 };
 
@@ -45,6 +46,7 @@ const httpPostAction = (collectionName, endpoint, body={}, options={}) => (dispa
     }).catch(err => {
       // TODO what to do in the store here?
       console.log("HTTP error", collectionName, endpoint, body, err); // eslint-disable-line
+      return Promise.reject(err);
     });
 };
 
@@ -65,6 +67,7 @@ const httpPutAction = (collectionName, endpoint, body={}, options={}) => (dispat
     }).catch(err => {
       // TODO what to do in the store here?
       console.log("HTTP error", collectionName, endpoint, body, err); // eslint-disable-line
+      return Promise.reject(err);
     });
 };
 
@@ -90,6 +93,7 @@ const httpPutActionMultipleUpdate = (collectionNames, endpoint, body={}, options
     }).catch(err => {
       // TODO what to do in the store here?
       console.log("HTTP error", collectionName, endpoint, body, err); // eslint-disable-line
+      return Promise.reject(err);
     });
 };
 
@@ -109,6 +113,7 @@ const httpDeleteAction = (collectionName, endpoint, body={}, options={}) => (dis
     }).catch(err => {
       // TODO what to do in the store here?
       console.log("HTTP error", collectionName, endpoint, body, err); // eslint-disable-line
+      return Promise.reject(err);
     });
 };
 
