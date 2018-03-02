@@ -5,7 +5,8 @@ import { constants } from "../../style";
 
 class Page extends React.PureComponent {
   render() {
-    return <div style={{...styles.base, ...this.props.style}}>{this.props.children}</div>;
+    console.log("page");
+    return <div style={[styles.base, this.props.style]}>{this.props.children}</div>;
   }
 }
 
@@ -20,9 +21,7 @@ const styles = {
     marginBottom: "0",
     marginLeft: "auto",
     marginRight: "auto",
-    display: "flex",
     flexDirection: "column",
-    alignItems: "center",
     position: "relative"
   }
 };

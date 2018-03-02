@@ -95,7 +95,9 @@ class RegisterPage extends React.PureComponent {
 
 const styles = {
   pageStyles: {
-    justifyContent: "center"
+    display: "flex",
+    justifyContent: "center",
+    flexDirection: "column",
   },
   wrapper: {
     width: "100%",

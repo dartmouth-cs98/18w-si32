@@ -99,7 +99,9 @@ const mapDispatchToProps = dispatch => ({
 
 const styles = {
   pageStyles: {
-    justifyContent: "center"
+    display: "flex",
+    justifyContent: "center",
+    flexDirection: "column",
   },
   wrapper: {
     width: "100%",

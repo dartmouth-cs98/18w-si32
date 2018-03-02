@@ -22,7 +22,7 @@ class LandingPage extends React.PureComponent {
 
   render() {
     return (
-      <Page>
+      <Page style={styles.page}>
         <LandingCanvas />
         <div style={styles.overlay}>
           <div style={styles.mainText}>The Web's Premier</div>
@@ -34,6 +34,10 @@ class LandingPage extends React.PureComponent {
 }
 
 const styles = {
+  page: {
+    display: "flex",
+    flexDirection: "column",
+  },
   wrapper: {
     padding: "0 15px"
   },
