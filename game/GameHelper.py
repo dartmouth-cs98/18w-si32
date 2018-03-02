@@ -16,7 +16,7 @@ class GameHelper:
         return self.map.get_tile((x, y))
 
     #get the number of units at specified square of specified player
-    def get_number_of_units__of_player_at_tile(self, x, y, playerId):
+    def get_number_of_units_of_player_at_tile(self, x, y, playerId):
         return self.map.get_tile((x, y)).units[playerId]
 
     #returns True if player with playerId1 has higher unit count at pos1 than player with playerId2 has at pos2
@@ -156,12 +156,14 @@ class GameHelper:
     #get the number of buildings belonging to player with playerId
     def get_number_of_buildings_belonging_to_player(self, playerId):
         number_buildings = 0
-        i = 0
+
         j = 0
         while (j < self.map.height):
+            i = 0
             while (i < self.map.width):
-                if self.get_tile(i, j).building.ownerId == playerId:
-                    number_buildings += 1
+                if self.get_tile(i, j).building is not None:
+                    if (self.get_tile(i, j).building.ownerId == playerId):
+                        number_buildings += 1
 
                 i += 1
             j += 1
@@ -171,27 +173,31 @@ class GameHelper:
     #get the position of the nearest building from (x, y) that belongs to a player with playerId
     def get_nearest_building_position_and_distance_belonging_to_player(self, x, y, playerId):
         if (self.get_number_of_buildings_belonging_to_player(playerId) > 0):
-            current_search_distance = 1
+            current_search_distance = 0
 
             while (True):
                 for m in range(-1 * current_search_distance, current_search_distance + 1):
                     n = current_search_distance - abs(m)
 
-                    if (self.get_tile(x + m, y + n).building is not None) & (self.get_tile(x + m, y + n).building.ownerId == playerId):
-                        return ((x + m, y + n), current_search_distance)
-                    elif (self.get_tile(x + m, y - n).building is not None) & (self.get_tile(x + m, y - n).building.ownerId == playerId):
-                        return ((x + m, y - n), current_search_distance)
+                    if (self.map.tile_in_range((x + m, y + n))):
+                        if (self.get_tile(x + m, y + n).building is not None):
+                            if (self.get_tile(x + m, y + n).building.ownerId == playerId):
+                                return ((x + m, y + n), current_search_distance)
+                    elif (self.map.tile_in_range((x + m, y + n))):
+                        if  (self.get_tile(x + m, y - n).building is not None):
+                            if (self.get_tile(x + m, y + n).building.ownerId == playerId):
+                                return ((x + m, y - n), current_search_distance)
 
                 current_search_distance += 1
         else:
             return None
 
     #return the position of the tile with the greatest resource of a specified distance away from a specified tile
-    def get_free_position_with_greatest_resource_of_range(self, x, y, range):
+    def get_free_position_with_greatest_resource_of_range(self, x, y, r):
         greatest_resource = 0
         greatest_position = None
-        for m in range(-1 * range, range + 1):
-            n = range - abs(m)
+        for m in range(-1 * r, r + 1):
+            n = r - abs(m)
 
             if (self.get_tile(x + m, y + n).building is None) & (self.get_tile(x + m, y + n).resource > greatest_resource):
                 greatest_resource = self.get_tile(x + m, y + n).resource
@@ -202,6 +208,9 @@ class GameHelper:
                 greatest_position = self.get_tile(x + m, y - n).position
 
         return (greatest_resource, greatest_position)
+
+    def get_adjacent_free_position_with_greatest_resource(self, x, y):
+        return self.get_free_position_with_greatest_resource_of_range(x, y, 1)
 
 
 
