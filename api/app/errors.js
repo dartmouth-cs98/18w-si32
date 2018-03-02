@@ -52,10 +52,10 @@ const errorMiddleware = async (ctx, next) =>  {
     // log for debugging
     console.log(err); // eslint-disable-line
 
-    // assertions only used for internal purposes (worker/sanity checking) so we
-    // want to just pass the error straight through for debugging
+    // assertions also used for internal purposes (sanity checking etc) so we
+    // also want to pass the error stack straight through for debugging
     if (err instanceof assert.AssertionError) {
-      ctx.body = Object.assign({}, err, {stack: err.stack});
+      ctx.body = { error: err.message, stack: err.stack};
       ctx.status = 500;
       return;
     }
