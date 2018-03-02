@@ -6,6 +6,7 @@ export default {
   red: "#E34444",
   green: "#219653",
   blue: "#2D95D6",
+  black: "#000000",
 
   sand: Color("#F2EFEE").lighten(0.03).string(), // light gray background
   border: "#F0EBEB",                             // gray color for most borders

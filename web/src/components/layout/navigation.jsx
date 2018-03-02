@@ -93,6 +93,7 @@ const styles = {
     backgroundColor: colors.background,
     borderBottom: `2px solid ${colors.sand}`,
     borderColor: colors.sand,
+    zIndex: 1000
   },
   inner: {
     width: constants.BODY_WIDTH,

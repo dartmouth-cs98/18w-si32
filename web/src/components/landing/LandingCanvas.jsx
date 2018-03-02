@@ -6,17 +6,20 @@ import { colors, constants } from "../../style";
 const PIXI = require("pixi.js");
 
 const SCENE_BACKGROUND_COLOR = 0xFFFFFF;
-const GRID_OUTLINE_COLOR = 0xec0b43;
+
+const ACTIVE_CELL_COLOR = 0xec0b43;
 const NEUTRAL_CELL_COLOR = 0x56666b;
 const NEUTRAL_CELL_ALPHA = 0.1;
 
 const CELL_OFFSET_X = 2;
 const CELL_OFFSET_Y = 2;
 
-const CELLS_IN_ROW = 12;
-const CELLS_IN_COL = 12;
+const CELLS_IN_ROW = 15;
+const CELLS_IN_COL = 15;
 
-const ACTIVE_CELL_COLOR = 0xec0b43;
+// TODO: tune these
+const FADE_DELAY_FACTOR = 4;
+const MAX_CELL_VALUE = 255;
 
 // TODO: can we abstract this out so it is only done in one place,
 // and always recomputed on resize
@@ -54,14 +57,10 @@ class LandingCanvas extends React.PureComponent {
     this.mapGraphics = new PIXI.Graphics();
     this.mapGraphics.interactive = true;
 
-    this.mapGraphics.click = (event) => {
-      this.toBeMapped = event.data.global;
-    }
-
     this.stage.addChild(this.mapGraphics);
 
     // inject the canvas
-    this.refs.gameCanvas.appendChild(this.app.view);
+    this.refs.landingCanvas.appendChild(this.app.view);
 
     // start the animation
     this.animate();
@@ -83,19 +82,19 @@ class LandingCanvas extends React.PureComponent {
     return pX > cX && pX < cX + this.sp.cell_w && pY > cY && pY < cY + this.sp.cell_h;
   }
 
-  getCellColor = (x, y, j, i) => {
-    const m = this.renderer.plugins.interaction.mouse.global;
-    if (this.cellContainsPoint(x, y, m.x, m.y)) {
-      return ACTIVE_CELL_COLOR;
-    } else if (this.active[`${j} ${i}`]) {
-      return ACTIVE_CELL_COLOR;
+  getCellColorAlpha = (j, i) => {
+    if (this.active[`${j} ${i}`]) {
+      return { "c": ACTIVE_CELL_COLOR, "a": (this.active[`${j} ${i}`] / MAX_CELL_VALUE) };
     } else {
-      return NEUTRAL_CELL_COLOR;
+      return { "c": NEUTRAL_CELL_COLOR, "a": NEUTRAL_CELL_ALPHA };
     }
   }
 
   // add the grid to main map graphics
   addGridToStage = () => {
+    // get the mouse location from the renderer
+    const mouse = this.renderer.plugins.interaction.mouse.global;
+
     // iterate over rows
     for (let i = 0; i < CELLS_IN_ROW; i++) {
       // iterate over columns
@@ -103,17 +102,32 @@ class LandingCanvas extends React.PureComponent {
         const xpos = j * (this.sp.cell_w + CELL_OFFSET_X);
         const ypos = i * (this.sp.cell_h + CELL_OFFSET_Y);
 
-        const r = this.getCellColor(xpos, ypos, j, i);
+        const r = this.getCellColorAlpha(j, i);
 
-        this.mapGraphics.beginFill(r, NEUTRAL_CELL_ALPHA);
+        this.mapGraphics.beginFill(r.c, r.a);
 
         this.mapGraphics.drawRect(xpos, ypos, this.sp.cell_w, this.sp.cell_h);
         this.mapGraphics.endFill();
 
-        if (this.toBeMapped && this.cellContainsPoint(xpos, ypos, this.toBeMapped.x, this.toBeMapped.y)) {
-          this.active[`${j} ${i}`] = true;
-          this.toBeMapped = null;
+        if (this.cellContainsPoint(xpos, ypos, mouse.x, mouse.y)) {
+          // the mouse is in this cell, increment its value
+          if (this.active[`${j} ${i}`]) {
+            // don't allow the cell value to grow arbitrarily
+            this.active[`${j} ${i}`] = Math.min(this.active[`${j} ${i}`] + 1*FADE_DELAY_FACTOR, MAX_CELL_VALUE);
+          } else {
+            this.active[`${j} ${i}`] = 1*FADE_DELAY_FACTOR;
+          }
+        } else {
+          // the mouse is not in this cell, decrement its value
+          if (this.active[`${j} ${i}`]) {
+            if (this.active[`${j} ${i}`] == 1) {
+              delete this.active[`${j} ${i}`];
+            } else {
+              this.active[`${j} ${i}`]--;
+            }
+          }
         }
+
       }
     }
   }
@@ -125,21 +139,12 @@ class LandingCanvas extends React.PureComponent {
     // render the stage container
     this.renderer.render(this.stage);
 
-    // and setup to render again in the future
-    // TODO: how quickly can we clock this and still get a smooth animation?
-    // do we for sure want to do a new frame every timestep of the animation?
-    // or do we maybe want to uncouple these?
     requestAnimationFrame(this.animate);
-    //setTimeout(() => requestAnimationFrame(this.animate), 500)
-
-    if (this.props.play && (this.props.frame + 1) < this.props.replay.turns.length) {
-      this.props.incrementFrame();
-    }
   }
 
   render() {
     return (
-      <div ref="gameCanvas" style={styles.canvasWrapper}></div>
+      <div ref="landingCanvas" style={styles.canvasWrapper}></div>
     );
   }
 }
