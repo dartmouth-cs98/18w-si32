@@ -1,5 +1,5 @@
 # Docker container to run user programmed bots
-FROM python:2-alpine
+FROM python:3-alpine
 
 # All we have to do is launch bot.py. All the user code has already
 # been placed in the /bot directory. Eventually, this could easily by

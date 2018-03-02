@@ -55,11 +55,11 @@ class ReplayVisualizer extends React.PureComponent {
         <Button kind={"primary"} onClick={this.toggleReplayControl}>
           <div>{controlButtonText}</div>
         </Button>
+        <div style={styles.progressText}>Match Progress</div>
         <div style={styles.progressContainer}>
           <Progress percentage={progressPercentage} />
         </div>
       </div>
-
     );
   }
 }
@@ -76,9 +76,11 @@ const styles = {
     color: colors.primary,
     fontSize: "30px"
   },
-  progressContainer: {
-    width: "40%",
+  progressText: {
     padding: "10px"
+  },
+  progressContainer: {
+    width: "60%",
   }
 };
 

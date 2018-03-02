@@ -21,7 +21,7 @@ const upload = (bucket, key, file, options={}) => {
       Bucket: bucket,
       Key: key,
       Body: body,
-      ...options
+      ...options              // eslint-disable-line
     }, (err, data) => {
       if (err) {
         reject(err);

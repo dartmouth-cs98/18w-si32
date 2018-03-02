@@ -73,7 +73,7 @@ class DashboardPage extends React.PureComponent {
   }
 
   renderTopBots = () => (
-    <Wrapper innerStyle={styles.dashSection}>
+    <Wrapper style={styles.dashSectionContainer} innerStyle={styles.dashSection}>
       <div style={styles.sectionHeader}>
         <MainTitle>
             Your Top Bots
@@ -95,12 +95,12 @@ class DashboardPage extends React.PureComponent {
     if (!this.props.user) return <div></div>;
 
     return (
-      <Page>
+      <Page style={styles.pageStyles}>
         <HeaderStatsBar user={this.props.user} />
 
         { this.renderTopBots() }
 
-        <Wrapper innerStyle={styles.dashSection}>
+        <Wrapper style={styles.dashSectionContainer} innerStyle={styles.dashSection}>
           <div style={styles.sectionHeader}>
             <MainTitle>
                 Recent Matches
@@ -114,10 +114,12 @@ class DashboardPage extends React.PureComponent {
           </div>
 
           <DashMatchList matches={this.props.matches} />
-
-          <UserSearch />
-
         </Wrapper>
+
+        <Wrapper style={styles.dashSectionContainer} innerStyle={styles.dashSection}>
+          <UserSearch />
+        </Wrapper>
+        
       </Page>
     );
   }
@@ -136,6 +138,12 @@ const mapStateToProps = state => ({
 });
 
 const styles = {
+  pageStyles: {
+    justifyContent: "flex-start",
+  },
+  dashSectionContainer: {
+    width: "100%"
+  },
   dashSection: {
     borderBottom: `2px solid ${colors.border}`,
     paddingBottom: 20,

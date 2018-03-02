@@ -6,7 +6,8 @@ from game.Map import Map
 from game.Tile import Tile
 from game.Rules import Rules
 from game.Logger import Logger
-from game.json_helpers import json_to_object_list
+
+MAX_ITERS = 300
 
 class Game_state(Game):
 
@@ -22,8 +23,6 @@ class Game_state(Game):
         self.map = Map(num_players)
 
         self.initialize_players(bots, self.map)
-
-        self.game_over = False
 
         self.logger = Logger(self.map, self.players)
 
@@ -43,8 +42,13 @@ class Game_state(Game):
     def initialize_players(self, bots, map):  # initalizes players
         i = 0
         self.players = []
-        for i, bot in enumerate(bots):
-            self.players.append(Player(i, self.map, bot, (i*5, i*5)))
+
+        # hardcoded for two bots
+        self.players.append(Player(0, self.map, bots[0], (5, 5)))
+        self.players.append(Player(1, self.map, bots[1], (45, 45)))
+
+        self.map.get_tile((4,4)).create_building(0)
+        self.map.get_tile((46,46)).create_building(1)
 
     # ------------------ Main Functions ---------------------
     def start(self):
@@ -66,10 +70,14 @@ class Game_state(Game):
 
             self.check_game_over()
 
+        # log one more turn, so that viz has a final state to work with
+        self.logger.new_turn(self.map)
+        self.logger.end_turn()
+
     # send all players the updated game state so they can make decisions
     def send_state(self):
         for p in self.players:
-            p.send_state()
+            p.send_state(self.players)
 
     # read all moves from the players and update state accordingly
     def read_moves(self):
@@ -97,27 +105,28 @@ class Game_state(Game):
 
     def check_game_over(self):
         if (self.check_unit_victory_condition()) or (self.time_limit_reached()):
-            self.log_result()
-
-        else: return False
+            self.log_winner()
+            return True
+        else:
+            return False
 
     def check_unit_victory_condition(self):
-        player1_units = self.players[0].total_units()
-        player2_units = self.players[1].total_units()
+        player1_b = self.players[0].has_building()
+        player2_b = self.players[1].has_building()
 
-        if (player1_units and not player2_units):
+        if (player1_b and not player2_b):
             self.winner = self.players[0]
             return True
 
-        if (player2_units and not player1_units):
+        if (player2_b and not player1_b):
             self.winner = self.players[1]
             return True
 
-        else: return False
+        return False
 
 
     def time_limit_reached(self):
-        if self.iter < 30:
+        if self.iter < MAX_ITERS:
             return False
 
         p1units = self.players[0].total_units()
@@ -134,8 +143,6 @@ class Game_state(Game):
     # ---------------- PLAYER MOVES FUNCTIONS ----------------
 
     def execute_moves(self, moves):
-        #moves = json_to_object_list(moves, 'move')
-
         for move in moves:
             self.execute_move(move)
 
@@ -150,16 +157,15 @@ class Game_state(Game):
     def get_log(self):
         return self.logger.get_log()
 
-    def log_result(self):
-        if self.winner:
-            result = self.players
-            if result[0] != self.winner:
-                temp = result[0]
-                result[0] = result[1]
-                result[1] = temp
+    def log_winner(self):
+        result = self.players
+        if result[0] != self.winner:
+            temp = result[0]
+            result[0] = result[1]
+            result[1] = temp
 
-            for player in result:
-                self.logger.add_ranked_bot(player.bot)
+        for player in result:
+            self.logger.add_ranked_bot(player.bot)
 
 # We want to execute commmands in the following order: move, build, mine
 def sort_moves(moves):

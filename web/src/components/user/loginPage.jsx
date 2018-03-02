@@ -52,7 +52,7 @@ class LoginPage extends React.PureComponent {
 
   render() {
     return (
-      <Page>
+      <Page style={styles.pageStyles}>
         <div style={styles.wrapper}>
           <div style={styles.titleContainer}>Awesome tagline.</div>
           <form style={styles.form} onSubmit={this.doLogin}>
@@ -79,7 +79,7 @@ class LoginPage extends React.PureComponent {
             </Button>
           </form>
           <div style={styles.registerContainer}>
-            <span style={styles.registerText}>New to SI32? </span>
+            <span style={styles.registerText}>New to Monad? </span>
             <Link
               key="register-link"
               href="/register"
@@ -98,14 +98,16 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const styles = {
+  pageStyles: {
+    justifyContent: "center"
+  },
   wrapper: {
     width: "100%",
     height: "100%",
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
-    alignItems: "center",
-    paddingBottom: "20%"
+    alignItems: "center"
   },
   titleContainer: {
     fontSize: "30px",

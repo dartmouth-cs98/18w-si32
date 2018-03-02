@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { Page, Wrapper} from "../layout";
 import { fetchMatch } from "../../data/match/matchActions";
 import { fetchLog } from "../../data/match/matchRoutes";
+import ReplayVisualizer from "../replay/ReplayVisualizer";
 
 class MatchSinglePage extends React.PureComponent {
   constructor(props) {
@@ -20,7 +21,16 @@ class MatchSinglePage extends React.PureComponent {
       }
     }).then(log => {
       this.setState({ log });
+      console.log(log);
     });
+  }
+
+  renderReplay = () => {
+    if (this.state.log) {
+      return <ReplayVisualizer replay={this.state.log} />;
+    }
+
+    return null;
   }
 
   render() {
@@ -31,7 +41,7 @@ class MatchSinglePage extends React.PureComponent {
           <p>status: {this.props.match.status}</p>
           <p>created: {this.props.match.createdAt}</p>
           { this.props.match.status === "DONE" ? <p>log: {JSON.stringify(this.props.match.log)}</p> : "" }
-          { JSON.stringify(this.state.log) }
+          { this.renderReplay() }
         </Wrapper>
       </Page>
     );

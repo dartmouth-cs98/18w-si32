@@ -1,4 +1,5 @@
 from random import randint
+from game.Building import Building
 
 
 class Tile:
@@ -27,8 +28,9 @@ class Tile:
 
     # ---------------- BUILDING METHODS  ----------------------------
 
-    def add_building(self, building):  #add building reference
-        self.building = building
+    def create_building(self, playerID):  #add building reference
+        b = Building(playerID)
+        self.building = b
 
     def destroy_building(self):  #remove building reference
         self.building = None
@@ -36,8 +38,8 @@ class Tile:
     # --------------- UPDATE FUNCTIONS ----------------------------
 
     def update_tile(self, players):
-        self.update_units_number()
         self.update_building_status(players)
+        self.update_units_number()
 
     def update_units_number(self):
         # TODO no need for this loop, do some math
@@ -52,10 +54,10 @@ class Tile:
 
             #  Check if building will be destroyed by enemy units
             if self.units[enemy_player] > 0:
-
                 if self.units[enemy_player] >= 10:
                     self.destroy_building()
                     self.units[enemy_player] -= 10
+                    return # done
 
                 else:
                     self.units[enemy_player] = 0
@@ -64,7 +66,9 @@ class Tile:
             while self.building.production_progress >= 5:
                 self.increment_units(building_owner, 1)
                 self.building.production_progress -= 5
-                players[self.building.ownerID].increment_units_produced()
+                players[self.building.ownerId].increment_units_produced()
+
+            self.building.update_production_status()
 
     # --------------- INITIALIZING FUNCTION ----------------------
 

@@ -33,7 +33,6 @@ class App extends React.Component {
       <div>
         <Navigation />
         <div id="main">{this.main}</div>
-        <Footer />
       </div>
     );
   }
