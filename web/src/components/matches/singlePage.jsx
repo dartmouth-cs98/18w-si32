@@ -1,9 +1,11 @@
 import React from "react";
 import { connect } from "react-redux";
+import moment from "moment";
 import { Page, Wrapper} from "../layout";
 import { fetchMatch } from "../../data/match/matchActions";
 import { fetchLog } from "../../data/match/matchRoutes";
 import ReplayVisualizer from "../replay/ReplayVisualizer";
+import { constants, colors } from "../../style";
 
 const Bot = ({ bot }) => {
 
@@ -30,7 +32,22 @@ class MatchSinglePage extends React.PureComponent {
   }
 
   renderBots = () => {
-
+    const bots = _.sortBy(this.props.match.bots, 'rank');
+    return _.map(bots, b => (
+      <div key={b._id} style={[styles.bot, b.user == this.props.sessionUserId ? styles.ownBot : null]}>
+        <div style={{display: "flex", alignItems: "flex-end"}}>
+          <span style={styles.botRank}>{b.rank}</span>
+          <span style={styles.botName}>{b.name}</span>
+          { b.user == this.props.sessionUserId ? <span style={styles.ownBotTag}>(You)</span> : null }
+        </div>
+        <div style={styles.botSkill}>
+          {b.trueSkill.mu.toFixed(1)}
+          <span style={[styles.botSkillDelta, b.trueSkill.delta > 0 ? styles.botDeltaPositive : styles.botDeltaNegative]}>
+            { b.trueSkill.delta > 0 ? "+" : ""}{b.trueSkill.delta.toFixed(1)}
+          </span>
+        </div>
+      </div>
+    ));
   }
 
   renderReplay = () => {
@@ -42,6 +59,7 @@ class MatchSinglePage extends React.PureComponent {
   }
 
   render() {
+    if (!this.props.match) return null;
     return (
       <Page>
         <Wrapper>
@@ -50,7 +68,8 @@ class MatchSinglePage extends React.PureComponent {
               { this.renderReplay() }
             </div>
             <div style={styles.matchInfo}>
-              <p>created: {this.props.match.createdAt}</p>
+              <div style={styles.date}>{moment(this.props.match.createdAt).format("MMMM d")}</div>
+              <h3 style={styles.title}>Finish Order</h3>
               { this.renderBots() }
             </div>
           </div>
@@ -65,12 +84,64 @@ const styles = {
     flex: 1,
     padding: "0 20px",
   },
+  date: {
+    marginBottom: 20,
+    color: colors.medGray,
+  },
   matchRow: {
     display: "flex",
   },
   matchInfo: {
     marginTop: 10,
     minWidth: 500,
+  },
+  title: {
+    fontSize: constants.fontSizes.large,
+    fontWeight: 400,
+    margin: "0 0 10px 0",
+  },
+  bot: {
+    padding: "10px 10px",
+    borderBottom: `1px solid ${colors.border}`,
+    display: "flex",
+    alignItems: "flex-end",
+    justifyContent: "space-between",
+  },
+  botName: {
+    color: colors.red,
+    fontSize: constants.fontSizes.large,
+  },
+  botRank: {
+    color: colors.medGray,
+    fontWeight: 500,
+    width: 30,
+    fontSize: constants.fontSizes.medium,
+  },
+  ownBot: {
+    background: colors.sand,
+  },
+  ownBotTag: {
+    color: colors.lightGray,
+    fontSize: constants.fontSizes.small,
+    marginLeft: 10,
+    alignSelf: "center",
+    fontWeight: 300,
+  },
+  botSkill: {
+    flex: 1,
+    fontSize: constants.fontSizes.medium,
+    textAlign: "right",
+  },
+  botSkillDelta: {
+    marginLeft: 10,
+    width: 50,
+    display: "inline-block",
+  },
+  botDeltaPositive: {
+    color: colors.green,
+  },
+  botDeltaNegative: {
+    color: colors.red,
   },
 };
 
@@ -79,6 +150,7 @@ const mapDispatchToProps = (dispatch, props) => ({
 });
 
 const mapStateToProps = (state, props) => ({
+  sessionUserId: state.session.userId,
   match: state.matches.records[props.id] || {},
 });
 
