@@ -15,8 +15,8 @@ const NEUTRAL_CELL_ALPHA = 0.1;
 const CELL_OFFSET_X = 1;
 const CELL_OFFSET_Y = 1;
 
-const BORDER_OFFSET_X = 10;
-const BORDER_OFFSET_Y = 10;
+const BORDER_OFFSET_X = 0;
+const BORDER_OFFSET_Y = 0;
 
 const BASE_SCENE_W = 600;
 const BASE_SCENE_H = 600;
@@ -77,8 +77,8 @@ class Canvas extends React.PureComponent {
     this.sp.cols = this.props.replay.w;
 
     // define cell width and height as function of # and the base values
-    this.sp.cell_w = Math.floor(BASE_SCENE_W / this.sp.cols);
-    this.sp.cell_h = Math.floor(BASE_SCENE_H / this.sp.rows);
+    this.sp.cell_w = Math.floor((this.props.size || BASE_SCENE_W) / this.sp.cols);
+    this.sp.cell_h = Math.floor((this.props.size || BASE_SCENE_H) / this.sp.rows);
 
     this.sp.w = this.sp.cols * (this.sp.cell_w + CELL_OFFSET_X) + BORDER_OFFSET_X*2;
     this.sp.h = this.sp.rows * (this.sp.cell_h + CELL_OFFSET_Y) + BORDER_OFFSET_Y*2;
@@ -86,6 +86,7 @@ class Canvas extends React.PureComponent {
 
   // add the border to main map graphics
   addBorderToStage = () => {
+    return;
     this.mapGraphics.lineStyle(1, GRID_OUTLINE_COLOR, 1);
     this.mapGraphics.drawPolygon([
       0, 0,
@@ -167,7 +168,6 @@ const styles = {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    padding: "10px",
   }
 }
 

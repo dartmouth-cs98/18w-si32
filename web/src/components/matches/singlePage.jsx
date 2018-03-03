@@ -5,6 +5,10 @@ import { fetchMatch } from "../../data/match/matchActions";
 import { fetchLog } from "../../data/match/matchRoutes";
 import ReplayVisualizer from "../replay/ReplayVisualizer";
 
+const Bot = ({ bot }) => {
+
+} ;
+
 class MatchSinglePage extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -25,6 +29,10 @@ class MatchSinglePage extends React.PureComponent {
     });
   }
 
+  renderBots = () => {
+
+  }
+
   renderReplay = () => {
     if (this.state.log) {
       return <ReplayVisualizer replay={this.state.log} />;
@@ -37,16 +45,34 @@ class MatchSinglePage extends React.PureComponent {
     return (
       <Page>
         <Wrapper>
-          <h1>Match {this.props.match._id}</h1>
-          <p>status: {this.props.match.status}</p>
-          <p>created: {this.props.match.createdAt}</p>
-          { this.props.match.status === "DONE" ? <p>log: {JSON.stringify(this.props.match.log)}</p> : "" }
-          { this.renderReplay() }
+          <div style={styles.matchRow}>
+            <div style={styles.gameViewer}>
+              { this.renderReplay() }
+            </div>
+            <div style={styles.matchInfo}>
+              <p>created: {this.props.match.createdAt}</p>
+              { this.renderBots() }
+            </div>
+          </div>
         </Wrapper>
       </Page>
     );
   }
 }
+
+const styles = {
+  gameViewer: {
+    flex: 1,
+    padding: "0 20px",
+  },
+  matchRow: {
+    display: "flex",
+  },
+  matchInfo: {
+    marginTop: 10,
+    minWidth: 500,
+  },
+};
 
 const mapDispatchToProps = (dispatch, props) => ({
   fetchMatch: () => dispatch(fetchMatch(props.id)),
