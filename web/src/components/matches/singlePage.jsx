@@ -7,10 +7,6 @@ import { fetchLog } from "../../data/match/matchRoutes";
 import ReplayVisualizer from "../replay/ReplayVisualizer";
 import { constants, colors } from "../../style";
 
-const Bot = ({ bot }) => {
-
-} ;
-
 class MatchSinglePage extends React.PureComponent {
   constructor(props) {
     super(props);
