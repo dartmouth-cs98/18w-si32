@@ -28,7 +28,6 @@ class _Button extends React.PureComponent {
 
   render() {
     const { style, kind, href, size, children, disabled } = this.props;
-    console.log(disabled);
     return (
       // using anchor to be able to get native browser behavior when we want it
       <a href={href} onClick={this.onClick} style={[

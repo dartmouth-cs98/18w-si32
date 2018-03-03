@@ -16,6 +16,12 @@ class ReplayVisualizer extends React.PureComponent {
     };
   }
 
+  componentDidMount() {
+    this.setState({
+      wrapperWidth: this.refs.wrapper.offsetWidth,
+    });
+  }
+
   toggleReplayControl = () => {
     this.setState({ play: !this.state.play });
     if (this.state.currentFrame === (this.props.replay.turns.length - 1)) {
@@ -34,6 +40,19 @@ class ReplayVisualizer extends React.PureComponent {
     }
   }
 
+  renderCanvas = () => {
+    if (!this.state.wrapperWidth) {
+      return null;
+    }
+    return (
+      <Canvas size={this.state.wrapperWidth}
+        replay={this.props.replay}
+        frame={this.state.currentFrame}
+        incrementFrame={this.incrementCurrentFrame}
+        play={this.state.play} />
+    );
+  }
+
   render() {
     let controlButtonText;
     if (this.state.play) {
@@ -45,19 +64,18 @@ class ReplayVisualizer extends React.PureComponent {
     }
 
     const progressPercentage = this.state.currentFrame === 0 ? 0 : Math.floor((this.state.currentFrame / (this.props.replay.turns.length - 1  ))*100);
+    console.log("width", this.state.wrapperWidth);
 
     return (
-      <div style={styles.wrapper}>
-        <Canvas replay={this.props.replay}
-                frame={this.state.currentFrame}
-                incrementFrame={this.incrementCurrentFrame}
-                play={this.state.play} />
-        <Button kind={"primary"} onClick={this.toggleReplayControl}>
-          <div>{controlButtonText}</div>
-        </Button>
-        <div style={styles.progressText}>Match Progress</div>
-        <div style={styles.progressContainer}>
-          <Progress percentage={progressPercentage} />
+      <div style={styles.wrapper} ref="wrapper">
+        { this.renderCanvas() }
+        <div style={styles.controls}>
+          <Button kind={"primary"} style={styles.button} onClick={this.toggleReplayControl}>
+            <div>{controlButtonText}</div>
+          </Button>
+          <div style={styles.progressContainer}>
+            <Progress percentage={progressPercentage} />
+          </div>
         </div>
       </div>
     );
@@ -72,15 +90,24 @@ const styles = {
     alignItems: "center",
     padding: "10px 0 0 0"
   },
+  controls: {
+    marginTop: 10,
+    display: "flex",
+    flex: 1,
+    alignSelf: "stretch",
+    alignItems: "center",
+  },
   pageHeader: {
     color: colors.primary,
     fontSize: "30px"
   },
-  progressText: {
-    padding: "10px"
+  button: {
+    width: 160,
+    marginRight: 10,
   },
   progressContainer: {
-    width: "60%",
+    flex: 1,
+    marginBottom: 1,
   }
 };
 

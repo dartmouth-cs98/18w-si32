@@ -20,14 +20,17 @@ const styles = {
   wrapper: {
     width: "100%",
     height: constants.PROGRESS_HEIGHT,
-    borderColor: colors.primary,
+    borderColor: colors.red,
     borderWidth: "1px",
     borderStyle: "solid",
-    borderRadius: "2px",
+    borderRadius: "10px",
+    overflow: "hidden",
+    position: "relative",
   },
   fill: {
     height: "100%",
-    backgroundColor: colors.primary
+    transition: "width .1s",
+    backgroundColor: colors.red,
   }
 }
 
