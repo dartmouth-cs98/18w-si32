@@ -1,6 +1,5 @@
 import React from "react";
 import { connect } from "react-redux";
-import Color from "color";
 
 import Page from "../layout/page";
 
@@ -43,9 +42,5 @@ class ReplayPage extends React.PureComponent {
     );
   }
 }
-
-const styles = {
-
-};
 
 export default connect(null, null)(ReplayPage);

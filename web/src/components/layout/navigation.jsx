@@ -1,7 +1,6 @@
 import React from "react";
 import Radium from "radium";
 import { connect } from "react-redux";
-import Color from "color";
 
 import Link from "../common/link";
 import history from "../../history";

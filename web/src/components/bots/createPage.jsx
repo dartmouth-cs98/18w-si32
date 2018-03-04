@@ -1,5 +1,6 @@
 import React from "react";
 import Radium from "radium";
+import _ from "lodash";
 import { connect } from "react-redux";
 
 import Button from "../common/button";
@@ -45,13 +46,12 @@ class BotCreatePage extends React.PureComponent {
       error: false,
     });
 
-    this.props.create(this.state.botName, this.state.botFile).then((res) => {
+    this.props.create(this.state.botName, this.state.botFile).then(() => {
       // after making a bot, users probably want to start a match with it
       // TODO pre-select the bot
       history.push("/matches/create");
     })
     .catch(err => {
-      console.log(err);
       this.setState({
         error: _.get(err, "response.body.error") || err,
       });
@@ -79,7 +79,7 @@ class BotCreatePage extends React.PureComponent {
                 onChange={this.handleInputChange}
               />
               <Label>
-                Select your bot's code file <span style={colorStyles.lightGray}>(.py only!)</span>
+                Select your {"bot's"} code file <span style={colorStyles.lightGray}>(.py only!)</span>
               </Label>
               <FileInput
                 name="botFile"

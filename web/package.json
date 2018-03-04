@@ -7,9 +7,9 @@
   "scripts": {
     "start": "webpack-dev-server -d --config webpack.dev.js",
     "build": "webpack --config webpack.prod.js",
-    "test": "eslint src",
+    "test": "eslint --ext .jsx --ext .js src",
     "prepush": "npm test",
-    "lint:watch": "esw src --watch --cache"
+    "lint:watch": "esw --watch --cache --ext .jsx --ext .js src"
   },
   "author": "",
   "license": "ISC",

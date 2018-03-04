@@ -3,10 +3,6 @@ import Radium from "radium";
 
 import { constants } from "../../style";
 
-const Row = (props) => {
-
-};
-
 // puts children into a max-width child but wrapper spans full width of screen
 const Wrapper = Radium((props) => (
   <div style={{...styles.wrapper, ...props.style}}>

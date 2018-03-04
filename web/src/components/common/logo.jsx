@@ -2,11 +2,9 @@ import React from "react";
 import Radium from "radium";
 import {
   colors,
-  constants,
 } from "../../style";
-import Link from "../common/link";
 
-const Logo = (props) => {
+const Logo = () => {
   return (
     <div key="main-logo" style={styles.logoContainer}>
       <div style={styles.logoOuter}><div style={styles.logoInner}></div></div>

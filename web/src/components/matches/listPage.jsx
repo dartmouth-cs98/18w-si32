@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 
 import history from "../../history";
 
-import { Page, Link, Wrapper, TitleBar } from "../layout";
+import { Page, Wrapper, TitleBar } from "../layout";
 import { fetchMatches } from "../../data/match/matchActions";
 
 import MatchList from "./MatchList";

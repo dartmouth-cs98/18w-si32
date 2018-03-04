@@ -12,12 +12,11 @@ import HeaderStatsBar from "./HeaderStatsBar";
 
 import { fetchBots } from "../../data/bot/botActions";
 import { fetchMatches } from "../../data/match/matchActions";
-import { getProfile } from "../../data/user/userActions";
 import { getSessionUser } from "../../data/user/userSelectors";
 import { getMatchesForUser } from "../../data/match/matchSelectors";
 import { getBotsForUser } from "../../data/bot/botSelectors";
 
-import { MainTitle, SubTitle } from "../common/titles";
+import { MainTitle } from "../common/titles";
 
 import { colors, fontStyles, colorStyles } from "../../style";
 
@@ -68,7 +67,7 @@ class DashboardPage extends React.PureComponent {
 
   renderNoBots = () => {
     return (
-      <p>You don't have any bots yet! To get started playing Monad, <Link href="/bots/create">upload a bot first &rarr;</Link></p>
+      <p>{"You don't have any bots yet!"} To get started playing Monad, <Link href="/bots/create">upload a bot first &rarr;</Link></p>
     );
   }
 
@@ -93,7 +92,6 @@ class DashboardPage extends React.PureComponent {
 
   render() {
     if (!this.props.user) return <div></div>;
-    console.log(this.props.user);
 
     return (
       <Page style={styles.pageStyles}>

@@ -1,8 +1,6 @@
 import React from "react";
 import Radium from "radium";
-import _ from "lodash";
 
-import Link from "../common/link";
 import Button from "../common/button";
 import StatDifference from "../common/statDifference";
 import { Wrapper } from "../layout/wrappers";

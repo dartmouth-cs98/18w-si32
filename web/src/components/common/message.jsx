@@ -1,8 +1,6 @@
 import React from "react";
 import Radium from "radium";
-import Color from "color";
 
-import history from "../../history";
 import { constants, colors } from "../../style";
 
 // generic button class

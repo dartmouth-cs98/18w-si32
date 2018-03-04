@@ -1,14 +1,11 @@
 import React from "react";
-import Color from "color";
 
-import { colors } from "../../style";
-
-const PIXI = require("pixi.js");
+import { Application, Graphics } from "pixi.js";
 
 const TICK_SPEED = 30;
 
 const SCENE_BACKGROUND_COLOR = 0xFFFFFF;
-const GRID_OUTLINE_COLOR = 0xec0b43;
+// const GRID_OUTLINE_COLOR = 0xec0b43;
 const NEUTRAL_CELL_COLOR = 0x56666b;
 const NEUTRAL_CELL_ALPHA = 0.1;
 
@@ -47,7 +44,7 @@ class Canvas extends React.PureComponent {
     this.computeSceneParameters();
 
     // setup pixi canvas
-    this.app = new PIXI.Application({
+    this.app = new Application({
       width: this.sp.w,
       height: this.sp.h
     });
@@ -58,11 +55,11 @@ class Canvas extends React.PureComponent {
     this.renderer.backgroundColor = SCENE_BACKGROUND_COLOR;
 
     // create the root graphics and add it as child of the stage
-    this.mapGraphics = new PIXI.Graphics();
+    this.mapGraphics = new Graphics();
     this.stage.addChild(this.mapGraphics);
 
     // inject the canvas
-    this.refs.gameCanvas.appendChild(this.app.view);
+    this.gameCanvasRef.appendChild(this.app.view);
 
     // start the animation
     this.animate();
@@ -86,15 +83,14 @@ class Canvas extends React.PureComponent {
 
   // add the border to main map graphics
   addBorderToStage = () => {
-    return;
-    this.mapGraphics.lineStyle(1, GRID_OUTLINE_COLOR, 1);
+    /*this.mapGraphics.lineStyle(1, GRID_OUTLINE_COLOR, 1);
     this.mapGraphics.drawPolygon([
       0, 0,
       this.sp.w - 1, 1,
       this.sp.w - 1, this.sp.h - 1,
       1, this.sp.h - 1,
       0, 0
-    ]);
+    ]);*/
   }
 
   // add the grid to main map graphics
@@ -158,7 +154,7 @@ class Canvas extends React.PureComponent {
 
   render() {
     return (
-      <div ref="gameCanvas" style={styles.canvasWrapper}></div>
+      <div ref={(ref) => {this.gameCanvasRef = ref;}} style={styles.canvasWrapper}></div>
     );
   }
 }
@@ -169,6 +165,6 @@ const styles = {
     justifyContent: "center",
     alignItems: "center",
   }
-}
+};
 
 export default Canvas;
