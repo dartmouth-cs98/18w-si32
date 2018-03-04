@@ -51,7 +51,7 @@ class Group extends React.PureComponent {
         <h1>{this.props.group.name}</h1>
         <p>{this.props.group.description}</p>
         <p>Number of Members: {this.props.group.members.length}</p>
-        <p>My Rank: {userRank}</p>
+        <p>My Rank: {userRank ? userRank.rank : ""}</p>
         <br/>
         {this.renderJoinLeaveButton()}
         <br/>

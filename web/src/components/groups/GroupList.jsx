@@ -15,6 +15,10 @@ const GroupListRow = ({ group, leaveGroup, rank }) => {
   const onClickLeave = () => {
     leaveGroup(group._id);
   };
+
+  if (!rank) {
+    return null;
+  }
   
   return (
     <div style={{display: "flex"}}>
