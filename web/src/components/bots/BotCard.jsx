@@ -22,7 +22,7 @@ const BotCard = ({ bot, style, hasDivider }) => (
       <div style={fontStyles.small}><StatDifference history={bot.trueSkillHistory} /></div>
     </div>
 
-    <h4 style={styles.subtitle}>Rankings</h4>
+    {/*<h4 style={styles.subtitle}>Rankings</h4>
     <table style={styles.rankTable}>
       <tbody>
         <tr style={styles.rankTableRow}>
@@ -48,7 +48,7 @@ const BotCard = ({ bot, style, hasDivider }) => (
           </td>
         </tr>
       </tbody>
-    </table>
+    </table>*/}
 
   </div>
 );
