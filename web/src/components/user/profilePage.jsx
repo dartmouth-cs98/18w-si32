@@ -105,7 +105,7 @@ class ProfilePage extends React.Component {
           { this.renderFollowLink() }
           <MainTitle>Profile: { this.props.profileUser.username }</MainTitle>
           <SubTitle>Rating</SubTitle>
-          <p>{this.props.profileUser.rating}</p>
+          <p>{this.props.profileUser.trueSkill.mu}</p>
 
           <SubTitle>Global Rank</SubTitle>
           <p>{globalRank.rank}/{globalRank.of}</p>
