@@ -26,6 +26,8 @@ class Game_state(Game):
 
         self.logger = Logger(self.map, self.players)
 
+        self.debugLogFile = open("./gameserver.log", "w")
+
         self.rules = Rules(self.map, self.players)
 
         self.iter = 0
@@ -86,9 +88,18 @@ class Game_state(Game):
         for p in self.players:
             moves.append(p.get_move())
 
+        self.log("After:")
+        self.log(moves[0])
+        self.log(moves[1])
+
+
         # Check moves for combat, and sort by type of command
         moves = self.rules.update_combat_phase(moves)  # Run both players moves through combat phase, return updated list of moves
         moves = sort_moves(moves)
+
+        self.log("After:")
+        self.log(moves[0])
+        self.log(moves[1])
 
         for player_moves in moves:
             self.execute_moves(player_moves)
@@ -167,6 +178,9 @@ class Game_state(Game):
         for player in result:
             self.logger.add_ranked_bot(player.bot)
 
+    def log(self, out):
+        self.debugLogFile.write(str(out) + "\n")
+        self.debugLogFile.flush()
 # We want to execute commmands in the following order: move, build, mine
 def sort_moves(moves):
     sorted_moves = []

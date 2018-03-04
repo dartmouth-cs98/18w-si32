@@ -140,13 +140,13 @@ class Rules:
         sets = [{}, {}]
 
         for move in moves[0]:
-            if tuple(move.direction) not in sets[0]:
+            if tuple(move.position) not in sets[0]:
                 sets[0][tuple(move.position)] = [move]
             else:
                 sets[0][tuple(move.position)].append(move)
 
         for move in moves[1]:
-            if tuple(move.direction) not in sets[1]:
+            if tuple(move.position) not in sets[1]:
                 sets[1][tuple(move.position)] = [move]
             else:
                 sets[1][tuple(move.position)].append(move)
