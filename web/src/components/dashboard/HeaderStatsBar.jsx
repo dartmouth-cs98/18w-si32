@@ -25,7 +25,7 @@ const HeaderStatsBar = ({ user }) => {
       </div>
 
     </div>
-    <div style={styles.statContainer}>
+    { group && groupRank ? <div style={styles.statContainer}>
       <h3 style={styles.title}>Your ranking in <span style={fontStyles.bold}>{group.name}</span></h3>
       <div style={styles.statRow}>
         <span style={styles.stat}>{groupRank.rank} <span style={styles.rankOf}>of {groupRank.of}</span></span>
@@ -33,7 +33,7 @@ const HeaderStatsBar = ({ user }) => {
           <Button kind="tertiary" href={`/groups/${group._id}`}>See group &rarr;</Button>
         </span>
       </div>
-    </div>
+    </div> : null }
     <div style={styles.statContainer}>
       <h3 style={styles.title}>Your global ranking in <span style={fontStyles.bold}>all of Monad</span></h3>
       <div style={styles.statRow}>
