@@ -14,7 +14,7 @@ const HeaderStatsBar = ({ user }) => {
 
   // arbitrarily chosen group to show
   const group = user.groups[0];
-  const groupRank = user.ranks[group._id];
+  const groupRank = user.ranks[group && group._id];
 
   return (<Wrapper style={styles.wrapper} innerStyle={styles.inner}>
     <div style={styles.statContainer}>
