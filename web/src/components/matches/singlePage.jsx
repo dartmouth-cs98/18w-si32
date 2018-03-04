@@ -74,7 +74,7 @@ class MatchSinglePage extends React.PureComponent {
         <Wrapper>
           <TitleBar
             title={"Match Results"}
-            right={moment(this.props.match.createdAt).format("MMMM d")}
+            right={moment(this.props.match.createdAt).format("MMMM D")}
           />
           <div style={styles.matchRow}>
             <div style={styles.gameViewer}>
