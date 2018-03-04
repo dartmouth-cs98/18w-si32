@@ -95,7 +95,7 @@ class ProfilePage extends React.Component {
   }
 
   render() {
-    if (!this.props.profileUser || !this.props.profileUser.ranks) return <div></div>;
+    if (!this.props.profileUser || !_.get(this.props.profileUser, "ranks.global")) return <div></div>;
 
     const globalRank = this.props.profileUser.ranks ? this.props.profileUser.ranks.global : "...";
 

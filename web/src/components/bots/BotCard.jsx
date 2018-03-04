@@ -19,7 +19,7 @@ const BotCard = ({ bot, style, hasDivider }) => (
     <div style={styles.skillWrapper}>
       <p style={[colorStyles.darkGray, fontStyles.large]}>{bot.trueSkill.mu.toFixed(1)}</p>
 
-      <p style={fontStyles.small}><StatDifference history={bot.trueSkillHistory} /></p>
+      <div style={fontStyles.small}><StatDifference history={bot.trueSkillHistory} /></div>
     </div>
 
     <h4 style={styles.subtitle}>Rankings</h4>

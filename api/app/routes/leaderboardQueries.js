@@ -66,9 +66,9 @@ module.exports.allRanksQuery = async function(userId) {
   const user = await User.findById(userId);
 
   const rankPromises = user.groups.map(groupId => {
-    return module.exports.rankingQuery({groupId: groupId, userObj: user}).then(rank => {return {_id: groupId, ...rank};});
+    return module.exports.rankingQuery({groupId: groupId, userObj: user}).then(rank => {return {_id: groupId, ...rank};}); // eslint-disable-line
   });
-  rankPromises.push(module.exports.rankingQuery({userObj: user}).then(rank => {return {_id: "global", ...rank};}));
+  rankPromises.push(module.exports.rankingQuery({userObj: user}).then(rank => {return {_id: "global", ...rank};})); // eslint-disable-line
   const ranks = await Promise.all(rankPromises);
   const rankObj = ranks.reduce((obj, rank) => {
     obj[rank._id] = { rank: rank.rank, of: rank.of };
