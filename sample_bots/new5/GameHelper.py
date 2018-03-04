@@ -41,13 +41,13 @@ class GameHelper:
             return None
 
         if position_from[0] < position_to[0]:
-            d = 'down'
-        elif position_from[0] > position_to[0]:
-            d = 'up'
-        elif position_from[1] < position_to[1]:
             d = 'right'
-        elif position_from[1] > position_to[1]:
+        elif position_from[0] > position_to[0]:
             d = 'left'
+        elif position_from[1] < position_to[1]:
+            d = 'down'
+        elif position_from[1] > position_to[1]:
+            d = 'up'
         return self.create_move_command(position_from, d, self.my_units_at_pos(position_from))
 
 

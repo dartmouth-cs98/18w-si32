@@ -23,6 +23,7 @@ while True:
         if len(buildings) > 0:
             for s in units:
                 m = game.move_towards(s.position,buildings[0].position)
+                game.log(m)
                 if m:
                     commands.append(m)
     else:

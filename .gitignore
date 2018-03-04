@@ -9,6 +9,7 @@ ehthumbs.db
 Thumbs.db
 
 *.log
+log.json
 
 
 __pycache__
