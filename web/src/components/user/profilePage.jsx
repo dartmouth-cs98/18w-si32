@@ -95,7 +95,7 @@ class ProfilePage extends React.Component {
   }
 
   render() {
-    if (!this.props.profileUser) return <div></div>;
+    if (!this.props.profileUser || !_.get(this.props.profileUser, "ranks.global")) return <div></div>;
 
     const globalRank = this.props.profileUser.ranks ? this.props.profileUser.ranks.global : "...";
 
@@ -108,7 +108,7 @@ class ProfilePage extends React.Component {
           <p>{this.props.profileUser.rating}</p>
 
           <SubTitle>Global Rank</SubTitle>
-          <p>{globalRank}</p>
+          <p>{globalRank.rank}/{globalRank.of}</p>
 
           <SubTitle>Bots</SubTitle>
           <BotList bots={this.props.bots} />

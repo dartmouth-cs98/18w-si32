@@ -46,7 +46,7 @@ class LeaderboardPage extends React.PureComponent {
           <MainTitle>Leaderboard</MainTitle>
           <SubTitle>{groupLabel}</SubTitle>
           {groupSearchbar(this.state.selectedGroup, this.didSelectGroup, {placeholder: "Choose A Specific Group"})}
-          <span>My Rank: {userRank}</span>
+          <span>My Rank: {userRank ? userRank.rank : ""}</span>
           <LeaderboardTable groupId={groupId} />
         </div>
       </Page>
