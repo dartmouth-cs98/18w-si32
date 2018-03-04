@@ -4,6 +4,7 @@ import _ from "lodash";
 
 import Link from "../common/link";
 import Button from "../common/button";
+import StatDifference from "../common/statDifference";
 import { Wrapper } from "../layout/wrappers";
 
 import { colors, constants, colorStyles, fontStyles } from "../../style";
@@ -14,9 +15,7 @@ const HeaderStatsBar = ({ user }) => (
       <h3 style={styles.title}>Your skill rating</h3>
       <div style={styles.statRow}>
         <span style={styles.stat}>{user.trueSkill.mu.toFixed(1)}</span>
-        <span style={styles.adjustment}>
-          <span style={colorStyles.green}>&uarr;14</span> since last week
-        </span>
+        <StatDifference history={user.trueSkillHistory} />
       </div>
 
     </div>
@@ -67,7 +66,7 @@ const styles = {
   statRow: {
     display: "flex",
     flexDirection: "row",
-    justifyContent: "flex-start",
+    justifyContent: "space-between",
     alignItems: "center",
   },
   stat: {
