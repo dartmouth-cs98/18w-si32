@@ -1,6 +1,4 @@
 import React from "react";
-import Link from "../common/link";
-import _ from "lodash";
 import ReactTable from "react-table";
 import { connect } from "react-redux";
 import "react-table/react-table.css";

@@ -4,7 +4,7 @@ import Canvas from "./Canvas";
 import Button from "../common/button";
 import Progress from "../common/progress";
 
-import { colors } from "../../style"
+import { colors } from "../../style";
 
 class ReplayVisualizer extends React.PureComponent {
   constructor(props) {
@@ -18,7 +18,7 @@ class ReplayVisualizer extends React.PureComponent {
 
   componentDidMount() {
     this.setState({
-      wrapperWidth: this.refs.wrapper.offsetWidth,
+      wrapperWidth: this.wrapperRef.offsetWidth,
     });
   }
 
@@ -31,7 +31,7 @@ class ReplayVisualizer extends React.PureComponent {
   }
 
   incrementCurrentFrame = () => {
-    const nextFrame = this.state.currentFrame + 1
+    const nextFrame = this.state.currentFrame + 1;
     this.setState({ currentFrame: nextFrame });
 
     if ((nextFrame + 1) === this.props.replay.turns.length) {
@@ -66,7 +66,7 @@ class ReplayVisualizer extends React.PureComponent {
     const progressPercentage = this.state.currentFrame === 0 ? 0 : Math.floor((this.state.currentFrame / (this.props.replay.turns.length - 1  ))*100);
 
     return (
-      <div style={styles.wrapper} ref="wrapper">
+      <div style={styles.wrapper} ref={(ref) => { this.wrapperRef = ref; }}>
         { this.renderCanvas() }
         <div style={styles.controls}>
           <Button kind={"primary"} style={styles.button} onClick={this.toggleReplayControl}>

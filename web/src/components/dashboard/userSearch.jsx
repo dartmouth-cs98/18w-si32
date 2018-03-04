@@ -1,6 +1,7 @@
 import React from "react";
 import Radium from "radium";
 import Color from "color";
+import _ from "lodash";
 
 import { getUsersForSearch } from "../../data/user/userRoutes";
 
@@ -22,11 +23,11 @@ const UserSearchEntry = ({ u, r }) => {
       <div style={styles.searchEntryNumeric}>{r}</div>
     </div>
   );
-}
+};
 
 class UserSearch extends React.PureComponent {
   constructor(props) {
-    super(props)
+    super(props);
 
     this.state = {
       query: "",
@@ -74,7 +75,7 @@ class UserSearch extends React.PureComponent {
         </div>
         {items}
       </div>
-    )
+    );
 
   }
 
@@ -185,6 +186,6 @@ const styles = {
     paddingLeft: "2.5%",
     paddingRight: "2.5%",
   }
-}
+};
 
 export default Radium(UserSearch);

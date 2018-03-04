@@ -6,7 +6,7 @@ import history from "../../history";
 import Page from "../layout/page";
 import LandingCanvas from "./LandingCanvas";
 
-import { colors, constants } from "../../style/"
+import { colors, constants } from "../../style/";
 
 class LandingPage extends React.PureComponent {
   constructor(props) {
@@ -25,7 +25,7 @@ class LandingPage extends React.PureComponent {
       <Page style={styles.page}>
         <LandingCanvas />
         <div style={styles.overlay}>
-          <div style={styles.mainText}>The Web's Premier</div>
+          <div style={styles.mainText}>{"The Web's Premier"}</div>
           <div style={styles.mainText}>AI Programming Challenge</div>
         </div>
       </Page>

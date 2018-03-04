@@ -1,9 +1,8 @@
 import React from "react";
-import Color from "color";
 
-import { colors, constants } from "../../style";
+import { constants } from "../../style";
 
-const PIXI = require("pixi.js");
+import { Application, Graphics } from "pixi.js";
 
 const SCENE_BACKGROUND_COLOR = 0xFFFFFF;
 
@@ -43,7 +42,7 @@ class LandingCanvas extends React.PureComponent {
     this.computeSceneParameters();
 
     // setup pixi canvas
-    this.app = new PIXI.Application({
+    this.app = new Application({
       width: this.sp.w,
       height: this.sp.h
     });
@@ -54,13 +53,13 @@ class LandingCanvas extends React.PureComponent {
     this.renderer.backgroundColor = SCENE_BACKGROUND_COLOR;
 
     // create the root graphics and add it as child of the stage
-    this.mapGraphics = new PIXI.Graphics();
+    this.mapGraphics = new Graphics();
     this.mapGraphics.interactive = true;
 
     this.stage.addChild(this.mapGraphics);
 
     // inject the canvas
-    this.refs.landingCanvas.appendChild(this.app.view);
+    this.landingCanvasRef.appendChild(this.app.view);
 
     // start the animation
     this.animate();
@@ -144,7 +143,7 @@ class LandingCanvas extends React.PureComponent {
 
   render() {
     return (
-      <div ref="landingCanvas" style={styles.canvasWrapper}></div>
+      <div ref={ref => { this.landingCanvasRef = ref; }} style={styles.canvasWrapper}></div>
     );
   }
 }
@@ -155,6 +154,6 @@ const styles = {
     justifyContent: "center",
     alignItems: "center",
   }
-}
+};
 
 export default LandingCanvas;

@@ -1,6 +1,5 @@
 import React from "react";
 import Radium from "radium";
-import Color from "color";
 
 import { constants, colors } from "../../style";
 
@@ -12,7 +11,7 @@ class Progress extends React.PureComponent {
       <div style={styles.wrapper}>
         <div style={{...styles.fill, ...fillPercentage }}></div>
       </div>
-    )
+    );
   }
 }
 
@@ -32,6 +31,6 @@ const styles = {
     transition: "width .1s",
     backgroundColor: colors.red,
   }
-}
+};
 
-export default Progress;
+export default Radium(Progress);

@@ -1,6 +1,5 @@
 import React from "react";
 import { connect } from "react-redux";
-import Color from "color";
 
 import Link from "../common/link";
 import Message from "../common/message";
@@ -12,7 +11,6 @@ import { register } from "../../data/session/sessionActions";
 
 import {
   colors,
-  constants,
 } from "../../style";
 
 class RegisterPage extends React.PureComponent {

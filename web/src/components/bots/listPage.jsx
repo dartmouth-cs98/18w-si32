@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 
 import history from "../../history";
 
-import { Page, Link, Wrapper, TitleBar } from "../layout";
+import { Page, Wrapper, TitleBar } from "../layout";
 import { fetchBots } from "../../data/bot/botActions";
 
 import BotList from "./BotList";

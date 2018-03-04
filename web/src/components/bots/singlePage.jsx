@@ -1,7 +1,6 @@
 import React from "react";
 import Radium from "radium";
 import { connect } from "react-redux";
-import { MainTitle, SubTitle } from "../common/titles";
 import { Page, Wrapper, TitleBar } from "../layout";
 import { fetchBot, updateBotCode } from "../../data/bot/botActions";
 

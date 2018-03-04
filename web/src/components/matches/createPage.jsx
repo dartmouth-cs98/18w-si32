@@ -9,7 +9,7 @@ import { createMatch } from "../../data/match/matchActions";
 import { fetchBots } from "../../data/bot/botActions";
 import { Page, Wrapper } from "../layout";
 
-import { fontStyles, colorStyles, colors, constants } from "../../style";
+import { colors, constants } from "../../style";
 
 const BotView = Radium(({ bot }) => {
   return (
@@ -23,7 +23,7 @@ const BotView = Radium(({ bot }) => {
 
 });
 
-const MatchBotList = ({ bots, selectedBotIds, botClicked }) => (
+const MatchBotList = ({ bots, botClicked }) => (
   _.map(bots, (b) => (
     <div onClick={() => botClicked(b._id)} key={b._id} style={styles.listBot}>
       <BotView bot={b} />
@@ -63,7 +63,6 @@ class MatchCreatePage extends React.PureComponent {
       history.push(`/matches/${m[0]._id}`);
     })
     .catch(err => {
-      console.log("goterr", err);
       this.setState({
         error: _.get(err, "response.body.error"),
       });

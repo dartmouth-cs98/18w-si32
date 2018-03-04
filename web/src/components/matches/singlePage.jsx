@@ -1,5 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
+import _ from "lodash";
 import moment from "moment";
 import { Page, Wrapper, TitleBar } from "../layout";
 import { fetchMatch } from "../../data/match/matchActions";
@@ -23,12 +24,11 @@ class MatchSinglePage extends React.PureComponent {
       }
     }).then(log => {
       this.setState({ log });
-      console.log(log);
     });
   }
 
   renderBots = () => {
-    const bots = _.sortBy(this.props.match.bots, 'rank');
+    const bots = _.sortBy(this.props.match.bots, "rank");
     return _.map(bots, b => (
       <div key={b._id} style={[styles.bot, b.user == this.props.sessionUserId ? styles.ownBot : null]}>
         <div style={{display: "flex", alignItems: "flex-end"}}>

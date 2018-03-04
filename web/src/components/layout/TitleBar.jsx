@@ -1,7 +1,7 @@
 import React from "react";
 import Radium from "radium";
 import Button from "../common/button";
-import { MainTitle, SubTitle } from "../common/titles";
+import { MainTitle } from "../common/titles";
 import { Wrapper } from "./";
 import {
   colors,

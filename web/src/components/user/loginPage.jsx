@@ -1,6 +1,5 @@
 import React from "react";
 import { connect } from "react-redux";
-import Color from "color";
 
 import Link from "../common/link";
 import Message from "../common/message";
@@ -12,7 +11,6 @@ import { login } from "../../data/session/sessionActions";
 
 import {
   colors,
-  constants,
 } from "../../style";
 
 class LoginPage extends React.PureComponent {
@@ -49,7 +47,7 @@ class LoginPage extends React.PureComponent {
       .then(() => {
         history.push("/dashboard");
       })
-      .catch((err, res) => {
+      .catch(err => {
         this.setState({
           error: err.response.body.error
         });

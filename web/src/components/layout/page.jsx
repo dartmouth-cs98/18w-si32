@@ -5,7 +5,6 @@ import { constants } from "../../style";
 
 class Page extends React.PureComponent {
   render() {
-    console.log("page");
     return <div style={[styles.base, this.props.style]}>{this.props.children}</div>;
   }
 }

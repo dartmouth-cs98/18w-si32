@@ -2,7 +2,7 @@ import React from "react";
 import Radium from "radium";
 import moment from "moment";
 
-import { colors, constants, colorStyles, fontStyles } from "../../style";
+import { colorStyles } from "../../style";
 
 const NUM_BACK_HISTORY = 15;
 
@@ -32,9 +32,7 @@ const StatDifference = ({ history }) => {
     diffEl = <span style={colorStyles.red}>&darr;{ Math.abs(diff).toFixed(1) }</span>;
   }
 
-
-  console.log(history);
-  const timeEl = <span style={colorStyles.lightGray}>since { moment(prevStat.timestamp).fromNow() }</span>
+  const timeEl = <span style={colorStyles.lightGray}>since { moment(prevStat.timestamp).fromNow() }</span>;
 
   return <div>{diffEl} {timeEl}</div>;
 };
