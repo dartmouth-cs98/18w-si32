@@ -22,7 +22,10 @@ matchRouter.get("/", async (ctx) => {
 });
 
 matchRouter.get("/:matchId", async (ctx) => {
-  const match = await Match.findById(ctx.params.matchId).lean();
+  const match = await Match.findById(ctx.params.matchId)
+    .populate({ path: "bots.user", model: "User", select: "-password" })
+    .populate({ path: "users", model: "User", select: "-password" }) // yes, this is a little duplicative, but it's useful
+    .lean();
 
   if (!match) {
     throw new NotFoundError("couldn't find that match");
