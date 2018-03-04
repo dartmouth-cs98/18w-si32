@@ -93,6 +93,7 @@ class DashboardPage extends React.PureComponent {
 
   render() {
     if (!this.props.user) return <div></div>;
+    console.log(this.props.user);
 
     return (
       <Page style={styles.pageStyles}>
@@ -119,7 +120,7 @@ class DashboardPage extends React.PureComponent {
         <Wrapper style={styles.dashSectionContainer} innerStyle={styles.dashSection}>
           <UserSearch />
         </Wrapper>
-        
+
       </Page>
     );
   }

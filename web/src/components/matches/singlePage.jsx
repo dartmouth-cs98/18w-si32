@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import moment from "moment";
-import { Page, Wrapper} from "../layout";
+import { Page, Wrapper, TitleBar } from "../layout";
 import { fetchMatch } from "../../data/match/matchActions";
 import { fetchLog } from "../../data/match/matchRoutes";
 import ReplayVisualizer from "../replay/ReplayVisualizer";
@@ -54,18 +54,34 @@ class MatchSinglePage extends React.PureComponent {
     return null;
   }
 
+  renderNotDone = () => (
+      <Page>
+        <Wrapper>
+        <div>Game is currently running, check back in a bit</div>
+      </Wrapper>
+    </Page>
+  )
+
   render() {
     if (!this.props.match) return null;
+
+    if (this.props.match.status !== "DONE") {
+      return this.renderNotDone();
+    }
+
     return (
       <Page>
         <Wrapper>
+          <TitleBar
+            title={"Match Results"}
+            right={moment(this.props.match.createdAt).format("MMMM d")}
+          />
           <div style={styles.matchRow}>
             <div style={styles.gameViewer}>
               { this.renderReplay() }
             </div>
             <div style={styles.matchInfo}>
-              <div style={styles.date}>{moment(this.props.match.createdAt).format("MMMM d")}</div>
-              <h3 style={styles.title}>Finish Order</h3>
+              <h3 style={styles.title}>Bot Finish Order</h3>
               { this.renderBots() }
             </div>
           </div>
@@ -79,10 +95,6 @@ const styles = {
   gameViewer: {
     flex: 1,
     padding: "0 20px",
-  },
-  date: {
-    marginBottom: 20,
-    color: colors.medGray,
   },
   matchRow: {
     display: "flex",

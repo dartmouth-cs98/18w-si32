@@ -64,7 +64,6 @@ class ReplayVisualizer extends React.PureComponent {
     }
 
     const progressPercentage = this.state.currentFrame === 0 ? 0 : Math.floor((this.state.currentFrame / (this.props.replay.turns.length - 1  ))*100);
-    console.log("width", this.state.wrapperWidth);
 
     return (
       <div style={styles.wrapper} ref="wrapper">
