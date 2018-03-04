@@ -7,8 +7,16 @@ import { Wrapper } from "../layout/wrappers";
 
 import { colors, constants, colorStyles, fontStyles } from "../../style";
 
-const HeaderStatsBar = ({ user }) => (
-  <Wrapper style={styles.wrapper} innerStyle={styles.inner}>
+const HeaderStatsBar = ({ user }) => {
+  if (!_.get(user, "ranks.global")) {
+    return null;
+  }
+
+  // arbitrarily chosen group to show
+  const group = user.groups[0];
+  const groupRank = user.ranks[group._id];
+
+  return (<Wrapper style={styles.wrapper} innerStyle={styles.inner}>
     <div style={styles.statContainer}>
       <h3 style={styles.title}>Your skill rating</h3>
       <div style={styles.statRow}>
@@ -18,20 +26,20 @@ const HeaderStatsBar = ({ user }) => (
 
     </div>
     <div style={styles.statContainer}>
-      <h3 style={styles.title}>Your ranking at <span style={fontStyles.bold}>Dartmouth</span></h3>
+      <h3 style={styles.title}>Your ranking in <span style={fontStyles.bold}>{group.name}</span></h3>
       <div style={styles.statRow}>
-        <span style={styles.stat}>19/1,234</span>
+        <span style={styles.stat}>{groupRank.rank} <span style={styles.rankOf}>of {groupRank.of}</span></span>
         <span style={styles.adjustment}>
-          <span style={colorStyles.green}>&uarr;14</span> since last week
+          <Button kind="tertiary" href={`/groups/${group._id}`}>See group &rarr;</Button>
         </span>
       </div>
     </div>
     <div style={styles.statContainer}>
       <h3 style={styles.title}>Your global ranking in <span style={fontStyles.bold}>all of Monad</span></h3>
       <div style={styles.statRow}>
-        <span style={styles.stat}>19/1,234</span>
+        <span style={styles.stat}>{user.ranks.global.rank} <span style={styles.rankOf}>of {user.ranks.global.of}</span></span>
         <span style={styles.adjustment}>
-          <span style={colorStyles.green}>&uarr;14</span> since last week
+          <Button kind="tertiary" href="/leaderboard">See leaderboard &rarr;</Button>
         </span>
       </div>
     </div>
@@ -39,8 +47,8 @@ const HeaderStatsBar = ({ user }) => (
       <Button href="/matches/create" kind="primary">Start a match</Button>
     </div>
 
-  </Wrapper>
-);
+  </Wrapper>);
+};
 
 const styles = {
   wrapper: {
@@ -69,6 +77,10 @@ const styles = {
   },
   stat: {
     fontSize: constants.fontSizes.larger,
+  },
+  rankOf: {
+    fontWeight: 300,
+    color: colors.medGray,
   },
   adjustment: {
     color: colors.lightGray,

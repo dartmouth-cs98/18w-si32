@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import _ from "lodash";
 import moment from "moment";
-import { Page, Wrapper, TitleBar } from "../layout";
+import { Page, Wrapper, TitleBar, Link } from "../layout";
 import { fetchMatch } from "../../data/match/matchActions";
 import { fetchLog } from "../../data/match/matchRoutes";
 import ReplayVisualizer from "../replay/ReplayVisualizer";
@@ -30,11 +30,13 @@ class MatchSinglePage extends React.PureComponent {
   renderBots = () => {
     const bots = _.sortBy(this.props.match.bots, "rank");
     return _.map(bots, b => (
-      <div key={b._id} style={[styles.bot, b.user == this.props.sessionUserId ? styles.ownBot : null]}>
+      <div key={b._id} style={[styles.bot, b.user._id == this.props.sessionUserId ? styles.ownBot : null]}>
         <div style={{display: "flex", alignItems: "flex-end"}}>
           <span style={styles.botRank}>{b.rank}</span>
           <span style={styles.botName}>{b.name}</span>
-          { b.user == this.props.sessionUserId ? <span style={styles.ownBotTag}>(You)</span> : null }
+          { b.user._id == this.props.sessionUserId ?
+            <span style={styles.ownBotTag}>(You)</span> :
+            <Link style={styles.otherBotTag} href={`/users/${ b.user._id }`}>{b.user.username}</Link>}
         </div>
         <div style={styles.botSkill}>
           {b.trueSkill.mu.toFixed(1)}
@@ -134,6 +136,16 @@ const styles = {
     marginLeft: 10,
     alignSelf: "center",
     fontWeight: 300,
+  },
+  otherBotTag: {
+    color: colors.medGray,
+    fontSize: constants.fontSizes.small,
+    marginLeft: 10,
+    alignSelf: "center",
+    fontWeight: 400,
+    ":hover": {
+      color: colors.red,
+    },
   },
   botSkill: {
     flex: 1,

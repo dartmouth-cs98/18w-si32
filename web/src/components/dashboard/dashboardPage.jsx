@@ -12,6 +12,7 @@ import HeaderStatsBar from "./HeaderStatsBar";
 
 import { fetchBots } from "../../data/bot/botActions";
 import { fetchMatches } from "../../data/match/matchActions";
+import { fetchUser } from "../../data/user/userActions";
 import { getSessionUser } from "../../data/user/userSelectors";
 import { getMatchesForUser } from "../../data/match/matchSelectors";
 import { getBotsForUser } from "../../data/bot/botSelectors";
@@ -63,6 +64,7 @@ class DashboardPage extends React.PureComponent {
   componentDidMount() {
     this.props.fetchBots(this.props.userId);
     this.props.fetchMatches(this.props.userId);
+    this.props.fetchUser(this.props.userId);
   }
 
   renderNoBots = () => {
@@ -127,6 +129,7 @@ class DashboardPage extends React.PureComponent {
 const mapDispatchToProps = dispatch => ({
   fetchBots: (userId) => dispatch(fetchBots(userId)),
   fetchMatches: (userId) => dispatch(fetchMatches(userId)),
+  fetchUser: (userId) => dispatch(fetchUser(userId, true)),
 });
 
 const mapStateToProps = state => ({
