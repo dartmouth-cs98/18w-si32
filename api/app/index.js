@@ -17,11 +17,6 @@ const PORT = process.env.PORT || 5000;
 const app = new Koa();
 
 app.use(errorMiddleware);
-
-app.use(async (ctx, next) => {
-  await next();
-});
-
 app.use(cors());
 app.use(koaBody({
   multipart: true,

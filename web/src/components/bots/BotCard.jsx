@@ -1,7 +1,7 @@
 import React from "react";
 import Radium from "radium";
-import _ from "lodash";
 import Link from "../common/link";
+import StatDifference from "../common/statDifference";
 
 import { colors, constants, colorStyles, fontStyles } from "../../style";
 
@@ -18,10 +18,11 @@ const BotCard = ({ bot, style, hasDivider }) => (
     <h4 style={styles.subtitle}>Skill Rating</h4>
     <div style={styles.skillWrapper}>
       <p style={[colorStyles.darkGray, fontStyles.large]}>{bot.trueSkill.mu.toFixed(1)}</p>
-      <p style={[fontStyles.small, colorStyles.lightGray]}><span style={colorStyles.green}>+5.3</span> since last week</p>
+
+      <div style={fontStyles.small}><StatDifference history={bot.trueSkillHistory} /></div>
     </div>
 
-    <h4 style={styles.subtitle}>Rankings</h4>
+    {/*<h4 style={styles.subtitle}>Rankings</h4>
     <table style={styles.rankTable}>
       <tbody>
         <tr style={styles.rankTableRow}>
@@ -47,7 +48,7 @@ const BotCard = ({ bot, style, hasDivider }) => (
           </td>
         </tr>
       </tbody>
-    </table>
+    </table>*/}
 
   </div>
 );

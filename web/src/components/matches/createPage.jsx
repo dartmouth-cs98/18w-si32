@@ -4,11 +4,12 @@ import { connect } from "react-redux";
 import _ from "lodash";
 import history from "../../history";
 import Button from "../common/button";
+import Message from "../common/message";
 import { createMatch } from "../../data/match/matchActions";
 import { fetchBots } from "../../data/bot/botActions";
 import { Page, Wrapper } from "../layout";
 
-import { fontStyles, colorStyles, colors, constants } from "../../style";
+import { colors, constants } from "../../style";
 
 const BotView = Radium(({ bot }) => {
   return (
@@ -22,7 +23,7 @@ const BotView = Radium(({ bot }) => {
 
 });
 
-const MatchBotList = ({ bots, selectedBotIds, botClicked }) => (
+const MatchBotList = ({ bots, botClicked }) => (
   _.map(bots, (b) => (
     <div onClick={() => botClicked(b._id)} key={b._id} style={styles.listBot}>
       <BotView bot={b} />
@@ -53,8 +54,21 @@ class MatchCreatePage extends React.PureComponent {
   }
 
   create = () => {
-    this.props.create([this.state.ownBot, this.state.otherBot]).then((m) => {
+    this.setState({
+      submitting: true,
+      error: false,
+    });
+
+    this.props.create([this.state.ownBot._id, this.state.otherBot._id]).then((m) => {
       history.push(`/matches/${m[0]._id}`);
+    })
+    .catch(err => {
+      this.setState({
+        error: _.get(err, "response.body.error"),
+      });
+    })
+    .finally(() => {
+      this.setState({ submitting: false });
     });
   }
 
@@ -75,12 +89,13 @@ class MatchCreatePage extends React.PureComponent {
   }
 
   render() {
-    console.log(this.props);
     return (
       <Page>
         <Wrapper>
           <div style={styles.createWrap}>
             <h1 style={styles.mainTitle}>Start a Match</h1>
+
+            <Message kind="error" style={{marginTop: 15, alignSelf: "center"}}>{ this.state.error }</Message>
 
             <div style={styles.selectedBots.row}>
               { this.renderTitleBox(this.state.ownBot, "Choose one of your own bots") }
@@ -123,6 +138,8 @@ const styles = {
   createWrap: {
     maxWidth: 800,
     margin: "20px auto",
+    display: "flex",
+    flexDirection: "column",
   },
   mainTitle: {
     color: colors.red,

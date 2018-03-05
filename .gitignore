@@ -9,6 +9,7 @@ ehthumbs.db
 Thumbs.db
 
 *.log
+log.json
 
 
 __pycache__
@@ -18,3 +19,4 @@ node_modules
 .env
 .eslintcache
 dist
+.idea

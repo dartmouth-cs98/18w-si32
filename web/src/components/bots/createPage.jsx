@@ -1,8 +1,11 @@
 import React from "react";
 import Radium from "radium";
+import _ from "lodash";
 import { connect } from "react-redux";
 
 import Button from "../common/button";
+import Message from "../common/message";
+import history from "../../history";
 import { Input, Label, FileInput } from "../form";
 import { Page, Wrapper } from "../layout";
 import { createBot } from "../../data/bot/botActions";
@@ -38,7 +41,26 @@ class BotCreatePage extends React.PureComponent {
     }
     // TODO validation
 
-    this.props.create(this.state.botName, this.state.botFile);
+    this.setState({
+      submitting: true,
+      error: false,
+    });
+
+    this.props.create(this.state.botName, this.state.botFile).then(() => {
+      // after making a bot, users probably want to start a match with it
+      // TODO pre-select the bot
+      history.push("/matches/create");
+    })
+    .catch(err => {
+      this.setState({
+        error: _.get(err, "response.body.error") || err,
+      });
+    })
+    .finally(() => {
+      this.setState({
+        submitting: false,
+      });
+    });
   }
 
   render() {
@@ -48,6 +70,7 @@ class BotCreatePage extends React.PureComponent {
           <div style={styles.uploadWrap}>
             <h1 style={[fontStyles.large, colorStyles.red]}>Create a Bot</h1>
             <form style={styles.form} onSubmit={this.submit}>
+              <Message kind="error">{ this.state.error }</Message>
               <Label>Name your bot</Label>
               <Input
                 name="botName"
@@ -56,7 +79,7 @@ class BotCreatePage extends React.PureComponent {
                 onChange={this.handleInputChange}
               />
               <Label>
-                Select your bot's code file <span style={colorStyles.lightGray}>(.py only!)</span>
+                Select your {"bot's"} code file <span style={colorStyles.lightGray}>(.py only!)</span>
               </Label>
               <FileInput
                 name="botFile"
@@ -64,8 +87,8 @@ class BotCreatePage extends React.PureComponent {
               />
 
               <input type="submit" style={{display: "none"}} />
-              <Button kind="primary" onClick={this.submit} style={styles.submitButton}>
-                Create new bot!
+              <Button kind="primary" onClick={this.submit} style={styles.submitButton} disabled={this.state.submitting}>
+                { this.state.submitting ? "Creating your bot" : "Create bot" }
               </Button>
             </form>
           </div>

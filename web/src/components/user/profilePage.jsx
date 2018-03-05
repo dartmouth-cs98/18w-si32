@@ -95,7 +95,7 @@ class ProfilePage extends React.Component {
   }
 
   render() {
-    if (!this.props.profileUser) return <div></div>;
+    if (!this.props.profileUser || !_.get(this.props.profileUser, "ranks.global")) return <div></div>;
 
     const globalRank = this.props.profileUser.ranks ? this.props.profileUser.ranks.global : "...";
 
@@ -105,10 +105,10 @@ class ProfilePage extends React.Component {
           { this.renderFollowLink() }
           <MainTitle>Profile: { this.props.profileUser.username }</MainTitle>
           <SubTitle>Rating</SubTitle>
-          <p>{this.props.profileUser.rating}</p>
+          <p>{this.props.profileUser.trueSkill.mu}</p>
 
           <SubTitle>Global Rank</SubTitle>
-          <p>{globalRank}</p>
+          <p>{globalRank.rank}/{globalRank.of}</p>
 
           <SubTitle>Bots</SubTitle>
           <BotList bots={this.props.bots} />

@@ -60,8 +60,8 @@ class Rules:
                 self.players[move.playerId].decrement_resource(100)
 
         # If there is a building, increase its production count
-        elif tile.building.ownerId == move.playerId:
-            tile.building.increment_production_progress(move.number_of_units)
+        # elif tile.building.ownerId == move.playerId:
+        #     tile.building.increment_production_progress(move.number_of_units)
 
 
     def update_combat_phase(self, moves):
@@ -89,8 +89,6 @@ class Rules:
                     enemy_move = enemy_set[new_position][i]
 
                     if self.opposite_direction(current_move.direction, enemy_move.direction):
-
-                        print('collision detected')
 
                         current_tile = self.map.get_tile(tile.position)
                         enemy_tile = self.map.get_tile(enemy_move.tile.position)
@@ -142,13 +140,13 @@ class Rules:
         sets = [{}, {}]
 
         for move in moves[0]:
-            if tuple(move.direction) not in sets[0]:
+            if tuple(move.position) not in sets[0]:
                 sets[0][tuple(move.position)] = [move]
             else:
                 sets[0][tuple(move.position)].append(move)
 
         for move in moves[1]:
-            if tuple(move.direction) not in sets[1]:
+            if tuple(move.position) not in sets[1]:
                 sets[1][tuple(move.position)] = [move]
             else:
                 sets[1][tuple(move.position)].append(move)

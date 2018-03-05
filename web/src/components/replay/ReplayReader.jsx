@@ -1,11 +1,10 @@
 import React from "react";
 import { connect } from "react-redux";
+import Radium from "radium";
 import Modal from "react-modal";
 import Color from "color";
 
-import Page from "../layout/page";
-
-import { colors, constants } from "../../style"
+import { colors, constants } from "../../style";
 
 class ReplayReader extends React.PureComponent {
   constructor(props) {
@@ -22,21 +21,21 @@ class ReplayReader extends React.PureComponent {
   }
 
   componentDidMount() {
-    const dropZone = document.getElementById('dropZone');
+    const dropZone = document.getElementById("dropZone");
 
-    dropZone.addEventListener('dragenter', this.handleDragEnter, false);
-    dropZone.addEventListener('dragleave', this.handleDragLeave, false);
-    dropZone.addEventListener('dragover', this.handleDragOver, false);
-    dropZone.addEventListener('drop', this.handleFileSelect, false);
+    dropZone.addEventListener("dragenter", this.handleDragEnter, false);
+    dropZone.addEventListener("dragleave", this.handleDragLeave, false);
+    dropZone.addEventListener("dragover", this.handleDragOver, false);
+    dropZone.addEventListener("drop", this.handleFileSelect, false);
   }
 
   componentWillUnmount() {
-    const dropZone = document.getElementById('dropZone');
+    const dropZone = document.getElementById("dropZone");
 
-    dropZone.removeEventListener('dragenter', this.handleDragEnter, false);
-    dropZone.removeEventListener('dragleave', this.handleDragLeave, false);
-    dropZone.removeEventListener('dragover', this.handleDragOver, false);
-    dropZone.removeEventListener('drop', this.handleFileSelect, false);
+    dropZone.removeEventListener("dragenter", this.handleDragEnter, false);
+    dropZone.removeEventListener("dragleave", this.handleDragLeave, false);
+    dropZone.removeEventListener("dragover", this.handleDragOver, false);
+    dropZone.removeEventListener("drop", this.handleFileSelect, false);
   }
 
   setupFileReader = () => {
@@ -138,7 +137,7 @@ class ReplayReader extends React.PureComponent {
                id="file"
                style={styles.hiddenInput}
                onChange={this.handleFileSelect}
-               name="files[]" />
+              />
          <label style={styles.selectButton}
                 htmlFor="file">
                 Choose a file
@@ -148,22 +147,20 @@ class ReplayReader extends React.PureComponent {
   }
 
   render() {
-    const dropZoneCnd = this.state.dragOver ? styles.dropZoneLit : {}
+    const dropZoneCnd = this.state.dragOver ? styles.dropZoneLit : {};
     const fileSelectButton = this.state.dragOver ? null : this.renderFileSelectButton();
 
     return (
-      <Page>
-        <div style={styles.wrapper}>
-          {this.renderBadFileModal()}
-          <div style={styles.uploadHeader}>Replay Your Bot</div>
+      <div style={styles.wrapper}>
+        {this.renderBadFileModal()}
+        <div style={styles.uploadHeader}>Replay Your Bot</div>
 
-          <div style={{...styles.dropZoneBase, ...dropZoneCnd}} id="dropZone">
-            {fileSelectButton}
-            Drop a Replay File to Upload
-          </div>
-
+        <div style={{...styles.dropZoneBase, ...dropZoneCnd}} id="dropZone">
+          {fileSelectButton}
+          Drop a Replay File to Upload
         </div>
-      </Page>
+
+      </div>
     );
   }
 }
@@ -230,12 +227,12 @@ const styles = {
   },
   modal: {
     overlay: {
-      position: 'fixed',
+      position: "fixed",
       top: 0,
       left: 0,
       right: 0,
       bottom: 0,
-      backgroundColor: 'rgba(255, 255, 255, 0.75)'
+      backgroundColor: "rgba(255, 255, 255, 0.75)"
     },
     content: {
       top: "30%",
@@ -255,4 +252,4 @@ const styles = {
   }
 };
 
-export default connect(null, null)(ReplayReader);
+export default connect(null, null)(Radium(ReplayReader));

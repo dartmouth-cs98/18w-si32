@@ -1,27 +1,33 @@
 import React from "react";
-import Color from "color";
 
-import { colors } from "../../style";
+import { Application, Graphics } from "pixi.js";
 
-const PIXI = require("pixi.js");
+const TICK_SPEED = 30;
 
 const SCENE_BACKGROUND_COLOR = 0xFFFFFF;
-const GRID_OUTLINE_COLOR = 0xec0b43;
+// const GRID_OUTLINE_COLOR = 0xec0b43;
 const NEUTRAL_CELL_COLOR = 0x56666b;
 const NEUTRAL_CELL_ALPHA = 0.1;
 
 const CELL_OFFSET_X = 1;
 const CELL_OFFSET_Y = 1;
 
-const BORDER_OFFSET_X = 10;
-const BORDER_OFFSET_Y = 10;
+const BORDER_OFFSET_X = 0;
+const BORDER_OFFSET_Y = 0;
 
-const BASE_SCENE_W = 500;
-const BASE_SCENE_H = 500;
+const BASE_SCENE_W = 600;
+const BASE_SCENE_H = 600;
 
 // TODO: generalize to n players?
 const COLOR_P0 = 0xec0b43;
 const COLOR_P1 = 0x274c77;
+
+const getPlayerColor = (playerN) => {
+  if (playerN == 0) {
+    return COLOR_P0;
+  }
+  return COLOR_P1;
+};
 
 // TODO: calibrate this value
 const MAX_UNITS = 5;
@@ -38,7 +44,7 @@ class Canvas extends React.PureComponent {
     this.computeSceneParameters();
 
     // setup pixi canvas
-    this.app = new PIXI.Application({
+    this.app = new Application({
       width: this.sp.w,
       height: this.sp.h
     });
@@ -49,11 +55,11 @@ class Canvas extends React.PureComponent {
     this.renderer.backgroundColor = SCENE_BACKGROUND_COLOR;
 
     // create the root graphics and add it as child of the stage
-    this.mapGraphics = new PIXI.Graphics();
+    this.mapGraphics = new Graphics();
     this.stage.addChild(this.mapGraphics);
 
     // inject the canvas
-    this.refs.gameCanvas.appendChild(this.app.view);
+    this.gameCanvasRef.appendChild(this.app.view);
 
     // start the animation
     this.animate();
@@ -68,8 +74,8 @@ class Canvas extends React.PureComponent {
     this.sp.cols = this.props.replay.w;
 
     // define cell width and height as function of # and the base values
-    this.sp.cell_w = Math.floor(BASE_SCENE_W / this.sp.cols);
-    this.sp.cell_h = Math.floor(BASE_SCENE_H / this.sp.rows);
+    this.sp.cell_w = Math.floor((this.props.size || BASE_SCENE_W) / this.sp.cols);
+    this.sp.cell_h = Math.floor((this.props.size || BASE_SCENE_H) / this.sp.rows);
 
     this.sp.w = this.sp.cols * (this.sp.cell_w + CELL_OFFSET_X) + BORDER_OFFSET_X*2;
     this.sp.h = this.sp.rows * (this.sp.cell_h + CELL_OFFSET_Y) + BORDER_OFFSET_Y*2;
@@ -77,14 +83,14 @@ class Canvas extends React.PureComponent {
 
   // add the border to main map graphics
   addBorderToStage = () => {
-    this.mapGraphics.lineStyle(1, GRID_OUTLINE_COLOR, 1);
+    /*this.mapGraphics.lineStyle(1, GRID_OUTLINE_COLOR, 1);
     this.mapGraphics.drawPolygon([
       0, 0,
       this.sp.w - 1, 1,
       this.sp.w - 1, this.sp.h - 1,
       1, this.sp.h - 1,
       0, 0
-    ]);
+    ]);*/
   }
 
   // add the grid to main map graphics
@@ -106,7 +112,12 @@ class Canvas extends React.PureComponent {
   }
 
   getCellColorAlpha = (r, c) => {
-    const units = this.props.replay.turns[this.props.frame].map[r][c].u
+    const building = this.props.replay.turns[this.props.frame].map[r][c].b;
+    if (building != undefined) {
+      return { "c": getPlayerColor(building), "a": 1 };
+    }
+
+    const units = this.props.replay.turns[this.props.frame].map[r][c].u;
     if (!units) {
       return { "c": NEUTRAL_CELL_COLOR, "a": NEUTRAL_CELL_ALPHA };
     }
@@ -134,7 +145,7 @@ class Canvas extends React.PureComponent {
     // TODO: how quickly can we clock this and still get a smooth animation?
     // do we for sure want to do a new frame every timestep of the animation?
     // or do we maybe want to uncouple these?
-    setTimeout(() => requestAnimationFrame(this.animate), 500);
+    setTimeout(() => requestAnimationFrame(this.animate), TICK_SPEED);
 
     if (this.props.play && (this.props.frame + 1) < this.props.replay.turns.length) {
       this.props.incrementFrame();
@@ -143,7 +154,7 @@ class Canvas extends React.PureComponent {
 
   render() {
     return (
-      <div ref="gameCanvas" style={styles.canvasWrapper}></div>
+      <div ref={(ref) => {this.gameCanvasRef = ref;}} style={styles.canvasWrapper}></div>
     );
   }
 }
@@ -153,8 +164,7 @@ const styles = {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    padding: "10px",
   }
-}
+};
 
 export default Canvas;

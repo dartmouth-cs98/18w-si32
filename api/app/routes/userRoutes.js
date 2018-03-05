@@ -1,5 +1,7 @@
 const Router = require("koa-router");
 const bcrypt = require("bcryptjs");
+const assert = require("assert");
+const _ = require("lodash");
 
 const session = require("../session");
 const auth = require("../auth");
@@ -110,6 +112,9 @@ userRouter.get("/profile", auth.loggedIn, async (ctx) => {
 
 // TODO split handlers into independent places?
 userRouter.post("/register", async (ctx) => {
+  assert(_.get(ctx, "request.body.username", "").length > 0, "You need to enter a username");
+  assert(_.get(ctx, "request.body.password", "").length > 0, "You need to enter a password");
+
   // hash the password
   const hash = await bcrypt.hash(ctx.request.body.password, 10);
 

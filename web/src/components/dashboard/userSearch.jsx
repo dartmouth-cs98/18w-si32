@@ -1,11 +1,12 @@
+import _ from "lodash";
 import React from "react";
 import Radium from "radium";
 import Color from "color";
 
-import { getUsersForSearch } from "../../data/user/userRoutes";
-
 import Link from "../common/link";
 import { SubTitle } from "../common/titles";
+
+import { getUsersForSearch } from "../../data/user/userRoutes";
 
 import {
   colors,
@@ -22,11 +23,11 @@ const UserSearchEntry = ({ u, r }) => {
       <div style={styles.searchEntryNumeric}>{r}</div>
     </div>
   );
-}
+};
 
 class UserSearch extends React.PureComponent {
   constructor(props) {
-    super(props)
+    super(props);
 
     this.state = {
       query: "",
@@ -53,11 +54,7 @@ class UserSearch extends React.PureComponent {
 
   renderUserList() {
     if (this.state.results.length < 1) {
-      return (
-        <div style={styles.emptyResultsContainer}>
-          Results
-        </div>
-      );
+      return null;
     }
 
     const items = _.map(this.state.results, (u, i) =>
@@ -65,7 +62,6 @@ class UserSearch extends React.PureComponent {
     );
 
     return (
-
       <div>
         <div style={styles.searchResultsHeaderContainer}>
           <span style={styles.searchEntryNumeric}>Rank</span>
@@ -74,7 +70,7 @@ class UserSearch extends React.PureComponent {
         </div>
         {items}
       </div>
-    )
+    );
 
   }
 
@@ -90,12 +86,10 @@ class UserSearch extends React.PureComponent {
             type="text"
             style={styles.input}
             value={this.state.query}
-            onChange={this.handleInputChange}
-          />
+            onChange={this.handleInputChange} />
           <input type="submit"
-               value="Search"
-               style={styles.submitButton}
-          />
+             value="Search"
+             style={styles.submitButton}/>
         </form>
 
         {this.renderUserList()}
@@ -116,7 +110,7 @@ const styles = {
     alignItems: "center"
   },
   input: {
-    width: "75%",
+    width: "85%",
     height: constants.INPUT_HEIGHT,
     fontSize: "16px",
     margin: "10px 0",
@@ -127,19 +121,21 @@ const styles = {
     }
   },
   submitButton: {
-    width: "20%",
-    height: constants.INPUT_HEIGHT,
-    backgroundColor: colors.background,
-    color: colors.red,
-    borderWidth: "1px",
-    borderStyle: "solid",
-    borderColor: colors.red,
-    borderRadius: "2px",
+    cursor: "pointer",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    color: colors.blue,
+    textDecoration: "none",
+    borderRadius: "50px",
+    boxShadow: "0 2px 5px rgba(0,0,0,.15)",
+    padding: "5px 15px",
+    height: 30,
+    fontSize: constants.fontSizes.small,
+    transition: "box-shadow .1s",
     ":hover": {
-      backgroundColor: colors.red,
-      color: colors.background,
-      cursor: "pointer"
-    }
+      boxShadow: "0 3px 5px rgba(0,0,0,.23)",
+    },
   },
   emptyResultsContainer: {
     display: "flex",
@@ -185,6 +181,6 @@ const styles = {
     paddingLeft: "2.5%",
     paddingRight: "2.5%",
   }
-}
+};
 
 export default Radium(UserSearch);

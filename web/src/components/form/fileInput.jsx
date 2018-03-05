@@ -1,14 +1,11 @@
 import React from "react";
 import Radium from "radium";
 
-import Color from "color";
 import {
   colors,
   constants,
 } from "../../style";
 
-
-import Button from "../common/button";
 
 class FileInput extends React.PureComponent {
   constructor() {
@@ -25,7 +22,6 @@ class FileInput extends React.PureComponent {
   }
 
   chooseFile = () => {
-    console.log("focusing", this.fileInput);
     this.fileInput.click();
   }
 
@@ -51,7 +47,7 @@ class FileInput extends React.PureComponent {
       <div style={styles.input} onClick={this.chooseFile}>
         { this.renderInner() }
 
-        <input style={{ display: "none" }} ref={(input) => { this.fileInput = input }} type="file" onChange={this.onChange} name={name} />
+        <input style={{ display: "none" }} ref={(input) => { this.fileInput = input; }} type="file" onChange={this.onChange} name={name} />
       </div>
     );
   }

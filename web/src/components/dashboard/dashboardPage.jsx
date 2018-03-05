@@ -3,8 +3,8 @@ import Radium from "radium";
 import _ from "lodash";
 import { connect } from "react-redux";
 
-import { Link, Page, Wrapper } from "../layout";
 import Button from "../common/button";
+import { Link, Page, Wrapper } from "../layout";
 
 import UserSearch from "./UserSearch";
 import BotCard from "../bots/BotCard";
@@ -12,12 +12,12 @@ import HeaderStatsBar from "./HeaderStatsBar";
 
 import { fetchBots } from "../../data/bot/botActions";
 import { fetchMatches } from "../../data/match/matchActions";
-import { getProfile } from "../../data/user/userActions";
+import { fetchUser } from "../../data/user/userActions";
 import { getSessionUser } from "../../data/user/userSelectors";
 import { getMatchesForUser } from "../../data/match/matchSelectors";
 import { getBotsForUser } from "../../data/bot/botSelectors";
 
-import { MainTitle, SubTitle } from "../common/titles";
+import { MainTitle } from "../common/titles";
 
 import { colors, fontStyles, colorStyles } from "../../style";
 
@@ -64,16 +64,17 @@ class DashboardPage extends React.PureComponent {
   componentDidMount() {
     this.props.fetchBots(this.props.userId);
     this.props.fetchMatches(this.props.userId);
+    this.props.fetchUser(this.props.userId);
   }
 
   renderNoBots = () => {
     return (
-      <p>You don't have any bots yet! To get started playing Monad, <Link href="/bots/create">upload a bot first &rarr;</Link></p>
+      <p>{"You don't have any bots yet!"} To get started playing Monad, <Link href="/bots/create">upload a bot first &rarr;</Link></p>
     );
   }
 
   renderTopBots = () => (
-    <Wrapper innerStyle={styles.dashSection}>
+    <Wrapper style={styles.dashSectionContainer} innerStyle={styles.dashSection}>
       <div style={styles.sectionHeader}>
         <MainTitle>
             Your Top Bots
@@ -95,12 +96,12 @@ class DashboardPage extends React.PureComponent {
     if (!this.props.user) return <div></div>;
 
     return (
-      <Page>
+      <Page style={styles.pageStyles}>
         <HeaderStatsBar user={this.props.user} />
 
         { this.renderTopBots() }
 
-        <Wrapper innerStyle={styles.dashSection}>
+        <Wrapper style={styles.dashSectionContainer} innerStyle={styles.dashSection}>
           <div style={styles.sectionHeader}>
             <MainTitle>
                 Recent Matches
@@ -114,10 +115,12 @@ class DashboardPage extends React.PureComponent {
           </div>
 
           <DashMatchList matches={this.props.matches} />
-
-          <UserSearch />
-
         </Wrapper>
+
+        <Wrapper style={styles.dashSectionContainer} innerStyle={styles.dashSection}>
+          <UserSearch />
+        </Wrapper>
+
       </Page>
     );
   }
@@ -126,6 +129,7 @@ class DashboardPage extends React.PureComponent {
 const mapDispatchToProps = dispatch => ({
   fetchBots: (userId) => dispatch(fetchBots(userId)),
   fetchMatches: (userId) => dispatch(fetchMatches(userId)),
+  fetchUser: (userId) => dispatch(fetchUser(userId, true)),
 });
 
 const mapStateToProps = state => ({
@@ -136,6 +140,12 @@ const mapStateToProps = state => ({
 });
 
 const styles = {
+  pageStyles: {
+    justifyContent: "flex-start",
+  },
+  dashSectionContainer: {
+    width: "100%"
+  },
   dashSection: {
     borderBottom: `2px solid ${colors.border}`,
     paddingBottom: 20,

@@ -1,8 +1,8 @@
 import React from "react";
 import { connect } from "react-redux";
-import Color from "color";
 
 import Link from "../common/link";
+import Message from "../common/message";
 import Page from "../layout/page";
 import { history } from "../../router";
 import Input from "../form/input";
@@ -11,7 +11,6 @@ import { login } from "../../data/session/sessionActions";
 
 import {
   colors,
-  constants,
 } from "../../style";
 
 class LoginPage extends React.PureComponent {
@@ -38,24 +37,34 @@ class LoginPage extends React.PureComponent {
       event.preventDefault();
     }
 
+    this.setState({
+      submitting: true,
+      error: false,
+    });
+
     this.props
       .login(this.state.username, this.state.password)
       .then(() => {
         history.push("/dashboard");
       })
-      .catch((err) => {
-        /* eslint-disable no-console */
-        console.log("FAIL");
-        /* eslint-enable no-console */
+      .catch(err => {
+        this.setState({
+          error: err.response.body.error
+        });
+      }).finally(() => {
+        this.setState({
+          submitting: false,
+        });
       });
   }
 
   render() {
     return (
-      <Page>
+      <Page style={styles.pageStyles}>
         <div style={styles.wrapper}>
           <div style={styles.titleContainer}>Awesome tagline.</div>
           <form style={styles.form} onSubmit={this.doLogin}>
+            <Message kind="error">{ this.state.error }</Message>
             <Input
               name="username"
               key="username"
@@ -74,12 +83,12 @@ class LoginPage extends React.PureComponent {
               onChange={this.handleInputChange}
             />
             <input type="submit" style={{display: "none"}} />
-            <Button kind="primary" style={{width: 200}} onClick={this.doLogin}>
-              Log In
+            <Button kind="primary" style={{width: 200}} onClick={this.doLogin} disabled={this.state.submitting || !this.state.username || !this.state.password}>
+              { this.state.submitting ? "Logging In...": "Log In" }
             </Button>
           </form>
           <div style={styles.registerContainer}>
-            <span style={styles.registerText}>New to SI32? </span>
+            <span style={styles.registerText}>New to Monad? </span>
             <Link
               key="register-link"
               href="/register"
@@ -98,14 +107,18 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const styles = {
+  pageStyles: {
+    display: "flex",
+    justifyContent: "center",
+    flexDirection: "column",
+  },
   wrapper: {
     width: "100%",
     height: "100%",
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
-    alignItems: "center",
-    paddingBottom: "20%"
+    alignItems: "center"
   },
   titleContainer: {
     fontSize: "30px",

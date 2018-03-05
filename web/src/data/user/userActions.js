@@ -1,6 +1,5 @@
 import { httpGetAction, httpPutAction, httpDeleteAction } from "../httpCollectionActions";
 
-// TODO: do we still need / want this?
 const fetchUsers = () => httpGetAction("USER", "/users", null);
 
 const fetchUser = (userId, withranks) => httpGetAction("USER", `/users/${userId}`, { withranks }, { isSingle: true });

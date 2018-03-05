@@ -26,6 +26,12 @@ class Bot(object):
         self.proc.stdin.flush()
         return
 
+    # pass binary data through to the bot's stdin
+    def write_binary(self, data):
+        self.proc.stdin.write(data)
+        self.proc.stdin.flush()
+        return
+
 
 # class for being run in containerized "live" environment
 class DockerBot(Bot):
@@ -43,7 +49,7 @@ class DockerBot(Bot):
         get_bot_file(self.codeUrl, self.playerNum)
 
         # copy everything from bot_common (provided helpers, etc.) into bot dir
-        call("cp bot_common/* /bot%d" % self.playerNum, shell=True)
+        call("cp -R -L bot_common/* /bot%d" % self.playerNum, shell=True)
 
     def run(self):
         command = ["docker", "run", "-i",
@@ -69,6 +75,7 @@ class LocalBot(Bot):
     def __init__(self, name, playerNum):
         self.name = name
         self.playerNum = playerNum
+
 
     def prep(self):
         return

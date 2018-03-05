@@ -1,6 +1,5 @@
 import React from "react";
 import Radium from "radium";
-import Color from "color";
 
 import { constants, colors } from "../../style";
 
@@ -12,7 +11,7 @@ class Progress extends React.PureComponent {
       <div style={styles.wrapper}>
         <div style={{...styles.fill, ...fillPercentage }}></div>
       </div>
-    )
+    );
   }
 }
 
@@ -20,15 +19,18 @@ const styles = {
   wrapper: {
     width: "100%",
     height: constants.PROGRESS_HEIGHT,
-    borderColor: colors.primary,
+    borderColor: colors.red,
     borderWidth: "1px",
     borderStyle: "solid",
-    borderRadius: "2px",
+    borderRadius: "10px",
+    overflow: "hidden",
+    position: "relative",
   },
   fill: {
     height: "100%",
-    backgroundColor: colors.primary
+    transition: "width .1s",
+    backgroundColor: colors.red,
   }
-}
+};
 
-export default Progress;
+export default Radium(Progress);

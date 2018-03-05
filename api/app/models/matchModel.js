@@ -31,6 +31,7 @@ const _Match = new Schema({
 });
 
 _Match.statics.createWithBots = (userId, botIds) => {
+  assert(botIds.length == 2 && _.every(botIds, _.isString), "Need two bots to start a match!");
   return Bot.find({
     "_id": { $in: botIds }
   }).select({ code: 1, _id: 1, name: 1, user: 1, version: 1 }).lean().then(bots => {

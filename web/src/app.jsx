@@ -4,7 +4,6 @@ import { initRouter } from "./router";
 
 import { setUserForSession } from "./data/session/sessionActions";
 
-import Footer from "./components/layout/footer";
 import Navigation from "./components/layout/navigation";
 
 class App extends React.Component {
@@ -33,7 +32,6 @@ class App extends React.Component {
       <div>
         <Navigation />
         <div id="main">{this.main}</div>
-        <Footer />
       </div>
     );
   }

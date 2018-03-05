@@ -1,6 +1,5 @@
 import React from "react";
 import { connect } from "react-redux";
-import Color from "color";
 
 import Page from "../layout/page";
 
@@ -28,10 +27,16 @@ class ReplayPage extends React.PureComponent {
     this.setState({ replay: f });
   }
 
+  resetReplayFile = () => {
+    this.setState({
+      replay: null
+    });
+  }
+
   render() {
     let main;
     if (this.state.replay) {
-      main = <ReplayVisualizer replay={this.state.replay} />;
+      main = <ReplayVisualizer replay={this.state.replay} resetReplayFile={this.resetReplayFile} />;
     } else {
       main = <ReplayReader setReplayFile={this.setReplayFile} />;
     }
@@ -43,9 +48,5 @@ class ReplayPage extends React.PureComponent {
     );
   }
 }
-
-const styles = {
-
-};
 
 export default connect(null, null)(ReplayPage);

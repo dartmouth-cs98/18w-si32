@@ -13,7 +13,7 @@ const INITIAL_STATE = {
 // otherwise replaces existingRecords
 const mergeRecords = (existingRecords, newRecords, doMerge) => {
   const rById = doMerge ? { ...existingRecords }  : {}; // need to create new ref in either case
-  newRecords.forEach(r => rById[r._id] = r);
+  newRecords.forEach(r => rById[r._id] = Object.assign({}, rById[r._id], r));
   return rById;
 };
 

@@ -20,6 +20,6 @@ WORKDIR /app
 RUN mv /tmp/node_modules /app
 
 # copy local files over
-COPY ./app /app
+COPY ./app /app/app
 
 CMD ["nodemon", "app/index.js"]
