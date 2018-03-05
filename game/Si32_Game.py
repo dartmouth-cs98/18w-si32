@@ -7,7 +7,7 @@ from game.Tile import Tile
 from game.Rules import Rules
 from game.Logger import Logger
 
-MAX_ITERS = 300
+MAX_ITERS = 3000
 
 class Game_state(Game):
 
@@ -47,10 +47,10 @@ class Game_state(Game):
 
         # hardcoded for two bots
         self.players.append(Player(0, self.map, bots[0], (5, 5)))
-        self.players.append(Player(1, self.map, bots[1], (45, 45)))
+        self.players.append(Player(1, self.map, bots[1], (15, 15)))
 
         self.map.get_tile((4,4)).create_building(0)
-        self.map.get_tile((46,46)).create_building(1)
+        self.map.get_tile((16,16)).create_building(1)
 
     # ------------------ Main Functions ---------------------
     def start(self):
