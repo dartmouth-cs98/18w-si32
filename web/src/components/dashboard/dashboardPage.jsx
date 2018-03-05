@@ -8,6 +8,7 @@ import { Link, Page, Wrapper } from "../layout";
 
 import UserSearch from "./UserSearch";
 import BotCard from "../bots/BotCard";
+import MatchList from "../matches/MatchList";
 import HeaderStatsBar from "./HeaderStatsBar";
 
 import { fetchBots } from "../../data/bot/botActions";
@@ -44,16 +45,6 @@ const DashBotList = Radium(({ bots }) => {
 
   return (<div style={styles.botCards}>{items}</div>);
 });
-
-const DashMatchList = ({ matches }) => {
-  const items = _.map(matches, m =>
-    <div key={m._id}>
-      <Link href={`/matches/${m._id}`}>{m.status} {m._id}</Link>
-    </div>
-  );
-
-  return <div>{items}</div>;
-};
 
 class DashboardPage extends React.PureComponent {
   constructor(props) {
@@ -114,7 +105,7 @@ class DashboardPage extends React.PureComponent {
             </Button>
           </div>
 
-          <DashMatchList matches={this.props.matches} />
+          <MatchList matches={this.props.matches} />
         </Wrapper>
 
         <Wrapper style={styles.dashSectionContainer} innerStyle={styles.dashSection}>
