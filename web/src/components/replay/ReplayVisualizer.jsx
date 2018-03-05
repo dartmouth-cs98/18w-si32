@@ -30,6 +30,10 @@ class ReplayVisualizer extends React.PureComponent {
     }
   }
 
+  resetReplayFile = () => {
+    this.props.resetReplayFile();
+  }
+
   incrementCurrentFrame = () => {
     const nextFrame = this.state.currentFrame + 1;
     this.setState({ currentFrame: nextFrame });
@@ -45,7 +49,7 @@ class ReplayVisualizer extends React.PureComponent {
       return null;
     }
     return (
-      <Canvas size={this.state.wrapperWidth}
+      <Canvas size={null}
         replay={this.props.replay}
         frame={this.state.currentFrame}
         incrementFrame={this.incrementCurrentFrame}
@@ -69,12 +73,17 @@ class ReplayVisualizer extends React.PureComponent {
       <div style={styles.wrapper} ref={(ref) => { this.wrapperRef = ref; }}>
         { this.renderCanvas() }
         <div style={styles.controls}>
-          <Button kind={"primary"} style={styles.button} onClick={this.toggleReplayControl}>
+          <Button kind={"primary"} style={styles.controlButton} onClick={this.toggleReplayControl}>
             <div>{controlButtonText}</div>
           </Button>
           <div style={styles.progressContainer}>
             <Progress percentage={progressPercentage} />
           </div>
+        </div>
+        <div style={styles.subRow}>
+          <Button kind={"tertiary"} style={styles.navigateButton} onClick={this.resetReplayFile}>
+            <div>&larr; Select Another File</div>
+          </Button>
         </div>
       </div>
     );
@@ -89,20 +98,30 @@ const styles = {
     alignItems: "center",
     padding: "10px 0 0 0"
   },
+  subRow: {
+    width: "80%",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center",
+  },
   controls: {
+    width: "80%",
     marginTop: 10,
     display: "flex",
     flex: 1,
-    alignSelf: "stretch",
     alignItems: "center",
   },
   pageHeader: {
     color: colors.primary,
     fontSize: "30px"
   },
-  button: {
+  controlButton: {
     width: 160,
     marginRight: 10,
+  },
+  navigateButton: {
+    width: 160,
   },
   progressContainer: {
     flex: 1,
