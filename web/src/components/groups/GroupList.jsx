@@ -15,14 +15,13 @@ const GroupListRow = ({ group, leaveGroup, rank }) => {
   const onClickLeave = () => {
     leaveGroup(group._id);
   };
-
   if (!rank) {
     return null;
   }
-  
+    
   return (
     <div style={{display: "flex"}}>
-      <Link href={`/groups/${group._id}`}>{group.name}: {group.description} &nbsp; | &nbsp; Rank: {rank.rank}/{rank.of} &nbsp; | &nbsp;</Link>
+      <Link href={`/leaderboards/${group._id}`}>{group.name}: {group.description} &nbsp; | &nbsp; Rank: {rank} &nbsp; | &nbsp;</Link>
       <button onClick={onClickLeave}>Leave Group</button>
     </div>
   );

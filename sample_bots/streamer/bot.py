@@ -6,9 +6,6 @@ game = GameHelper()
 
 
 while True:
-    # l = sys.stdin.readline()
-    # print(str(i) + ": bot 2 received: " + l,)
-
     commands = []
 
     # load state for next turn

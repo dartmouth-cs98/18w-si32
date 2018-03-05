@@ -50,8 +50,17 @@ const routes = [
     action: () => <FeedPage />
   },
   {
-    path: "/leaderboard",
-    action: () => <LeaderboardPage />
+    path: "/leaderboards",
+    children: [
+      {
+        path: "",
+        action: () => <LeaderboardPage id={"global"} />
+      },
+      {
+        path: "/:id",
+        action: ({ params: { id }}) => <LeaderboardPage id={id}/>
+      }
+    ],
   },
   {
     path: "/replay",
