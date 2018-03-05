@@ -15,7 +15,11 @@ while True:
     buildings = game.enemy_buildings()
 
     if len(buildings) > 0:
-        for t in tiles:
+        for i, t in enumerate(tiles):
+            # if i == 0:
+            #     m = game.build(game.myId, t.position, 1)
+            #     if m:
+            #         commands.append(m)
             if t.units[game.myId] < 8:
                 continue
             else:
