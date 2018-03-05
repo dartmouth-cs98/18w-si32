@@ -2,18 +2,20 @@ import React from "react";
 import Radium from "radium";
 import { connect } from "react-redux";
 
-import Link from "../common/link";
 import history from "../../history";
-import { logout } from "../../data/session/sessionActions";
+import config from "../../config";
+
+import Link from "../common/link";
 import Logo from "../common/logo";
+
+import { logout } from "../../data/session/sessionActions";
 
 import {
   colors,
   constants,
 } from "../../style";
 
-// TODO: determine this based on environment var
-const DOCS_URL = "http://localhost:4001";
+const { DOCS_URL } = config;
 
 class Navigation extends React.PureComponent {
   logout = () => {
