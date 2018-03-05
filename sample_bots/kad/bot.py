@@ -15,14 +15,18 @@ while True:
     buildings = game.enemy_buildings()
 
     if len(buildings) > 0:
-        for t in tiles:
+        for i, t in enumerate(tiles):
+            # if i == 0:
+            #     m = game.build(game.myId, t.position, 1)
+            #     if m:
+            #         commands.append(m)
             if t.units[game.myId] < 8:
                 continue
             else:
                 [x, y] = t.position
-                adjacent = [[x + 1, y + 1], [x - 1, y - 1], [x + 1, y - 1], [x - 1, y + 1]]
+                adjacent = [[x + 1, y], [x - 1, y], [x, y + 1], [x, y - 1]]
                 for a in adjacent:
-                    m = game.move_towards(t.position, adjacent, 2)
+                    m = game.move_towards(t.position, a, 2)
                     if m:
                         commands.append(m)
 

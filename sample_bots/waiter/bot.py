@@ -18,7 +18,7 @@ while True:
 
     nUnits = game.get_total_units()
 
-    if nUnits < 11:
+    if nUnits < 40:
         buildings = game.my_buildings()
         if len(buildings) > 0:
             for s in units:

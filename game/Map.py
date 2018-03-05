@@ -1,7 +1,7 @@
 from .Tile import Tile
 
-width = 50  # width of map
-height = 50  # height of map
+width = 20  # width of map
+height = 20  # height of map
 
 class Map:
     def __init__(self, number_of_players):
