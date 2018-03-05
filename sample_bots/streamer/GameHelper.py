@@ -103,20 +103,20 @@ class GameHelper:
 
 
     #returns True if player with playerId1 has higher unit count at pos1 than player with playerId2 has at pos2
-    def compare_unit_count(self, pos1, pos2, playerId1, playerId2):
-        if (self.get_tile(pos1[0], pos1[1]).units[playerId1] < self.get_tile(pos2[0], pos2[1]).units[playerId2]):
+    def compare_unit_count(self, pos1, pos2):
+        if (self.get_tile(pos1[0], pos1[1]).units[self.myId] > self.get_tile(pos2[0], pos2[1]).units[self.eId]):
             return True
         return False
 
     #returns True if player with playerId1 has more resource than player with playerId2
-    def compare_resource(self, playerId1, playerId2):
-        if (self.players[playerId1].resource > self.players[playerId2].resource):
+    def compare_resource(self):
+        if (self.players[self.myId].resource > self.players[self.eId].resource):
             return True
         return False
 
     # returns True if player with playerId1 has higher building count than player with playerId2
-    def compare_building_count(self, playerId1, playerId2):
-        if (self.get_number_of_buildings_belonging_to_player(playerId1) > self.get_number_of_buildings_belonging_to_player(playerId2)):
+    def compare_building_count(self):
+        if (self.get_number_of_buildings_belonging_to_player(self.myId) > self.get_number_of_buildings_belonging_to_player(self.eId)):
             return True
         return False
 
@@ -130,8 +130,8 @@ class GameHelper:
         return count
 
     #returns True if player with playerId1 has more units than player with playerId2
-    def compare_total_units(self, playerId1, playerId2):
-        if (self.get_total_units(playerId1) > self.get_total_units(playerId2)):
+    def compare_total_units(self):
+        if (self.get_total_units(self.myId) > self.get_total_units(self.eId)):
             return True
         else:
             return False
@@ -207,8 +207,7 @@ class GameHelper:
 
         # returns True if tile at (x, y) contains an enemy building whose defense value is higher than the number of our units to command
         def tile_contains_stronger_enemy_building(x, y):
-            return (self.get_tile(x, y).building is not None) & (
-            (self.get_tile(x, y).building.ownerId + playerId) == 1) & (
+            return tile_contains_enemy_building(x, y) & (
                    self.get_tile(x, y).building.defense >= number_of_units)
 
         # returns True of tile at (x, y) contains enemy units
@@ -233,6 +232,7 @@ class GameHelper:
                 direction = (0, -1)
             else:
                 direction = (0, 0)
+
         elif (things_to_avoid == 'stronger buildings'):
             if (xy_difference[0] > 0) & (not tile_contains_stronger_enemy_building(x0 + 1, y0)):
                 direction = (1, 0)
@@ -244,6 +244,7 @@ class GameHelper:
                 direction = (0, -1)
             else:
                 direction = (0, 0)
+
         elif (things_to_avoid == 'units'):
             if (xy_difference[0] > 0) & (not tile_contains_enemy_units(x0 + 1, y0)):
                 direction = (1, 0)
@@ -263,14 +264,18 @@ class GameHelper:
     #get the number of buildings belonging to player with playerId
     def get_number_of_buildings_belonging_to_player(self, playerId):
         number_buildings = 0
-        i = 0
+
         j = 0
         while (j < self.map.height):
-            while (i < self.map.width):
-                if self.get_tile(i, j).building.ownerId == playerId:
-                    number_buildings += 1
 
-            i += 1
+            i = 0
+            while (i < self.map.width):
+
+                if (self.get_tile(i, j).building is not None):
+                    if (self.get_tile(i, j).building.ownerId == playerId):
+                        number_buildings += 1
+
+                i += 1
             j += 1
 
         return number_buildings
@@ -298,7 +303,7 @@ class GameHelper:
             return None
 
     #return the position of the tile with the greatest resource of a specified distance away from a specified tile
-    def get_free_position_with_greatest_resource_of_range(self, x, y, range):
+    def get_free_position_with_greatest_resource_of_range(self, x, y, r):
         greatest_resource = 0
         greatest_position = None
 
