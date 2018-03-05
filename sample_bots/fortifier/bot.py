@@ -25,7 +25,6 @@ while True:
                 [x, y] = s.position
 
                 surrounding = [[x + 1, y], [x - 1, y], [x, y + 1], [x, y - 1]]
-                # surrounding = [[x + 1, y]]
 
                 for tile in surrounding:
                     m = game.move_towards(s.position,tile, 1)
