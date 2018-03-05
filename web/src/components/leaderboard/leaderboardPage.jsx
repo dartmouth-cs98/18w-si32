@@ -107,6 +107,7 @@ class LeaderboardPage extends React.PureComponent {
     const groupLabel = this.props.selectedGroup ? capitalize(this.props.selectedGroup.name || "Loading...") : "Global";
     const groupId = this.props.selectedGroup ? this.props.selectedGroup.id : "global";
     const userRank = this.props.user.ranks ? this.props.user.ranks[groupId] : null;
+    console.log(userRank);
 
     const titleOptions = this.getRightTitleOptions();
 
@@ -119,7 +120,7 @@ class LeaderboardPage extends React.PureComponent {
           buttonLabel={titleOptions.buttonLabel}
           buttonAction={titleOptions.buttonAction}
         />
-        <span>My Rank: {userRank}</span>
+        <span>My Rank: {userRank ? userRank.rank: ""}</span>
         <LeaderboardTable groupId={groupId} />
       </Page>
     );
