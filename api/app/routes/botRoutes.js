@@ -2,7 +2,7 @@ const Router = require("koa-router");
 const auth = require("../auth");
 const s3 = require("../files/s3");
 const Bot = require("../models").Bot;
-const { AccessError } = require("../errors");
+const { AccessError, MalformedError } = require("../errors");
 
 const botRouter = new Router();
 
@@ -21,6 +21,9 @@ botRouter.get("/", async (ctx) => {
 });
 
 botRouter.post("/", async (ctx) => {
+  if (ctx.request.body.files.code.type != "text/x-python-script") {
+    throw new MalformedError("Bot must be a python file");
+  }
   // const {files, fields} = await asyncBusboy(ctx.req);
   const bot = await Bot.create({
     name: ctx.request.body.fields.name,
