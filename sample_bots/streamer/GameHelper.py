@@ -4,6 +4,7 @@
 import sys
 import json
 import pickle
+import math
 
 directions = {
     'up': [-1,0],
@@ -164,17 +165,14 @@ class GameHelper:
 
         if (resource_at_tile < units_at_tile):
 
-            print(self.get_tile(position[0], position[1]).building is not None)
-            print((self.players[self.myId].resource < resource_cost))
-
             if (resource_at_tile > 0):
                 commands.append(self.mine(self.myId, position, resource_at_tile))
-            greatest_pos = self.get_free_position_with_greatest_resource_of_range(position[0], position[1], 1)
+            greatest = self.get_free_position_with_greatest_resource_of_range(position[0], position[1], 1)
 
             # if there is a free adjacent tile, move to the one with the greatest resource
-            if greatest_pos is not None:
-                if greatest_pos[1] is not None:
-                    direction = (greatest_pos[1][0] - position[0], greatest_pos[1][1] - position[1])
+            if greatest is not None:
+                if greatest[1] is not None:
+                    direction = (greatest[1][0] - position[0], greatest[1][1] - position[1])
                     # build if there's room on the tile
 
 
@@ -332,3 +330,22 @@ class GameHelper:
 
     def get_adjacent_free_position_with_greatest_resource(self, x, y):
         return self.get_free_position_with_greatest_resource_of_range(x, y, 1)
+
+    def get_nearest_player_unit_pos_to_tile(self, x, y, playerId):
+        nearest_enemy = None
+        distance = math.inf
+        for tile in self.get_occupied_tiles(playerId):
+            separation = abs(tile.position[0] - x) + abs(tile.position[1] - y)
+            if  separation < distance:
+                distance = separation
+                nearest_enemy = tile.position
+        
+        return (nearest_enemy, distance)
+
+    def get_nearest_enemy_unit_pos_to_tile(self, x, y):
+        return self.get_nearest_player_unit_pos_to_tile(x, y, self.eId)
+    
+    def get_nearest_friendly_unit_pos_to_tile(self, x, y):
+        return self.get_nearest_player_unit_pos_to_tile(x, y, self.eId)
+    
+  
