@@ -54,11 +54,7 @@ class UserSearch extends React.PureComponent {
 
   renderUserList() {
     if (this.state.results.length < 1) {
-      return (
-        <div style={styles.emptyResultsContainer}>
-          Results
-        </div>
-      );
+      return null;
     }
 
     const items = _.map(this.state.results, (u, i) =>
