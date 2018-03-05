@@ -10,8 +10,6 @@ import {
 
 class TitleBar extends React.PureComponent {
   renderButton = () => {
-    console.log(this.props.buttonLabel);
-    console.log(this.props.buttonAction);
     if (!this.props.buttonLabel || !this.props.buttonAction) {
       return null;
     }
