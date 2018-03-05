@@ -1,11 +1,12 @@
 import React from "react";
 import Radium from "radium";
+import _ from "lodash";
 
 import Button from "../common/button";
 import StatDifference from "../common/statDifference";
 import { Wrapper } from "../layout/wrappers";
 
-import { colors, constants, colorStyles, fontStyles } from "../../style";
+import { colors, constants, fontStyles } from "../../style";
 
 const HeaderStatsBar = ({ user }) => {
   if (!_.get(user, "ranks.global")) {
