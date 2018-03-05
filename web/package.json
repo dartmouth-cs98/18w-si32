@@ -7,6 +7,7 @@
   "scripts": {
     "start": "webpack-dev-server -d --config webpack.dev.js",
     "build": "webpack --config webpack.prod.js",
+    "deploy": "npm run build && surge --domain monad.surge.sh dist/",
     "test": "eslint --ext .jsx --ext .js src",
     "prepush": "npm test",
     "lint:watch": "esw --watch --cache --ext .jsx --ext .js src"

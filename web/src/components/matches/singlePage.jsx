@@ -34,6 +34,7 @@ class MatchSinglePage extends React.PureComponent {
         <div style={{display: "flex", alignItems: "flex-end"}}>
           <span style={styles.botRank}>{b.rank}</span>
           <span style={styles.botName}>{b.name}</span>
+          <span style={styles.botVersion}>v{b.version}</span>
           { b.user._id == this.props.sessionUserId ?
             <span style={styles.ownBotTag}>(You)</span> :
             <Link style={styles.otherBotTag} href={`/users/${ b.user._id }`}>{b.user.username}</Link>}
@@ -156,6 +157,11 @@ const styles = {
     marginLeft: 10,
     width: 50,
     display: "inline-block",
+  },
+  botVersion: {
+    color: colors.lightGray,
+    fontSize: constants.fontSizes.large,
+    marginLeft: 10,
   },
   botDeltaPositive: {
     color: colors.green,

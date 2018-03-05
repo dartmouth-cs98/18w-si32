@@ -3,8 +3,8 @@ import Radium from "radium";
 import _ from "lodash";
 import { connect } from "react-redux";
 
-import { Link, Page, Wrapper } from "../layout";
 import Button from "../common/button";
+import { Link, Page, Wrapper } from "../layout";
 
 import UserSearch from "./UserSearch";
 import BotCard from "../bots/BotCard";
