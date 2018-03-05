@@ -54,7 +54,7 @@ class Navigation extends React.PureComponent {
   renderMainNav() {
     return (
       <div style={styles.mainNav}>
-        <Link style={styles.link} href="/leaderboard">Leaderboard</Link>
+        <Link style={styles.link} href="/leaderboards">Leaderboard</Link>
         {/* <Link style={styles.link} href="/feed">Feed</Link> */}
 
         <Link style={styles.link} href="#" onClick={this.openDocs}>Docs</Link>

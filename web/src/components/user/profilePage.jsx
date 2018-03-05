@@ -78,7 +78,7 @@ class ProfilePage extends React.Component {
     const groupId = this.state.selectedGroup ? this.state.selectedGroup.value : null;
 
     if (groupId) {
-      return <button><a style={{color: "black", textDecoration: "none"}} href={`/groups/${groupId}`} target="_blank">Explore Group</a></button>;
+      return <button><a style={{color: "black", textDecoration: "none"}} href={`/leaderboards/${groupId}`} target="_blank">Explore Group</a></button>;
     } else {
       return <button disabled={true}>Explore Group</button>;
     }
