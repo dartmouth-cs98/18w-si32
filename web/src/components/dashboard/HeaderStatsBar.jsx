@@ -31,7 +31,7 @@ const HeaderStatsBar = ({ user }) => {
       <div style={styles.statRow}>
         <span style={styles.stat}>{groupRank.rank} <span style={styles.rankOf}>of {groupRank.of}</span></span>
         <span style={styles.adjustment}>
-          <Button kind="tertiary" href={`/groups/${group._id}`}>See group &rarr;</Button>
+          <Button kind="tertiary" href={`/leaderboards/${group._id}`}>See group &rarr;</Button>
         </span>
       </div>
     </div> : null }
@@ -40,7 +40,7 @@ const HeaderStatsBar = ({ user }) => {
       <div style={styles.statRow}>
         <span style={styles.stat}>{user.ranks.global.rank} <span style={styles.rankOf}>of {user.ranks.global.of}</span></span>
         <span style={styles.adjustment}>
-          <Button kind="tertiary" href="/leaderboard">See leaderboard &rarr;</Button>
+          <Button kind="tertiary" href="/leaderboards">See leaderboard &rarr;</Button>
         </span>
       </div>
     </div>

@@ -106,6 +106,12 @@ class Canvas extends React.PureComponent {
         const ypos = i * (this.sp.cell_h + CELL_OFFSET_Y) + BORDER_OFFSET_Y;
 
         this.mapGraphics.drawRect(xpos, ypos, this.sp.cell_w, this.sp.cell_h);
+
+        if (r.building) {
+          this.mapGraphics.beginFill(0xFFFFFF);
+          this.mapGraphics.drawStar(xpos + this.sp.cell_w / 2, ypos + this.sp.cell_h / 2, 5, this.sp.cell_w / 2.1);
+        }
+
         this.mapGraphics.endFill();
       }
     }
@@ -114,12 +120,12 @@ class Canvas extends React.PureComponent {
   getCellColorAlpha = (r, c) => {
     const building = this.props.replay.turns[this.props.frame].map[r][c].b;
     if (building != undefined) {
-      return { "c": getPlayerColor(building), "a": 1 };
+      return { "c": getPlayerColor(building), "a": 1, "building": true };
     }
 
     const units = this.props.replay.turns[this.props.frame].map[r][c].u;
     if (!units) {
-      return { "c": NEUTRAL_CELL_COLOR, "a": NEUTRAL_CELL_ALPHA };
+      return { "c": NEUTRAL_CELL_COLOR, "a": NEUTRAL_CELL_ALPHA, "building": false };
     }
     let color, alpha;
     if (units[0] > 0) {
@@ -129,7 +135,7 @@ class Canvas extends React.PureComponent {
       color = COLOR_P1;
       alpha = units[1] / MAX_UNITS;
     }
-    return { "c": color, "a": alpha };
+    return { "c": color, "a": alpha, "building": false };
   }
 
   // recursively render the stage with renderer

@@ -22,7 +22,7 @@ class GroupCreatePage extends React.PureComponent {
     });
     this.props.create(groupInfo).then((res) => {
       // TODO use keyed collections instead of just happening to know that 1 is the group
-      history.push(`/groups/${res[1]._id}`);
+      history.push(`/leaderboards/${res[1]._id}`);
     });
   }
 
