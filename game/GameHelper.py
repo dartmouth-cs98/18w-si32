@@ -85,17 +85,18 @@ class GameHelper:
 
             # if there is a free adjacent tile, move to the one with the greatest resource
             if greatest_pos is not None:
-                direction = (greatest_pos[1][0] - position[0], greatest_pos[1][1] - position[1])
-                #build if there's room on the tile
+                if greatest_pos[1] is not None:
+                    direction = (greatest_pos[1][0] - position[0], greatest_pos[1][1] - position[1])
+                    #build if there's room on the tile
 
 
-                if (self.get_tile(position[0], position[1]).building is not None) | (self.players[playerId].resource < resource_cost):
+                    if (self.get_tile(position[0], position[1]).building is not None) | (self.players[playerId].resource < resource_cost):
 
-                    commands.append(self.move(playerId, position, units_at_tile - resource_at_tile, direction))
-                else:
+                        commands.append(self.move(playerId, position, units_at_tile - resource_at_tile, direction))
+                    else:
 
-                    commands.append(self.move(playerId, position, units_at_tile - resource_at_tile - 1, direction))
-                    commands.append(self.build(playerId, position, 1))
+                        commands.append(self.move(playerId, position, units_at_tile - resource_at_tile - 1, direction))
+                        commands.append(self.build(playerId, position, 1))
 
         #else, have them all (minus one) gather resource, then build (if there is no building), or all gather resource (if there is a building)
         else:
