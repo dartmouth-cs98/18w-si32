@@ -93,7 +93,7 @@ class Rules:
                     if self.opposite_direction(current_move.direction, enemy_move.direction):
 
                         current_tile = self.map.get_tile(tile.position)
-                        enemy_tile = self.map.get_tile(enemy_move.tile.position)
+                        enemy_tile = self.map.get_tile(enemy_move.position)
 
                         if current_move.number_of_units > enemy_move.number_of_units:
                             current_move.decrement_units(enemy_move.number_of_units)
