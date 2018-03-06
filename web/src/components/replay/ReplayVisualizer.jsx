@@ -80,11 +80,13 @@ class ReplayVisualizer extends React.PureComponent {
             <Progress percentage={progressPercentage} />
           </div>
         </div>
-        <div style={styles.subRow}>
-          <Button kind={"tertiary"} style={styles.navigateButton} onClick={this.resetReplayFile}>
-            <div>&larr; Select Another File</div>
-          </Button>
-        </div>
+        { this.props.hideSelectButton ? "" :
+            <div style={styles.subRow}>
+              <Button kind={"tertiary"} style={styles.navigateButton} onClick={this.resetReplayFile}>
+                <div>&larr; Select Another File</div>
+              </Button>
+            </div>
+        }
       </div>
     );
   }

@@ -1,4 +1,6 @@
 
+BUILDING_COST = 100
+
 class Rules:
 
     def __init__(self, map, players):
@@ -57,7 +59,7 @@ class Rules:
         if tile.building is None:
             if (self.player_has_enough_resources(move.playerId)) and (self.map.get_tile(tile.position).units[move.playerId] > 0):
                 tile.create_building(move.playerId)
-                self.players[move.playerId].decrement_resource(100)
+                self.players[move.playerId].decrement_resource(BUILDING_COST)
 
         # If there is a building, increase its production count
         # elif tile.building.ownerId == move.playerId:
@@ -159,4 +161,4 @@ class Rules:
         return (temp[0] == direction2[0]) and (temp[1] == direction2[1])
 
     def player_has_enough_resources(self, playerId):
-        return self.players[playerId].resources >= 100
+        return self.players[playerId].resources >= BUILDING_COST

@@ -169,6 +169,12 @@ class Game_state(Game):
     def get_log(self):
         return self.logger.get_log()
 
+    def get_ranked_by_units(self):
+        if self.players[0].total_units() > self.players[1].total_units():
+            return self.players
+
+        return [self.players[1], self.players[0]]
+
     def log_winner(self):
         result = self.players
         if result[0] != self.winner:

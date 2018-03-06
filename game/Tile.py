@@ -42,10 +42,10 @@ class Tile:
         self.update_units_number()
 
     def update_units_number(self):
-        # TODO no need for this loop, do some math
         while (self.units[0] > 0) and (self.units[1] > 0):
-            self.units[0] -= 1
-            self.units[1] -= 1
+            units = min(self.units[0], self.units[1])
+            self.units[0] -= units
+            self.units[1] -= units
 
     def update_building_status(self, players):
         if self.building is not None:

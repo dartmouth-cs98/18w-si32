@@ -29,7 +29,7 @@ while True:
                 tile.position[0], tile.position[1], game.eId) is not None) & game.get_tile(nearest_enemy_building_position[0],
                                         nearest_enemy_building_position[1]).building.defense < tile.units[game.myId]:
 
-                commands.append(self.GameHelper.single_move_towards_tile_avoiding_things(game.myId, tile.position,
+                commands.append(game.bad_single_move_towards_tile_avoiding_things(game.myId, tile.position,
                                                                                          nearest_enemy_building_position,
                                                                                          tile.units[game.myId],
                                                                                          'stronger_buildings'))
