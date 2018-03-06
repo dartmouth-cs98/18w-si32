@@ -2,6 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 
 import Page from "../layout/page";
+import { Wrapper } from "../layout/wrappers";
 import groupSearchbar from "../groups/groupSearchbar";
 import LeaderboardTable from "./LeaderboardTable";
 
@@ -112,15 +113,17 @@ class LeaderboardPage extends React.PureComponent {
 
     return (
       <Page>
-        {groupSearchbar({value: groupId, label: groupLabel}, this.didSelectGroup, {placeholder: "Choose A Specific Group"})}
-        <TitleBar
-          title={groupLabel}
-          right={titleOptions.right}
-          buttonLabel={titleOptions.buttonLabel}
-          buttonAction={titleOptions.buttonAction}
-        />
-        <span>My Rank: {userRank ? userRank.rank: ""}</span>
-        <LeaderboardTable groupId={groupId} />
+        <Wrapper>
+          {groupSearchbar({value: groupId, label: groupLabel}, this.didSelectGroup, {placeholder: "Choose A Specific Group"})}
+          <TitleBar
+            title={groupLabel}
+            right={titleOptions.right}
+            buttonLabel={titleOptions.buttonLabel}
+            buttonAction={titleOptions.buttonAction}
+          />
+          <span>My Rank: {userRank ? userRank.rank: ""}</span>
+          <LeaderboardTable groupId={groupId} />
+        </Wrapper>
       </Page>
     );
   }
