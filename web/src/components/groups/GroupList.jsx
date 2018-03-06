@@ -18,10 +18,10 @@ const GroupListRow = ({ group, leaveGroup, rank }) => {
   if (!rank) {
     return null;
   }
-    
+
   return (
     <div style={{display: "flex"}}>
-      <Link href={`/leaderboards/${group._id}`}>{group.name}: {group.description} &nbsp; | &nbsp; Rank: {rank} &nbsp; | &nbsp;</Link>
+      <Link href={`/leaderboards/${group._id}`}>{group.name}: {group.description} &nbsp; | &nbsp; Rank: {rank.of} &nbsp; | &nbsp;</Link>
       <button onClick={onClickLeave}>Leave Group</button>
     </div>
   );
