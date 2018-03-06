@@ -56,7 +56,7 @@ class MatchSinglePage extends React.PureComponent {
 
   renderFailed = () => {
     if (this.props.match.result.reason == "BOT_CRASHED") {
-      return (<div style={styles.failureMessage}>a bot crashed, we don't have a replay for this game :(</div>);
+      return (<div style={styles.failureMessage}>{"a bot crashed, we don't have a replay for this game :("}</div>);
     }
   }
 
