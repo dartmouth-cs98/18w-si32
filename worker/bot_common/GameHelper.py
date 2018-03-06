@@ -45,6 +45,20 @@ class GameHelper:
             'direction': directions[direction]
         }
 
+    def position_towards(self, position_from, position_to):
+        if pos_equal(position_from, position_to):
+            return position_from
+
+        if position_from[0] < position_to[0]:
+            return position_from + (1,0)
+        elif position_from[0] > position_to[0]:
+            return position_from + (-1,0)
+        elif position_from[1] < position_to[1]:
+            return position_from + (0,1)
+        elif position_from[1] > position_to[1]:
+            return position_from + (0,-1)
+
+
     #makes a single move from position_from that tries to get closer to position_to while avoiding either enemy units, enemy buildings, or stronger enemy buildings
     def move_towards(self, position_from, position_to, n_units=None):
         if pos_equal(position_from, position_to):
@@ -177,6 +191,7 @@ class GameHelper:
     def move(self, position_from, number_of_units, direction):
         return Command(self.myId, position_from, 'move', number_of_units, directions[direction])
 
+    # TODO remove playerId
     def build(self, playerId, position_build, number_of_units):
         return Command(playerId, position_build, 'build', number_of_units, directions["none"])
 
