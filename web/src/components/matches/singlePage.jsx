@@ -30,26 +30,41 @@ class MatchSinglePage extends React.PureComponent {
   renderBots = () => {
     const bots = _.sortBy(this.props.match.bots, "rank");
     return _.map(bots, b => (
-      <div key={b._id} style={[styles.bot, b.user._id == this.props.sessionUserId ? styles.ownBot : null]}>
-        <div style={{display: "flex", alignItems: "flex-end"}}>
-          <span style={styles.botRank}>{b.rank}</span>
-          <span style={styles.botName}>{b.name}</span>
-          <span style={styles.botVersion}>v{b.version}</span>
-          { b.user._id == this.props.sessionUserId ?
-            <span style={styles.ownBotTag}>(You)</span> :
-            <Link style={styles.otherBotTag} href={`/users/${ b.user._id }`}>{b.user.username}</Link>}
-        </div>
-        <div style={styles.botSkill}>
-          {b.trueSkill.mu.toFixed(1)}
-          <span style={[styles.botSkillDelta, b.trueSkill.delta > 0 ? styles.botDeltaPositive : styles.botDeltaNegative]}>
-            { b.trueSkill.delta > 0 ? "+" : ""}{b.trueSkill.delta.toFixed(1)}
-          </span>
+      <div key={b._id} style={[styles.botRow, b.user._id == this.props.sessionUserId ? styles.ownBot : null]}>
+        { this.props.match.result.crashed == b._id ? <div style={styles.crashed}>Crashed!</div> : "" }
+        <div key={b._id} style={styles.bot}>
+          <div style={{display: "flex", alignItems: "flex-end"}}>
+            <span style={styles.botRank}>{b.rank}</span>
+            <div style={styles.botName}>
+              {b.name}
+            </div>
+            <span style={styles.botVersion}>v{b.version}</span>
+            { b.user._id == this.props.sessionUserId ?
+              <span style={styles.ownBotTag}>(You)</span> :
+              <Link style={styles.otherBotTag} href={`/users/${ b.user._id }`}>{b.user.username}</Link>}
+          </div>
+          <div style={styles.botSkill}>
+            {b.trueSkill.mu.toFixed(1)}
+            <span style={[styles.botSkillDelta, b.trueSkill.delta > 0 ? styles.botDeltaPositive : styles.botDeltaNegative]}>
+              { b.trueSkill.delta > 0 ? "+" : ""}{b.trueSkill.delta.toFixed(1)}
+            </span>
+          </div>
         </div>
       </div>
     ));
   }
 
+  renderFailed = () => {
+    if (this.props.match.result.reason == "BOT_CRASHED") {
+      return (<div style={styles.failureMessage}>a bot crashed, we don't have a replay for this game :(</div>);
+    }
+  }
+
   renderReplay = () => {
+    if (this.props.match.result.success == false) {
+      return this.renderFailed();
+    }
+
     if (this.state.log) {
       return <ReplayVisualizer replay={this.state.log} />;
     }
@@ -112,11 +127,13 @@ const styles = {
     margin: "0 0 10px 0",
   },
   bot: {
-    padding: "10px 10px",
-    borderBottom: `1px solid ${colors.border}`,
     display: "flex",
     alignItems: "flex-end",
     justifyContent: "space-between",
+  },
+  botRow: {
+    padding: "10px",
+    borderBottom: `1px solid ${colors.border}`,
   },
   botName: {
     color: colors.red,
@@ -135,14 +152,12 @@ const styles = {
     color: colors.lightGray,
     fontSize: constants.fontSizes.small,
     marginLeft: 10,
-    alignSelf: "center",
     fontWeight: 300,
   },
   otherBotTag: {
     color: colors.medGray,
     fontSize: constants.fontSizes.small,
     marginLeft: 10,
-    alignSelf: "center",
     fontWeight: 400,
     ":hover": {
       color: colors.red,
@@ -168,6 +183,23 @@ const styles = {
   },
   botDeltaNegative: {
     color: colors.red,
+  },
+  failureMessage: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: "100px 0",
+    borderRadius: 3,
+    border: `2px solid ${colors.border}`,
+    color: colors.lightGray,
+    fontSize: constants.fontSizes.large,
+  },
+  crashed: {
+    textTransform: "uppercase",
+    fontWeight: 300,
+    color: colors.darkGray,
+    marginBottom: 3,
+    fontSize: constants.fontSizes.small,
   },
 };
 
