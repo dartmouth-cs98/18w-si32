@@ -22,14 +22,32 @@ while True:
             if (s.units[game.myId] < 8):
                 continue
             else:
+                game.log(game.building_potential())
                 [x, y] = s.position
 
-                surrounding = [[x + 1, y], [x - 1, y], [x, y + 1], [x, y - 1]]
+                e_buildings = game.enemy_buildings()
+                e_position = e_buildings[0].position
+
+                surrounding = []
+
+                if x < e_position[0]:
+                    surrounding.append([x + 1, y])
+                elif x > e_position[0]:
+                    surrounding.append([x - 1, y])
+
+                if  y < e_position[1]:
+                    surrounding.append([x, y + 1])
+                elif y > e_position[1]:
+                    surrounding.append([x, y - 1])
+
 
                 for tile in surrounding:
-                    m = game.move_towards(s.position,tile, 1)
+                    m = game.move_towards(s.position,tile, 2)
                     if m:
                         commands.append(m)
+                # m = game.mine_tile(game.myId, s.position, game.my_units_at_pos(s.position) - 2 * len(surrounding))
+                # if m:
+                #     commands.append(m)
 
 
     # done for this turn, send all my commands

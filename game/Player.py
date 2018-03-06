@@ -23,7 +23,13 @@ class Player:
 
 
     def send_state(self, players):
-        self.bot.write_binary(pickle.dumps(self.map))
+        to_send = {
+            "map": self.map,
+            "player": {
+                "resources": self.resources
+            }
+        }
+        self.bot.write_binary(pickle.dumps(to_send))
 
     def get_move(self):
         # read a turn from the bot
