@@ -60,6 +60,10 @@ class DockerBot(Bot):
         # run docker and start the bot in its own isolated environment
         self.proc = Popen(command, stdout=PIPE, stdin=PIPE)
 
+    def is_running(self):
+        container = client.containers.get(self.name)
+        return container.status == "running"
+
     # remove docker container
     def cleanup(self):
         container = client.containers.get(self.name)
