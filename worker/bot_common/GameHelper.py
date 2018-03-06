@@ -245,7 +245,7 @@ class GameHelper:
 
         return commands
 
-    def single_move_towards_tile_avoiding_things(self, position_from, position_to, number_of_units, things_to_avoid):
+    def bad_single_move_towards_tile_avoiding_things(self, position_from, position_to, number_of_units, things_to_avoid):
 
         # returns True if tile at (x, y) contains an enemy building
         def tile_contains_enemy_building(x, y):
@@ -331,7 +331,7 @@ class GameHelper:
 
     def get_nearest_building_position_and_distance_belonging_to_player(self, x, y, playerId):
         if (self.get_number_of_buildings_belonging_to_player(playerId) > 0):
-            current_search_distance = 0
+            current_search_distance = 1
 
             while (True):
                 for m in range(-1 * current_search_distance, current_search_distance + 1):
@@ -341,7 +341,7 @@ class GameHelper:
                         if (self.get_tile(x + m, y + n).building is not None):
                             if (self.get_tile(x + m, y + n).building.ownerId == playerId):
                                 return ((x + m, y + n), current_search_distance)
-                    elif (self.map.tile_in_range((x + m, y + n))):
+                    elif (self.map.tile_in_range((x + m, y - n))):
                         if (self.get_tile(x + m, y - n).building is not None):
                             if (self.get_tile(x + m, y + n).building.ownerId == playerId):
                                 return ((x + m, y - n), current_search_distance)
@@ -376,6 +376,7 @@ class GameHelper:
     def get_adjacent_free_position_with_greatest_resource(self, x, y):
         return self.get_free_position_with_greatest_resource_of_range(x, y, 1)
 
+    #ignores buildings, needs to be rewritten with a proper search algorithm like A-star
     def get_nearest_player_unit_pos_to_tile(self, x, y, playerId):
         nearest_enemy = None
         distance = math.inf
@@ -392,6 +393,9 @@ class GameHelper:
 
     def get_nearest_friendly_unit_pos_to_tile(self, x, y):
         return self.get_nearest_player_unit_pos_to_tile(x, y, self.eId)
+
+    def are_my_units_closer_to_tile(self, x, y):
+        return self.get_nearest_friendly_unit_pos_to_tile(x, y)[1] > self.get_nearest_enemy_unit_pos_to_tile(x, y)[1]
 
     def log(self, out):
         self.Logfile.write(str(out) + "\n")
