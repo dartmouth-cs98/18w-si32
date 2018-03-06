@@ -158,6 +158,8 @@ class Game_state(Game):
         for move in moves:
             self.execute_move(move)
 
+
+
     def execute_move(self, move):
         if self.rules.verify_move(move):
             self.logger.add_move(move)
