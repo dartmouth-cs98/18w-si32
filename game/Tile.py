@@ -43,7 +43,7 @@ class Tile:
 
     def update_units_number(self):
         while (self.units[0] > 0) and (self.units[1] > 0):
-            units = Math.min(self.units[0], self.units[1])
+            units = min(self.units[0], self.units[1])
             self.units[0] -= units
             self.units[1] -= units
 
