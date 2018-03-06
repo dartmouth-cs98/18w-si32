@@ -4,7 +4,8 @@
   "engines": {
     "node": ">=6.0.0"
   },
-  "description": "The web API for Si32.",
+  "description": "The web API for Monad",
+  "repository": "https://github.com/dartmouth-cs98/18w-si32",
   "main": "index.js",
   "scripts": {
     "test": "export DB_URI='mongodb://localhost:27017' && export DB_EXTENSION='/si32_test' && mocha --reporter spec --exit",
