@@ -59,7 +59,7 @@ class Rules:
         if tile.building is None:
             if (self.player_has_enough_resources(move.playerId)) and (self.map.get_tile(tile.position).units[move.playerId] > 0):
                 tile.create_building(move.playerId)
-                self.players[move.playerId].decrement_resource(BUILDING_COST)
+                self.players[move.playerId].decrement_resources(BUILDING_COST)
 
         # If there is a building, increase its production count
         # elif tile.building.ownerId == move.playerId:
