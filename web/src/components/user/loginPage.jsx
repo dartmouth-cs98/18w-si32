@@ -62,7 +62,7 @@ class LoginPage extends React.PureComponent {
     return (
       <Page style={styles.pageStyles}>
         <div style={styles.wrapper}>
-          <div style={styles.titleContainer}>Awesome tagline.</div>
+          <div style={styles.titleContainer}>Log In to Monad</div>
           <form style={styles.form} onSubmit={this.doLogin}>
             <Message kind="error">{ this.state.error }</Message>
             <Input
