@@ -1,5 +1,6 @@
 const AWS = require("aws-sdk");
 const fs = require("fs");
+const _ = require("lodash");
 
 const s3 = new AWS.S3({signatureVersion: "v4"});
 
@@ -11,6 +12,16 @@ const MATCH_BUCKET = "si32-matches";
 
 const BOT_EXPIRE = 60 * 5;
 const MATCH_EXPIRE = 60 * 60;
+
+const isPythonFile = (file) => (
+  _.includes([
+    "text/x-python",
+    "text/plain",
+    "application/x-python-code",
+    "application/x-python",
+    "text/x-python-script"
+  ], file.type)
+);
 
 const upload = (bucket, key, file, options={}) => {
   let body = file;
@@ -38,7 +49,7 @@ const upload = (bucket, key, file, options={}) => {
 };
 
 const uploadBot = (userId, botId, code) => {
-  if (code.type != "text/x-python-script") {
+  if (!isPythonFile(code)) {
     throw new MalformedError("Bot must be a python file");
   }
 
@@ -73,4 +84,5 @@ module.exports = {
   getBotUrl,
   uploadLog,
   getLogUrl,
+  isPythonFile,
 };
