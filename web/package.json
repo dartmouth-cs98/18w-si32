@@ -1,7 +1,7 @@
 {
   "name": "web",
   "version": "1.0.0",
-  "description": "",
+  "description": "The web client for Monad",
   "repository": "https://github.com/dartmouth-cs98/18w-si32",
   "main": "webpack.config.js",
   "scripts": {

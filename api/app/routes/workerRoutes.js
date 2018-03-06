@@ -53,7 +53,7 @@ workerRouter.post("/result/:matchId", async (ctx, next) => {
     const logKey = `${matchId}.mp`;
 
     // update the match in the db
-    const matchResult = await Match.handleWorkerResponse(matchId, gameOutput.rankedBots, logKey);
+    const matchResult = await Match.handleWorkerResponse(matchId, gameOutput.rankedBots, logKey, { success: true });
 
     // if that was all successful, put the log in s3
     await s3.uploadLog(matchId, logData);
@@ -64,6 +64,18 @@ workerRouter.post("/result/:matchId", async (ctx, next) => {
   });
   /* eslint-disable no-unused-vars */
 
+});
+
+// ugly to use another route but it's just easier; this will handle timeouts, crashes, etc.
+workerRouter.post("/failed/:matchId", async (ctx, next) => {
+  /* eslint-disable no-unused-vars */
+  const matchId = ctx.params.matchId;
+
+  // update the match in the db
+  const matchResult = await Match.handleWorkerResponse(matchId, ctx.request.body.rankedBots, null, ctx.request.body.result);
+
+  return next();
+  /* eslint-disable no-unused-vars */
 });
 
 module.exports = workerRouter;

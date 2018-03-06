@@ -21,7 +21,7 @@ botRouter.get("/", async (ctx) => {
 });
 
 botRouter.post("/", async (ctx) => {
-  if (ctx.request.body.files.code.type != "text/x-python-script") {
+  if (!s3.isPythonFile(ctx.request.body.files.code)) {
     throw new MalformedError("Bot must be a python file");
   }
   // const {files, fields} = await asyncBusboy(ctx.req);

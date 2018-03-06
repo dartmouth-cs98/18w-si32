@@ -11,7 +11,6 @@ import BotList from "../bots/BotList";
 import GroupList from "../groups/GroupList";
 import groupSearchbar from "../groups/groupSearchbar";
 
-
 import { MainTitle, SubTitle } from "../common/titles";
 
 import { fetchRankings, fetchUser, followUser, unfollowUser, joinGroup, leaveGroup } from "../../data/user/userActions";

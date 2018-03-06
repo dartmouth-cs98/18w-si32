@@ -20,3 +20,7 @@ node_modules
 .eslintcache
 dist
 .idea
+tags
+
+# robin's dope proprietary bots
+sample_bots/fortifier/bot.py

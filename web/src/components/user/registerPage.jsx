@@ -62,7 +62,7 @@ class RegisterPage extends React.PureComponent {
     return (
       <Page style={styles.pageStyles}>
         <div style={styles.wrapper}>
-          <div style={styles.titleContainer}>Different awesome tagline.</div>
+          <div style={styles.titleContainer}>Register for Monad</div>
           <form style={styles.form} onSubmit={this.doRegister}>
             <Message kind="error">{ this.state.error }</Message>
             <Input

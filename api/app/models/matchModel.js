@@ -82,7 +82,7 @@ _Match.statics.getNext = () => {
   });
 };
 
-_Match.statics.handleWorkerResponse = async (id, rankedBots, logKey) => {
+_Match.statics.handleWorkerResponse = async (id, rankedBots, logKey, result={}) => {
   // pull the things we need from gameOutput
   const match = await Match.findById(id);
 
@@ -113,8 +113,10 @@ _Match.statics.handleWorkerResponse = async (id, rankedBots, logKey) => {
   });
 
   // update and save the match back into the db
+  match.result = result;
   match.bots = newBots;
   match.status = "DONE";
+  match.success = true;
   match.logKey = logKey;
   match.markModified("bots"); // need to alert mongoose that the array is different
 

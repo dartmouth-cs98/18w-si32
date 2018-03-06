@@ -1,11 +1,12 @@
 from random import randint
 from game.Building import Building
+from game.Coordinate import Coordinate
 
 
 class Tile:
 
     def __init__(self, position, number_of_players):
-        self.position = position
+        self.position = Coordinate(position)
         self.resource = randint(0, 50)  # amount of resource in the tile (will be randomized for now)
         self.units = self.initialize_units_list(number_of_players)
         self.building = None  # Tiles initialized to not have a building
@@ -42,25 +43,27 @@ class Tile:
         self.update_units_number()
 
     def update_units_number(self):
-        # TODO no need for this loop, do some math
         while (self.units[0] > 0) and (self.units[1] > 0):
-            self.units[0] -= 1
-            self.units[1] -= 1
+            units = min(self.units[0], self.units[1])
+            self.units[0] -= units
+            self.units[1] -= units
 
     def update_building_status(self, players):
         if self.building is not None:
             building_owner = self.building.ownerId
-            enemy_player = 1 - building_owner
+            attacker = 1 - building_owner
 
             #  Check if building will be destroyed by enemy units
-            if self.units[enemy_player] > 0:
-                if self.units[enemy_player] >= 10:
+            if self.units[attacker] > 0:
+                if self.units[attacker] > 10 + self.units[building_owner]:
                     self.destroy_building()
-                    self.units[enemy_player] -= 10
+                    self.units[attacker] -= 10 + self.units[building_owner] 
+                    self.units[building_owner] = 0
                     return # done
 
                 else:
-                    self.units[enemy_player] = 0
+                    self.units[attacker] = 0
+                    self.units[building_owner] -= 10 - self.units[attacker] 
 
             # Check if new units should be produced
             while self.building.production_progress >= 5:

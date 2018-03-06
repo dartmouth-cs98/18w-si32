@@ -25,8 +25,10 @@ class LandingPage extends React.PureComponent {
       <Page style={styles.page}>
         <LandingCanvas />
         <div style={styles.overlay}>
-          <div style={styles.mainText}>{"The Web's Premier"}</div>
-          <div style={styles.mainText}>AI Programming Challenge</div>
+          <div style={styles.mainTextContainer}>
+            <div style={styles.mainText}>{"The Web's Premier"}</div>
+            <div style={styles.mainText}>AI Programming Challenge</div>
+          </div>
         </div>
       </Page>
     );
@@ -54,6 +56,17 @@ const styles = {
     alignItems: "center",
     color: colors.black,
     fontSize: constants.fontSizes.largest
+  },
+  mainTextContainer: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    borderStyle: "solid",
+    borderWidth: "1px",
+    borderRadius: "3px",
+    borderColor: colors.primary,
+    padding: "15px"
   },
   mainText: {
     padding: "5px"

@@ -1,4 +1,4 @@
-from game.Command import Command
+# from game.Command import Command
 # from game.Map import Map
 # from game.Building import resource_cost
 import sys
@@ -21,9 +21,6 @@ class GameHelper:
         # first thing the game server sends us through STDIN is our player id
         self.myId = pickle.load(sys.stdin.buffer)
         self.eId = 1 - self.myId
-        self.me = {
-            "resources": 0
-        }
 
         self.Logfile = open("./game" + str(self.eId) + ".log", "w")
 
@@ -32,9 +29,7 @@ class GameHelper:
 
     # reads in the game state and loads it
     def load_state(self):
-        state = pickle.load(sys.stdin.buffer)
-        self.map = state["map"]
-        self.me = state["player"]
+        self.map = pickle.load(sys.stdin.buffer)
 
     def create_move_command(self, location, direction, n_units):
         return {
@@ -45,24 +40,14 @@ class GameHelper:
             'direction': directions[direction]
         }
 
-    def position_towards(self, position_from, position_to):
-        if pos_equal(position_from, position_to):
-            return position_from
-
-        if position_from[0] < position_to[0]:
-            return position_from + (1,0)
-        elif position_from[0] > position_to[0]:
-            return position_from + (-1,0)
-        elif position_from[1] < position_to[1]:
-            return position_from + (0,1)
-        elif position_from[1] > position_to[1]:
-            return position_from + (0,-1)
-
-
     #makes a single move from position_from that tries to get closer to position_to while avoiding either enemy units, enemy buildings, or stronger enemy buildings
     def move_towards(self, position_from, position_to, n_units=None):
         if pos_equal(position_from, position_to):
             return None
+
+        self.log("Moving:")
+        self.log(position_from)
+        self.log(position_to)
 
         if position_from[0] < position_to[0]:
             d = 'right'
@@ -73,13 +58,14 @@ class GameHelper:
         elif position_from[1] > position_to[1]:
             d = 'up'
 
+        self.log(d)
+
         n_units = n_units if n_units else self.my_units_at_pos(position_from)
-        return self.move(position_from, n_units, d)
+        return self.create_move_command(position_from, d, n_units)
 
 
     def send_commands(self, commands):
-        print(pickle.dumps(commands))
-        # print(json.dumps(commands))
+        print(json.dumps(commands))
         sys.stdout.flush()
 
         # gets all tiles of a player with specified playerId where he has at least one unit
@@ -133,14 +119,6 @@ class GameHelper:
     def get_units(self, x, y, playerId):
         return self.map.get_tile((x, y)).units[playerId]
 
-    def my_resource_count(self):
-        if "resources" in self.me:
-            return self.me["resources"]
-        return 0
-
-    def building_potential(self):
-        return int(self.my_resource_count() / 100)
-
     def my_units_at_pos(self, pos):
         return self.map.get_tile(pos).units[self.myId]
 
@@ -188,17 +166,18 @@ class GameHelper:
 
             # functions to return commands of various types
 
-    def move(self, position_from, number_of_units, direction):
-        return Command(self.myId, position_from, 'move', number_of_units, directions[direction])
+    def move(self, playerId, position_from, number_of_units, direction):
+        return Command(playerId, position_from, 'move', number_of_units, direction)
 
-    # TODO remove playerId
     def build(self, playerId, position_build, number_of_units):
-        return Command(playerId, position_build, 'build', number_of_units, directions["none"])
+        return Command(playerId, position_build, 'build', number_of_units, None)
 
-    def mine(self, position_mine, number_of_units):
-        return Command(self.myId, position_mine, 'mine', number_of_units, directions["none"])
+    def mine(self, playerId, position_mine, number_of_units):
+        return Command(playerId, position_mine, 'mine', number_of_units, None)
 
-    # returns a sequence of commands at a tile so that - if the tile has resource less than number of units, send the unneeded units to the adjacent free tile with greatest resource; then, build on the tile if it's empty
+
+        # returns a sequence of commands at a tile so that - if the tile has resource less than number of units, send the unneeded units to the adjacent free tile with greatest resource; then, build on the tile if it's empty
+
     def efficient_mine_and_build(self, position):
         commands = []
 
@@ -234,9 +213,9 @@ class GameHelper:
 
             if (self.get_tile(position[0], position[1]).building is not None) | (
                         self.players[self.myId].resource < resource_cost):
-                commands.append(self.mine(position, units_at_tile))
+                commands.append(self.mine(self.myId, position, units_at_tile))
             else:
-                commands.append(self.mine(position, units_at_tile - 1))
+                commands.append(self.mine(self.myId, position, units_at_tile - 1))
                 commands.append(self.build(self.myId, position, 1))
 
         for command in commands:

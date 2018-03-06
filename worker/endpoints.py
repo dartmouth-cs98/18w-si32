@@ -21,11 +21,15 @@ def post_match_success(matchId, log):
 
 
 # on failure, send reasoning why
-def post_match_failure(matchId, result, log):
+def post_match_crash(matchId, rankedBots, crashedBot):
     body = {
-        'gameOutput': log,
         'matchId': matchId,
-        'result': result
+        'result': {
+            'success': False,
+            'reason': 'BOT_CRASHED',
+            'crashed': crashedBot,
+        },
+        'rankedBots': rankedBots,
     }
 
-    return requests.post(API + '/result/' + matchId, json=body)
+    return requests.post(API + '/failed/' + matchId, json=body)
