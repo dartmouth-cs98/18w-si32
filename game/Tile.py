@@ -51,17 +51,19 @@ class Tile:
     def update_building_status(self, players):
         if self.building is not None:
             building_owner = self.building.ownerId
-            enemy_player = 1 - building_owner
+            attacker = 1 - building_owner
 
             #  Check if building will be destroyed by enemy units
-            if self.units[enemy_player] > 0:
-                if self.units[enemy_player] >= 10:
+            if self.units[attacker] > 0:
+                if self.units[attacker] > 10 + self.units[building_owner]:
                     self.destroy_building()
-                    self.units[enemy_player] -= 10
+                    self.units[attacker] -= 10 + self.units[building_owner] 
+                    self.units[building_owner] = 0
                     return # done
 
                 else:
-                    self.units[enemy_player] = 0
+                    self.units[attacker] = 0
+                    self.units[building_owner] -= 10 - self.units[attacker] 
 
             # Check if new units should be produced
             while self.building.production_progress >= 5:
