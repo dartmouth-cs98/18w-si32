@@ -18,7 +18,7 @@ while True:
 
     for tile in tiles:
         # if dominant in units and buildings, go on the offensive
-        if self.GameHelper.compare_total_units() & self.GameHelper.compare_building_count() & self.GameHelper.compare_resource():
+        if game.compare_total_units() & game.compare_building_count() & game.compare_resource():
 
             (nearest_enemy_building_position,
              distance) = game.get_nearest_building_position_and_distance_belonging_to_player(

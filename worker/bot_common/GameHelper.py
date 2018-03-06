@@ -329,6 +329,7 @@ class GameHelper:
 
         # get the position of the nearest building from (x, y) that belongs to a player with playerId
 
+
     def get_nearest_building_position_and_distance_belonging_to_player(self, x, y, playerId):
         if (self.get_number_of_buildings_belonging_to_player(playerId) > 0):
             current_search_distance = 1
@@ -350,7 +351,25 @@ class GameHelper:
         else:
             return None
 
-            # return the position of the tile with the greatest resource of a specified distance away from a specified tile
+    def get_nearest_enemy_building_position(self):
+
+        my_buildings = self.my_buildings()
+        enemy_buildings = self.enemy_buildings()
+
+        smallest_distance = 10000
+        closest_building = None
+
+        for building in my_buildings:
+            for enemy_building in enemy_buildings:
+                manhattan_distance = abs(building.position[0] - enemy_building.position[0]) + abs(
+                    building.position[1] - enemy_building.position[1])
+                if (manhattan_distance < smallest_distance):
+                    smallest_distance = manhattan_distance
+                    closest_building = enemy_building
+
+        return closest_building.position
+    
+    # return the position of the tile with the greatest resource of a specified distance away from a specified tile
 
     def get_free_position_with_greatest_resource_of_range(self, x, y, r):
         greatest_resource = 0
