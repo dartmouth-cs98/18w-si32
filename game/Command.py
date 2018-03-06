@@ -1,11 +1,12 @@
 from .Tile import Tile
+from .Coordinate import Coordinate
 
 class Command:
 
     # location is tuple of square, direction is tuple of which direction
     def __init__(self, playerId, position, command, number_of_units, direction):
         self.playerId = playerId
-        self.position = position
+        self.position = Coordinate(position)
         self.command = command
         self.number_of_units = number_of_units
         self.direction = direction
@@ -23,5 +24,3 @@ class Command:
 
     def __str__(self):
         return "Player "+str(self.playerId) + " moving " + str(self.number_of_units) + " units from tile " + str(self.position) + " in direction " + str(self.direction)
-
-test = Command(0, Tile([0, 0], 2), 'move', 5, 90)
