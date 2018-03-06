@@ -2,20 +2,19 @@ mongo:
   image: mongo:jessie
   volumes:
     - ./.dbdata:/data/db
-  log_driver: none
 
 redis:
   image: redis:3.2-alpine
   volumes:
     - ./.redis:/etc/redis/database
-  log_driver: none
 
 si32-api:
   build: .
   ports:
     - "3000:3000"
   volumes:
-    - ./app:/app/app
+    - ./:/app
+    - node_modules:/app/node_modules
   environment:
     PORT: 3000
   links:
