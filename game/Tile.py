@@ -1,11 +1,12 @@
 from random import randint
 from game.Building import Building
+from game.Coordinate import Coordinate
 
 
 class Tile:
 
     def __init__(self, position, number_of_players):
-        self.position = position
+        self.position = Coordinate(position)
         self.resource = randint(0, 50)  # amount of resource in the tile (will be randomized for now)
         self.units = self.initialize_units_list(number_of_players)
         self.building = None  # Tiles initialized to not have a building
