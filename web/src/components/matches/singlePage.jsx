@@ -66,7 +66,7 @@ class MatchSinglePage extends React.PureComponent {
     }
 
     if (this.state.log) {
-      return <ReplayVisualizer replay={this.state.log} />;
+      return <ReplayVisualizer hideSelectButton replay={this.state.log} />;
     }
 
     return null;
