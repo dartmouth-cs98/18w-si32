@@ -38,8 +38,8 @@ class Player:
 
         # parse out the moves for this turn
         try:
-            move_list = json.loads(move_str)
-            commands = [ Command.from_dict(self.playerId, d) for d in move_list ]
+            commands = pickle.loads(eval(move_str))
+            # commands = [ Command.from_dict(self.playerId, d) for d in move_list ]
         except Exception as err:
             print(err)
             # TODO: if invalid command sent, should probably just kick this noob out of the game

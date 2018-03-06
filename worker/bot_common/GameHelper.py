@@ -1,4 +1,4 @@
-# from game.Command import Command
+from game.Command import Command
 # from game.Map import Map
 # from game.Building import resource_cost
 import sys
@@ -60,11 +60,12 @@ class GameHelper:
             d = 'up'
 
         n_units = n_units if n_units else self.my_units_at_pos(position_from)
-        return self.create_move_command(position_from, d, n_units)
+        return self.move(position_from, n_units, d)
 
 
     def send_commands(self, commands):
-        print(json.dumps(commands))
+        print(pickle.dumps(commands))
+        # print(json.dumps(commands))
         sys.stdout.flush()
 
         # gets all tiles of a player with specified playerId where he has at least one unit
@@ -124,7 +125,7 @@ class GameHelper:
         return 0
 
     def building_potential(self):
-        return self.my_resource_count() / 100
+        return int(self.my_resource_count() / 100)
 
     def my_units_at_pos(self, pos):
         return self.map.get_tile(pos).units[self.myId]
@@ -173,23 +174,14 @@ class GameHelper:
 
             # functions to return commands of various types
 
-    def move(self, playerId, position_from, number_of_units, direction):
-        return Command(playerId, position_from, 'move', number_of_units, direction)
+    def move(self, position_from, number_of_units, direction):
+        return Command(self.myId, position_from, 'move', number_of_units, directions[direction])
 
     def build(self, playerId, position_build, number_of_units):
         return Command(playerId, position_build, 'build', number_of_units, None)
 
-    def mine(self, playerId, position_mine, number_of_units):
-        return Command(playerId, position_mine, 'mine', number_of_units, None)
-
-
-    def mine_tile(self, playerId, position, number_of_units):
-        commands = []
-
-        commands.append(self.mine(self.myId, position, number_of_units))
-
-        return commands
-
+    def mine(self, position_mine, number_of_units):
+        return Command(self.myId, position_mine, 'mine', number_of_units, None)
 
     # returns a sequence of commands at a tile so that - if the tile has resource less than number of units, send the unneeded units to the adjacent free tile with greatest resource; then, build on the tile if it's empty
     def efficient_mine_and_build(self, position):

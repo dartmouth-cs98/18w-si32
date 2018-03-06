@@ -97,10 +97,11 @@ class Logger:
 
         coded_position = command.position[0] * self.width + command.position[1]
 
+        direction = coded_directions[tuple(command.direction)] if command.direction else None
         clean_command = {
             'u': command.playerId,
             'p': coded_position,
-            'd': coded_directions[tuple(command.direction)],
+            'd': direction,
             'n': command.number_of_units,
         }
 

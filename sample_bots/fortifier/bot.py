@@ -23,6 +23,7 @@ while True:
                 continue
             else:
                 game.log(game.building_potential())
+                game.log(game.me["resources"])
                 [x, y] = s.position
 
                 e_buildings = game.enemy_buildings()
@@ -45,9 +46,9 @@ while True:
                     m = game.move_towards(s.position,tile, 2)
                     if m:
                         commands.append(m)
-                # m = game.mine_tile(game.myId, s.position, game.my_units_at_pos(s.position) - 2 * len(surrounding))
-                # if m:
-                #     commands.append(m)
+                m = game.mine(s.position, game.my_units_at_pos(s.position) - 2 * len(surrounding))
+                if m:
+                    commands.append(m)
 
 
     # done for this turn, send all my commands
