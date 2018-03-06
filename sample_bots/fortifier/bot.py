@@ -4,10 +4,15 @@ from GameHelper import GameHelper
 
 game = GameHelper()
 
+def euclidean_distance(from_position, to_position):
+    return abs(from_position[0] - to_position[0]) + abs(from_position[1] - to_position[1])
 
 while True:
     # l = sys.stdin.readline()
     # print(str(i) + ": bot 2 received: " + l,)
+
+    game.log(game.building_potential())
+    game.log(game.me["resources"])
 
     commands = []
 
@@ -18,12 +23,20 @@ while True:
 
     buildings = game.enemy_buildings()
     if len(buildings) > 0:
+
+        closest_to_enemy = None
+        closest_to_enemy_distance = float("inf")
+
         for s in units:
+            if (euclidean_distance(s.position, buildings[0].position) < closest_to_enemy_distance):
+                closest_to_enemy = s
+                closest_to_enemy_distance = euclidean_distance(s.position, buildings[0].position)
+
             if (s.units[game.myId] < 8):
-                continue
+                m = game.mine(s.position, game.my_units_at_pos(s.position))
+                if m:
+                    commands.append(m)
             else:
-                game.log(game.building_potential())
-                game.log(game.me["resources"])
                 [x, y] = s.position
 
                 e_buildings = game.enemy_buildings()
@@ -49,6 +62,11 @@ while True:
                 m = game.mine(s.position, game.my_units_at_pos(s.position) - 2 * len(surrounding))
                 if m:
                     commands.append(m)
+
+        if (game.building_potential() > 0):
+            m = game.build(game.myId, closest_to_enemy.position, game.my_units_at_pos(closest_to_enemy.position))
+            if m:
+                commands.append(m)
 
 
     # done for this turn, send all my commands

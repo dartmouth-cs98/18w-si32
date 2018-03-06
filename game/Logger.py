@@ -89,10 +89,11 @@ class Logger:
 
     def add_move(self, command):
         coded_directions = {
+            (0, 0): -1,
             (1,0): 0,
             (0,1): 1,
             (-1,0): 2,
-            (0,-1): 3,
+            (0,-1): 3
         }
 
         coded_position = command.position[0] * self.width + command.position[1]

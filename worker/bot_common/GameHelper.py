@@ -178,10 +178,10 @@ class GameHelper:
         return Command(self.myId, position_from, 'move', number_of_units, directions[direction])
 
     def build(self, playerId, position_build, number_of_units):
-        return Command(playerId, position_build, 'build', number_of_units, None)
+        return Command(playerId, position_build, 'build', number_of_units, directions["none"])
 
     def mine(self, position_mine, number_of_units):
-        return Command(self.myId, position_mine, 'mine', number_of_units, None)
+        return Command(self.myId, position_mine, 'mine', number_of_units, directions["none"])
 
     # returns a sequence of commands at a tile so that - if the tile has resource less than number of units, send the unneeded units to the adjacent free tile with greatest resource; then, build on the tile if it's empty
     def efficient_mine_and_build(self, position):
@@ -219,9 +219,9 @@ class GameHelper:
 
             if (self.get_tile(position[0], position[1]).building is not None) | (
                         self.players[self.myId].resource < resource_cost):
-                commands.append(self.mine(self.myId, position, units_at_tile))
+                commands.append(self.mine(position, units_at_tile))
             else:
-                commands.append(self.mine(self.myId, position, units_at_tile - 1))
+                commands.append(self.mine(position, units_at_tile - 1))
                 commands.append(self.build(self.myId, position, 1))
 
         for command in commands:
