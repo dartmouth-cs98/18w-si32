@@ -97,6 +97,7 @@ class Game_state(Game):
         # Check moves for combat, and sort by type of command
         moves = self.rules.update_combat_phase(moves)  # Run both players moves through combat phase, return updated list of moves
         moves = sort_moves(moves)
+        moves = self.add_implicit_commands(moves)
 
         self.log("After:")
         self.log(moves[0])
@@ -136,7 +137,6 @@ class Game_state(Game):
 
         return False
 
-
     def time_limit_reached(self):
         if self.iter < MAX_ITERS:
             return False
@@ -162,6 +162,50 @@ class Game_state(Game):
         if self.rules.verify_move(move):
             self.logger.add_move(move)
             self.rules.update_by_move(move)
+
+    def count_units_sent(self, moves):
+        tiles = {}
+
+        for move in moves:
+
+            if tuple(move.position) not in tiles:
+                tiles[tuple(move.position)] = move.number_of_units
+
+            else:
+                tiles[tuple(move.position)] += move.number_of_units
+
+        return tiles
+
+    def add_implicit_commands(self, moves):
+        new_moves = copy(moves)
+        counts = []
+
+        for player in moves:
+            counts.append(self.count_units_sent(player))
+
+        i = 0
+
+        while i < len(counts):
+            command_count = counts[i]
+
+            for tile_position in command_count:
+
+                tile = self.map.get_tile(list(tile_position))
+
+                if command_count[tile_position] < tile.units[i]:
+
+                    remaining_units = tile.units[i] - command_count[tile_position]
+
+                    if tile.has_building():
+                        new_moves[i].append(Command(i, list(tile_position), 'build', remaining_units, [0,0]))
+
+                    else:
+                        new_moves[i].append(Command(i, list(tile_position), 'mine', remaining_units, [0,0]))
+
+            i += 1
+
+        return new_moves
+
 
     def write_log(self, file_name):
         self.logger.write(file_name)
