@@ -1,14 +1,15 @@
-SI32
-====
+# Monad (Working Title)
 
-Si32 will be an online environment where players can submit their own bots to play against each other in a very simple Starcraft-style turn-based strategy game. Each bot will control an army of "units" which will build "factories" that will spawn more units; the objective of the game is to destroy all of the opponent's factories. Bots will control all aspects of gameplay and will direct how each and every unit will move.
+Monad is a web-based artificial intelligence programming challenge. The user-facing interface is a web client where users submit code files that implement bots. These bots then compete against the bots submitted by other users in a simple turn-based strategy game (think: Starcraft meets Chess).  Bots thus control all aspects of gameplay and direct how each and every unit available to  will move.
 
-Basic functionalities we're hoping to implement:
+**Implemented Functionalities:**
+
 - The game (obviously)
 - A leaderboard
 - Basic stats/analysis for each user
 
-Stretch goals:
+**Planned Functionalities:**
+
 - Guided tutorials/AIs of incremental difficulties for players to train their bots against
 - Statistical analysis during the match (of advantage, positions, etc.)
 - Team VS gameplay
@@ -40,7 +41,7 @@ Users can import the library and simply call `game.send_moves()` to get the stat
 Furthermore, these provide helpful classes for objects in the game that make it easier for the user to focus on
 strategy. These will at first only be in Python.
 
-## Setup
+## Development
 
 ### Frontend / Database
 
@@ -72,4 +73,6 @@ Tong Xu
 
 ## Acknowledgments
 
-Inspiration: Halite
+Professor Tim Tregubov. 
+
+We derived a significant degree of inspiration from the [Halite](https://halite.io) programming challenge. While we are deeply indebted to the creators of this superb competition, we simultaneously hope to differentiate our product from theirs via original game mechanics and additional web interface functionalities that combine to produce a fundamentally different user experience. 
