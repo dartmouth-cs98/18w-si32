@@ -16,7 +16,8 @@ while True:
 
     units = game.get_my_units()
 
-    buildings = game.enemy_buildings()
+    eBuildings = game.enemy_buildings()
+
     if len(buildings) > 0:
         for s in units:
             m = game.move_towards(s.position,buildings[0].position)

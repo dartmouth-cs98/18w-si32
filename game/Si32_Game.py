@@ -198,11 +198,9 @@ class Game_state(Game):
 
                     remaining_units = tile.units[i] - command_count[tile_position]
 
-                    if tile.has_building():
-                        new_moves[i].append(Command(i, list(tile_position), 'build', remaining_units, [0,0]))
-
-                    else:
-                        new_moves[i].append(Command(i, list(tile_position), 'mine', remaining_units, [0,0]))
+                    #if tile.has_building():
+                    #    new_moves[i].append(Command(i, list(tile_position), 'build', remaining_units, [0,0]))
+                    new_moves[i].append(Command(i, list(tile_position), 'mine', remaining_units, [0,0]))
 
             i += 1
 
