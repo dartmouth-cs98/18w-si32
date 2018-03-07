@@ -61,10 +61,6 @@ class Rules:
                 tile.create_building(move.playerId)
                 self.players[move.playerId].decrement_resource(BUILDING_COST)
 
-        # If there is a building, increase its production count
-        # elif tile.building.ownerId == move.playerId:
-        #     tile.building.increment_production_progress(move.number_of_units)
-
 
     def update_combat_phase(self, moves):
         sets = self.moves_to_dictionary(moves)
