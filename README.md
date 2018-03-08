@@ -1,4 +1,6 @@
 # Monad 
+[![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://opensource.org/licenses/MIT)
+
 _Last updated: 7 March 2018_
 
 ## Overview
