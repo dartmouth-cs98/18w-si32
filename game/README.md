@@ -1,11 +1,11 @@
-## Si32 - Game Notes 
+# Monad - Game Notes
 
-A work-in-progress overview of the Si32 game. 
+A work-in-progress overview of the Monad game.
 
-### High Level Considerations
+## High Level Considerations
 
 * Turn based
-* Simple / constrained instruction set 
+* Simple / constrained instruction set
 * Aesthetically pleasing visualization
 * Victory follows naturally from effective gameplay (no 'inflection points')
 * Fundamental tradeoffs
@@ -17,7 +17,7 @@ A work-in-progress overview of the Si32 game.
 * Time constraints (scalability)
 * Space for continuous improvement / optimization
 	* Multiple objectives
-	* Objectives can be optimized independently 
+	* Objectives can be optimized independently
 	* Balance
 * Heuristics
 	* Simple to grasp / comprehend
