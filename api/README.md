@@ -1,13 +1,11 @@
-SI32 API
-=======
+# Monad Web API
 
-The API component of Si32
+The web API component of Monad.
 
 ## Building and Running
-1. From the web directory, run `docker-compose build`
-2. Run `docker-compose up`, which will launch all needed containers
-    (mongo, node, and whatever else we might want eventually)
 
+1. Within the `api/` directory, run `npm run build` (`docker-compose build`)
+2. Run `npm run up` (`docker-compose up`), which will launch all needed containers (mongo, redis, and node)
 
 ## Deploying
 

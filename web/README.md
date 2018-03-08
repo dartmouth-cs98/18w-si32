@@ -1,25 +1,25 @@
-SI32 Web
-========
+# Monad Web
 
-The UI component of Si32
+The web client component of Monad.
 
-## Building and Running
+## Development
 
-From this directory, `docker-compose build` and then `docker-compose up` should run the front end on your machine at `localhost:4000`.
+Within the the `web/` directory, run `npm run start` to build the client and serve
+it on your machine at `localhost:4000`.
 
-Any changes to code inside `/src` should propagate through without needing
-to rebuild the image.  
+There is also the option of running locally with Docker.
+Within the `web/` directory, run `docker-compose build` and then `docker-compose up`
+to build the client and serve it on your machine at `localhost:4000`.
 
-## Running Locally
-
-Use `npm start` to run a dev server.
+In either case, any changes to code inside `/src` should propagate through without
+needing to rebuild.  
 
 ## Deploying
 
-`npm build` will build the app for deployment into the `/dist` folder.
+`npm run build` will build the app for deployment into the `/dist` folder.
 
-After you `npm install -g surge`, running `surge` from the dist folder will
-let you quickly deploy to surge.sh.
+`npm run deploy` will first build the application for deployment, and will
+then deploy with Surge.
 
 ## Anatomy
 
