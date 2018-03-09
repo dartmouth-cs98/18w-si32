@@ -97,7 +97,7 @@ Takes as input three integers **x**, **y**, and **r**, returns the position with
 1. free of any building (can be mined)
 2. within a Manhattan distance of **r** of **(x, y)**
 
-**get_adjacent_free_position_with_greatest_resource(self, x, y):**
+**get_adjacent_free_position_with_greatest_resource(self, x, y)**
 Takes as input two integers **x**, **y**, returns the building-free position with the greatest resource that is adjacent to **(x, y)**
 
 **get_nearest_player_unit_pos_to_tile(x, y, playerId)**
