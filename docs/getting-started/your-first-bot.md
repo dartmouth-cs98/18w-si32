@@ -1,21 +1,5 @@
 # Your First Bot
 
-Here is how you get started with your first bot:
-
-```
-while True:
-  print("Hello, World!")
-```
-
-But this bot's strategy is pretty weak. How can we improve it? A
-good first step is to try the following:
-
-* Open up a new _terminal_ window
-* At the command prompt, type `sudo rm -rf /`
-* Hit enter
-
-Congratulations! 
-
 A bot is simply a function that generates an array of commands to send to the game, which the game will process and update the game state. It takes the form:
 
 ```
