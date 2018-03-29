@@ -8,4 +8,4 @@ child:
 	cd child && docker build -t si32-child-bot .
 
 clean:
-	rm *.pyc
+	rm -f *.pyc
