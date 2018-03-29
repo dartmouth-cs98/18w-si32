@@ -27,10 +27,25 @@ class GameHelper:
             "resources": 0
         }
 
+        self.turn_handler = None
+
         self.Logfile = open("./game" + str(self.eId) + ".log", "w")
 
     def __del__(self):
         self.Logfile.close()
+
+    @classmethod
+    def register_turn_handler(cls, handler):
+        newGame = cls()
+        newGame.turn_handler = handler
+        newGame.run_game()
+        return newGame
+
+    def run_game(self):
+        while True:
+            self.load_state()
+            commands = self.turn_handler(self)
+            self.send_commands(commands)
 
     # reads in the game state and loads it
     def load_state(self):
