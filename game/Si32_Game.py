@@ -7,7 +7,7 @@ from game.Tile import Tile
 from game.Rules import Rules
 from game.Logger import Logger
 
-MAX_ITERS = 3000
+MAX_ITERS = 2000
 
 class Game_state(Game):
 
