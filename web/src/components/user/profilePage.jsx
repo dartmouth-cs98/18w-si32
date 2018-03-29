@@ -1,23 +1,24 @@
 import React from "react";
+import Radium from "radium";
 import _ from "lodash";
 import { connect } from "react-redux";
 
-import Page from "../layout/page";
-import Link from "../common/link";
-import { Wrapper } from "../layout/wrappers";
+import { Link, Page, Wrapper, TitleBar } from "../layout";
+import Button from "../common/button";
 
 import MatchList from "../matches/MatchList";
 import BotList from "../bots/BotList";
 import GroupList from "../groups/GroupList";
 import groupSearchbar from "../groups/groupSearchbar";
 
-import { MainTitle, SubTitle } from "../common/titles";
+import { SubTitle } from "../common/titles";
 
 import { fetchRankings, fetchUser, followUser, unfollowUser, joinGroup, leaveGroup } from "../../data/user/userActions";
 import { fetchBots } from "../../data/bot/botActions";
 import { fetchMatches } from "../../data/match/matchActions";
 import { getMatchesForUser } from "../../data/match/matchSelectors";
 import { getBotsForUser } from "../../data/bot/botSelectors";
+import { colors } from "../../style";
 
 class ProfilePage extends React.Component {
   constructor(props) {
@@ -51,10 +52,17 @@ class ProfilePage extends React.Component {
       return;
     } else if (_.includes(this.props.profileUser.followers, this.props.sessionUser._id)) {
       // if the session user is currently following the profile user
-      return <Link onClick={this.props.unfollowUser}>Unfollow</Link>;
+      return <Button
+                kind="primary"
+                style={styles.followingButton} 
+                onClick={this.props.unfollowUser}
+                hoverContent="Unfollow"
+              >
+                Following
+              </Button>;
     } else {
       // if the session user is not currently following the profile user
-      return <Link onClick={this.props.followUser}>Follow</Link>;
+      return <Button kind="primary" style={{padding: "0 40px", height: 40}} onClick={this.props.followUser}>Follow</Button>;
     }
   }
 
@@ -101,8 +109,7 @@ class ProfilePage extends React.Component {
     return (
       <Page>
         <Wrapper>
-          { this.renderFollowLink() }
-          <MainTitle>Profile: { this.props.profileUser.username }</MainTitle>
+          <TitleBar title={this.props.profileUser.username} right={this.renderFollowLink()} />
           <SubTitle>Rating</SubTitle>
           <p>{this.props.profileUser.trueSkill.mu}</p>
 
@@ -143,7 +150,7 @@ const mapStateToProps = (state, props) => ({
   bots: getBotsForUser(state, props.id),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ProfilePage);
+export default connect(mapStateToProps, mapDispatchToProps)(Radium(ProfilePage));
 
 const styles = {
   groupActionBox: {
@@ -153,5 +160,17 @@ const styles = {
     justifyContent: "center",
     alignItems: "center",
     paddingTop: "20px"
+  },
+  followingButton: {
+    borderColor: colors.border,
+    borderWidth: 1,
+    color: colors.medGray,
+    width: 150,
+    height: 40,
+    ":hover": {
+      background: "transparent",
+      borderWidth: 2,
+      color: colors.medGray,
+    },
   },
 };
