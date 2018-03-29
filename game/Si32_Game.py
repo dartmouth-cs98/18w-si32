@@ -1,4 +1,5 @@
 import json
+from copy import copy
 from game.Command import Command
 from game.Game import Game
 from game.Player import Player
