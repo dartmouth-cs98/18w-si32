@@ -6,8 +6,6 @@ from game.Map import Map
 from game.Tile import Tile
 from game.Rules import Rules
 from game.Logger import Logger
-import signal
-
 
 MAX_ITERS = 3000
 
@@ -108,9 +106,14 @@ class Game_state(Game):
             for tile in tiles:
                 tile.update_units_number()
 
+    # returns true if at least one player in the game is still "alive"
+    # in terms of valid code execution
     def has_living_player(self):
-        # TODO should return false if all players have timed or errored out
-        return True
+        for p in self.players:
+            # if any player is alive, return true
+            if not (p.crashed or p.timed_out):
+                return True
+        return False
 
     def check_game_over(self):
         if (self.check_unit_victory_condition()) or (self.time_limit_reached()) or not self.has_living_player():
