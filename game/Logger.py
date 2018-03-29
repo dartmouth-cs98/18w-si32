@@ -108,8 +108,12 @@ class Logger:
 
         self.turn_log['cmd'].append(clean_command)
 
-    def add_ranked_bot(self, bot):
-        self.log['rankedBots'].append(bot.name)
+    def add_ranked_player(self, player):
+        self.log['rankedBots'].append({
+            '_id': player.bot.name,
+            'crashed': player.crashed,
+            'timedOut': player.timed_out,
+        })
 
     def get_log(self):
         return gzip.compress(msgpack.packb(self.log))
