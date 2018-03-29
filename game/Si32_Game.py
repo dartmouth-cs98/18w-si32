@@ -1,5 +1,6 @@
 import json
 from copy import copy
+
 from game.Command import Command
 from game.Game import Game
 from game.Player import Player
@@ -8,7 +9,7 @@ from game.Tile import Tile
 from game.Rules import Rules
 from game.Logger import Logger
 
-MAX_ITERS = 2000
+from game.params import MAX_ITERS
 
 class Game_state(Game):
 

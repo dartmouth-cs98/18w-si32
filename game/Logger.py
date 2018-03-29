@@ -1,7 +1,7 @@
-from copy import copy
 import json
-import msgpack
 import gzip
+import msgpack
+from copy import copy
 
 # logger strips out unneeded properties and stores/logs only the information needed
 # and in the format expected by the front-end. By maintaining this independently,

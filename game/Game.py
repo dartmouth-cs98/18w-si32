@@ -1,7 +1,7 @@
-from abc import ABC, abstractmethod
 import sys
-from subprocess import Popen, PIPE
 import pickle
+from subprocess import Popen, PIPE
+from abc import ABC, abstractmethod
 
 class Game(ABC):
     def __init__(self, bots):

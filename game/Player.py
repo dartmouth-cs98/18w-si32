@@ -1,20 +1,24 @@
-from random import random, randint
 import json
-from .Command import Command
 import pickle
 import signal
+from random import random, randint
 
-starting_distance = 30
+from game.Command import Command
+
+from game.params import INITIAL_RESOURCES
 
 class timeout:
     def __init__(self, seconds=1, error_message='Timeout'):
         self.seconds = seconds
         self.error_message = error_message
+
     def handle_timeout(self, signum, frame):
         raise TimeoutError(self.error_message)
+
     def __enter__(self):
         signal.signal(signal.SIGALRM, self.handle_timeout)
         signal.alarm(self.seconds)
+
     def __exit__(self, type, value, traceback):
         signal.alarm(0)
 
@@ -29,16 +33,15 @@ class Player:
         self.playerId = playerId
         self.map = map
 
-        self.resources = 100
+        self.resources = INITIAL_RESOURCES
         self.starting_pos = starting_pos
         self.units_produced = 0
 
         starting_tile = self.map.get_tile(self.starting_pos)
         starting_tile.increment_units(playerId)
 
-
     def send_state(self, players):
-        if self.crashed or self.timed_out: 
+        if self.crashed or self.timed_out:
             return
 
         to_send = {
@@ -81,7 +84,6 @@ class Player:
     # Find all tiles in which player has units to control
     def get_occupied_tiles(self):
         tiles = []
-
         for col in self.map.tiles:
             for tile in col:
                 if tile.units[self.playerId] > 0:
@@ -91,7 +93,6 @@ class Player:
 
     def get_buildings(self):
         tiles = []
-
         for col in self.map.tiles:
             for tile in col:
                 if tile.building and tile.building.ownerId == self.playerId:
