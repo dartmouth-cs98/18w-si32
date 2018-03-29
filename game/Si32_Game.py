@@ -8,17 +8,6 @@ from game.Rules import Rules
 from game.Logger import Logger
 import signal
 
-class timeout:
-    def __init__(self, seconds=1, error_message='Timeout'):
-        self.seconds = seconds
-        self.error_message = error_message
-    def handle_timeout(self, signum, frame):
-        raise TimeoutError(self.error_message)
-    def __enter__(self):
-        signal.signal(signal.SIGALRM, self.handle_timeout)
-        signal.alarm(self.seconds)
-    def __exit__(self, type, value, traceback):
-        signal.alarm(0)
 
 MAX_ITERS = 3000
 
@@ -46,8 +35,6 @@ class Game_state(Game):
         self.iter = 0
 
         self.winner = None
-
-        self.state_log = []
 
         super().__init__(bots)
 
@@ -94,32 +81,15 @@ class Game_state(Game):
     # send all players the updated game state so they can make decisions
     def send_state(self):
         for p in self.players:
-            try:
-                p.send_state(self.players)
-            except Exception as err:
-                p.crashed = True
+            p.send_state(self.players)
 
     # read all moves from the players and update state accordingly
     def read_moves(self):
 
         moves = []
         for p in self.players:
-            # a timed-out or crashed player is done; they just sit there
-            # attempt to get moves for the bot
-            try: 
-                with timeout(seconds=3):
-                    m = p.get_move()
-                    moves.append(m)
-            except (TimeoutError, Exception) as err:
-                # if the bot timed out, mark so
-                if type(err) is TimeoutError:
-                    p.timed_out = True
-                    moves.append([]) 
-
-                # TODO figure out how to handle a crashed bot in here
-                # right now seems like because the docker container crashes it falls
-                # all the way through to startWorker.py instead of here?
-
+            m = p.get_move()
+            moves.append(m)
 
         # Check moves for combat, and sort by type of command
         moves = self.rules.update_combat_phase(moves)  # Run both players moves through combat phase, return updated list of moves

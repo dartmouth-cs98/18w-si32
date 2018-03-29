@@ -2,8 +2,21 @@ from random import random, randint
 import json
 from .Command import Command
 import pickle
+import signal
 
 starting_distance = 30
+
+class timeout:
+    def __init__(self, seconds=1, error_message='Timeout'):
+        self.seconds = seconds
+        self.error_message = error_message
+    def handle_timeout(self, signum, frame):
+        raise TimeoutError(self.error_message)
+    def __enter__(self):
+        signal.signal(signal.SIGALRM, self.handle_timeout)
+        signal.alarm(self.seconds)
+    def __exit__(self, type, value, traceback):
+        signal.alarm(0)
 
 class Player:
     def __init__(self, playerId, map, bot, starting_pos):
@@ -41,16 +54,19 @@ class Player:
             return []
 
         # read a turn from the bot
-        move_str = self.bot.read()
         commands = []
-
-        # parse out the moves for this turn
         try:
-            commands = pickle.loads(eval(move_str))
-            # commands = [ Command.from_dict(self.playerId, d) for d in move_list ]
-        except Exception as err:
-            print(err)
-            # TODO: if invalid command sent, should probably just kick this noob out of the game
+            with timeout(seconds=3):
+                move_str = self.bot.read()
+
+                # parse out the moves for this turn
+                commands = pickle.loads(eval(move_str))
+
+        except TimeoutError as err:
+            # if the bot timed out, mark so
+            print("TIMED OUT")
+            self.timed_out = True
+            return []
 
         return commands
 
