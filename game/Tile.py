@@ -1,6 +1,7 @@
 from random import randint
 from game.Building import Building
 from game.Coordinate import Coordinate
+import itertools
 
 
 class Tile:
@@ -47,6 +48,47 @@ class Tile:
             units = min(self.units[0], self.units[1])
             self.units[0] -= units
             self.units[1] -= units
+
+    def update_units_number_multi(self):
+        i = 0
+        ids_players_with_units = []
+
+        total_number_of_units = 0
+
+        for player_unit_count in self.units:
+            if player_unit_count > 0:
+                total_number_of_units += player_unit_count
+                ids_players_with_units.append(i)
+
+            i += 1
+
+        num_players_with_units = len(ids_players_with_units)
+
+        pairs = itertools.combinations(ids_players_with_units, 2)
+
+        pair_to_units_to_send_dict = {}
+
+        #calculate for each player how many units they will send towards each other player
+        for pair in pairs:
+            id1 = pair[0]
+            id2 = pair[1]
+
+            id1_units = self.units[id1]
+            other_units_for_id1 = total_number_of_units - id1_units
+
+        #TODO: finish writing multi-player combat
+
+
+
+
+
+
+
+    #calculates combat between two players with the units they send toward each other
+    def in_square_two_player_combat(self, playerId1, playerId2, units1, units2):
+        smaller = min(units1, units2)
+        self.units[playerId1] -= smaller
+        self.units[playerId2] -= smaller
 
     def update_building_status(self, players):
         if self.building is not None:
