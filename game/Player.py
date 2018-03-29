@@ -9,13 +9,15 @@ class Player:
     def __init__(self, playerId, map, bot, starting_pos):
         self.bot = bot
 
+        self.winner = False
+        self.timed_out = False
+        self.crashed = False
+
         self.playerId = playerId
         self.map = map
-        self.winner = False
+
         self.resources = 100
-
         self.starting_pos = starting_pos
-
         self.units_produced = 0
 
         starting_tile = self.map.get_tile(self.starting_pos)
@@ -23,6 +25,9 @@ class Player:
 
 
     def send_state(self, players):
+        if self.crashed or self.timed_out: 
+            return
+
         to_send = {
             "map": self.map,
             "player": {
@@ -32,6 +37,9 @@ class Player:
         self.bot.write_binary(pickle.dumps(to_send))
 
     def get_move(self):
+        if self.crashed or self.timed_out:
+            return []
+
         # read a turn from the bot
         move_str = self.bot.read()
         commands = []

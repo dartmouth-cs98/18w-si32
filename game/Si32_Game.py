@@ -6,6 +6,19 @@ from game.Map import Map
 from game.Tile import Tile
 from game.Rules import Rules
 from game.Logger import Logger
+import signal
+
+class timeout:
+    def __init__(self, seconds=1, error_message='Timeout'):
+        self.seconds = seconds
+        self.error_message = error_message
+    def handle_timeout(self, signum, frame):
+        raise TimeoutError(self.error_message)
+    def __enter__(self):
+        signal.signal(signal.SIGALRM, self.handle_timeout)
+        signal.alarm(self.seconds)
+    def __exit__(self, type, value, traceback):
+        signal.alarm(0)
 
 MAX_ITERS = 3000
 
@@ -77,30 +90,40 @@ class Game_state(Game):
         self.logger.barebones_new_turn(self.map)
         self.logger.end_turn()
 
+
     # send all players the updated game state so they can make decisions
     def send_state(self):
         for p in self.players:
-            p.send_state(self.players)
+            try:
+                p.send_state(self.players)
+            except Exception as err:
+                p.crashed = True
 
     # read all moves from the players and update state accordingly
     def read_moves(self):
 
         moves = []
         for p in self.players:
-            moves.append(p.get_move())
+            # a timed-out or crashed player is done; they just sit there
+            # attempt to get moves for the bot
+            try: 
+                with timeout(seconds=3):
+                    m = p.get_move()
+                    moves.append(m)
+            except (TimeoutError, Exception) as err:
+                # if the bot timed out, mark so
+                if type(err) is TimeoutError:
+                    p.timed_out = True
+                    moves.append([]) 
 
-        self.log("After:")
-        self.log(moves[0])
-        self.log(moves[1])
+                # TODO figure out how to handle a crashed bot in here
+                # right now seems like because the docker container crashes it falls
+                # all the way through to startWorker.py instead of here?
 
 
         # Check moves for combat, and sort by type of command
         moves = self.rules.update_combat_phase(moves)  # Run both players moves through combat phase, return updated list of moves
         moves = sort_moves(moves)
-
-        self.log("After:")
-        self.log(moves[0])
-        self.log(moves[1])
 
         for player_moves in moves:
             self.execute_moves(player_moves)
@@ -115,8 +138,12 @@ class Game_state(Game):
             for tile in tiles:
                 tile.update_units_number()
 
+    def has_living_player(self):
+        # TODO should return false if all players have timed or errored out
+        return True
+
     def check_game_over(self):
-        if (self.check_unit_victory_condition()) or (self.time_limit_reached()):
+        if (self.check_unit_victory_condition()) or (self.time_limit_reached()) or not self.has_living_player():
             self.log_winner()
             return True
         else:
@@ -188,6 +215,7 @@ class Game_state(Game):
     def log(self, out):
         self.debugLogFile.write(str(out) + "\n")
         self.debugLogFile.flush()
+
 # We want to execute commmands in the following order: move, build, mine
 def sort_moves(moves):
     sorted_moves = []
@@ -209,19 +237,3 @@ def sort_moves(moves):
 
     return sorted_moves
 
-
-#test = Game_state([1,2])
-
-# moves = self.get_random_player_moves()
-
-# self.map.get_tile([39,40]).increment_units(1, 2)
-# moves = [ [], [] ]
-# moves[0].append(Command(0, test.map.get_tile([0,0]), 'move', 1, [1,0]))
-# moves[1].append(Command(1, test.map.get_tile([5,5]), 'move', 1, [1,0]))
-
-# test.play_a_turn(moves)
-# p1 = test.players[0].get_occupied_tiles()
-# p2 = test.players[1].get_occupied_tiles()
-# test.write_game_log()
-
-# print(test.map.tiles[1][0])

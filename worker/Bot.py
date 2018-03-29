@@ -40,8 +40,6 @@ class DockerBot(Bot):
         self.name = name
         self.codeUrl = codeUrl
 
-    # eventually will download/unzip etc. bot from server
-    # for now, mock "prep" stage by copying from local dir into docker vol
     def prep(self):
         sys.stdout.flush()
 
