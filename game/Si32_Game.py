@@ -7,7 +7,7 @@ from game.Tile import Tile
 from game.Rules import Rules
 from game.Logger import Logger
 
-MAX_ITERS = 3000
+MAX_ITERS = 2000
 
 class Game_state(Game):
 
@@ -33,8 +33,6 @@ class Game_state(Game):
         self.iter = 0
 
         self.winner = None
-
-        self.state_log = []
 
         super().__init__(bots)
 
@@ -77,6 +75,7 @@ class Game_state(Game):
         self.logger.barebones_new_turn(self.map)
         self.logger.end_turn()
 
+
     # send all players the updated game state so they can make decisions
     def send_state(self):
         for p in self.players:
@@ -87,21 +86,13 @@ class Game_state(Game):
 
         moves = []
         for p in self.players:
-            moves.append(p.get_move())
-
-        self.log("After:")
-        self.log(moves[0])
-        self.log(moves[1])
-
+            m = p.get_move()
+            moves.append(m)
 
         # Check moves for combat, and sort by type of command
         moves = self.rules.update_combat_phase(moves)  # Run both players moves through combat phase, return updated list of moves
         moves = sort_moves(moves)
         moves = self.add_implicit_commands(moves)
-
-        self.log("After:")
-        self.log(moves[0])
-        self.log(moves[1])
 
         for player_moves in moves:
             self.execute_moves(player_moves)
@@ -116,8 +107,17 @@ class Game_state(Game):
             for tile in tiles:
                 tile.update_units_number()
 
+    # returns true if at least one player in the game is still "alive"
+    # in terms of valid code execution
+    def has_living_player(self):
+        for p in self.players:
+            # if any player is alive, return true
+            if not (p.crashed or p.timed_out):
+                return True
+        return False
+
     def check_game_over(self):
-        if (self.check_unit_victory_condition()) or (self.time_limit_reached()):
+        if (self.check_unit_victory_condition()) or (self.time_limit_reached()) or not self.has_living_player():
             self.log_winner()
             return True
         else:
@@ -227,11 +227,12 @@ class Game_state(Game):
             result[1] = temp
 
         for player in result:
-            self.logger.add_ranked_bot(player.bot)
+            self.logger.add_ranked_player(player)
 
     def log(self, out):
         self.debugLogFile.write(str(out) + "\n")
         self.debugLogFile.flush()
+
 # We want to execute commmands in the following order: move, build, mine
 def sort_moves(moves):
     sorted_moves = []
@@ -253,19 +254,3 @@ def sort_moves(moves):
 
     return sorted_moves
 
-
-#test = Game_state([1,2])
-
-# moves = self.get_random_player_moves()
-
-# self.map.get_tile([39,40]).increment_units(1, 2)
-# moves = [ [], [] ]
-# moves[0].append(Command(0, test.map.get_tile([0,0]), 'move', 1, [1,0]))
-# moves[1].append(Command(1, test.map.get_tile([5,5]), 'move', 1, [1,0]))
-
-# test.play_a_turn(moves)
-# p1 = test.players[0].get_occupied_tiles()
-# p2 = test.players[1].get_occupied_tiles()
-# test.write_game_log()
-
-# print(test.map.tiles[1][0])

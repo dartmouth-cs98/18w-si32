@@ -37,8 +37,6 @@ def run_worker():
         except Exception as err:
             print("GAME ERR")
             print(err)
-            # TODO attribute fault to the bot that caused an error and set them as loser
-            # or determine that the crash was our fault
             crashedBot = None
             for b in bots:
                 if not b.is_running():
@@ -48,8 +46,10 @@ def run_worker():
 
             if crashedBot:
                 rankedPlayers = game.get_ranked_by_units()
-                reordered  = [p.bot.name for p in rankedPlayers if p.bot.name != crashedBot] + [crashedBot] # move crashed bot to the end
+                reordered  = [{'_id': p.bot.name} for p in rankedPlayers if p.bot.name != crashedBot] + [{'_id': crashedBot, 'crashed': True}] # move crashed bot to the end
                 post_match_crash(matchId, reordered, crashedBot)
+
+            # TODO handle if no bot crashed, meaning the error was ours
 
         try:
             for b in bots:

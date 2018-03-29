@@ -2,20 +2,35 @@ from random import random, randint
 import json
 from .Command import Command
 import pickle
+import signal
 
 starting_distance = 30
+
+class timeout:
+    def __init__(self, seconds=1, error_message='Timeout'):
+        self.seconds = seconds
+        self.error_message = error_message
+    def handle_timeout(self, signum, frame):
+        raise TimeoutError(self.error_message)
+    def __enter__(self):
+        signal.signal(signal.SIGALRM, self.handle_timeout)
+        signal.alarm(self.seconds)
+    def __exit__(self, type, value, traceback):
+        signal.alarm(0)
 
 class Player:
     def __init__(self, playerId, map, bot, starting_pos):
         self.bot = bot
 
+        self.winner = False
+        self.timed_out = False
+        self.crashed = False
+
         self.playerId = playerId
         self.map = map
-        self.winner = False
+
         self.resources = 100
-
         self.starting_pos = starting_pos
-
         self.units_produced = 0
 
         starting_tile = self.map.get_tile(self.starting_pos)
@@ -23,6 +38,9 @@ class Player:
 
 
     def send_state(self, players):
+        if self.crashed or self.timed_out: 
+            return
+
         to_send = {
             "map": self.map,
             "player": {
@@ -32,17 +50,23 @@ class Player:
         self.bot.write_binary(pickle.dumps(to_send))
 
     def get_move(self):
-        # read a turn from the bot
-        move_str = self.bot.read()
-        commands = []
+        if self.crashed or self.timed_out:
+            return []
 
-        # parse out the moves for this turn
+        # read a turn from the bot
+        commands = []
         try:
-            commands = pickle.loads(eval(move_str))
-            # commands = [ Command.from_dict(self.playerId, d) for d in move_list ]
-        except Exception as err:
-            print(err)
-            # TODO: if invalid command sent, should probably just kick this noob out of the game
+            with timeout(seconds=3):
+                move_str = self.bot.read()
+
+                # parse out the moves for this turn
+                commands = pickle.loads(eval(move_str))
+
+        except TimeoutError as err:
+            # if the bot timed out, mark so
+            print("TIMED OUT")
+            self.timed_out = True
+            return []
 
         return commands
 

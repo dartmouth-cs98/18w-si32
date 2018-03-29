@@ -31,7 +31,8 @@ class MatchSinglePage extends React.PureComponent {
     const bots = _.sortBy(this.props.match.bots, "rank");
     return _.map(bots, b => (
       <div key={b._id} style={[styles.botRow, b.user._id == this.props.sessionUserId ? styles.ownBot : null]}>
-        { this.props.match.result.crashed == b._id ? <div style={styles.crashed}>Crashed!</div> : "" }
+        { b.crashed ? <div style={styles.crashed}>Crashed!</div> : "" }
+        { b.timedOut ? <div style={styles.crashed}>Timed Out!</div> : "" }
         <div key={b._id} style={styles.bot}>
           <div style={{display: "flex", alignItems: "flex-end"}}>
             <span style={styles.botRank}>{b.rank}</span>
