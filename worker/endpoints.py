@@ -27,7 +27,6 @@ def post_match_crash(matchId, rankedBots, crashedBot):
         'result': {
             'success': False,
             'reason': 'BOT_CRASHED',
-            'crashed': crashedBot,
         },
         'rankedBots': rankedBots,
     }

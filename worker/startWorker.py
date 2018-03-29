@@ -46,7 +46,7 @@ def run_worker():
 
             if crashedBot:
                 rankedPlayers = game.get_ranked_by_units()
-                reordered  = [p.bot.name for p in rankedPlayers if p.bot.name != crashedBot] + [crashedBot] # move crashed bot to the end
+                reordered  = [{'_id': p.bot.name} for p in rankedPlayers if p.bot.name != crashedBot] + [{'_id': crashedBot, 'crashed': True}] # move crashed bot to the end
                 post_match_crash(matchId, reordered, crashedBot)
 
             # TODO handle if no bot crashed, meaning the error was ours

@@ -92,12 +92,15 @@ _Match.statics.handleWorkerResponse = async (id, rankedBots, logKey, result={}) 
 
   // update the bot AND user skills. Because bots are own by users, this function will always
   // update both as needed.
-  const botSkills = await Bot.updateSkillByRankedFinish(rankedBots, match._id);
+  const botSkills = await Bot.updateSkillByRankedFinish(_.map(rankedBots, b => b._id), match._id);
 
   // turn array of bots into obj keyed on bot ID storing ranked finish
   const botRankById = {};
   _.each(rankedBots, (b, i) => {
-    botRankById[b] = i + 1;
+    botRankById[b._id] = {
+      ...b,
+      rank: i + 1,
+    };
   });
 
   // store the individual bots' skills and rank in this match
@@ -108,7 +111,7 @@ _Match.statics.handleWorkerResponse = async (id, rankedBots, logKey, result={}) 
       sigma: skill.prior.sigma,
       delta: skill.mu - skill.prior.mu // how much this match changed the bot's skill
     };
-    b.rank = botRankById[b._id];
+    Object.assign(b, botRankById[b._id]);
     return b;
   });
 
@@ -121,9 +124,6 @@ _Match.statics.handleWorkerResponse = async (id, rankedBots, logKey, result={}) 
   match.markModified("bots"); // need to alert mongoose that the array is different
 
   return match.save();
-
-  // TODO parse the game result, and if it was a completed game then compute new mu and sigma from players using
-  // lib/trueskill
 
   // TODO if result was our fault, set status back to queued and try again?
 };

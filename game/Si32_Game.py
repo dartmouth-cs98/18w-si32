@@ -183,7 +183,7 @@ class Game_state(Game):
             result[1] = temp
 
         for player in result:
-            self.logger.add_ranked_bot(player.bot)
+            self.logger.add_ranked_player(player)
 
     def log(self, out):
         self.debugLogFile.write(str(out) + "\n")
