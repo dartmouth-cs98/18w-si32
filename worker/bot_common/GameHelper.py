@@ -6,15 +6,17 @@ import json
 import pickle
 
 directions = {
-    'left': [-1,0],
-    'right': [1,0],
-    'up': [0,-1],
-    'down': [0,1],
-    'none': [0,0],
+    'left': [-1, 0],
+    'right': [1, 0],
+    'up': [0, -1],
+    'down': [0, 1],
+    'none': [0, 0],
 }
 
-def pos_equal(a,b):
+
+def pos_equal(a, b):
     return a[0] == b[0] and a[1] == b[1]
+
 
 class GameHelper:
     def __init__(self):
@@ -50,16 +52,15 @@ class GameHelper:
             return position_from
 
         if position_from[0] < position_to[0]:
-            return position_from + (1,0)
+            return position_from + (1, 0)
         elif position_from[0] > position_to[0]:
-            return position_from + (-1,0)
+            return position_from + (-1, 0)
         elif position_from[1] < position_to[1]:
-            return position_from + (0,1)
+            return position_from + (0, 1)
         elif position_from[1] > position_to[1]:
-            return position_from + (0,-1)
+            return position_from + (0, -1)
 
-
-    #makes a single move from position_from that tries to get closer to position_to while avoiding either enemy units, enemy buildings, or stronger enemy buildings
+    # makes a single move from position_from that tries to get closer to position_to while avoiding either enemy units, enemy buildings, or stronger enemy buildings
     def move_towards(self, position_from, position_to, n_units=None):
         if pos_equal(position_from, position_to):
             return None
@@ -75,7 +76,6 @@ class GameHelper:
 
         n_units = n_units if n_units else self.my_units_at_pos(position_from)
         return self.move(position_from, n_units, d)
-
 
     def send_commands(self, commands):
         print(pickle.dumps(commands))
@@ -245,7 +245,8 @@ class GameHelper:
 
         return commands
 
-    def bad_single_move_towards_tile_avoiding_things(self, position_from, position_to, number_of_units, things_to_avoid):
+    def bad_single_move_towards_tile_avoiding_things(self, position_from, position_to, number_of_units,
+                                                     things_to_avoid):
 
         # returns True if tile at (x, y) contains an enemy building
         def tile_contains_enemy_building(x, y):
@@ -329,7 +330,6 @@ class GameHelper:
 
         # get the position of the nearest building from (x, y) that belongs to a player with playerId
 
-
     def get_nearest_building_position_and_distance_belonging_to_player(self, x, y, playerId):
         if (self.get_number_of_buildings_belonging_to_player(playerId) > 0):
             current_search_distance = 1
@@ -368,7 +368,7 @@ class GameHelper:
                     closest_building = enemy_building
 
         return closest_building.position
-    
+
     # return the position of the tile with the greatest resource of a specified distance away from a specified tile
 
     def get_free_position_with_greatest_resource_of_range(self, x, y, r):
@@ -395,7 +395,7 @@ class GameHelper:
     def get_adjacent_free_position_with_greatest_resource(self, x, y):
         return self.get_free_position_with_greatest_resource_of_range(x, y, 1)
 
-    #ignores buildings, needs to be rewritten with a proper search algorithm like A-star
+    # ignores buildings, needs to be rewritten with a proper search algorithm like A-star
     def get_nearest_player_unit_pos_to_tile(self, x, y, playerId):
         nearest_enemy = None
         distance = math.inf

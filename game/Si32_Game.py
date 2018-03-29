@@ -138,6 +138,25 @@ class Game_state(Game):
 
         return False
 
+    def check_unit_victory_condition_multi(self):
+
+        i = 0
+        index = -1
+
+        players_with_buildings = 0
+
+        for player in self.players:
+            if player.has_building():
+                index = i
+                players_with_buildings += 1
+            i += 1
+
+        if (players_with_buildings == 1):
+            self.winner = self.players[index]
+            return True
+
+        return False
+
     def time_limit_reached(self):
         if self.iter < MAX_ITERS:
             return False
@@ -151,6 +170,25 @@ class Game_state(Game):
         else:
             self.winner = self.players[1]
 
+        return True
+
+    def time_limit_reached_multi(self):
+        if self.iter < MAX_ITERS:
+            return False
+
+        max_player = -1
+        max_units = -1
+
+        i = 0
+        for player in self.players:
+
+            if (player.total_units() >= max_units):
+                max_player = i
+                max_units = player.total_units()
+
+            i += 1
+
+        self.winner = self.players[max_player]
         return True
 
     # ---------------- PLAYER MOVES FUNCTIONS ----------------
@@ -220,6 +258,11 @@ class Game_state(Game):
 
         return [self.players[1], self.players[0]]
 
+    def get_ranked_by_units_multi(self):
+        s = sorted(self.players, key=lambda player: player.total_units())
+
+        return s.reverse()
+
     def log_winner(self):
         result = self.players
         if result[0] != self.winner:
@@ -229,6 +272,8 @@ class Game_state(Game):
 
         for player in result:
             self.logger.add_ranked_player(player)
+
+    # TODO: write a multiplayer version of log_winner
 
     def log(self, out):
         self.debugLogFile.write(str(out) + "\n")
@@ -254,4 +299,3 @@ def sort_moves(moves):
         sorted_moves.append(move + build + mine)
 
     return sorted_moves
-
