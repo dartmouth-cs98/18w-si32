@@ -26,7 +26,8 @@
       "node/no-unsupported-features": [
         "error",
         {
-          "ignores": [ "asyncAwait" ]
+          "version": 8.3,
+          "ignores": [ "asyncAwait", "spreadOperators" ]
         }
       ],
       "node/no-extraneous-require": [
