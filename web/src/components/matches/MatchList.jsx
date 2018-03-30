@@ -56,7 +56,6 @@ const styles = {
     color: colors.lightGray,
   },
   wrapper: {
-    width: 700,
     padding: "15px 0",
     borderBottom: `1px solid ${colors.border}`,
   },
