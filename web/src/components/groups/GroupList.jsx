@@ -1,7 +1,6 @@
 import React from "react";
 import Radium from "radium";
 import _ from "lodash";
-import Link from "../common/link";
 import Button from "../common/button";
 import { colors, constants } from "../../style";
 
@@ -14,10 +13,7 @@ const GroupList = ({ groups, leaveGroup, ranks }) => {
   return <div>{items}</div>;
 };
 
-const GroupListRow = Radium(({ group, leaveGroup, rank }) => {
-  const onClickLeave = () => {
-    leaveGroup(group._id);
-  };
+const GroupListRow = Radium(({ group, rank }) => {
   if (!rank) {
     return null;
   }

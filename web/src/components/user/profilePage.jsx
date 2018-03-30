@@ -7,9 +7,8 @@ import { Link, Page, Wrapper, TitleBar } from "../layout";
 import Button from "../common/button";
 
 import MatchList from "../matches/MatchList";
-import BotList from "../bots/BotList";
 import GroupList from "../groups/GroupList";
-import groupSearchbar from "../groups/groupSearchbar";
+//import groupSearchbar from "../groups/groupSearchbar";
 
 import { SubTitle } from "../common/titles";
 
@@ -17,7 +16,7 @@ import { fetchRankings, fetchUser, followUser, unfollowUser, joinGroup, leaveGro
 import { fetchBots } from "../../data/bot/botActions";
 import { fetchMatches } from "../../data/match/matchActions";
 import { getMatchesForUser } from "../../data/match/matchSelectors";
-import { getBotsForUser } from "../../data/bot/botSelectors";
+//import { getBotsForUser } from "../../data/bot/botSelectors";
 import { colors, constants } from "../../style";
 
 class ProfilePage extends React.Component {
