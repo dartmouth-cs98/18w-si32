@@ -1,4 +1,3 @@
-
 BUILDING_COST = 100
 
 class Rules:
@@ -62,12 +61,100 @@ class Rules:
                 self.players[move.playerId].decrement_resources(BUILDING_COST)
 
 
+    def update_combat_phase_multi(self, moves):
+        sets = self.moves_to_dictionary_multi(moves) #dictionaries
+
+        num_players = len(sets)
+
+        i = num_players - 1
+
+        while (i >= 0):
+
+            j = i - 1
+
+            while (j >= 0):
+                moves[i], moves[j] = self.combat_multi(moves[i], sets[j], i, j)
+                sets = self.moves_to_dictionary_multi(moves)
+                j -= 1
+
+            i -= 1
+
+        return moves
+
+
     def update_combat_phase(self, moves):
         sets = self.moves_to_dictionary(moves)
 
         moves[0], moves[1] = self.combat(moves[0], sets[1])
 
         return moves
+
+    #multi-player version of 'combat' method (m and n are the playerIds of the two players to engage in combat)
+
+    def combat_multi(self, player_moves, enemy_set, m, n):
+        index = 0
+
+        while index < len(player_moves):
+            current_move = player_moves[index]
+            tile = self.map.get_tile(current_move.position)
+
+            new_position = (tile.position[0] + current_move.direction[0],
+            tile.position[1] + current_move.direction[1])
+
+            if new_position in enemy_set:  # Check if opposing player has moves coming from new position
+                i = 0
+
+                while i < len(enemy_set[new_position]) and current_move:
+
+                    enemy_move = enemy_set[new_position][i]
+
+                    if self.opposite_direction(current_move.direction, enemy_move.direction):
+
+                        current_tile = self.map.get_tile(tile.position)
+                        enemy_tile = self.map.get_tile(enemy_move.position)
+
+                        if current_move.number_of_units > enemy_move.number_of_units:
+                            current_move.decrement_units(enemy_move.number_of_units)
+                            current_tile.decrement_units(m, enemy_move.number_of_units)
+                            enemy_tile.decrement_units(n, enemy_move.number_of_units)
+
+                            enemy_set[new_position].pop(i)
+                            i -= 1
+
+                        elif current_move.number_of_units < enemy_move.number_of_units:
+                            enemy_move.decrement_units(current_move.number_of_units)
+                            current_tile.decrement_units(m, current_move.number_of_units)
+                            enemy_tile.decrement_units(n, current_move.number_of_units)
+
+                            current_move = False
+
+                            player_moves.pop(index)
+                            index -= 1
+
+                        else:
+                            player_moves.pop(index)
+                            enemy_set[new_position].pop(i)
+
+                            current_tile.decrement_units(m, current_move.number_of_units)
+                            enemy_tile.decrement_units(n, current_move.number_of_units)
+
+                            current_move = False
+
+                            i -= 1
+                            index -= 1
+
+                    i += 1
+
+            index += 1
+
+        enemy_moves = []
+
+        for moves in enemy_set.values():
+            for move in moves:
+                enemy_moves.append(move)
+
+        return player_moves, enemy_moves
+
 
     def combat(self, player_moves, enemy_set):
         index = 0
@@ -132,6 +219,29 @@ class Rules:
                 enemy_moves.append(move)
 
         return player_moves, enemy_moves
+
+
+    def moves_to_dictionary_multi(self, moves):
+
+        num_players = len(moves)
+        sets = []
+
+        for move in moves:
+            sets.append({})
+
+        player = 0
+
+        while player < num_players:
+
+            for move in moves[player]:
+                if tuple(move.position) not in sets[player]:
+                    sets[player][tuple(move.position)] = [move]
+                else:
+                    sets[player][tuple(move.position)].append(move)
+
+            player += 1
+
+        return sets
 
 
     def moves_to_dictionary(self, moves):
