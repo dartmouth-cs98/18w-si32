@@ -1,10 +1,12 @@
 # Coordinate.py
 # Class definition for 'Coordinate'
 
+# Coordinate serves as useful helper class to aid in navigating board space. 
+#
 # Constructor Arguments
 # (tuples) - the tuple that is, essentially, cast to a Coordinate type.
 
-# TODO: why is y first and x second in the coordinate?? 
+# TODO: why is y first and x second in the coordinate??
 
 class Coordinate(tuple):
     @property

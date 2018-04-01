@@ -1,7 +1,15 @@
+# Game.py
+# Class definition for 'Game'
+
 import sys
 import pickle
 from subprocess import Popen, PIPE
 from abc import ABC, abstractmethod
+
+# Game instance is the higher order wrapper around Game_State.
+#
+# Constructor Arguments
+# bots (list) - a list of the bots involved in this game.
 
 class Game(ABC):
     def __init__(self, bots):
@@ -18,10 +26,6 @@ class Game(ABC):
 
         super().__init__()
 
-    @abstractmethod
-    def get_log(self):
-        pass
-
     def get_raw_log(self):
         return self.logger.get_raw_log()
 
@@ -31,7 +35,7 @@ class Game(ABC):
 
     @abstractmethod
     def game_loop(self):
-        '''
+        """
         General game loop will probably look something like:
         while game not over:
             for each bot:
@@ -45,5 +49,9 @@ class Game(ABC):
             (do each loop independently to benefit from the fact
             they're independent processes and we don't need to wait
             for first to finish before second starts working)
-        '''
+        """
+        pass
+
+    @abstractmethod
+    def get_log(self):
         pass
