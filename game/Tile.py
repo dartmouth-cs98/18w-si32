@@ -106,7 +106,7 @@ class Tile:
             building_owner = self.building.ownerId
             attacker = 1 - building_owner
 
-            #  Check if building will be destroyed by enemy units
+            #  check if building will be destroyed by enemy units
             if self.units[attacker] > 0:
                 if self.units[attacker] > 10 + self.units[building_owner]:
                     self.destroy_building()
@@ -118,13 +118,13 @@ class Tile:
                     self.units[attacker] = 0
                     self.units[building_owner] -= 10 - self.units[attacker]
 
-            # Check if new units should be produced
-            while self.building.production_progress >= 5:
+            # check if new units should be produced
+            while self.building.production >= 5:
                 self.increment_units(building_owner, 1)
-                self.building.production_progress -= 5
+                self.building.production -= 5
                 players[self.building.ownerId].increment_units_produced()
 
-            self.building.update_production_status()
+            self.building.increment_production()
 
     # --------------------------------------------------------------------------
     # INITIALIZING FUNCTION
