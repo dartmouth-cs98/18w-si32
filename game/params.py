@@ -1,3 +1,6 @@
+# params.py
+# Game parameters that remain consistent across all game variations / iterations. 
+
 # ------------------------------------------------------------------------------
 # Game
 
@@ -23,7 +26,7 @@ INITIAL_RESOURCES = 100  # The value of resources that an individual player begi
 # ------------------------------------------------------------------------------
 # Rules
 
-BUILDING_COST = 100      # The resource cost to construct an individual building. 
+BUILDING_COST = 100      # The resource cost to construct an individual building.
 
 # ------------------------------------------------------------------------------
 # Rules
