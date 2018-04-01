@@ -1,3 +1,6 @@
+# Player.py
+# Class definition for 'Player'
+
 import json
 import pickle
 import signal
@@ -7,20 +10,16 @@ from game.Command import Command
 
 from game.params import INITIAL_RESOURCES
 
-class timeout:
-    def __init__(self, seconds=1, error_message='Timeout'):
-        self.seconds = seconds
-        self.error_message = error_message
+# ------------------------------------------------------------------------------
+# Player
 
-    def handle_timeout(self, signum, frame):
-        raise TimeoutError(self.error_message)
-
-    def __enter__(self):
-        signal.signal(signal.SIGALRM, self.handle_timeout)
-        signal.alarm(self.seconds)
-
-    def __exit__(self, type, value, traceback):
-        signal.alarm(0)
+# A Player represents a single game agent. 
+#
+# Constructor Arguments
+# playerId (number)     - the unique id associated with this player.
+# map (Map)             - the map for this game instance.
+# bot (Bot)             - the bot associated with this player, for this game instance.
+# starting_pos (tuple)  - the starting map position for this player, for this game instance.
 
 class Player:
     def __init__(self, playerId, map, bot, starting_pos):
@@ -111,3 +110,21 @@ class Player:
 
     def decrement_resources(self, number):
         self.resources -= number
+
+# ------------------------------------------------------------------------------
+# Timeout (Helper Class)
+
+class timeout:
+    def __init__(self, seconds=1, error_message='Timeout'):
+        self.seconds = seconds
+        self.error_message = error_message
+
+    def handle_timeout(self, signum, frame):
+        raise TimeoutError(self.error_message)
+
+    def __enter__(self):
+        signal.signal(signal.SIGALRM, self.handle_timeout)
+        signal.alarm(self.seconds)
+
+    def __exit__(self, type, value, traceback):
+        signal.alarm(0)

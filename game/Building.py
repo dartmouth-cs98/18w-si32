@@ -1,25 +1,24 @@
+# Building.py
+# Class definition for 'Building'
+
 from game.params import PRODUCTION_RATE, DEFENSE_RATING
 
-nextId = 0
+# A Building is constructed via a 'build' command, is always located on
+# a single associated Tile, and is the sole source of resource production.
+#
+# Constructor Arguments
+# ownerID: The unique ID of this building's owner.
 
 class Building:
-    def __init__(self, ownerID):
-        global nextId
-        self.ownerId = ownerID         # ID of the player who controls this building
-
-        self.production_progress = 0
+    def __init__(self, ownerId):
+        self.ownerId = ownerId
+        self.resources = 0
         self.defense = DEFENSE_RATING
-        self.buildingID = nextId
-        nextId += 1
 
-    def update_production_status(self):
-        self.production_progress += PRODUCTION_RATE
-
-    def increment_production_progress(self, number):  #increase production count by how many workers are on the same tile
-        self.production_progress += number
-
-    def decrement_production(self, number=10):
-        self.production_progress -= number
+    # increment the resource value of this building
+    # by the default production rate.
+    def increment_resources(self):
+        self.resources += PRODUCTION_RATE
 
     def __str__(self):
-        return ("BUILDING: " + str(self.buildingID) + "; OWNER: " + str(self.ownerId))
+        return ("BUILDING OWNER: " + str(self.ownerId))

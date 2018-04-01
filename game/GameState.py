@@ -1,3 +1,6 @@
+# GameState.py
+# Class implementation for GameState
+
 import json
 from copy import copy
 
@@ -11,22 +14,27 @@ from game.Logger import Logger
 
 from game.params import MAX_ITERS
 
-class Game_state(Game):
+# ------------------------------------------------------------------------------
+# GameState
 
+# Constructor Arguments
+# bots (list) - a list of the bots involved in this game instance.
+
+class GameState(Game):
     def __init__(self, bots):
-        # Game state is determined by map, players, and rules. Higher level
-        # game state takes these objects and runs games, allowing for a
+
+        # Game state is determined by map, players, and rules.
+        # Higher level game state takes these objects and runs games, allowing for a
         # game agnostic framework
+        #
         # GB - I'm more tightly coupling these at the moment to get things off
         # the ground. Won't be hard to abstract back out when needed.
 
-        num_players = len(bots)
-
-        self.map = Map(num_players)
+        self.map = Map(len(bots))
 
         self.initialize_players(bots, self.map)
 
-        self.logger = Logger(self.map, self.players)
+        self.logger = Logger(self.map)
 
         self.debugLogFile = open("./gameserver.log", "w")
 
@@ -39,7 +47,8 @@ class Game_state(Game):
         super().__init__(bots)
 
 
-    # ------------ Initializing function ------------------
+    # --------------------------------------------------------------------------
+    # INITIALIZING FUNCTION
 
     def initialize_players(self, bots, map):  # initalizes players
         i = 0
@@ -52,7 +61,9 @@ class Game_state(Game):
         self.map.get_tile((4,4)).create_building(0)
         self.map.get_tile((16,16)).create_building(1)
 
-    # ------------------ Main Functions ---------------------
+    # --------------------------------------------------------------------------
+    # MAIN FUNCTIONS
+
     def start(self):
         self.game_loop()
 
@@ -72,7 +83,7 @@ class Game_state(Game):
 
             self.check_game_over()
 
-        # log one more turn, so that viz has a final state to work with
+        # once game ends, log one more turn, so that viz has a final state to work with
 
         # uncomment this line and comment the one under to get more verbose log
         # self.logger.new_turn(self.map)
@@ -142,7 +153,6 @@ class Game_state(Game):
         return False
 
     def check_unit_victory_condition_multi(self):
-
         i = 0
         index = -1
 
@@ -193,7 +203,8 @@ class Game_state(Game):
         self.winner = self.players[max_player]
         return True
 
-    # ---------------- PLAYER MOVES FUNCTIONS ----------------
+    # --------------------------------------------------------------------------
+    # PLAYER MOVEMENT FUNCTIONS
 
     def execute_moves(self, moves):
         for move in moves:
@@ -275,6 +286,9 @@ class Game_state(Game):
     def log(self, out):
         self.debugLogFile.write(str(out) + "\n")
         self.debugLogFile.flush()
+
+# ------------------------------------------------------------------------------
+# Helper Functions 
 
 # execute commmands in the following order: move, build, mine
 def sort_moves(moves):

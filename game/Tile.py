@@ -1,10 +1,19 @@
+# Tile.py
+# Class implementation for 'Tile'
+
 import itertools
 from random import randint
 
 from game.Building import Building
 from game.Coordinate import Coordinate
 
-from game.params import MAX_RESOURCES
+from game.params import MAX_RESOURCES, DEFENSE_RATING, UNIT_COST
+
+# A Tile represents a single, atomic cell of the game map.
+#
+# Constructor Arguments
+# position (tuple)     - tuple representing the map position of this tile instance.
+# num_players (number) - the number of players involved in this game instance.
 
 class Tile:
     def __init__(self, position, number_of_players):
@@ -25,7 +34,8 @@ class Tile:
     # --------------------------------------------------------------------------
     # PLAYER UNIT METHODS
 
-    def increment_units(self, player, number=1):  # Useful for when buildings create units
+    # useful for when buildings create units
+    def increment_units(self, player, number=1):
         self.units[player] += number
 
     def decrement_units(self, player, number=1):
@@ -96,34 +106,35 @@ class Tile:
             building_owner = self.building.ownerId
             attacker = 1 - building_owner
 
-            #  Check if building will be destroyed by enemy units
+            #  check if building will be destroyed by enemy units
             if self.units[attacker] > 0:
-                if self.units[attacker] > 10 + self.units[building_owner]:
+                if self.units[attacker] > DEFENSE_RATING + self.units[building_owner]:
+                    # building will be destroyed
                     self.destroy_building()
-                    self.units[attacker] -= 10 + self.units[building_owner]
+                    self.units[attacker] -= DEFENSE_RATING + self.units[building_owner]
                     self.units[building_owner] = 0
-                    return # done
-
+                    return
                 else:
+                    # building not destroyed
                     self.units[attacker] = 0
-                    self.units[building_owner] -= 10 - self.units[attacker]
+                    self.units[building_owner] -= DEFENSE_RATING - self.units[attacker]
 
-            # Check if new units should be produced
-            while self.building.production_progress >= 5:
+            # check if new units should be produced
+            while self.building.resources >= UNIT_COST:
                 self.increment_units(building_owner, 1)
-                self.building.production_progress -= 5
+                self.building.resources -= UNIT_COST
                 players[self.building.ownerId].increment_units_produced()
 
-            self.building.update_production_status()
+            self.building.increment_resources()
 
     # --------------------------------------------------------------------------
     # INITIALIZING FUNCTION
 
-    def initialize_units_list(self, number_of_players):  #we want to store the number of units a player has in each square, initialized to 0 for each player
+    # we want to store the number of units a player has in each square, initialized to 0 for each player
+    def initialize_units_list(self, number_of_players):
         units = []
         for i in range(number_of_players):
             units.append(0)
-
         return units
 
     def __str__(self):
