@@ -26,7 +26,7 @@ class Game_state(Game):
 
         self.initialize_players(bots, self.map)
 
-        self.logger = Logger(self.map, self.players)
+        self.logger = Logger(self.map)
 
         self.debugLogFile = open("./gameserver.log", "w")
 
