@@ -39,8 +39,7 @@ class Tile:
 
     # add building reference
     def create_building(self, playerID):
-        b = Building(playerID)
-        self.building = b
+        self.building = Building(playerID)
 
     # remove building reference
     def destroy_building(self):
@@ -85,14 +84,6 @@ class Tile:
 
             id1_units = self.units[id1]
             other_units_for_id1 = total_number_of_units - id1_units
-
-        #TODO: finish writing multi-player combat
-
-
-
-
-
-
 
     # calculates combat between two players with the units they send toward each other
     def in_square_two_player_combat(self, playerId1, playerId2, units1, units2):

@@ -5,20 +5,19 @@ from game.params import MAP_WIDTH, MAP_HEIGHT
 class Map:
     def __init__(self, number_of_players):
         self.number_of_players = number_of_players
-        self.tiles = self.initialize_map(width, height)
-        self.width = width
-        self.height = height
+        self.tiles = self.initialize_map(MAP_WIDTH, MAP_HEIGHT)
+        self.width = MAP_WIDTH
+        self.height = MAP_HEIGHT
 
     # --------------------------------------------------------------------------
     # Initializing Function
 
     def initialize_map(self, width, height):
         tiles = []
-
         for i in range(width):
             col = []
             for j in range(height):
-                new_tile = Tile([w, h], self.number_of_players)
+                new_tile = Tile([i, j], self.number_of_players)
                 col.append(new_tile)
 
             tiles.append(col)

@@ -73,7 +73,9 @@ class Game_state(Game):
             self.check_game_over()
 
         # log one more turn, so that viz has a final state to work with
-        # self.logger.new_turn(self.map) # uncomment this line and comment the one under to get more verbose log
+
+        # uncomment this line and comment the one under to get more verbose log
+        # self.logger.new_turn(self.map)
         self.logger.barebones_new_turn(self.map)
         self.logger.end_turn()
 
@@ -85,21 +87,21 @@ class Game_state(Game):
 
     # read all moves from the players and update state accordingly
     def read_moves(self):
-
         moves = []
         for p in self.players:
             m = p.get_move()
             moves.append(m)
 
-        # Check moves for combat, and sort by type of command
-        moves = self.rules.update_combat_phase(moves)  # Run both players moves through combat phase, return updated list of moves
+        # check moves for combat, and sort by type of command
+        # run both players moves through combat phase, return updated list of moves
+        moves = self.rules.update_combat_phase(moves)
         moves = sort_moves(moves)
         moves = self.add_implicit_commands(moves)
 
         for player_moves in moves:
             self.execute_moves(player_moves)
 
-        # Update statuses/unit numbers, etc.
+        # update statuses / unit numbers, etc.
         for col in self.map.tiles:
             for tile in col:
                 tile.update_tile(self.players)
@@ -182,7 +184,6 @@ class Game_state(Game):
 
         i = 0
         for player in self.players:
-
             if (player.total_units() >= max_units):
                 max_player = i
                 max_units = player.total_units()
@@ -198,8 +199,6 @@ class Game_state(Game):
         for move in moves:
             self.execute_move(move)
 
-
-
     def execute_move(self, move):
         if self.rules.verify_move(move):
             self.logger.add_move(move)
@@ -209,7 +208,6 @@ class Game_state(Game):
         tiles = {}
 
         for move in moves:
-
             if tuple(move.position) not in tiles:
                 tiles[tuple(move.position)] = move.number_of_units
 
@@ -238,8 +236,6 @@ class Game_state(Game):
 
                     remaining_units = tile.units[i] - command_count[tile_position]
 
-                    #if tile.has_building():
-                    #    new_moves[i].append(Command(i, list(tile_position), 'build', remaining_units, [0,0]))
                     new_moves[i].append(Command(i, list(tile_position), 'mine', remaining_units, [0,0]))
 
             i += 1
@@ -280,7 +276,7 @@ class Game_state(Game):
         self.debugLogFile.write(str(out) + "\n")
         self.debugLogFile.flush()
 
-# We want to execute commmands in the following order: move, build, mine
+# execute commmands in the following order: move, build, mine
 def sort_moves(moves):
     sorted_moves = []
 

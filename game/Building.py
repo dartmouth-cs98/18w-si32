@@ -22,4 +22,4 @@ class Building:
         self.production_progress -= number
 
     def __str__(self):
-        return ("Building " + str(self.buildingID) +", owned by player " + str(self.ownerId))
+        return ("BUILDING: " + str(self.buildingID) + "; OWNER: " + str(self.ownerId))
