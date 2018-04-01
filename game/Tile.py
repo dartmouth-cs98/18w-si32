@@ -120,12 +120,12 @@ class Tile:
                     self.units[building_owner] -= DEFENSE_RATING - self.units[attacker]
 
             # check if new units should be produced
-            while self.building.production >= UNIT_COST:
+            while self.building.resources >= UNIT_COST:
                 self.increment_units(building_owner, 1)
-                self.building.production -= UNIT_COST
+                self.building.resources -= UNIT_COST
                 players[self.building.ownerId].increment_units_produced()
 
-            self.building.increment_production()
+            self.building.increment_resources()
 
     # --------------------------------------------------------------------------
     # INITIALIZING FUNCTION

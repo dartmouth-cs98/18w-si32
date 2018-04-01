@@ -4,7 +4,7 @@
 from game.params import BUILDING_COST
 
 # Rules defines bulk of the game logic: how the various components of the game
-# interact and update the global state of the game. 
+# interact and update the global state of the game.
 #
 # Constructor Arguments
 # map (Map)      - the map associated with this game instance.
@@ -59,8 +59,9 @@ class Rules:
     def update_build_command(self, move):
         tile = self.map.get_tile(move.position)
 
-        # two cases for building: either they're making a new building or they're
-        # increasing the production count of an existing one
+        # two cases for building:
+        # - making a new building
+        # - increasing the resource value of an existing building 
 
         # if there is no building, create one
         if tile.building is None:

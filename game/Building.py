@@ -12,13 +12,13 @@ from game.params import PRODUCTION_RATE, DEFENSE_RATING
 class Building:
     def __init__(self, ownerId):
         self.ownerId = ownerId
-        self.production = 0
+        self.resources = 0
         self.defense = DEFENSE_RATING
 
-    # Increment the production value of this building
+    # increment the resource value of this building
     # by the default production rate.
-    def increment_production(self):
-        self.production += PRODUCTION_RATE
+    def increment_resources(self):
+        self.resources += PRODUCTION_RATE
 
     def __str__(self):
         return ("BUILDING OWNER: " + str(self.ownerId))
