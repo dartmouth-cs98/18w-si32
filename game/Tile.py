@@ -1,3 +1,6 @@
+# Tile.py
+# Class implementation for 'Tile'
+
 import itertools
 from random import randint
 
@@ -5,6 +8,12 @@ from game.Building import Building
 from game.Coordinate import Coordinate
 
 from game.params import MAX_RESOURCES
+
+# A Tile represents a single, atomic cell of the game map.
+#
+# Constructor Arguments
+# position (tuple)     - tuple representing the map position of this tile instance.
+# num_players (number) - the number of players involved in this game instance.
 
 class Tile:
     def __init__(self, position, number_of_players):
@@ -25,7 +34,8 @@ class Tile:
     # --------------------------------------------------------------------------
     # PLAYER UNIT METHODS
 
-    def increment_units(self, player, number=1):  # Useful for when buildings create units
+    # useful for when buildings create units
+    def increment_units(self, player, number=1):
         self.units[player] += number
 
     def decrement_units(self, player, number=1):
@@ -119,11 +129,11 @@ class Tile:
     # --------------------------------------------------------------------------
     # INITIALIZING FUNCTION
 
-    def initialize_units_list(self, number_of_players):  #we want to store the number of units a player has in each square, initialized to 0 for each player
+    # we want to store the number of units a player has in each square, initialized to 0 for each player
+    def initialize_units_list(self, number_of_players):
         units = []
         for i in range(number_of_players):
             units.append(0)
-
         return units
 
     def __str__(self):

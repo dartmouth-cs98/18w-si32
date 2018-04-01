@@ -1,4 +1,14 @@
+# Rules.py
+# Class implementation for 'Rules'
+
 from game.params import BUILDING_COST
+
+# Rules defines bulk of the game logic: how the various components of the game
+# interact and update the global state of the game. 
+#
+# Constructor Arguments
+# map (Map)      - the map associated with this game instance.
+# players (list) - a list of the players involved in this game instance.
 
 class Rules:
     def __init__(self, map, players):
