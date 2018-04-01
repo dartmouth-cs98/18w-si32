@@ -6,7 +6,7 @@ import pickle
 from subprocess import Popen, PIPE
 from abc import ABC, abstractmethod
 
-# Game instance is the higher order wrapper around Game_State.
+# Game instance is the higher order wrapper around GameState.
 #
 # Constructor Arguments
 # bots (list) - a list of the bots involved in this game.
