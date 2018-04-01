@@ -1,7 +1,6 @@
-BUILDING_COST = 100
+from game.params import BUILDING_COST
 
 class Rules:
-
     def __init__(self, map, players):
         self.map = map
         self.players = players
@@ -37,13 +36,12 @@ class Rules:
         tile = self.map.get_tile(move.position)
 
         if tile.resource > 0:
-
-            # Each unit gathers one unit of resource from the tile when mining
+            # cach unit gathers one unit of resource from the tile when mining
             if tile.resource >= move.number_of_units:
                 tile.decrement_resource(move.number_of_units)
                 self.players[move.playerId].increment_resources(move.number_of_units)
 
-            # If there are more miners than resources, take whatever remains
+            # if there are more miners than resources, take whatever remains
             else:
                 self.players[move.playerId].increment_resources(tile.resource)
                 tile.resource = 0
@@ -51,10 +49,10 @@ class Rules:
     def update_build_command(self, move):
         tile = self.map.get_tile(move.position)
 
-        # Two cases for building: either they're making a new building or they're
+        # two cases for building: either they're making a new building or they're
         # increasing the production count of an existing one
 
-        # If there is no building, create one
+        # if there is no building, create one
         if tile.building is None:
             if (self.player_has_enough_resources(move.playerId)) and (self.map.get_tile(tile.position).units[move.playerId] > 0):
                 tile.create_building(move.playerId)
@@ -263,7 +261,6 @@ class Rules:
 
     def opposite_direction(self, direction1, direction2):
         temp = (direction1[0]*-1, direction1[1]*-1)
-
         return (temp[0] == direction2[0]) and (temp[1] == direction2[1])
 
     def player_has_enough_resources(self, playerId):

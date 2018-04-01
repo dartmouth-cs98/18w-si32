@@ -1,23 +1,29 @@
+import itertools
 from random import randint
+
 from game.Building import Building
 from game.Coordinate import Coordinate
-import itertools
 
+from game.params import MAX_RESOURCES
 
 class Tile:
-
     def __init__(self, position, number_of_players):
         self.position = Coordinate(position)
-        self.resource = randint(0, 50)  # amount of resource in the tile (will be randomized for now)
-        self.units = self.initialize_units_list(number_of_players)
-        self.building = None  # Tiles initialized to not have a building
 
-    # ---------------- RESOURCE METHODS ------------------------
+        # amount of resource in the tile (will be randomized for now)
+        self.resource = randint(0, MAX_RESOURCES)
+        self.units = self.initialize_units_list(number_of_players)
+
+        self.building = None
+
+    # --------------------------------------------------------------------------
+    # RESOURCE METHODS
 
     def decrement_resource(self, number=1):  # reduces the resource in the tile (i.e. when a unit mines the resource)
         self.resource = self.resource - number
 
-    # ---------------- PLAYER UNIT METHODS  -------------------------
+    # --------------------------------------------------------------------------
+    # PLAYER UNIT METHODS
 
     def increment_units(self, player, number=1):  # Useful for when buildings create units
         self.units[player] += number
@@ -28,16 +34,19 @@ class Tile:
     def set_units(self, player, number_of_units):
         self.units[player] = number_of_units
 
-    # ---------------- BUILDING METHODS  ----------------------------
+    # --------------------------------------------------------------------------
+    # BUILDING METHODS
 
-    def create_building(self, playerID):  #add building reference
-        b = Building(playerID)
-        self.building = b
+    # add building reference
+    def create_building(self, playerID):
+        self.building = Building(playerID)
 
-    def destroy_building(self):  #remove building reference
+    # remove building reference
+    def destroy_building(self):
         self.building = None
 
-    # --------------- UPDATE FUNCTIONS ----------------------------
+    # --------------------------------------------------------------------------
+    # UPDATE FUNCTIONS
 
     def update_tile(self, players):
         self.update_building_status(players)
@@ -76,15 +85,7 @@ class Tile:
             id1_units = self.units[id1]
             other_units_for_id1 = total_number_of_units - id1_units
 
-        #TODO: finish writing multi-player combat
-
-
-
-
-
-
-
-    #calculates combat between two players with the units they send toward each other
+    # calculates combat between two players with the units they send toward each other
     def in_square_two_player_combat(self, playerId1, playerId2, units1, units2):
         smaller = min(units1, units2)
         self.units[playerId1] -= smaller
@@ -99,13 +100,13 @@ class Tile:
             if self.units[attacker] > 0:
                 if self.units[attacker] > 10 + self.units[building_owner]:
                     self.destroy_building()
-                    self.units[attacker] -= 10 + self.units[building_owner] 
+                    self.units[attacker] -= 10 + self.units[building_owner]
                     self.units[building_owner] = 0
                     return # done
 
                 else:
                     self.units[attacker] = 0
-                    self.units[building_owner] -= 10 - self.units[attacker] 
+                    self.units[building_owner] -= 10 - self.units[attacker]
 
             # Check if new units should be produced
             while self.building.production_progress >= 5:
@@ -115,12 +116,11 @@ class Tile:
 
             self.building.update_production_status()
 
-    # --------------- INITIALIZING FUNCTION ----------------------
+    # --------------------------------------------------------------------------
+    # INITIALIZING FUNCTION
 
     def initialize_units_list(self, number_of_players):  #we want to store the number of units a player has in each square, initialized to 0 for each player
         units = []
-
-
         for i in range(number_of_players):
             units.append(0)
 

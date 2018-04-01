@@ -1,5 +1,5 @@
-from .Tile import Tile
-from .Coordinate import Coordinate
+from game.Tile import Tile
+from game.Coordinate import Coordinate
 
 class Command:
 
@@ -21,4 +21,3 @@ class Command:
     @classmethod
     def from_dict(cls, playerId, d):
         return cls(playerId, d["location"], d["command"], d["number_of_units"], d["direction"])
-

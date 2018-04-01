@@ -1,14 +1,14 @@
-resource_cost = 1
-nextId = 0
+from game.params import PRODUCTION_RATE, DEFENSE_RATING
 
-PRODUCTION_RATE = 1
+nextId = 0
 
 class Building:
     def __init__(self, ownerID):
         global nextId
-        self.ownerId = ownerID #the ID of the player who controls the building
+        self.ownerId = ownerID         # ID of the player who controls this building
+
         self.production_progress = 0
-        self.defense = 10  # defense rating; default is 10
+        self.defense = DEFENSE_RATING
         self.buildingID = nextId
         nextId += 1
 
@@ -22,4 +22,4 @@ class Building:
         self.production_progress -= number
 
     def __str__(self):
-        return ("Building " + str(self.buildingID) +", owned by player " + str(self.ownerId))
+        return ("BUILDING: " + str(self.buildingID) + "; OWNER: " + str(self.ownerId))
