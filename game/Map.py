@@ -1,10 +1,18 @@
+# Map.py
+# Class implementation for 'Map'
+
 from .Tile import Tile
 
 from game.params import MAP_WIDTH, MAP_HEIGHT
 
+# Constructor Arguments
+# num_players (number) - the number of players involved in the game with which
+#                        this map is associated.
+
 class Map:
-    def __init__(self, number_of_players):
-        self.number_of_players = number_of_players
+    def __init__(self, num_players):
+        self.num_players = num_players
+
         self.tiles = self.initialize_map(MAP_WIDTH, MAP_HEIGHT)
         self.width = MAP_WIDTH
         self.height = MAP_HEIGHT
@@ -17,9 +25,8 @@ class Map:
         for i in range(width):
             col = []
             for j in range(height):
-                new_tile = Tile([i, j], self.number_of_players)
+                new_tile = Tile([i, j], self.num_players)
                 col.append(new_tile)
-
             tiles.append(col)
 
         return tiles
@@ -59,7 +66,8 @@ class Map:
     def position_in_range(self, position):
         return not ((position[0] < 0) or (position[0] >= (self.width-1)) or (position[1] < 0) or (position[1] >= (self.height-1)))
 
-    def tile_in_range(self, tile):  # check if tile is within map
+    # check if tile is within map
+    def tile_in_range(self, tile):
         return self.position_in_range(tile.position)
 
     # returns only the state we care about for the game log
