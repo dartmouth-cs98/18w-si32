@@ -7,7 +7,7 @@ from random import randint
 from game.Building import Building
 from game.Coordinate import Coordinate
 
-from game.params import MAX_RESOURCES
+from game.params import MAX_RESOURCES, DEFENSE_RATING, UNIT_COST
 
 # A Tile represents a single, atomic cell of the game map.
 #
@@ -108,20 +108,21 @@ class Tile:
 
             #  check if building will be destroyed by enemy units
             if self.units[attacker] > 0:
-                if self.units[attacker] > 10 + self.units[building_owner]:
+                if self.units[attacker] > DEFENSE_RATING + self.units[building_owner]:
+                    # building will be destroyed
                     self.destroy_building()
-                    self.units[attacker] -= 10 + self.units[building_owner]
+                    self.units[attacker] -= DEFENSE_RATING + self.units[building_owner]
                     self.units[building_owner] = 0
-                    return # done
-
+                    return
                 else:
+                    # building not destroyed
                     self.units[attacker] = 0
-                    self.units[building_owner] -= 10 - self.units[attacker]
+                    self.units[building_owner] -= DEFENSE_RATING - self.units[attacker]
 
             # check if new units should be produced
-            while self.building.production >= 5:
+            while self.building.production >= UNIT_COST:
                 self.increment_units(building_owner, 1)
-                self.building.production -= 5
+                self.building.production -= UNIT_COST
                 players[self.building.ownerId].increment_units_produced()
 
             self.building.increment_production()
