@@ -57,7 +57,7 @@ def do_turn(game):
                     commands.append(m)
 
         if (game.building_potential() > 0):
-            m = game.build(game.myId, closest_to_enemy.position, game.my_units_at_pos(closest_to_enemy.position))
+            m = game.build(closest_to_enemy.position, game.my_units_at_pos(closest_to_enemy.position))
             if m:
                 commands.append(m)
 

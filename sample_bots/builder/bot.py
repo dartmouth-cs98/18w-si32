@@ -23,7 +23,7 @@ def stage_1():
             commands.append(game.mine(u.position, game.my_units_at_pos(u.position)))
 
     if (game.building_potential() > 0):
-        m = game.build(game.myId, targetPos, game.my_units_at_pos(targetPos))
+        m = game.build(targetPos, game.my_units_at_pos(targetPos))
         if m:
             commands.append(m)
             targetPos = game.position_towards(targetPos, e_buildings[0].position)
@@ -76,10 +76,10 @@ while True:
         firstIter = False
 
         game.log(targetPos)
-    
+
     if nUnits < 50:
         commands = stage_1()
-    else: 
+    else:
         commands = stage_2()
 
     # done for this turn, send all my commands
