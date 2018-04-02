@@ -61,8 +61,8 @@ class GameHelper:
         return self.move(position_from, n_units, d)
 
     # TODO: remove playerId
-    def build(self, playerId, position_build, num_units):
-        return Command(playerId, position_build, 'build', num_units, DIRECTIONS["none"])
+    def build(self, position_build, num_units):
+        return Command(self.myId, position_build, 'build', num_units, DIRECTIONS["none"])
 
     def mine(self, position_mine, num_units):
         return Command(self.myId, position_mine, 'mine', num_units, DIRECTIONS["none"])
@@ -73,7 +73,7 @@ class GameHelper:
     # Get map cell at specified (x, y) coordinate.
     # Return: Cell at <position> if <position> is valid, else None
     def get_cell(self, x, y):
-        # map handles validity check 
+        # map handles validity check
         return self.map.get_cell((x, y))
 
     def get_my_cells(self):
