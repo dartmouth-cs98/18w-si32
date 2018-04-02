@@ -2,22 +2,15 @@ import sys
 import time
 from GameHelper import GameHelper
 
-game = GameHelper()
-
 def euclidean_distance(from_position, to_position):
     return abs(from_position[0] - to_position[0]) + abs(from_position[1] - to_position[1])
 
-while True:
-    # l = sys.stdin.readline()
-    # print(str(i) + ": bot 2 received: " + l,)
+def do_turn(game):
 
     game.log(game.building_potential())
     game.log(game.me["resources"])
 
     commands = []
-
-    # load state for next turn
-    game.load_state()
 
     units = game.get_my_units()
 
@@ -70,4 +63,7 @@ while True:
 
 
     # done for this turn, send all my commands
-    game.send_commands(commands)
+    # game.send_commands(commands)
+    return commands
+
+GameHelper.register_turn_handler(do_turn)

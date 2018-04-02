@@ -1,13 +1,20 @@
-from copy import copy
-import json
-import msgpack
-import gzip
+# Logger.py
+# Class implementation for 'Logger'
 
-# logger strips out unneeded properties and stores/logs only the information needed
+import json
+import gzip
+import msgpack
+from copy import copy
+
+# Logger strips out unneeded properties and stores/logs only the information needed
 # and in the format expected by the front-end. By maintaining this independently,
-# as the game underneath changes, we can keep the same log format
+# as the game underneath changes, we can keep the same log format.
+#
+# Constructor Arguments
+# map (Map) - game Map instance associated with game for which log will be generated.
+
 class Logger:
-    def __init__(self, map, players):
+    def __init__(self, map):
         self.log = {}
 
         self.width = map.width
@@ -24,7 +31,6 @@ class Logger:
     # gets pushed into the complete log at the end of a turn
     def new_turn(self, map):
         map_state = map.get_state()
-
         tiles = []
 
         # when adding a turn to the log, only include tile data that's needed
@@ -32,9 +38,7 @@ class Logger:
         for row in map_state:
             this_row = []
             for c in row:
-                cleaned_cell = {
-                    'r': c.resource
-                }
+                cleaned_cell = { 'r': c.resource }
                 for u in c.units:
                     if u > 0:
                         cleaned_cell['u'] = copy(c.units)
@@ -57,7 +61,6 @@ class Logger:
     # gets pushed into the complete log at the end of a turn
     def barebones_new_turn(self, map):
         map_state = map.get_state()
-
         tiles = []
 
         # when adding a turn to the log, only include tile data that's needed

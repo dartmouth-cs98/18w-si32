@@ -1,23 +1,23 @@
 import React from "react";
+import Radium from "radium";
 import _ from "lodash";
 import { connect } from "react-redux";
 
-import Page from "../layout/page";
-import Link from "../common/link";
-import { Wrapper } from "../layout/wrappers";
+import { Link, Page, Wrapper, TitleBar } from "../layout";
+import Button from "../common/button";
 
 import MatchList from "../matches/MatchList";
-import BotList from "../bots/BotList";
 import GroupList from "../groups/GroupList";
-import groupSearchbar from "../groups/groupSearchbar";
+//import groupSearchbar from "../groups/groupSearchbar";
 
-import { MainTitle, SubTitle } from "../common/titles";
+import { SubTitle } from "../common/titles";
 
 import { fetchRankings, fetchUser, followUser, unfollowUser, joinGroup, leaveGroup } from "../../data/user/userActions";
 import { fetchBots } from "../../data/bot/botActions";
 import { fetchMatches } from "../../data/match/matchActions";
 import { getMatchesForUser } from "../../data/match/matchSelectors";
-import { getBotsForUser } from "../../data/bot/botSelectors";
+//import { getBotsForUser } from "../../data/bot/botSelectors";
+import { colors, constants } from "../../style";
 
 class ProfilePage extends React.Component {
   constructor(props) {
@@ -51,10 +51,17 @@ class ProfilePage extends React.Component {
       return;
     } else if (_.includes(this.props.profileUser.followers, this.props.sessionUser._id)) {
       // if the session user is currently following the profile user
-      return <Link onClick={this.props.unfollowUser}>Unfollow</Link>;
+      return <Button
+                kind="primary"
+                style={styles.followingButton} 
+                onClick={this.props.unfollowUser}
+                hoverContent="Unfollow"
+              >
+                Following
+              </Button>;
     } else {
       // if the session user is not currently following the profile user
-      return <Link onClick={this.props.followUser}>Follow</Link>;
+      return <Button kind="primary" style={{padding: "0 40px", height: 40}} onClick={this.props.followUser}>Follow</Button>;
     }
   }
 
@@ -88,7 +95,7 @@ class ProfilePage extends React.Component {
       <div style={styles.groupActionBox}>
         {this.renderJoinGroupLink()}
         {this.renderExploreGroupLink()}
-        <button><Link style={{color: "black", textDecoration: "none"}} href="/groups/create">Create Group</Link></button>;
+        <button><Link style={{color: "black", textDecoration: "none"}} href="/groups/create">Create Group</Link></button>
       </div>
     );
   }
@@ -101,24 +108,41 @@ class ProfilePage extends React.Component {
     return (
       <Page>
         <Wrapper>
-          { this.renderFollowLink() }
-          <MainTitle>Profile: { this.props.profileUser.username }</MainTitle>
-          <SubTitle>Rating</SubTitle>
-          <p>{this.props.profileUser.trueSkill.mu}</p>
+          <TitleBar title={this.props.profileUser.username} right={this.renderFollowLink()} />
+          <div style={styles.statsRow}>
+            <div style={styles.stats}>
+              <div style={styles.stat}>
+                <div style={styles.statTitle}>Current Rating</div>
+                <p style={styles.statBody}>{this.props.profileUser.trueSkill.mu.toFixed(1)}</p>
+              </div>
 
-          <SubTitle>Global Rank</SubTitle>
-          <p>{globalRank.rank}/{globalRank.of}</p>
+              <div style={styles.stat}>
+                <div style={styles.statTitle}>Global Rank</div>
+                <p style={styles.statBody}>{globalRank.rank}/{globalRank.of}</p>
+              </div>
+            </div>
 
-          <SubTitle>Bots</SubTitle>
-          <BotList bots={this.props.bots} />
+            <div style={styles.skillGraphWrap}>
+            </div>
 
-          <SubTitle>Matches</SubTitle>
-          <MatchList matches={this.props.matches} />
+          </div>
 
-          <SubTitle>Groups</SubTitle>
-          <GroupList groups={this.props.profileUser.groups} ranks={this.props.profileUser.ranks} leaveGroup={this.props.leaveGroup} />
-          {groupSearchbar(this.state.selectedGroup, this.didSelectGroup, {placeholder: "Search for new groups to join"})}
-          {this.renderGroupActionBox()}
+          <div style={styles.secondary}>
+            <div style={styles.secondary.main}>
+              <SubTitle>Matches</SubTitle>
+              <MatchList matches={this.props.matches} />
+            </div>
+            <div style={styles.secondary.sidebar}>
+              <SubTitle>Groups</SubTitle>
+              <div style={styles.groupList}>
+                <GroupList groups={this.props.profileUser.groups} ranks={this.props.profileUser.ranks} leaveGroup={this.props.leaveGroup} />
+              </div>
+              {/*{groupSearchbar(this.state.selectedGroup, this.didSelectGroup, {placeholder: "Search for new groups to join"})}
+              {this.renderGroupActionBox()}*/}
+            </div>
+          </div>
+
+
         </Wrapper>
       </Page>
     );
@@ -140,10 +164,10 @@ const mapStateToProps = (state, props) => ({
   sessionUser: state.session.user || {},
   profileUser: state.users.records[props.id],
   matches: getMatchesForUser(state, props.id),
-  bots: getBotsForUser(state, props.id),
+  // bots: getBotsForUser(state, props.id),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ProfilePage);
+export default connect(mapStateToProps, mapDispatchToProps)(Radium(ProfilePage));
 
 const styles = {
   groupActionBox: {
@@ -153,5 +177,48 @@ const styles = {
     justifyContent: "center",
     alignItems: "center",
     paddingTop: "20px"
+  },
+  followingButton: {
+    borderColor: colors.border,
+    borderWidth: 1,
+    color: colors.medGray,
+    width: 150,
+    height: 40,
+    ":hover": {
+      background: "transparent",
+      borderWidth: 2,
+      color: colors.medGray,
+    },
+  },
+  statTitle: {
+    color: colors.red,
+    fontSize: constants.fontSizes.smaller,
+    textTransform: "uppercase",
+  },
+  statBody: {
+    color: colors.darkGray,
+    fontSize: constants.fontSizes.larger,
+    marginTop: 5,
+  },
+  stat: {
+    margin: "15px 0",
+  },
+  secondary: {
+    display: "flex",
+    borderTop: `1px solid ${colors.border}`,
+    paddingTop: 20,
+    marginTop: 30,
+    main: {
+      width: "60%",
+      marginRight: 50,
+      flexGrow: 0,
+    },
+    sidebar: {
+      flex: 1,
+    },
+  },
+  groupList: {
+    marginBottom: 15,
+    marginTop: 5,
   },
 };

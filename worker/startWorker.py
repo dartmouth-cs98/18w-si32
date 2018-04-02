@@ -1,13 +1,12 @@
 import traceback
-# from SimpleGame import SimpleGame
-from game.Si32_Game import Game_state
 
 from Bot import DockerBot
+from game.GameState import GameState
 from waitForGame import pollUntilGameReady
 from endpoints import post_match_success, post_match_crash
 
 gameClasses = {
-    'SimpleGame': Game_state
+    'SimpleGame': GameState
 }
 
 def run_worker():

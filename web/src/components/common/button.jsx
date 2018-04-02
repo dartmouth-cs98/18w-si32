@@ -27,7 +27,7 @@ class _Button extends React.PureComponent {
   }
 
   render() {
-    const { style, kind, href, size, children, disabled } = this.props;
+    const { style, kind, href, size, children, disabled, hoverContent } = this.props;
     return (
       // using anchor to be able to get native browser behavior when we want it
       <a href={href} onClick={this.onClick} style={[
@@ -38,7 +38,7 @@ class _Button extends React.PureComponent {
         style
       ]}>
         <span style={[styles.base.inner, styles[kind].inner]}>
-          { children }
+          { (hoverContent && Radium.getState(this.state, null, ":hover")) ? hoverContent : children }
         </span>
       </a>
     );
