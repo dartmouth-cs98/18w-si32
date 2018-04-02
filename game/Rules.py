@@ -68,6 +68,11 @@ class Rules:
 
         i = num_players - 1
 
+        #instead of checking only the two players, in a 3+ player game, check every pair of players for collisions
+        #we can still break down the collision checking into pairs of 2 since we can only have 2 players "colliding" anywhere
+        #(since at the start of every turn/movement there is only units of one player/faction in any square
+
+        #do the collision checking for each pair of players (order doesn't matter)
         while (i >= 0):
 
             j = i - 1
@@ -89,8 +94,7 @@ class Rules:
 
         return moves
 
-    #multi-player version of 'combat' method (m and n are the playerIds of the two players to engage in combat)
-
+    #multi-player version of 'combat' method (m and n are the playerIds of the two players to check for opposing collisions, since there will be more than two players in total)
     def combat_multi(self, player_moves, enemy_set, m, n):
         index = 0
 
@@ -220,20 +224,20 @@ class Rules:
 
         return player_moves, enemy_moves
 
-
+    #multi-player version of moves_to_dictionary, takes a variable 'moves', which is a list of lists of Commands (one Command list for each player, a.k.a. a 'move')
     def moves_to_dictionary_multi(self, moves):
 
-        num_players = len(moves)
-        sets = []
+        num_players = len(moves) #the number of players, corresponds to the number of 'moves'
+        sets = [] #a list of dictionaries (mapping positions to Commands of a player from that position)
 
-        for move in moves:
+        for move in moves: #initialize empty dictionaries
             sets.append({})
 
         player = 0
 
         while player < num_players:
 
-            for move in moves[player]:
+            for move in moves[player]: #for each COMMAND of a player, check if the command's position is in the player's dictionary's keys; if not, add it with value as a singleton list with that Command. if it is, append to the value (list of Commands)
                 if tuple(move.position) not in sets[player]:
                     sets[player][tuple(move.position)] = [move]
                 else:

@@ -143,16 +143,16 @@ class Game_state(Game):
         i = 0
         index = -1
 
-        players_with_buildings = 0
+        players_with_buildings = 0 #the number of players who own at least one building
 
         for player in self.players:
-            if player.has_building():
-                index = i
+            if player.has_building(): #if a player has a building
+                index = i #save their ID
                 players_with_buildings += 1
             i += 1
 
-        if (players_with_buildings == 1):
-            self.winner = self.players[index]
+        if (players_with_buildings == 1): #if only one player has nonzero buildings, then they are the winner
+            self.winner = self.players[index] #the saved ID must therefore also be the winner's ID
             return True
 
         return False
@@ -172,12 +172,12 @@ class Game_state(Game):
 
         return True
 
-    def time_limit_reached_multi(self):
+    def time_limit_reached_multi(self): #if time limit reached, the player with the highest number of units is the winner
         if self.iter < MAX_ITERS:
             return False
 
-        max_player = -1
-        max_units = -1
+        max_player = -1 #ID of the player with the most units (so far)
+        max_units = -1 # number of units controlled by 'max_player'
 
         i = 0
         for player in self.players:
@@ -189,6 +189,7 @@ class Game_state(Game):
             i += 1
 
         self.winner = self.players[max_player]
+
         return True
 
     # ---------------- PLAYER MOVES FUNCTIONS ----------------
@@ -259,9 +260,9 @@ class Game_state(Game):
         return [self.players[1], self.players[0]]
 
     def get_ranked_by_units_multi(self):
-        s = sorted(self.players, key=lambda player: player.total_units())
+        s = sorted(self.players, key=lambda player: player.total_units()) #sort the list of players by their number of units
 
-        return s.reverse()
+        return s.reverse() #return the reversed list since the players with the most units are ranked first
 
     def log_winner(self):
         result = self.players

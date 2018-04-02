@@ -2,6 +2,7 @@ from random import randint
 from game.Building import Building
 from game.Coordinate import Coordinate
 import itertools
+import random
 
 
 class Tile:
@@ -23,7 +24,8 @@ class Tile:
         self.units[player] += number
 
     def decrement_units(self, player, number=1):
-        self.units[player] -= number
+        if (self.units[player] >= number):
+            self.units[player] -= number
 
     def set_units(self, player, number_of_units):
         self.units[player] = number_of_units
@@ -49,39 +51,52 @@ class Tile:
             self.units[0] -= units
             self.units[1] -= units
 
-    def update_units_number_multi(self):
+    def update_units_number_multi(self): #resolves combat when there are more than one player with units on a tile (occurs post-movement)
         i = 0
-        ids_players_with_units = []
+        ids_players_with_units = [] #list which will contain the ids of all players with units on the tile
 
-        total_number_of_units = 0
+        total_number_units = 0 #total number of units on the tile
 
-        for player_unit_count in self.units:
-            if player_unit_count > 0:
-                total_number_of_units += player_unit_count
-                ids_players_with_units.append(i)
+        for player_unit_count in self.units: #for the unit count of each player
+            if player_unit_count > 0: #if it's nonzero
+                total_number_units += player_unit_count #sum into total number of units on the tile
+                ids_players_with_units.append(i) #append the id ('i') into the list containing ids of all players with units on the tile
 
             i += 1
 
-        num_players_with_units = len(ids_players_with_units)
+        num_players_with_units = len(ids_players_with_units) #number of players with units on the tile
 
-        pairs = itertools.combinations(ids_players_with_units, 2)
+        dict = {} #maps pairs of IDs (expressed as tuples) to the number of units to send to each other
 
-        pair_to_units_to_send_dict = {}
+        for id_player in ids_players_with_units: #for the id 'id_player' of each player with units on the tile
+            number_player_units = self.units[id_player] #the number of units on the tile controlled by player with id 'id_player'
+            total_number_enemy_units = total_number_units - number_player_units #the total number of units controlled by all other players on the tile;
 
-        #calculate for each player how many units they will send towards each other player
-        for pair in pairs:
-            id1 = pair[0]
-            id2 = pair[1]
+            #list of enemy IDs is just the list of player IDs minus 'id_player'
+            ids_enemies_with_units = list(ids_players_with_units)
+            ids_enemies_with_units.remove(id_player)
 
-            id1_units = self.units[id1]
-            other_units_for_id1 = total_number_of_units - id1_units
+            #tallies total number delegated towards enemy combat
+            total_number_units_sent = 0
 
-        #TODO: finish writing multi-player combat
+            #distribute units to combat each enemy proportional to their unit strength
+            for id_enemy in ids_enemies_with_units: #for the id 'id_enemy' of each other player with units on the tile
+                number_enemy_units = self.units[id_enemy]
+                number_units_sent_to_enemy = int((number_enemy_units/total_number_enemy_units) * number_player_units)
 
+                dict[(id_player, id_enemy)] = number_units_sent_to_enemy
+                total_number_units_sent += number_units_sent_to_enemy
 
+            units_remaining = number_player_units - total_number_units_sent
 
+            #distribute remaining units randomly
+            k = 0
+            while (k < units_remaining):
+                random_enemy_id = random.choice(ids_enemies_with_units)
+                dict[(id_player, random_enemy_id)] += 1
+                k += 1
 
-
+            #fix up the dictionary so that we can combine pairs of tuples that are reverses of each other into one
 
 
     #calculates combat between two players with the units they send toward each other
@@ -90,6 +105,7 @@ class Tile:
         self.units[playerId1] -= smaller
         self.units[playerId2] -= smaller
 
+    #TODO: generalize to multiplayer
     def update_building_status(self, players):
         if self.building is not None:
             building_owner = self.building.ownerId
