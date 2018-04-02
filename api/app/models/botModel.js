@@ -18,6 +18,11 @@ const _Bot = new Schema({
     type: Number,
     default: 1,
   },
+  versionHistory: [{
+    _id: false,
+    timestamp: Date,
+    version: Number,
+  }],
   name: {
     type: String,
     required: true
