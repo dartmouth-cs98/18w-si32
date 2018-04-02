@@ -1,5 +1,5 @@
-# Tile.py
-# Class implementation for 'Tile'
+# Cell.py
+# Class implementation for 'Cell'
 
 import itertools
 from random import randint
@@ -9,26 +9,28 @@ from game.Coordinate import Coordinate
 
 from game.params import MAX_RESOURCES, DEFENSE_RATING, UNIT_COST
 
-# A Tile represents a single, atomic cell of the game map.
+# A Cell represents a single, atomic cell of the game map.
 #
 # Constructor Arguments
-# position (tuple)     - tuple representing the map position of this tile instance.
+# position (tuple)     - tuple representing the map position of this cell instance.
 # num_players (number) - the number of players involved in this game instance.
 
-class Tile:
-    def __init__(self, position, number_of_players):
+class Cell:
+    def __init__(self, position, num_players):
         self.position = Coordinate(position)
 
-        # amount of resource in the tile (will be randomized for now)
+        # amount of resource in the cell (will be randomized for now)
         self.resource = randint(0, MAX_RESOURCES)
-        self.units = self.initialize_units_list(number_of_players)
+        self.units = self.initialize_units_list(num_players)
 
         self.building = None
 
     # --------------------------------------------------------------------------
     # RESOURCE METHODS
 
-    def decrement_resource(self, number=1):  # reduces the resource in the tile (i.e. when a unit mines the resource)
+    # reduces the resource in the cell
+    # (i.e. when a unit mines the resource)
+    def decrement_resource(self, number=1):
         self.resource = self.resource - number
 
     # --------------------------------------------------------------------------
@@ -58,7 +60,7 @@ class Tile:
     # --------------------------------------------------------------------------
     # UPDATE FUNCTIONS
 
-    def update_tile(self, players):
+    def update_cell(self, players):
         self.update_building_status(players)
         self.update_units_number()
 
@@ -139,6 +141,6 @@ class Tile:
 
     def __str__(self):
         string = ""
-        string += "Tile at position: " + str(self.position) + '\n'
+        string += "Cell at position: " + str(self.position) + '\n'
         string += "Units:" + str(self.units)
         return string

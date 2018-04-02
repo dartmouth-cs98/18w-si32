@@ -31,9 +31,9 @@ class Logger:
     # gets pushed into the complete log at the end of a turn
     def new_turn(self, map):
         map_state = map.get_state()
-        tiles = []
+        cells = []
 
-        # when adding a turn to the log, only include tile data that's needed
+        # when adding a turn to the log, only include cell data that's needed
         # server will assume that it's zeros if the property is not included
         for row in map_state:
             this_row = []
@@ -51,9 +51,9 @@ class Logger:
                     cleaned_cell = None
 
                 this_row.append(cleaned_cell)
-            tiles.append(this_row)
+            cells.append(this_row)
         self.turn_log = {
-            'map': tiles,
+            'map': cells,
             'cmd': []
         }
 
@@ -61,9 +61,9 @@ class Logger:
     # gets pushed into the complete log at the end of a turn
     def barebones_new_turn(self, map):
         map_state = map.get_state()
-        tiles = []
+        cells = []
 
-        # when adding a turn to the log, only include tile data that's needed
+        # when adding a turn to the log, only include cell data that's needed
         # server will assume that it's zeros if the property is not included
         for row in map_state:
             this_row = []
@@ -81,9 +81,9 @@ class Logger:
                     cleaned_cell['b'] = c.building.ownerId
 
                 this_row.append(cleaned_cell)
-            tiles.append(this_row)
+            cells.append(this_row)
         self.turn_log = {
-            'map': tiles,
+            'map': cells,
             'cmd': []
         }
 
