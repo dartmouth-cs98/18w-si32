@@ -26,7 +26,7 @@ class Rules:
         return tile.units[move.playerId] >= move.number_of_units
 
     def update_by_move(self, move):
-        
+
         # Only execute move if it has a non-zero number of units
         if move.number_of_units > 0:
 
@@ -43,6 +43,9 @@ class Rules:
         old_tile = self.map.get_tile(move.position)
         new_tile = self.map.get_tile([old_tile.position[0] + move.direction[0], old_tile.position[1] + move.direction[1]])
 
+        if old_tile.units[move.playerId] < move.number_of_units:
+            move.number_of_units = old_tile.units[move.playerId]
+            
         old_tile.decrement_units(move.playerId, move.number_of_units)
         new_tile.increment_units(move.playerId, move.number_of_units)
 
