@@ -6,9 +6,13 @@ import { colors, constants } from "../../style";
 
 const GroupList = ({ groups, leaveGroup, ranks }) => {
   ranks = ranks || {};
-  const items = _.map(groups, g =>
+  let items = _.map(groups, g =>
     <GroupListRow key={g._id} group={g} leaveGroup={leaveGroup} rank={ranks[g._id]}/>
   );
+
+  if (items.length == 0) {
+    items = <div style={{marginTop: 20, color: colors.lightGray}}>No groups</div>;
+  }
 
   return <div>{items}</div>;
 };
