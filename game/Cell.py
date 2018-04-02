@@ -74,7 +74,8 @@ class Cell:
             self.units[1] -= units
 
     def update_units_number_multi(self):
-        i = 0
+        b = [1 if i else 0 for i in self.units]
+
         ids_players_with_units = []  # list which will contain the ids of all players with units on the tile
 
         total_number_units = 0  # total number of units on the tile
@@ -87,11 +88,11 @@ class Cell:
 
             i += 1
 
-        num_players_with_units = len(ids_players_with_units)  # number of players with units on the tile
-
+        dict_units_sent = {}  # maps tuple (attacker id, attacked id) to the number of units sent by attacker
         dict = {}  # maps pairs of IDs (expressed as tuples) to the number of units to send to each other
 
         for id_player in ids_players_with_units:  # for the id 'id_player' of each player with units on the tile
+
             number_player_units = self.units[
                 id_player]  # the number of units on the tile controlled by player with id 'id_player'
             total_number_enemy_units = total_number_units - number_player_units  # the total number of units controlled by all other players on the tile;
@@ -108,7 +109,7 @@ class Cell:
                 number_enemy_units = self.units[id_enemy]
                 number_units_sent_to_enemy = int((number_enemy_units / total_number_enemy_units) * number_player_units)
 
-                dict[(id_player, id_enemy)] = number_units_sent_to_enemy
+                dict_units_sent[(id_player, id_enemy)] = number_units_sent_to_enemy
                 total_number_units_sent += number_units_sent_to_enemy
 
             units_remaining = number_player_units - total_number_units_sent
@@ -117,12 +118,27 @@ class Cell:
             k = 0
             while (k < units_remaining):
                 random_enemy_id = random.choice(ids_enemies_with_units)
-                dict[(id_player, random_enemy_id)] += 1
+                dict_units_sent[(id_player, random_enemy_id)] += 1
                 k += 1
 
+
+
+        # create dict from dict_units_sent
+        for key in dict_units_sent:
+            rev_key = (key[1], key[0])
+            if key not in dict and rev_key not in dict:
+                dict[key] = (dict_units_sent[key], dict_units_sent[rev_key])
+
+        #finally, perform all the combats
+        for key in dict:
+            self.in_square_two_player_combat(key[0], key[1], dict[key][0], dict[key][1])
+
+
+
+
     # calculates combat between two players with the units they send toward each other
-    def in_square_two_player_combat(self, playerId1, playerId2, units1, units2):
-        smaller = min(units1, units2)
+    def in_square_two_player_combat(self, playerId1, playerId2, unitsId1, unitsId2):
+        smaller = min(unitsId1, unitsId2)
         self.units[playerId1] -= smaller
         self.units[playerId2] -= smaller
 
