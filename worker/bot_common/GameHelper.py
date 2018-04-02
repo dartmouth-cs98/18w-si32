@@ -190,11 +190,22 @@ class GameHelper:
             return position_from + (0, -1)
 
     # --------------------------------------------------------------------------
-    # COUNT GETTERS
+    # UNIT GETTERS
 
-    # get the number of units at specified square of specified player
-    def get_units(self, x, y, playerId):
+    # Get the number of units in <cell> controlled by <playerId>.
+    # Return: (number)
+    #   the number of units in <cell> controlled by player <playerId>
+    def get_unit_count_by_cell(self, cell, playerId):
+        return cell.units[playerId]
+
+    # Get the number of units in cell at position specified (<x>, <y>) controlled by <playerId>.
+    # Return: (number)
+    #   the number of units at the specified position controlled by player <playerId>
+    def get_unit_count_by_position(self, x, y, playerId):
         return self.map.get_cell((x, y)).units[playerId]
+
+    # --------------------------------------------------------------------------
+    # RESOURCE GETTERS
 
     def my_resource_count(self):
         if "resources" in self.me:
