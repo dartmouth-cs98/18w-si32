@@ -12,7 +12,7 @@ def do_turn(game):
 
     commands = []
 
-    units = game.get_my_units()
+    units = game.my_occupied_cells()
 
     buildings = game.enemy_buildings()
     if len(buildings) > 0:
