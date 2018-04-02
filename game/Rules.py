@@ -1,6 +1,6 @@
 # Rules.py
 # Class implementation for 'Rules'
-
+import Coordinate
 from game.params import BUILDING_COST
 
 # Rules defines bulk of the game logic: how the various components of the game
@@ -19,6 +19,7 @@ class Rules:
         return self.within_bounds(move) and self.enough_units(move)
 
     def within_bounds(self, move):
+        new_coords = move.position.add(move.direction)
         return self.map.position_in_range(move.position)
 
     def enough_units(self, move):
@@ -45,7 +46,7 @@ class Rules:
 
         if old_tile.units[move.playerId] < move.number_of_units:
             move.number_of_units = old_tile.units[move.playerId]
-            
+
         old_tile.decrement_units(move.playerId, move.number_of_units)
         new_tile.increment_units(move.playerId, move.number_of_units)
 
