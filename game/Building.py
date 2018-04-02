@@ -4,7 +4,7 @@
 from game.params import PRODUCTION_RATE, DEFENSE_RATING
 
 # A Building is constructed via a 'build' command, is always located on
-# a single associated Tile, and is the sole source of resource production.
+# a single associated Cell, and is the sole source of resource production.
 #
 # Constructor Arguments
 # ownerID: The unique ID of this building's owner.

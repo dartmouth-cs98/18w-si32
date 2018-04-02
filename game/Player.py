@@ -13,7 +13,7 @@ from game.params import INITIAL_RESOURCES
 # ------------------------------------------------------------------------------
 # Player
 
-# A Player represents a single game agent. 
+# A Player represents a single game agent.
 #
 # Constructor Arguments
 # playerId (number)     - the unique id associated with this player.
@@ -36,8 +36,8 @@ class Player:
         self.starting_pos = starting_pos
         self.units_produced = 0
 
-        starting_tile = self.map.get_tile(self.starting_pos)
-        starting_tile.increment_units(playerId)
+        starting_cell = self.map.get_cell(self.starting_pos)
+        starting_cell.increment_units(playerId)
 
     def send_state(self, players):
         if self.crashed or self.timed_out:
@@ -63,6 +63,8 @@ class Player:
 
                 # parse out the moves for this turn
                 commands = pickle.loads(eval(move_str))
+                for command in commands:
+                    command.playerId = self.playerId
 
         except TimeoutError as err:
             # if the bot timed out, mark so
@@ -74,30 +76,30 @@ class Player:
 
     def total_units(self):
         units = 0
-        tiles = self.get_occupied_tiles()
-        for tile in tiles:
-            units += tile.units[self.playerId]
+        cells = self.get_occupied_cells()
+        for cell in cells:
+            units += cell.units[self.playerId]
 
         return units
 
-    # Find all tiles in which player has units to control
-    def get_occupied_tiles(self):
-        tiles = []
-        for col in self.map.tiles:
-            for tile in col:
-                if tile.units[self.playerId] > 0:
-                    tiles.append(tile)
+    # Find all cells in which player has units to control
+    def get_occupied_cells(self):
+        cells = []
+        for col in self.map.cells:
+            for cell in col:
+                if cell.units[self.playerId] > 0:
+                    cells.append(cell)
 
-        return tiles
+        return cells
 
     def get_buildings(self):
-        tiles = []
-        for col in self.map.tiles:
-            for tile in col:
-                if tile.building and tile.building.ownerId == self.playerId:
-                    tiles.append(tile)
+        cells = []
+        for col in self.map.cells:
+            for cell in col:
+                if cell.building and cell.building.ownerId == self.playerId:
+                    cells.append(cell)
 
-        return tiles
+        return cells
 
     def has_building(self):
         return len(self.get_buildings()) > 0

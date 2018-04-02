@@ -11,8 +11,8 @@ while True:
     # load state for next turn
     game.load_state()
 
-    tiles = game.get_my_units()
-    buildings = game.enemy_buildings()
+    tiles = game.get_my_cells()
+    buildings = game.get_enemy_buildings()
 
     if len(buildings) > 0:
         for i, t in enumerate(tiles):

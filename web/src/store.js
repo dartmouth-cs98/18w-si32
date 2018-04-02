@@ -25,8 +25,8 @@ const rootReducer = (state, action) => {
     state = undefined;
   }
 
-  return reducer(state, action)
-}
+  return reducer(state, action);
+};
 
 let store = createStore(rootReducer, applyMiddleware(thunkMiddleware, logger));
 
