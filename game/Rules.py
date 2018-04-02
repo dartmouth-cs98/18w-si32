@@ -46,19 +46,11 @@ class Rules:
         old_tile = self.map.get_tile(move.position)
         new_tile = self.map.get_tile([old_tile.position[0] + move.direction[0], old_tile.position[1] + move.direction[1]])
 
-<<<<<<< HEAD
-        if old_cell.units[move.playerId] < move.number_of_units:
-            move.number_of_units = old_cell.units[move.playerId]
-
-        old_cell.decrement_units(move.playerId, move.number_of_units)
-        new_cell.increment_units(move.playerId, move.number_of_units)
-=======
         if old_tile.units[move.playerId] < move.number_of_units:
             move.number_of_units = old_tile.units[move.playerId]
 
         old_tile.decrement_units(move.playerId, move.number_of_units)
         new_tile.increment_units(move.playerId, move.number_of_units)
->>>>>>> f3fb0f4a9672937a41e5af27aad4096850b223c1
 
     def update_mine_command(self, move):
         tile = self.map.get_tile(move.position)
