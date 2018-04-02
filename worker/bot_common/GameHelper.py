@@ -77,6 +77,18 @@ class GameHelper:
         # map handles validity check
         return self.map.get_cell((x, y))
 
+    # Get count of all of my cells on the map.
+    # Return: (number)
+    #   the number of cells on the map that I control.
+    def get_my_cell_count(self):
+        return len(self.get_my_cells())
+
+    # Get count of all of enemy cells on the map.
+    # Return: (number)
+    #   the number of cells on the map that are enemy controlled.
+    def get_enemy_cell_count(self):
+        return len(self.get_enemy_cells())
+
     # Get a list of all my cells on the map.
     # Return: (list of Cell)
     #   list of all my cells
@@ -129,6 +141,18 @@ class GameHelper:
     # --------------------------------------------------------------------------
     # BUILDING GETTERS
 
+    # Get a count of all buildings on the map that I control.
+    # Return: (number)
+    #   the number of buildings on the map that I control
+    def get_my_building_count(self):
+        return len(self.get_my_buildings())
+
+    # Get a count of all buildings on the map that are enemy controlled.
+    # Return: (number)
+    #   the number of buildings on the map that are enemy controlled
+    def get_enemy_building_count(self):
+        return len(self.get_enemy_buildings())
+
     # Get a list of all my buildings on the map.
     # Return: (list of Building)
     #   list of buildings on the map that I control
@@ -164,6 +188,9 @@ class GameHelper:
             return position_from + (0, 1)
         elif position_from[1] > position_to[1]:
             return position_from + (0, -1)
+
+    # --------------------------------------------------------------------------
+    # COUNT GETTERS
 
     # get the number of units at specified square of specified player
     def get_units(self, x, y, playerId):
@@ -217,7 +244,7 @@ class GameHelper:
             return False
 
 
-            # functions to return commands of various types
+    # functions to return commands of various types
 
 
 
