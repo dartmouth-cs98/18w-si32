@@ -7,7 +7,7 @@ import pickle
 
 from game.Command import Command
 
-# translation of movement directions
+# movement direction translation 
 DIRECTIONS = {
     'left'  : [-1, 0],
     'right' : [1,  0],
@@ -419,7 +419,7 @@ class GameHelper:
         return self.get_nearest_friendly_unit_pos_to_tile(x, y)[1] > self.get_nearest_enemy_unit_pos_to_tile(x, y)[1]
 
     # --------------------------------------------------------------------------
-    # LOGGING 
+    # LOGGING
 
     def log(self, out):
         self.logfile.write(str(out) + "\n")
