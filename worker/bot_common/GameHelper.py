@@ -71,18 +71,52 @@ class GameHelper:
     # CELL GETTERS
 
     # Get map cell at specified (x, y) coordinate.
-    # Return: Cell at <position> if <position> is valid, else None
+    # Return: (Cell)
+    #   Cell at <position> if <position> is valid, else None
     def get_cell(self, x, y):
         # map handles validity check
         return self.map.get_cell((x, y))
 
+    # Get a list of all my cells on the map.
+    # Return: (list of Cell)
+    #   list of all my cells
     def get_my_cells(self):
         return self.get_occupied_cells(self.myId)
 
+    # Get a list of all enemy cells on the map.
+    # Return: (list of Cell)
+    #   list of all enemy cells
     def get_enemy_cells(self):
         return self.get_occupied_cells(self.eId)
 
-    # gets all cells of a player with specified playerId where he has at least one unit
+    # Get a list of all cells in which I have a building.
+    # Return: (list of Cell)
+    #   list of all my building-occupied cells
+    def get_my_building_sites(self):
+        cells = []
+        for col in self.map.cells:
+            for cell in col:
+                if cell.building and cell.building.ownerId == self.myId:
+                    cells.append(cell)
+
+        return cells
+
+    # Get a list of all cells in which enemy has a building.
+    # Return: (list of Cell)
+    #   list of all enemy building-occupied cells
+    def get_enemy_building_sites(self):
+        cells = []
+        for col in self.map.cells:
+            for cell in col:
+                if cell.building and cell.building.ownerId != self.myId:
+                    cells.append(cell)
+
+        return cells
+
+    # Get a list of all cells in which player specified by <playerId>
+    # has at least one unit - this is equivalent to control of this cell.
+    # Return: (list of Cell)
+    #   list of all cells occupied by player with <playerId>
     def get_occupied_cells(self, playerId):
         cells = []
         for col in self.map.cells:
@@ -95,20 +129,26 @@ class GameHelper:
     # --------------------------------------------------------------------------
     # BUILDING GETTERS
 
+    # Get a list of all my buildings on the map.
+    # Return: (list of Building)
+    #   list of buildings on the map that I control
     def get_my_buildings(self):
         blds = []
         for col in self.map.cells:
             for cell in col:
                 if cell.building and cell.building.ownerId == self.myId:
-                    blds.append(cell)
+                    blds.append(cell.building)
         return blds
 
+    # Get a list of all my buildings on the map.
+    # Return: (list of Building)
+    #   list of buildings on the map that I control
     def get_enemy_buildings(self):
         blds = []
         for col in self.map.cells:
             for cell in col:
                 if cell.building and cell.building.ownerId != self.myId:
-                    blds.append(cell)
+                    blds.append(building)
         return blds
 
     # TODO: rename this, its confusing
