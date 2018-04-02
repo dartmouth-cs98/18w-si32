@@ -26,7 +26,7 @@ class Rules:
         return cell.units[move.playerId] >= move.number_of_units
 
     def update_by_move(self, move):
-        
+
         # Only execute move if it has a non-zero number of units
         if move.number_of_units > 0:
 
@@ -43,8 +43,12 @@ class Rules:
         old_cell = self.map.get_cell(move.position)
         new_cell = self.map.get_cell([old_cell.position[0] + move.direction[0], old_cell.position[1] + move.direction[1]])
 
-        old_cell.decrement_units(move.playerId, move.number_of_units)
-        new_cell.increment_units(move.playerId, move.number_of_units)
+        if old_tile.units[move.playerId] < move.number_of_units:
+            move.number_of_units = old_tile.units[move.playerId]
+            
+        old_tile.decrement_units(move.playerId, move.number_of_units)
+        new_tile.increment_units(move.playerId, move.number_of_units)
+
 
     def update_mine_command(self, move):
         cell = self.map.get_cell(move.position)
