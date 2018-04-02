@@ -37,32 +37,6 @@ class GameHelper:
         self.logfile.close()
 
     # --------------------------------------------------------------------------
-    # INTERNAL - USER SHOULD NOT TOUCH
-
-    @classmethod
-    def register_turn_handler(cls, handler):
-        newGame = cls()
-        newGame.turn_handler = handler
-        newGame.run_game()
-        return newGame
-
-    def run_game(self):
-        while True:
-            self.load_state()
-            commands = self.turn_handler(self)
-            self.send_commands(commands)
-
-    # reads in the game state and loads it
-    def load_state(self):
-        state = pickle.load(sys.stdin.buffer)
-        self.map = state["map"]
-        self.me = state["player"]
-
-    def send_commands(self, commands):
-        print(pickle.dumps(commands))
-        sys.stdout.flush()
-
-    # --------------------------------------------------------------------------
     # COMMAND CREATION
 
     def move(self, position_from, num_units, direction):
@@ -93,9 +67,20 @@ class GameHelper:
     def mine(self, position_mine, num_units):
         return Command(self.myId, position_mine, 'mine', num_units, DIRECTIONS["none"])
 
-
     # --------------------------------------------------------------------------
-    # DATA GETTERS
+    # CELL GETTERS
+
+    # Get map cell at specified (x, y) coordinate.
+    # Return: Cell at <position> if <position> is valid, else None
+    def get_cell(self, x, y):
+        # map handles validity check 
+        return self.map.get_cell((x, y))
+
+    def get_my_cells(self):
+        return self.get_occupied_cells(self.myId)
+
+    def get_enemy_cells(self):
+        return self.get_occupied_cells(self.eId)
 
     # gets all cells of a player with specified playerId where he has at least one unit
     def get_occupied_cells(self, playerId):
@@ -107,13 +92,10 @@ class GameHelper:
 
         return cells
 
-    def my_occupied_cells(self):
-        return self.get_occupied_cells(self.myId)
+    # --------------------------------------------------------------------------
+    # BUILDING GETTERS
 
-    def enemy_occupied_cells(self):
-        return self.get_occupied_cells(self.eId)
-
-    def my_buildings(self):
+    def get_my_buildings(self):
         blds = []
         for col in self.map.cells:
             for cell in col:
@@ -121,7 +103,7 @@ class GameHelper:
                     blds.append(cell)
         return blds
 
-    def enemy_buildings(self):
+    def get_enemy_buildings(self):
         blds = []
         for col in self.map.cells:
             for cell in col:
@@ -142,10 +124,6 @@ class GameHelper:
             return position_from + (0, 1)
         elif position_from[1] > position_to[1]:
             return position_from + (0, -1)
-
-    # gets cell at specified xy-coordinates
-    def get_cell(self, x, y):
-        return self.map.get_cell((x, y))
 
     # get the number of units at specified square of specified player
     def get_units(self, x, y, playerId):
@@ -425,8 +403,34 @@ class GameHelper:
         self.logfile.write(str(out) + "\n")
         self.logfile.flush()
 
+    # --------------------------------------------------------------------------
+    # INTERNAL - USER SHOULD NOT MODIFY
+
+    @classmethod
+    def register_turn_handler(cls, handler):
+        newGame = cls()
+        newGame.turn_handler = handler
+        newGame.run_game()
+        return newGame
+
+    def run_game(self):
+        while True:
+            self.load_state()
+            commands = self.turn_handler(self)
+            self.send_commands(commands)
+
+    # reads in the game state and loads it
+    def load_state(self):
+        state = pickle.load(sys.stdin.buffer)
+        self.map = state["map"]
+        self.me = state["player"]
+
+    def send_commands(self, commands):
+        print(pickle.dumps(commands))
+        sys.stdout.flush()
+
 # ------------------------------------------------------------------------------
-# Helper Functions
+# HELPER FUNCTIONS
 
 def pos_equal(a, b):
     return a[0] == b[0] and a[1] == b[1]

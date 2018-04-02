@@ -34,9 +34,12 @@ class Map:
     # --------------------------------------------------------------------------
     # Helper functions
 
-    # helper function for getting cells
+    # return cell at specified position
     def get_cell(self, position):
-        return self.cells[position[0]][position[1]]
+        if self.position_in_range(position):
+            return self.cells[position[0]][position[1]]
+        else:
+            return None
 
      # returns list of adjacent cells
     def get_adjacent_squares(self, position, direction=None):
@@ -65,7 +68,7 @@ class Map:
 
     # check if coordinates are contained by map
     def position_in_range(self, position):
-        return not ((position[0] < 0) or (position[0] >= (self.width-1)) or (position[1] < 0) or (position[1] >= (self.height-1)))
+        return not ((position[0] < 0) or (position[0] >= (self.width - 1)) or (position[1] < 0) or (position[1] >= (self.height - 1)))
 
     # check if cell is within map
     def cell_in_range(self, cell):
