@@ -26,14 +26,18 @@ class Rules:
         return tile.units[move.playerId] >= move.number_of_units
 
     def update_by_move(self, move):
-        if move.command == 'move':
-            self.update_move_command(move)
+        
+        # Only execute move if it has a non-zero number of units
+        if move.number_of_units > 0:
 
-        if move.command == 'build':
-            self.update_build_command(move)
+            if move.command == 'move':
+                self.update_move_command(move)
 
-        if move.command == 'mine':
-            self.update_mine_command(move)
+            if move.command == 'build':
+                self.update_build_command(move)
+
+            if move.command == 'mine':
+                self.update_mine_command(move)
 
     def update_move_command(self, move):
         old_tile = self.map.get_tile(move.position)

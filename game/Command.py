@@ -21,7 +21,11 @@ class Command:
 
         self.direction = direction
         self.position = Coordinate(position)
-        self.number_of_units = number_of_units
+
+        # Catch people trying to send negative number of units
+        if number_of_units >= 1:
+            self.number_of_units = number_of_units
+        else: self.number_of_units = 0
 
     def decrement_units(self, number=1):
         if self.number_of_units >= number:
