@@ -14,7 +14,7 @@ while True:
     # load state for next turn
     game.load_state()
 
-    units = game.get_my_units()
+    units = game.get_my_cells()
 
     nUnits = game.get_total_units()
 
@@ -27,7 +27,7 @@ while True:
                 if m:
                     commands.append(m)
     else:
-        buildings = game.enemy_buildings()
+        buildings = game.get_enemy_buildings()
         if len(buildings) > 0:
             for s in units:
                 m = game.move_towards(s.position,buildings[0].position)

@@ -1,19 +1,15 @@
 import React from "react";
 import { connect } from "react-redux";
 import history from "../../history";
-import Page from "../layout/page";
+
+import { Page, Wrapper }from "../layout";
 import { createGroup } from "../../data/group/groupActions";
-import { fetchBots } from "../../data/bot/botActions";
 import NewGroupForm from "./NewGroupForm";
+import { fontStyles, colorStyles } from "../../style";
 
 class GroupCreatePage extends React.PureComponent {
   constructor(props) {
     super(props);
-    this.state = { bots: {} };
-  }
-
-  componentDidMount() {
-    this.props.fetchBots();
   }
 
   handleSubmit = (values) => {
@@ -21,7 +17,6 @@ class GroupCreatePage extends React.PureComponent {
       public: values.public === "public"
     });
     this.props.create(groupInfo).then((res) => {
-      // TODO use keyed collections instead of just happening to know that 1 is the group
       history.push(`/leaderboards/${res[1]._id}`);
     });
   }
@@ -29,21 +24,26 @@ class GroupCreatePage extends React.PureComponent {
   render() {
     return (
       <Page>
-        <h1>Create a New Group</h1>
-        <NewGroupForm onSubmit={this.handleSubmit} />
-        <input type="button" value="create" onClick={this.create} />
+        <Wrapper>
+          <div style={styles.formWrap}>
+            <h1 style={[fontStyles.large, colorStyles.red]}>Create Group</h1>
+            <NewGroupForm onSubmit={this.handleSubmit} />
+          </div>
+        </Wrapper>
       </Page>
     );
   }
 }
 
+const styles = {
+  formWrap: {
+    maxWidth: 500,
+    margin: "20px auto",
+  },
+};
+
 const mapDispatchToProps = dispatch => ({
-  create: (bots) => dispatch(createGroup(bots)),
-  fetchBots: () => dispatch(fetchBots()),
+  create: (groupInfo) => dispatch(createGroup(groupInfo)),
 });
 
-const mapStateToProps = state => ({
-  bots: state.bots.records,
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(GroupCreatePage);
+export default connect(null, mapDispatchToProps)(GroupCreatePage);

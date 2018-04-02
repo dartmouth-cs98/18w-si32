@@ -87,7 +87,7 @@ class GameHelper:
 
 
     # returns a list of all tiles that have units for this player on them
-    def get_my_units(self):
+    def get_my_cells(self):
         return self.get_occupied_tiles(self.myId)
 
     #gets tile at specified xy-coordinates

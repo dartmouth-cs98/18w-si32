@@ -14,9 +14,9 @@ while True:
     # load state for next turn
     game.load_state()
 
-    units = game.get_my_units()
+    units = game.get_my_cells()
 
-    eBuildings = game.enemy_buildings()
+    eBuildings = game.get_enemy_buildings()
 
     if len(buildings) > 0:
         for s in units:

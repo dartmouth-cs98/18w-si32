@@ -63,6 +63,8 @@ class Player:
 
                 # parse out the moves for this turn
                 commands = pickle.loads(eval(move_str))
+                for command in commands:
+                    command.playerId = self.playerId
 
         except TimeoutError as err:
             # if the bot timed out, mark so

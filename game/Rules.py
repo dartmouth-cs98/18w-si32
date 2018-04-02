@@ -19,28 +19,37 @@ class Rules:
         return self.within_bounds(move) and self.enough_units(move)
 
     def within_bounds(self, move):
-        return self.map.position_in_range(move.position)
+        new_coords = move.position.add(move.direction)
+        return self.map.position_in_range(new_coords)
 
     def enough_units(self, move):
         cell = self.map.get_cell(move.position)
         return cell.units[move.playerId] >= move.number_of_units
 
     def update_by_move(self, move):
-        if move.command == 'move':
-            self.update_move_command(move)
 
-        if move.command == 'build':
-            self.update_build_command(move)
+        # Only execute move if it has a non-zero number of units
+        if move.number_of_units > 0:
 
-        if move.command == 'mine':
-            self.update_mine_command(move)
+            if move.command == 'move':
+                self.update_move_command(move)
+
+            if move.command == 'build':
+                self.update_build_command(move)
+
+            if move.command == 'mine':
+                self.update_mine_command(move)
 
     def update_move_command(self, move):
         old_cell = self.map.get_cell(move.position)
         new_cell = self.map.get_cell([old_cell.position[0] + move.direction[0], old_cell.position[1] + move.direction[1]])
 
-        old_cell.decrement_units(move.playerId, move.number_of_units)
-        new_cell.increment_units(move.playerId, move.number_of_units)
+        if old_tile.units[move.playerId] < move.number_of_units:
+            move.number_of_units = old_tile.units[move.playerId]
+
+        old_tile.decrement_units(move.playerId, move.number_of_units)
+        new_tile.increment_units(move.playerId, move.number_of_units)
+
 
     def update_mine_command(self, move):
         cell = self.map.get_cell(move.position)

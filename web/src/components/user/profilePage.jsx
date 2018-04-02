@@ -3,12 +3,12 @@ import Radium from "radium";
 import _ from "lodash";
 import { connect } from "react-redux";
 
-import { Link, Page, Wrapper, TitleBar } from "../layout";
+import { Page, Wrapper, TitleBar } from "../layout";
 import Button from "../common/button";
 
 import MatchList from "../matches/MatchList";
 import GroupList from "../groups/GroupList";
-//import groupSearchbar from "../groups/groupSearchbar";
+import groupSearchbar from "../groups/groupSearchbar";
 
 import { SubTitle } from "../common/titles";
 
@@ -77,17 +77,12 @@ class ProfilePage extends React.Component {
   }
 
   renderJoinGroupLink = () => {
-    return <button onClick={this.joinGroup} disabled={!this.state.selectedGroup}>Join Group</button>;
+    return <Button kind="secondary" style={{marginRight: 20}} onClick={this.joinGroup} disabled={!this.state.selectedGroup}>Join group</Button>;
   }
 
   renderExploreGroupLink = () => {
     const groupId = this.state.selectedGroup ? this.state.selectedGroup.value : null;
-
-    if (groupId) {
-      return <button><a style={{color: "black", textDecoration: "none"}} href={`/leaderboards/${groupId}`} target="_blank">Explore Group</a></button>;
-    } else {
-      return <button disabled={true}>Explore Group</button>;
-    }
+    return <Button disabled={!groupId} kind="secondary" href={`/leaderboards/${groupId}`}>Explore group &rarr;</Button>;
   }
 
   renderGroupActionBox = () => {
@@ -95,7 +90,6 @@ class ProfilePage extends React.Component {
       <div style={styles.groupActionBox}>
         {this.renderJoinGroupLink()}
         {this.renderExploreGroupLink()}
-        <button><Link style={{color: "black", textDecoration: "none"}} href="/groups/create">Create Group</Link></button>
       </div>
     );
   }
@@ -133,12 +127,17 @@ class ProfilePage extends React.Component {
               <MatchList matches={this.props.matches} />
             </div>
             <div style={styles.secondary.sidebar}>
-              <SubTitle>Groups</SubTitle>
+              <SubTitle>
+                <div style={styles.groupTitle}>
+                  <span style={{marginRight: 20}}>Groups</span>
+                  { this.props.isOwnProfile ? <Button kind="secondary" href="/groups/create">+ Create Group</Button> : null }
+                </div>
+              </SubTitle>
               <div style={styles.groupList}>
                 <GroupList groups={this.props.profileUser.groups} ranks={this.props.profileUser.ranks} leaveGroup={this.props.leaveGroup} />
               </div>
-              {/*{groupSearchbar(this.state.selectedGroup, this.didSelectGroup, {placeholder: "Search for new groups to join"})}
-              {this.renderGroupActionBox()}*/}
+              { this.props.isOwnProfile ? groupSearchbar(this.state.selectedGroup, this.didSelectGroup, {placeholder: "Search for new groups to join"}) : null }
+              { this.props.isOwnProfile ? this.renderGroupActionBox() : null }
             </div>
           </div>
 
@@ -164,6 +163,7 @@ const mapStateToProps = (state, props) => ({
   sessionUser: state.session.user || {},
   profileUser: state.users.records[props.id],
   matches: getMatchesForUser(state, props.id),
+  isOwnProfile: (state.session.user || {})._id === props.id,
   // bots: getBotsForUser(state, props.id),
 });
 
@@ -220,5 +220,9 @@ const styles = {
   groupList: {
     marginBottom: 15,
     marginTop: 5,
+  },
+  groupTitle: {
+    display: "flex",
+    alignItems: "center",
   },
 };
