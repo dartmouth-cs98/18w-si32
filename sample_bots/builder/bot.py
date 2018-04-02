@@ -12,7 +12,7 @@ firstIter = True
 def stage_1():
     global targetPos
     buildings = game.my_buildings()
-    e_buildings = game.enemy_buildings()
+    e_buildings = game.get_enemy_buildings()
     commands = []
     for u in units:
         game.log(targetPos)
@@ -42,7 +42,7 @@ def stage_2():
     global targetPos
 
     buildings = game.my_buildings()
-    e_buildings = game.enemy_buildings()
+    e_buildings = game.get_enemy_buildings()
     targetPos = buildings[0].position
     commands = []
 
@@ -65,11 +65,11 @@ while True:
     # load state for next turn
     game.load_state()
 
-    units = game.get_my_units()
+    units = game.get_my_cells()
     nUnits = game.get_total_units()
 
     buildings = game.my_buildings()
-    e_buildings = game.enemy_buildings()
+    e_buildings = game.get_enemy_buildings()
 
     if firstIter:
         targetPos = game.position_towards(buildings[0].position, e_buildings[0].position)

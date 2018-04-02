@@ -5,9 +5,9 @@ from GameHelper import GameHelper
 def do_turn(game):
     commands = []
 
-    units = game.get_my_units()
+    units = game.get_my_cells()
 
-    buildings = game.enemy_buildings()
+    buildings = game.get_enemy_buildings()
     if len(buildings) > 0:
         for s in units:
             m = game.move_towards(s.position,buildings[0].position)
