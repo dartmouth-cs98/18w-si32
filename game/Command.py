@@ -23,6 +23,14 @@ class Command:
         self.position = Coordinate(position)
         self.number_of_units = number_of_units
 
+    def decrement_units(self, number=1):
+        if self.number_of_units >= number:
+            self.number_of_units -= number
+
+        else:
+            self.number_of_units = 0
+
+
     @classmethod
     def from_dict(cls, playerId, d):
         return cls(playerId, d["location"], d["command"], d["number_of_units"], d["direction"])

@@ -61,7 +61,7 @@ class Rules:
 
         # two cases for building:
         # - making a new building
-        # - increasing the resource value of an existing building 
+        # - increasing the resource value of an existing building
 
         # if there is no building, create one
         if tile.building is None:
