@@ -8,7 +8,7 @@ from game.Command import Command
 from game.Game import Game
 from game.Player import Player
 from game.Map import Map
-from game.Tile import Tile
+from game.Cell import Cell
 from game.Rules import Rules
 from game.Logger import Logger
 
@@ -58,8 +58,8 @@ class GameState(Game):
         self.players.append(Player(0, self.map, bots[0], (5, 5)))
         self.players.append(Player(1, self.map, bots[1], (15, 15)))
 
-        self.map.get_tile((4,4)).create_building(0)
-        self.map.get_tile((16,16)).create_building(1)
+        self.map.get_cell((4,4)).create_building(0)
+        self.map.get_cell((16,16)).create_building(1)
 
     # --------------------------------------------------------------------------
     # MAIN FUNCTIONS
@@ -113,14 +113,14 @@ class GameState(Game):
             self.execute_moves(player_moves)
 
         # update statuses / unit numbers, etc.
-        for col in self.map.tiles:
-            for tile in col:
-                tile.update_tile(self.players)
+        for col in self.map.cells:
+            for cell in col:
+                cell.update_cell(self.players)
 
     def update_units_numbers(self):
-        for tiles in self.map.tiles:
-            for tile in tiles:
-                tile.update_units_number()
+        for cells in self.map.cells:
+            for cell in cells:
+                cell.update_units_number()
 
     # returns true if at least one player in the game is still "alive"
     # in terms of valid code execution
@@ -216,16 +216,16 @@ class GameState(Game):
             self.rules.update_by_move(move)
 
     def count_units_sent(self, moves):
-        tiles = {}
+        cells = {}
 
         for move in moves:
-            if tuple(move.position) not in tiles:
-                tiles[tuple(move.position)] = move.number_of_units
+            if tuple(move.position) not in cells:
+                cells[tuple(move.position)] = move.number_of_units
 
             else:
-                tiles[tuple(move.position)] += move.number_of_units
+                cells[tuple(move.position)] += move.number_of_units
 
-        return tiles
+        return cells
 
     def add_implicit_commands(self, moves):
         new_moves = copy(moves)
@@ -239,15 +239,15 @@ class GameState(Game):
         while i < len(counts):
             command_count = counts[i]
 
-            for tile_position in command_count:
+            for cell_position in command_count:
 
-                tile = self.map.get_tile(list(tile_position))
+                cell = self.map.get_cell(list(cell_position))
 
-                if command_count[tile_position] < tile.units[i]:
+                if command_count[cell_position] < cell.units[i]:
 
-                    remaining_units = tile.units[i] - command_count[tile_position]
+                    remaining_units = cell.units[i] - command_count[cell_position]
 
-                    new_moves[i].append(Command(i, list(tile_position), 'mine', remaining_units, [0,0]))
+                    new_moves[i].append(Command(i, list(cell_position), 'mine', remaining_units, [0,0]))
 
             i += 1
 
@@ -288,7 +288,7 @@ class GameState(Game):
         self.debugLogFile.flush()
 
 # ------------------------------------------------------------------------------
-# Helper Functions 
+# Helper Functions
 
 # execute commmands in the following order: move, build, mine
 def sort_moves(moves):
