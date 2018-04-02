@@ -19,7 +19,8 @@ class Rules:
         return self.within_bounds(move) and self.enough_units(move)
 
     def within_bounds(self, move):
-        return self.map.position_in_range(move.position)
+        new_coords = move.position.add(move.direction)
+        return self.map.position_in_range(new_coords)
 
     def enough_units(self, move):
         cell = self.map.get_cell(move.position)
@@ -45,7 +46,7 @@ class Rules:
 
         if old_tile.units[move.playerId] < move.number_of_units:
             move.number_of_units = old_tile.units[move.playerId]
-            
+
         old_tile.decrement_units(move.playerId, move.number_of_units)
         new_tile.increment_units(move.playerId, move.number_of_units)
 
