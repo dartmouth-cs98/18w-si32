@@ -33,6 +33,7 @@ botRouter.post("/", async (ctx) => {
 
   const { key } = await s3.uploadBot(ctx.state.userId, bot._id, ctx.request.body.files.code);
   bot.code = key;
+  bot.versionHistory.push({ timestamp: new Date(), version: 1 });
   bot.save();
 
   // delete this file to mark it as handled
@@ -52,7 +53,6 @@ botRouter.get("/:botId", async (ctx) => {
 
 // update bot with uploaded code
 botRouter.post("/:botId", async (ctx) => {
-  // TODO validate that user owns this bot
   const bot = await Bot.findById(ctx.params.botId);
 
   if (ctx.state.userId != bot.user) {
@@ -64,9 +64,10 @@ botRouter.post("/:botId", async (ctx) => {
   // delete this file to mark it as handled
   delete ctx.request.body.files.code;
 
-  // update bot in db w/ code's url
+  // update bot in db w/ code's url, and increment the version
   bot.set("code", key);
   bot.set("version", bot.version + 1);
+  bot.versionHistory.push({ timestamp: new Date(), version: bot.version });
   bot.save();
 
   ctx.body = { updatedRecords: [bot] };

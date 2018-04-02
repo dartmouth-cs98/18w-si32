@@ -1,31 +1,40 @@
+# GameState.py
+# Class implementation for GameState
+
 import json
 from copy import copy
+
 from game.Command import Command
 from game.Game import Game
 from game.Player import Player
 from game.Map import Map
-from game.Tile import Tile
+from game.Cell import Cell
 from game.Rules import Rules
 from game.Logger import Logger
 
-MAX_ITERS = 2000
+from game.params import MAX_ITERS
 
-class Game_state(Game):
+# ------------------------------------------------------------------------------
+# GameState
 
+# Constructor Arguments
+# bots (list) - a list of the bots involved in this game instance.
+
+class GameState(Game):
     def __init__(self, bots):
-        # Game state is determined by map, players, and rules. Higher level
-        # game state takes these objects and runs games, allowing for a
+
+        # Game state is determined by map, players, and rules.
+        # Higher level game state takes these objects and runs games, allowing for a
         # game agnostic framework
+        #
         # GB - I'm more tightly coupling these at the moment to get things off
         # the ground. Won't be hard to abstract back out when needed.
 
-        num_players = len(bots)
-
-        self.map = Map(num_players)
+        self.map = Map(len(bots))
 
         self.initialize_players(bots, self.map)
 
-        self.logger = Logger(self.map, self.players)
+        self.logger = Logger(self.map)
 
         self.debugLogFile = open("./gameserver.log", "w")
 
@@ -38,7 +47,8 @@ class Game_state(Game):
         super().__init__(bots)
 
 
-    # ------------ Initializing function ------------------
+    # --------------------------------------------------------------------------
+    # INITIALIZING FUNCTION
 
     def initialize_players(self, bots, map):  # initalizes players
         i = 0
@@ -48,10 +58,12 @@ class Game_state(Game):
         self.players.append(Player(0, self.map, bots[0], (5, 5)))
         self.players.append(Player(1, self.map, bots[1], (15, 15)))
 
-        self.map.get_tile((4,4)).create_building(0)
-        self.map.get_tile((16,16)).create_building(1)
+        self.map.get_cell((4,4)).create_building(0)
+        self.map.get_cell((16,16)).create_building(1)
 
-    # ------------------ Main Functions ---------------------
+    # --------------------------------------------------------------------------
+    # MAIN FUNCTIONS
+
     def start(self):
         self.game_loop()
 
@@ -71,8 +83,10 @@ class Game_state(Game):
 
             self.check_game_over()
 
-        # log one more turn, so that viz has a final state to work with
-        # self.logger.new_turn(self.map) # uncomment this line and comment the one under to get more verbose log
+        # once game ends, log one more turn, so that viz has a final state to work with
+
+        # uncomment this line and comment the one under to get more verbose log
+        # self.logger.new_turn(self.map)
         self.logger.barebones_new_turn(self.map)
         self.logger.end_turn()
 
@@ -84,29 +98,29 @@ class Game_state(Game):
 
     # read all moves from the players and update state accordingly
     def read_moves(self):
-
         moves = []
         for p in self.players:
             m = p.get_move()
             moves.append(m)
 
-        # Check moves for combat, and sort by type of command
-        moves = self.rules.update_combat_phase(moves)  # Run both players moves through combat phase, return updated list of moves
+        # check moves for combat, and sort by type of command
+        # run both players moves through combat phase, return updated list of moves
+        moves = self.rules.update_combat_phase(moves)
         moves = sort_moves(moves)
         moves = self.add_implicit_commands(moves)
 
         for player_moves in moves:
             self.execute_moves(player_moves)
 
-        # Update statuses/unit numbers, etc.
-        for col in self.map.tiles:
-            for tile in col:
-                tile.update_tile(self.players)
+        # update statuses / unit numbers, etc.
+        for col in self.map.cells:
+            for cell in col:
+                cell.update_cell(self.players)
 
     def update_units_numbers(self):
-        for tiles in self.map.tiles:
-            for tile in tiles:
-                tile.update_units_number()
+        for cells in self.map.cells:
+            for cell in cells:
+                cell.update_units_number()
 
     # returns true if at least one player in the game is still "alive"
     # in terms of valid code execution
@@ -139,7 +153,6 @@ class Game_state(Game):
         return False
 
     def check_unit_victory_condition_multi(self):
-
         i = 0
         index = -1
 
@@ -181,7 +194,6 @@ class Game_state(Game):
 
         i = 0
         for player in self.players:
-
             if (player.total_units() >= max_units):
                 max_player = i
                 max_units = player.total_units()
@@ -192,13 +204,12 @@ class Game_state(Game):
 
         return True
 
-    # ---------------- PLAYER MOVES FUNCTIONS ----------------
+    # --------------------------------------------------------------------------
+    # PLAYER MOVEMENT FUNCTIONS
 
     def execute_moves(self, moves):
         for move in moves:
             self.execute_move(move)
-
-
 
     def execute_move(self, move):
         if self.rules.verify_move(move):
@@ -206,17 +217,16 @@ class Game_state(Game):
             self.rules.update_by_move(move)
 
     def count_units_sent(self, moves):
-        tiles = {}
+        cells = {}
 
         for move in moves:
-
-            if tuple(move.position) not in tiles:
-                tiles[tuple(move.position)] = move.number_of_units
+            if tuple(move.position) not in cells:
+                cells[tuple(move.position)] = move.number_of_units
 
             else:
-                tiles[tuple(move.position)] += move.number_of_units
+                cells[tuple(move.position)] += move.number_of_units
 
-        return tiles
+        return cells
 
     def add_implicit_commands(self, moves):
         new_moves = copy(moves)
@@ -230,17 +240,15 @@ class Game_state(Game):
         while i < len(counts):
             command_count = counts[i]
 
-            for tile_position in command_count:
+            for cell_position in command_count:
 
-                tile = self.map.get_tile(list(tile_position))
+                cell = self.map.get_cell(list(cell_position))
 
-                if command_count[tile_position] < tile.units[i]:
+                if command_count[cell_position] < cell.units[i]:
 
-                    remaining_units = tile.units[i] - command_count[tile_position]
+                    remaining_units = cell.units[i] - command_count[cell_position]
 
-                    #if tile.has_building():
-                    #    new_moves[i].append(Command(i, list(tile_position), 'build', remaining_units, [0,0]))
-                    new_moves[i].append(Command(i, list(tile_position), 'mine', remaining_units, [0,0]))
+                    new_moves[i].append(Command(i, list(cell_position), 'mine', remaining_units, [0,0]))
 
             i += 1
 
@@ -280,7 +288,10 @@ class Game_state(Game):
         self.debugLogFile.write(str(out) + "\n")
         self.debugLogFile.flush()
 
-# We want to execute commmands in the following order: move, build, mine
+# ------------------------------------------------------------------------------
+# Helper Functions
+
+# execute commmands in the following order: move, build, mine
 def sort_moves(moves):
     sorted_moves = []
 

@@ -20,6 +20,14 @@ const reducer = combineReducers({
   form: formReducer,
 });
 
-let store = createStore(reducer, applyMiddleware(thunkMiddleware, logger));
+const rootReducer = (state, action) => {
+  if (action.type === "SESSION_DESTROY") {
+    state = undefined;
+  }
+
+  return reducer(state, action);
+};
+
+let store = createStore(rootReducer, applyMiddleware(thunkMiddleware, logger));
 
 export default store;
