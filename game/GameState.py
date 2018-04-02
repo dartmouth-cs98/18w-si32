@@ -8,7 +8,7 @@ from game.Command import Command
 from game.Game import Game
 from game.Player import Player
 from game.Map import Map
-from game.Tile import Tile
+from game.Cell import Cell
 from game.Rules import Rules
 from game.Logger import Logger
 
@@ -58,8 +58,8 @@ class GameState(Game):
         self.players.append(Player(0, self.map, bots[0], (5, 5)))
         self.players.append(Player(1, self.map, bots[1], (15, 15)))
 
-        self.map.get_tile((4,4)).create_building(0)
-        self.map.get_tile((16,16)).create_building(1)
+        self.map.get_cell((4,4)).create_building(0)
+        self.map.get_cell((16,16)).create_building(1)
 
     # --------------------------------------------------------------------------
     # MAIN FUNCTIONS
@@ -113,14 +113,14 @@ class GameState(Game):
             self.execute_moves(player_moves)
 
         # update statuses / unit numbers, etc.
-        for col in self.map.tiles:
-            for tile in col:
-                tile.update_tile(self.players)
+        for col in self.map.cells:
+            for cell in col:
+                cell.update_cell(self.players)
 
     def update_units_numbers(self):
-        for tiles in self.map.tiles:
-            for tile in tiles:
-                tile.update_units_number()
+        for cells in self.map.cells:
+            for cell in cells:
+                cell.update_units_number()
 
     # returns true if at least one player in the game is still "alive"
     # in terms of valid code execution
@@ -156,16 +156,16 @@ class GameState(Game):
         i = 0
         index = -1
 
-        players_with_buildings = 0
+        players_with_buildings = 0 #the number of players who own at least one building
 
         for player in self.players:
-            if player.has_building():
-                index = i
+            if player.has_building(): #if a player has a building
+                index = i #save their ID
                 players_with_buildings += 1
             i += 1
 
-        if (players_with_buildings == 1):
-            self.winner = self.players[index]
+        if (players_with_buildings == 1): #if only one player has nonzero buildings, then they are the winner
+            self.winner = self.players[index] #the saved ID must therefore also be the winner's ID
             return True
 
         return False
@@ -185,12 +185,12 @@ class GameState(Game):
 
         return True
 
-    def time_limit_reached_multi(self):
+    def time_limit_reached_multi(self): #if time limit reached, the player with the highest number of units is the winner
         if self.iter < MAX_ITERS:
             return False
 
-        max_player = -1
-        max_units = -1
+        max_player = -1 #ID of the player with the most units (so far)
+        max_units = -1 # number of units controlled by 'max_player'
 
         i = 0
         for player in self.players:
@@ -201,6 +201,7 @@ class GameState(Game):
             i += 1
 
         self.winner = self.players[max_player]
+
         return True
 
     # --------------------------------------------------------------------------
@@ -216,16 +217,16 @@ class GameState(Game):
             self.rules.update_by_move(move)
 
     def count_units_sent(self, moves):
-        tiles = {}
+        cells = {}
 
         for move in moves:
-            if tuple(move.position) not in tiles:
-                tiles[tuple(move.position)] = move.number_of_units
+            if tuple(move.position) not in cells:
+                cells[tuple(move.position)] = move.number_of_units
 
             else:
-                tiles[tuple(move.position)] += move.number_of_units
+                cells[tuple(move.position)] += move.number_of_units
 
-        return tiles
+        return cells
 
     def add_implicit_commands(self, moves):
         new_moves = copy(moves)
@@ -239,15 +240,15 @@ class GameState(Game):
         while i < len(counts):
             command_count = counts[i]
 
-            for tile_position in command_count:
+            for cell_position in command_count:
 
-                tile = self.map.get_tile(list(tile_position))
+                cell = self.map.get_cell(list(cell_position))
 
-                if command_count[tile_position] < tile.units[i]:
+                if command_count[cell_position] < cell.units[i]:
 
-                    remaining_units = tile.units[i] - command_count[tile_position]
+                    remaining_units = cell.units[i] - command_count[cell_position]
 
-                    new_moves[i].append(Command(i, list(tile_position), 'mine', remaining_units, [0,0]))
+                    new_moves[i].append(Command(i, list(cell_position), 'mine', remaining_units, [0,0]))
 
             i += 1
 
@@ -267,9 +268,9 @@ class GameState(Game):
         return [self.players[1], self.players[0]]
 
     def get_ranked_by_units_multi(self):
-        s = sorted(self.players, key=lambda player: player.total_units())
+        s = sorted(self.players, key=lambda player: player.total_units()) #sort the list of players by their number of units
 
-        return s.reverse()
+        return s.reverse() #return the reversed list since the players with the most units are ranked first
 
     def log_winner(self):
         result = self.players
@@ -288,7 +289,7 @@ class GameState(Game):
         self.debugLogFile.flush()
 
 # ------------------------------------------------------------------------------
-# Helper Functions 
+# Helper Functions
 
 # execute commmands in the following order: move, build, mine
 def sort_moves(moves):

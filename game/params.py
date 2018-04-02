@@ -29,7 +29,7 @@ INITIAL_RESOURCES = 100  # The value of resources that an individual player begi
 BUILDING_COST = 100      # The resource cost to construct an individual building.
 
 # ------------------------------------------------------------------------------
-# Tile
+# Cell
 
-UNIT_COST = 5           # The resource cost of producing a single additional unit. 
-MAX_RESOURCES = 50      # The maximum resource value for an individual tile.
+UNIT_COST = 5           # The resource cost of producing a single additional unit.
+MAX_RESOURCES = 50      # The maximum resource value for an individual cell.
