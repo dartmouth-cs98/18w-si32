@@ -12,9 +12,9 @@ def do_turn(game):
 
     commands = []
 
-    units = game.my_occupied_cells()
+    units = game.get_my_cells()
 
-    buildings = game.enemy_buildings()
+    buildings = game.get_enemy_buildings()
     if len(buildings) > 0:
 
         closest_to_enemy = None
@@ -32,7 +32,7 @@ def do_turn(game):
             else:
                 [x, y] = s.position
 
-                e_buildings = game.enemy_buildings()
+                e_buildings = game.get_enemy_buildings()
                 e_position = e_buildings[0].position
 
                 surrounding = []
