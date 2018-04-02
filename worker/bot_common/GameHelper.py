@@ -175,6 +175,12 @@ class GameHelper:
                     blds.append(building)
         return blds
 
+    # Get the total number of buildings that I can currently construct.
+    # Return: (number)
+    #   the number of buildings I can construct, assuming full resource use
+    def get_building_potential(self):
+        return int(self.my_resource_count() / 100)
+
     # TODO: rename this, its confusing
     def position_towards(self, position_from, position_to):
         if pos_equal(position_from, position_to):
@@ -192,6 +198,23 @@ class GameHelper:
     # --------------------------------------------------------------------------
     # UNIT GETTERS
 
+    # Get a count of the total number of units I control.
+    # Return: (number)
+    #   a count of the total number of units that I control
+    def get_my_total_unit_count(self):
+        return self.get_total_unit_count(self.myId)
+
+    def get_enemy_total_unit_count(self):
+        # TODO: need a way to get all enemy player ids, generalized for n players 
+        pass
+
+    # gets the total number of units controlled by player with playerId
+    def get_total_unit_count(self, playerId):
+        count = 0
+        for cell in self.get_occupied_cells(playerId):
+            count += cell.units[playerId]
+        return count
+
     # Get the number of units in <cell> controlled by <playerId>.
     # Return: (number)
     #   the number of units in <cell> controlled by player <playerId>
@@ -207,17 +230,16 @@ class GameHelper:
     # --------------------------------------------------------------------------
     # RESOURCE GETTERS
 
-    def my_resource_count(self):
+    # Get the current value of the resources I possess.
+    # Return: (number)
+    #   the value of the resources that I currently possess
+    def get_my_resource_count(self):
         if "resources" in self.me:
             return self.me["resources"]
         return 0
 
-    def building_potential(self):
-        return int(self.my_resource_count() / 100)
-
     def my_units_at_pos(self, pos):
         return self.map.get_cell(pos).units[self.myId]
-
 
     # returns True if player with playerId1 has higher unit count at pos1 than player with playerId2 has at pos2
     def compare_unit_count(self, pos1, pos2):
@@ -238,14 +260,7 @@ class GameHelper:
             return True
         return False
 
-    # gets the total number of units controlled by player with playerId
-    def get_total_units(self, playerId=None):
-        if playerId is None:
-            playerId = self.myId
-        count = 0
-        for cell in self.get_occupied_cells(playerId):
-            count += cell.units[playerId]
-        return count
+
 
     # returns True if player with playerId1 has more units than player with playerId2
     def compare_total_units(self):
