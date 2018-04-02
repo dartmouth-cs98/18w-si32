@@ -48,8 +48,8 @@ def do_turn(game):
                     surrounding.append([x, y - 1])
 
 
-                for tile in surrounding:
-                    m = game.move_towards(s.position,tile, 2)
+                for cell in surrounding:
+                    m = game.move_towards(s.position,cell, 2)
                     if m:
                         commands.append(m)
                 m = game.mine(s.position, game.my_units_at_pos(s.position) - 2 * len(surrounding))
