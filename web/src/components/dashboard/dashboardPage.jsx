@@ -173,7 +173,7 @@ const styles = {
     display: "flex",
     alignItems: "center",
     marginBottom: 20,
-    marginTop: 30,
+    marginTop: 20,
   },
   matchesRow: {
     display: "flex",
