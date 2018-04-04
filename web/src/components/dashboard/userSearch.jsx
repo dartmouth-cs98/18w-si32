@@ -100,9 +100,6 @@ class UserSearch extends React.PureComponent {
 }
 
 const styles = {
-  wrapper: {
-    width: "50%",
-  },
   form: {
     display: "flex",
     flexDirection: "row",

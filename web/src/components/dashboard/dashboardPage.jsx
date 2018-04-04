@@ -7,6 +7,7 @@ import Button from "../common/button";
 import { Link, Page, Wrapper } from "../layout";
 
 import UserSearch from "./UserSearch";
+import UserList from "../user/UserList";
 import BotCard from "../bots/BotCard";
 import MatchList from "../matches/MatchList";
 import HeaderStatsBar from "./HeaderStatsBar";
@@ -83,6 +84,12 @@ class DashboardPage extends React.PureComponent {
     </Wrapper>
   )
 
+  renderFollowing = () => {
+    if (!_.get(this.props, "user.following", null)) return null;
+
+    return <UserList users={this.props.user.following} />;
+  }
+
   render() {
     if (!this.props.user) return <div></div>;
 
@@ -93,23 +100,28 @@ class DashboardPage extends React.PureComponent {
         { this.renderTopBots() }
 
         <Wrapper style={styles.dashSectionContainer} innerStyle={styles.dashSection}>
-          <div style={styles.sectionHeader}>
-            <MainTitle>
-                Recent Matches
-            </MainTitle>
-            <Button style={{margin: "0 20px"}} kind="secondary" size="small" href="/matches/create">
-              + Start a match
-            </Button>
-            <Button kind="tertiary" size="small" href="/matches">
-              See more matches &rarr;
-            </Button>
+          <div style={styles.matchesRow}>
+            <div style={styles.matches}>
+              <div style={styles.sectionHeader}>
+                <MainTitle>
+                    Recent Matches
+                </MainTitle>
+                <Button style={{margin: "0 20px"}} kind="secondary" size="small" href="/matches/create">
+                  + Start a match
+                </Button>
+                <Button kind="tertiary" size="small" href="/matches">
+                  See more matches &rarr;
+                </Button>
+              </div>
+
+              <MatchList matches={this.props.matches} />
+            </div>
+            <div style={styles.users}>
+              <div style={[styles.sectionHeader, {marginTop: 45}, fontStyles.medium, colorStyles.red]}>Users you follow</div>
+              { this.renderFollowing() }
+              <UserSearch />
+            </div>
           </div>
-
-          <MatchList matches={this.props.matches} />
-        </Wrapper>
-
-        <Wrapper style={styles.dashSectionContainer} innerStyle={styles.dashSection}>
-          <UserSearch />
         </Wrapper>
 
       </Page>
@@ -120,11 +132,11 @@ class DashboardPage extends React.PureComponent {
 const mapDispatchToProps = dispatch => ({
   fetchBots: (userId) => dispatch(fetchBots(userId)),
   fetchMatches: (userId) => dispatch(fetchMatches(userId)),
-  fetchUser: (userId) => dispatch(fetchUser(userId, true)),
+  fetchUser: (userId) => dispatch(fetchUser(userId, true, true)),
 });
 
 const mapStateToProps = state => ({
-  user: getSessionUser(state) || state.session.user,
+  user: getSessionUser(state) || {},
   userId: state.session.userId,
   matches: getMatchesForUser(state, state.session.userId),
   bots: getBotsForUser(state, state.session.userId, { limit: 3 }),
@@ -162,6 +174,16 @@ const styles = {
     alignItems: "center",
     marginBottom: 20,
     marginTop: 30,
+  },
+  matchesRow: {
+    display: "flex",
+  },
+  matches: {
+    width: "70%",
+    marginRight: 50,
+  },
+  users: {
+    flex: 1,
   },
 };
 

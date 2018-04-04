@@ -42,6 +42,11 @@ userRouter.get("/:userId", auth.loggedIn, async (ctx) => {
     getProms.push(allRanksQuery(ctx.params.userId));
   }
 
+  if (ctx.query.withFollows) {
+    getProms[0] = getProms[0].populate("following").populate("followers");
+  }
+
+
   let [user, ranks] = await Promise.all(getProms);
   user._doc.ranks = ranks || {};
 
