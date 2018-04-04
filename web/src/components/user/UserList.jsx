@@ -1,8 +1,7 @@
 import React from "react";
 import Radium from "radium";
 
-import Button from "../common/button";
-import StatDifference from "../common/statDifference";
+import Link from "../common/link";
 
 import { fontStyles } from "../../style";
 
@@ -12,16 +11,16 @@ class UserList extends React.PureComponent {
       if (typeof u === "string") return null;
 
       return (<div key={u._id} style={styles.user}>
-                <Button kind="tertiary" style={fontStyles.small} href="/users/{u._id}">{u.username}</Button>
-                <div style={fontStyles.small}>
-                  <StatDifference history={u.trueSkillHistory} />
-                </div>
+                <span style={[{flex: 1, alignItems: "flex-start"}, fontStyles.small]}>
+                  <Link href={`/users/${u._id}`}>{u.username}</Link>
+                </span>
+                <span>{u.trueSkill.mu.toFixed(1)}</span>
               </div>);
       }) 
 
   render() {
     if (!this.props.users) return <div></div>;
-    return <div style={{marginTop: 10}}>{ this.renderUsers() }</div>;
+    return <div>{ this.renderUsers() }</div>;
   }
 }
 
@@ -30,7 +29,7 @@ const styles = {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    padding: "2px 0",
+    padding: "7px 0",
   },
 };
 

@@ -87,7 +87,7 @@ class DashboardPage extends React.PureComponent {
   renderFollowing = () => {
     if (!_.get(this.props, "user.following", null)) return null;
 
-    return <UserList users={this.props.user.following} />;
+    return <div style={{marginTop: 10}}><UserList users={this.props.user.following} /></div>;
   }
 
   render() {
@@ -119,7 +119,7 @@ class DashboardPage extends React.PureComponent {
             <div style={styles.users}>
               <div style={[styles.sectionHeader, {marginTop: 45}, fontStyles.medium, colorStyles.red]}>Users you follow</div>
               { this.renderFollowing() }
-              <UserSearch />
+              <div style={{marginTop: 15, paddingTop: 20, borderTop: `1px solid ${colors.border}`}}><UserSearch /></div>
             </div>
           </div>
         </Wrapper>
