@@ -1,10 +1,10 @@
-import _ from "lodash";
 import React from "react";
 import Radium from "radium";
 import Color from "color";
 
-import Link from "../common/link";
-import { SubTitle } from "../common/titles";
+import { Input } from "../form";
+import Button from "../common/button";
+import UserList from "../user/UserList";
 
 import { getUsersForSearch } from "../../data/user/userRoutes";
 
@@ -12,18 +12,6 @@ import {
   colors,
   constants,
 } from "../../style";
-
-const UserSearchEntry = ({ u, r }) => {
-  return (
-    <div style={styles.searchEntryContainer}>
-      <div style={styles.searchEntryNumeric}>{r}</div>
-      <div style={styles.searchEntryString}>
-        <Link key={u._id} href={`/users/${u._id}`}>{u.username}</Link>
-      </div>
-      <div style={styles.searchEntryNumeric}>{r}</div>
-    </div>
-  );
-};
 
 class UserSearch extends React.PureComponent {
   constructor(props) {
@@ -42,7 +30,7 @@ class UserSearch extends React.PureComponent {
   }
 
   doUserQuery = (event) => {
-    event.preventDefault();
+    if (event) event.preventDefault();
     if (this.state.query === "") return;
     getUsersForSearch(this.state.query)
       .then(results => {
@@ -53,43 +41,27 @@ class UserSearch extends React.PureComponent {
   }
 
   renderUserList() {
-    if (this.state.results.length < 1) {
-      return null;
-    }
+    if (this.state.results.length < 1) { return null; }
 
-    const items = _.map(this.state.results, (u, i) =>
-      <UserSearchEntry key={u._id} u={u} r={i} />
-    );
-
-    return (
-      <div>
-        <div style={styles.searchResultsHeaderContainer}>
-          <span style={styles.searchEntryNumeric}>Rank</span>
-          <span style={styles.searchEntryString}>Username</span>
-          <span style={styles.searchEntryNumeric}>Rating</span>
-        </div>
-        {items}
-      </div>
-    );
-
+    return <UserList users={this.state.results} />;
   }
 
   render() {
     return (
       <div style={styles.wrapper}>
-        <SubTitle>Search for Users</SubTitle>
+        <div>Search for Users</div>
         <form style={styles.form} onSubmit={this.doUserQuery}>
-          <input
+          <Input
             name="user-search"
-            key="user-search"
-            placeholder="Username"
+            placeholder="search by username..."
             type="text"
-            style={styles.input}
             value={this.state.query}
-            onChange={this.handleInputChange} />
-          <input type="submit"
-             value="Search"
-             style={styles.submitButton}/>
+            onChange={this.handleInputChange}
+          />
+          <input type="submit" style={{display: "none"}} />
+          <Button kind="primary" onClick={this.doUserQuery} style={styles.submitButton}>
+            Search
+          </Button>
         </form>
 
         {this.renderUserList()}
@@ -100,9 +72,6 @@ class UserSearch extends React.PureComponent {
 }
 
 const styles = {
-  wrapper: {
-    width: "50%",
-  },
   form: {
     display: "flex",
     flexDirection: "row",
@@ -121,66 +90,10 @@ const styles = {
     }
   },
   submitButton: {
-    cursor: "pointer",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    color: colors.blue,
-    textDecoration: "none",
-    borderRadius: "50px",
-    boxShadow: "0 2px 5px rgba(0,0,0,.15)",
-    padding: "5px 15px",
-    height: 30,
-    fontSize: constants.fontSizes.small,
-    transition: "box-shadow .1s",
-    ":hover": {
-      boxShadow: "0 3px 5px rgba(0,0,0,.23)",
-    },
+    height: 38,
+    width: 120,
+    marginLeft: 10,
   },
-  emptyResultsContainer: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    color: colors.detail
-  },
-  searchResultsHeaderContainer: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "center",
-    marginBottom: "5px"
-  },
-  searchEntryContainer: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "center",
-    borderRadius: "1px",
-    borderStyle: "solid",
-    borderWidth: "1px",
-    borderColor: Color(colors.detail).lighten(0.7).string(),
-    padding: "5px 0 5px 0",
-    marginBottom: "5px"
-  },
-  searchEntryNumeric: {
-    width: "15%",
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center"
-  },
-  searchEntryString: {
-    width: "65%",
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    alignItems: "center",
-    borderStyle: "hidden solid hidden solid",
-    borderWidth: "1px",
-    borderColor: Color(colors.detail).lighten(0.7).string(),
-    paddingLeft: "2.5%",
-    paddingRight: "2.5%",
-  }
 };
 
 export default Radium(UserSearch);
