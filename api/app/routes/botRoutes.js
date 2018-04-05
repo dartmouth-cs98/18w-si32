@@ -14,7 +14,7 @@ botRouter.get("/", async (ctx) => {
   if (ctx.request.query.userId) {
     bots = await Bot.findByUser(ctx.request.query.userId);
   } else {
-    bots = await Bot.find();
+    bots = await Bot.find().populate("user");
   }
 
   ctx.body = bots;
