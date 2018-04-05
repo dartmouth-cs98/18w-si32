@@ -107,6 +107,8 @@ The player with the greater number of **units** in the **Cell** will lose a numb
   - **3**. After combat, the number of **units** in each **Cell** will be updated accordingly.
     
      So Player B keeps 2 **units** in total and Player C keeps 1 **unit** in total.
+     
+     ![Alt Text](https://i.imgur.com/QvneJOx.png)
     
   - **4**. Keep repeating the above process until there are no more than one players with nonzero **units** in the **Cell**.
     
