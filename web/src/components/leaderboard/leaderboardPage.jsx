@@ -18,10 +18,6 @@ import { joinGroup, leaveGroup, fetchGroupRank } from "../../data/user/userActio
 class LeaderboardPage extends React.PureComponent {
   constructor(props) {
     super(props);
-
-    this.state = {
-      selectedGroup: null,
-    };
   }
 
   componentWillMount() {
@@ -35,12 +31,6 @@ class LeaderboardPage extends React.PureComponent {
     }
 
     this.props.setSelectedGroup(groupId, groupLabel);
-    this.setState({
-      selectedGroup: {
-        value: groupId,
-        label: groupLabel,
-      }
-    });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -58,15 +48,15 @@ class LeaderboardPage extends React.PureComponent {
 
     if (nextProps.group.name !== this.props.group.name) {
       const label = nextProps.id === "global" ? "Global" : nextProps.group.name;
-      this.props.setSelectedGroup(this.props.selectedGroup.id, label);
+      this.props.setSelectedGroup(nextProps.id, label);
     }
 
   }
 
   didSelectGroup = (selectedGroup) => {
     const groupId = selectedGroup ? selectedGroup.value : "global";
-    const label = selectedGroup ? selectedGroup.label : "Global";
-    this.props.setSelectedGroup(groupId, label);
+    // const label = selectedGroup ? selectedGroup.label : "Global";
+    // this.props.setSelectedGroup(groupId, label);
     history.push(`/leaderboards/${groupId}`);
   }
 
@@ -79,14 +69,14 @@ class LeaderboardPage extends React.PureComponent {
   }
 
   getRightTitleOptions() {
-    if (!this.props.selectedGroup || !this.props.selectedGroup.id || this.props.selectedGroup.id === "global") {
+    if (!this.props.group || !this.props.group.id || this.props.group.id === "global") {
       return {};
     }
 
     let userInGroup = false;
     if (this.props.user.groups) {
       const groupIds = this.props.user.groups.map(g => g._id);
-      userInGroup = groupIds.includes(this.props.selectedGroup.id);
+      userInGroup = groupIds.includes(this.props.group.id);
     }
 
     const inGroupOptions = {
@@ -105,8 +95,8 @@ class LeaderboardPage extends React.PureComponent {
   }
 
   render() {
-    const groupLabel = this.props.selectedGroup ? capitalize(this.props.selectedGroup.name || "Loading...") : "Global";
-    const groupId = this.props.selectedGroup ? this.props.selectedGroup.id : "global";
+    const groupLabel = this.props.group ? capitalize(this.props.group.name || "Loading...") : "Global";
+    const groupId = this.props.group ? this.props.group._id : "global";
     const userRank = this.props.user.ranks ? this.props.user.ranks[groupId] : null;
 
     const titleOptions = this.getRightTitleOptions();
@@ -139,8 +129,8 @@ const mapDispatchToProps = (dispatch, props) => ({
 
 const mapStateToProps = (state, props) => ({
   user: getSessionUser(state) || state.session.user || {},
-  selectedGroup: state.leaderboards.selectedGroup || {id: "global", name: "Global"},
-  group: state.groups.records[props.id] || {},
+  selectedGroup: state.leaderboards.selectedGroup || {_id: "global", name: "Global"},
+  group: state.groups.records[props.id] || {_id: "global", name: "Global"},
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(LeaderboardPage);

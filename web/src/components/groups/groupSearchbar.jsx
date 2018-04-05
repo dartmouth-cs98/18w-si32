@@ -24,8 +24,6 @@ const getGroups  = (input, callback) => {
   });
 };
 
-const filter = (options) => options;
-
 export default function groupSearchbar(currentGroup, onChange, {placeholder}) {
   return (
         <Select.Async
@@ -38,7 +36,8 @@ export default function groupSearchbar(currentGroup, onChange, {placeholder}) {
             clearable={true}
             multi={false}
             onChange={onChange}
-            filterOptions={filter}
+            filterOptions={false}
+            onSelectResetsInput={true}
           />
   );
 }
