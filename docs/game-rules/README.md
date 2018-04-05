@@ -42,11 +42,11 @@ Units can be ordered around by **Commands** which have three possible types.
 
 ('current **cell**' refers to the **cell** occupied by the unit)
 
-**Move** - Move the unit in some direction by one **cell**
+- **Move** - Move the unit in some direction by one **cell**
 
-**Build** - If there is no **building** in the current **cell**, and the player has enough **resource** for a building, create a building in the current **cell**. If there is a **building** in the **cell**, help the **building** produce new **units** faster. A **building** will be created instantly (within the turn) if it's possible to do so (unlike conventional RTS games like Warcraft where building production is an extended process and can be disrupted by enemies).
+- **Build** - If there is no **building** in the current **cell**, and the player has enough **resource** for a building, create a building in the current **cell**. If there is a **building** in the **cell**, help the **building** produce new **units** faster. A **building** will be created instantly (within the turn) if it's possible to do so (unlike conventional RTS games like Warcraft where building production is an extended process and can be disrupted by enemies).
 
-**Mine** - Gather a unit of **resource** from the current **cell**, if there is any resource remaining.
+- **Mine** - Gather a unit of **resource** from the current **cell**, if there is any resource remaining.
 
 ### Buildings
 **Buildings** are static objects controlled by the **player**, which spawn new **units**. have several noteworthy properties. A **building** can be created by any **unit** on a free **cell**, and costs 100 units of **resource**. Each building occupies one **cell** in the map (although this may be changed later). A building will continuously spawn new **units** in the **cell** at a rate proportional to the number of allied **units** stationed at the building's **cell**. 
