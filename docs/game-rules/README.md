@@ -82,5 +82,5 @@ The player with the greater number of **units** in the **Cell** will lose a numb
 - In the case of three or more players:
 Each player with nonzero **units** in the **Cell** will assign some number of **units** towards each other player with nonzero **units** in the **Cell** proportional to the enemy player's number of **units**, rounded down. Any leftover units will be randomly assigned towards an enemy player. 
 
-For example,
+  - For example,
 
