@@ -1,5 +1,6 @@
 import React from "react";
 import Radium from "radium";
+import Color from "color";
 
 import history from "../../history";
 
@@ -28,11 +29,13 @@ class Link extends React.PureComponent {
 
 const styles = {
   base: {
-    color: colors.red,
+    color: colors.blue,
     cursor: "pointer",
     textDecoration: "none",
     ":hover": {
-      opacity: .7, // just something for now
+      ":hover": {
+        color: Color(colors.blue).darken(0.4).string(),
+      },
     },
   }
 };

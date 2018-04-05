@@ -1,72 +1,89 @@
 # Game Rules
 
 ### General
-Si32 is a game played by AI agents designed by you, the user. Once you have uploaded your code for an AI agent,
-it will be pitted against other Si32 agents across the internet in order to determine your ranking. Si32 is a
-turn-based game played in grid-based environments. Each player controls multiple units, which means that during
-each turn in Si32 each player passes an array of commands to the game state. A command will have the following properties: the tile from which to send units from, the type of command (move, build, or mine), the direction (if the command is of type move or build), and the number of units involved in that command. The game state then executes these commands, updates the locations/statuses of the players'
-units, updates the status of the map, and then awaits another set of commands from each player.
+Monad (a.k.a. Si32) is a RTS (real-time-strategy) style game played by AI agents designed by you, the user. Users upload bots based on a template (see 'Your First Bot'), which can then compete against Monad bots written by other users over the internet. 
 
-### Rules
-Si32 is a turn-based game where each player is trying to amass enough units to occupy the most area and buildings
-on the map. Usually this goal is achieved as a result of being able to perform two subroutines as efficiently as
-possible. These subroutines are
-1. Constructing a lot buildings in order to produce more units
-2. Gathering a lot of resources in order to construct more buildings
-Each player begins with one unit and enough resources to create one building, and from there on, whichever player
-that is able to most efficiently produce units and control buildings will eventually win the game.
+Monad is a turn-based strategy game played in a grid of **Cells**. Each player controls an army of **units**, each with the ability to mine **resource** (a type of currency used to build **buildings** - which spawn more units), move around the grid, or build **buildings**. During
+each turn in Monad, each player's bot will process information about the game state and determine its next move, which will be communicated as an array of **Command** objects. A **Command** will determine what the units in each Cell will do in the player's turn. It contains the following information - it will specify a **Cell**, a type of action (**move**, **build**, or **mine**), a direction (if the action is of type **move** or **build**), and a number of **units**. The game will then execute these **Commands** (perform the action for the specified number of **units** in the specified cell), update the locations of the players'
+**units**, updates the status of the map and the players, and then await another set of **Commands** from each player.
+
+### Objective
+The objective of Monad is to destroy each enemy player's buildings and become the sole player with buildings on the map.
+
+Usually, this goal is achieved by performing several subtasks better or more efficiently than enemy players, namely:
+- Gathering **resources** (to accelerate **building** production)
+- Constructing **buildings** (to accelerate **unit** production)
+- Controlling the map area to maximize favorable combat scenarios (destroying enemy **buildings**) and to minimize opponent **unit** mobility
+
+Each player starts the game with a single **unit** and 100 **resources** (just enough to create one building).
 
 ### Victory
-There are three ways in which a player can win a game of si32
-1. They are the only player controlling buildings
-2. They have been the only player controlling units for more than 10 turns
-3. If 300 turns have passed and there is no winner, the player who has produced the most units over the course of
-the game will win
+There are three ways in which a player can win a game of Monad
+1. They are the only player controlling a nonzero number of **buildings**.
+2. They have been the only player controlling a nonzero number of **units** for the last **10** turns.
+3. If **2000** turns have passed and no winner has been determined by the last two conditions, the player controlling more units at the time is the winner.
 
 ### Maps
-Each game of Si32 will be played on one of a variety of maps. However, although the maps may be different, they
-all share a few characteristics:
+The map is the environment in which Monad games will be played. In order to test the versatility of bots and to decrease predictability of matches, the map will be randomized in terms of **resource** distribution and **obstacle** distribution. However, they all share a few basic characteristics:
 
-*Symmetric*: In order to make games as fair as possible, each player will start on either side of a symmetric
-map. This means that at the start of the game they will have access to the same environment/resources, and
-therefore elements of luck/variance  affecting who wins the game will be minimized
+The map is *grid-based*:
 
-*Grid-based*: Each map will be composed of discrete tiles which units, buildings and resources can occupy. Units
-occupy 1 tile at a time and buildings occupy 2x2 tiles. A different amount of resources resides in
-each tile of the map
+The map is composed of discrete **Cells**, defined by a Cartesian coordinate; each free **Cell** will initially contain some randomized amount of **resource**, and also up to one **building**, and any number of **units**. **Units** and **buildings** each occupy 1 **cell** at a time. A **cell** with an obstacle has no **resource**, and can contain no **units** or **buildings**. A **cell** containing a **building** cannot be mined for **resource** by any **unit**.
+
+The map is *symmetric*:
+
+In order to make games as fair as possible, and to minimize the effects of luck and variance in determining the outcome of the match, the map will be symmetric in terms of **resource** and **obstacle** distribution, and each player will start in a symmetric part of the map (e.g. in a 4-player game, each player will begin with their starter unit at the center of a quadrant of the map, and each quadrant will initially contain the same total amount of **resource** and **obstacles**). This will make sure that each player will initially have access to the same environment/resources.
+
 
 ### Units
-Each unit controlled by a player is produced by buildings controlled by the player. Units can be considered
-properties of tiles on the map, in the sense that units are indistinguishable from one another, and can be
-identified only by their position on the map. Units are commanded by 'unit_commands' which have three possible
-forms.
+**Units** are the mobile agents controlled by the **player**, responsible for combat, **resource** gathering, and **building** construction. Each **unit** occupies one **cell** in the map. Each player controls a number of **units**, which is produced by the **buildings** they control. **Units** have no concept of health points and have no identifying characteristic besides their position on the map; they are essentially indistinguishable from one another. Therefore, there is no concept of a separate **unit** Object, and the map contains all the information about each player's **units** - each **Cell** of the map will simply hold an array of numbers indicating the numbers of **units** controlled by each player in that **Cell**.
 
-**Move** - Moves your unit in the direction of your choosing
+Units can be ordered around by **Commands** which have three possible types.
 
-**Build** - If there is no building where your unit is, and you have enough resources to build a building, this
-command will create a building in the square where your unit is located. If there is a building in the square
-where they are located, they will start working and help the building produce units faster
+('current **cell**' refers to the **cell** occupied by the unit)
 
-**Mine** - Gathers resource from the tile the unit is on, if there is resource remaining on the tile.
+- **Move** - Move the unit in some direction by one **cell**
+
+- **Build** - If there is no **building** in the current **cell**, and the player has enough **resource** for a building, create a building in the current **cell**. If there is a **building** in the **cell**, help the **building** produce new **units** faster. A **building** will be created instantly (within the turn) if it's possible to do so (unlike conventional RTS games like Warcraft where building production is an extended process and can be disrupted by enemies).
+
+- **Mine** - Gather a unit of **resource** from the current **cell**, if there is any resource remaining.
 
 ### Buildings
-Buildings in Si32 have several noteworthy properties. First of all, creating a building costs 100 resources and,
-once a unit has been ordered to create one in an area where there is enough space for a building, will be created
-instantly.
-Each building will produce new units at a rate proportional to how many units a player has working in the
-building.
-Buildings can also be destroyed. If an enemy player commands enough of their units onto the tile where one of
-your buildings is placed, the building will be destroyed.
-Determining how many enemy units are "enough" to destroy a building is quite easy. In order to destroy a
-building, one must march a number of opposing units onto the building's tile which is equal to the number of
-workers in the building + the inherent defense rating of the building. The default defense rating of buildings is
-10.
+**Buildings** are static objects controlled by the **player**, which spawn new **units**. have several noteworthy properties. A **building** can be created by any **unit** on a free **cell**, and costs 100 units of **resource**. Each building occupies one **cell** in the map (although this may be changed later). A building will continuously spawn new **units** in the **cell** at a rate proportional to the number of allied **units** stationed at the building's **cell**. 
+
+Each building has a default **intrinsic defense rating** of 10. The building essentially serves as an additional force of 10 **units** in combat when defending, which regenerates every turn.
+
+Buildings can destroyed through combat. If an enemy player sends a number of **units** equal to or greater than the number of allied units + the building's **intrinsic defense rating**, the building and all its allied **units** are destroyed (along with a number of enemy **units** equal to the number of allied **units** + the building's **intrinsic defense rating**). If the enemy player sends a number of **units** less than the building's **intrinsic defense rating**, all attacking enemy **units** are destroyed and the building and its allied **units** are unharmed. If the enemy player sends a number of **units** larger than the building's **intrinsic defense rating** but smaller than the sum of the **intrinsic defense rating** and its number of docked allied **units**, all attacking enemy **units** are destroyed but the building loses a number of allied **units** equal to the difference of the number of attacking enemy **units** and the **intrinsic defense rating** plus one.
+
+Some examples:
+- **Building** has no allied **units** docked, enemy attacking force has 8 **units** --> enemy loses 8 attacking **units**, **building** unaffected.
+- **Building** has no allied **units** docked, enemy attacking force has 10 **units** --> enemy loses 10 attacking **units**, **building** is destroyed.
+- **Building** has 3 allied **units** docked, enemy attacking force has 8 **units** --> enemy loses 8 attacking **units**, **building** and 3 allied **units** unaffected.
+- **Building** has 3 allied **units** docked, enemy attacking force has 15 **units** --> enemy loses 13 attacking **units**, **building** and 3 allied **units** are destroyed.
+- **Building** has 3 allied **units** docked, enemy attacking force has 12 **units** --> enemy loses 12 attacking **units**, **building** loses 3 allied **units**.
+**Building** has 3 allied **units** docked, enemy attacking force has 13 **units** --> enemy loses 13 attacking **units**, **building** and 3 allied **units** are destroyed.
+
+
 
 ### Combat
-Combat in Si32 takes place in two discrete phases. In the first phase, after the game state has received all the
-unit commands both players, it checks if any of the commands send enemy units from adjacent tiles into each
-other.  
-If there are any such 'collisions' between units, then units from the marching armies will be subtracted from
-each other until none or the larger army remains. After this, the commands will be modified to reflect the (probably) smaller size of the new marching army.  
-After this, positions of units are updated, and in each tile, units from opposing armies are subtracted from each
-other until none or the larger army remains. So, at the start of each turn, for each tile there will be no more than one faction of unit.
+Combat in Monad takes place in two discrete phases:
+
+**First phase: collision phase**
+If enemy players would send units in opposite directions from adjacent **Cells**, the enemy groups of **units** would fight, with the weaker group eliminated and the stronger group losing a number of **units** equal to the weaker group's number.
+
+After the game state receives all **Commands** for the turn from all players, it checks if any of the **Commands** would send enemy **unit** groups from adjacent **Cells** into each other. If there are any such 'collisions' between **unit** groups, **units** will be subtracted from each **unit** group until only the stronger group remains or both groups are eliminated. 
+
+**Second phase: cell-update phase**
+A **Cell** is defined to not have **units** of more than one player at the start of every turn. If a **Cell** ends up having nonzero numbers of **units** of more than one player (as a result of **unit** movement), the game state will process some combat operation which will result in only one or less players with remaining units in the **Cell**.
+
+For example, Player A sends 8 **units** North from **(2, 4)** and Player B sends 5 **units** South from **(2, 5)**; these two **Commands** will be replaced by an effectively equal single **Command** of "Player A sending 3 **units** North from **(2, 4)**.
+
+ - In the case of two players:
+The player with the greater number of **units** in the **Cell** will lose a number of **units** equal to the other player's number of **units**, and the other player's number of **units** will be set to zero.
+
+- In the case of three or more players:
+Each player with nonzero **units** in the **Cell** will assign some number of **units** towards each other player with nonzero **units** in the **Cell** proportional to the enemy player's number of **units**, rounded down. Any leftover units will be randomly assigned towards an enemy player. 
+
+  - For example, Player A has 8 units, Player B has 12 units, and Player C has 7 units. 
+    - Player A will send (12/19) of his 8 **units**, rounded down --> 5 **units** to Player B and (7/19) to his 8 **units**, rounded down 2 --> 2 **units** to Player C. The remaining **unit** (8 - 7 = 1) will be randomly assigned to Player B or Player C. 
+

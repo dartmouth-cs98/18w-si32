@@ -2,7 +2,7 @@ import { httpGetAction, httpPutAction, httpDeleteAction } from "../httpCollectio
 
 const fetchUsers = () => httpGetAction("USER", "/users", null);
 
-const fetchUser = (userId, withranks) => httpGetAction("USER", `/users/${userId}`, { withranks }, { isSingle: true });
+const fetchUser = (userId, withranks, withFollows = false) => httpGetAction("USER", `/users/${userId}`, { withranks, withFollows }, { isSingle: true });
 
 const fetchGroupRank = (groupId, userId) => httpGetAction(
   "RANK",
