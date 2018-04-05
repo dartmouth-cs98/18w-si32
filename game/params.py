@@ -2,9 +2,32 @@
 # Game parameters that remain consistent across all game variations / iterations.
 
 # ------------------------------------------------------------------------------
+# Movement Directions 
+
+DIRECTIONS = {
+    'left'  : [-1, 0],
+    'right' : [1,  0],
+    'up'    : [0, -1],
+    'down'  : [0,  1],
+    'none'  : [0,  0],
+}
+
+# ------------------------------------------------------------------------------
+# Command
+
+MOVE_COMMAND = 'MOVE_COMMAND'
+MINE_COMMAND = 'MINE_COMMAND'
+BUILD_COMMAND = 'BUILD_COMMAND'
+
+# ------------------------------------------------------------------------------
 # Game
 
 MAX_ITERS = 2000         # The maximum number of turn iterations in a single game.
+
+# ------------------------------------------------------------------------------
+# GameState
+
+DEBUG_LOG_FN = "./gameserver.log"
 
 # ------------------------------------------------------------------------------
 # Building

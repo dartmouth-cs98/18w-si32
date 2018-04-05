@@ -5,16 +5,8 @@ import sys
 import json
 import pickle
 
+from game.params import MOVE_COMMAND, BUILD_COMMAND, MINE_COMMAND, DIRECTIONS
 from game.Command import Command
-
-# movement direction translation
-DIRECTIONS = {
-    'left'  : [-1, 0],
-    'right' : [1,  0],
-    'up'    : [0, -1],
-    'down'  : [0,  1],
-    'none'  : [0,  0],
-}
 
 # ------------------------------------------------------------------------------
 # GameHelper
@@ -39,12 +31,16 @@ class GameHelper:
     # --------------------------------------------------------------------------
     # COMMAND CREATION
 
+    # Create and return a move command.
+    # Return: (Command)
+    #   the move command to accomplish the specified movement.
     def move(self, position_from, num_units, direction):
-        return Command(self.myId, position_from, 'move', num_units, DIRECTIONS[direction])
+        return Command(self.myId, position_from, MOVE_COMMAND, num_units, DIRECTIONS[direction])
 
-    # makes a single move from position_from that tries to get closer to position_to
-    # while avoiding either enemy units, enemy buildings, or stronger enemy buildings
-    def move_towards(self, position_from, position_to, n_units=None):
+    # Create and return a move command, with an additional layer of abstraction.
+    # Return: (Command)
+    #   the move command to accomplish the specified movement, or None.
+    def move_towards(self, position_from, position_to, num_units=None):
         if pos_equal(position_from, position_to):
             return None
 
@@ -57,15 +53,28 @@ class GameHelper:
         elif position_from[1] > position_to[1]:
             d = 'up'
 
-        n_units = n_units if n_units else self.my_units_at_pos(position_from)
-        return self.move(position_from, n_units, d)
+        # TODO: make this smarter by
+        # avoiding enemy units, enemy buildings, or stronger enemy buildings
 
-    # TODO: remove playerId
-    def build(self, position_build, num_units):
-        return Command(self.myId, position_build, 'build', num_units, DIRECTIONS["none"])
+        num_units = num_units if num_units else self.my_units_at_pos(position_from)
+        return self.move(position_from, num_units, d)
 
-    def mine(self, position_mine, num_units):
-        return Command(self.myId, position_mine, 'mine', num_units, DIRECTIONS["none"])
+    # Create and return a build command.
+    # Return: (Command)
+    #   the build command to accomplish the specified building procedure.
+    def build(self, position):
+        # TODO: track concurrent mine and build commands:
+        #   right now, building simply requires a single unit in a cell
+        #   do we care though that this unit will also be able to mine as well?
+        #   the difference is small, but it will be more realistic in some sense
+        #   if we have this logic.
+        return Command(self.myId, position, BUILD_COMMAND, 1, DIRECTIONS["none"])
+
+    # Create and return a mine command.
+    # Return: (Command)
+    #   the mine command to accomplish the specified mining procedure.
+    def mine(self, position, num_units):
+        return Command(self.myId, position, MINE_COMMAND, num_units, DIRECTIONS["none"])
 
     # --------------------------------------------------------------------------
     # CELL GETTERS
@@ -205,7 +214,7 @@ class GameHelper:
         return self.get_total_unit_count(self.myId)
 
     def get_enemy_total_unit_count(self):
-        # TODO: need a way to get all enemy player ids, generalized for n players 
+        # TODO: need a way to get all enemy player ids, generalized for n players
         pass
 
     # gets the total number of units controlled by player with playerId
@@ -382,7 +391,7 @@ class GameHelper:
         else:
             direction = (0, 0)
 
-        return Command(self.myId, position_from, 'move', number_of_units, direction)
+        return Command(self.myId, position_from, MOVE_COMMAND, number_of_units, direction)
 
     # get the number of buildings belonging to player with playerId
     def get_number_of_buildings_belonging_to_player(self, playerId):

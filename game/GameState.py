@@ -12,7 +12,11 @@ from game.Cell import Cell
 from game.Rules import Rules
 from game.Logger import Logger
 
+<<<<<<< HEAD
 from game.params import MAX_ITERS, STARTING_POSITIONS
+=======
+from game.params import MAX_ITERS, MOVE_COMMAND, BUILD_COMMAND, MINE_COMMAND, DEBUG_LOG_FN
+>>>>>>> helper updates and docs
 
 # ------------------------------------------------------------------------------
 # GameState
@@ -36,7 +40,7 @@ class GameState(Game):
 
         self.logger = Logger(self.map)
 
-        self.debugLogFile = open("./gameserver.log", "w")
+        self.debugLogFile = open(DEBUG_LOG_FN, "w")
 
         self.rules = Rules(self.map, self.players)
 
@@ -103,18 +107,20 @@ class GameState(Game):
 
     # read all moves from the players and update state accordingly
     def read_moves(self):
-        moves = []
+        moves_by_player = []
+        # will be nested list [ [commands for player1], [commands for player2], ... ]
+
         for p in self.players:
             m = p.get_move()
-            moves.append(m)
+            moves_by_player.append(m)
 
         # check moves for combat, and sort by type of command
         # run both players moves through combat phase, return updated list of moves
-        moves = self.rules.update_combat_phase(moves)
-        moves = sort_moves(moves)
-        moves = self.add_implicit_commands(moves)
+        moves_by_player = self.rules.update_combat_phase(moves_by_player)
+        moves_by_player = sort_moves(moves_by_player)
+        moves_by_player = self.add_implicit_commands(moves_by_player)
 
-        for player_moves in moves:
+        for player_moves in moves_by_player:
             self.execute_moves(player_moves)
 
         # update statuses / unit numbers, etc.
@@ -253,14 +259,11 @@ class GameState(Game):
             command_count = counts[i]
 
             for cell_position in command_count:
-
                 cell = self.map.get_cell(list(cell_position))
 
                 if command_count[cell_position] < cell.units[i]:
-
                     remaining_units = cell.units[i] - command_count[cell_position]
-
-                    new_moves[i].append(Command(i, list(cell_position), 'mine', remaining_units, [0,0]))
+                    new_moves[i].append(Command(i, list(cell_position), MINE_COMMAND, remaining_units, [0,0]))
 
             i += 1
 
@@ -303,23 +306,29 @@ class GameState(Game):
 # ------------------------------------------------------------------------------
 # Helper Functions
 
-# execute commmands in the following order: move, build, mine
-def sort_moves(moves):
+# sort moves so that they are executed in the order:
+# move, build, mine
+def sort_moves(moves_by_player):
     sorted_moves = []
 
-    for player in moves:
-        move = []
-        build = []
-        mine = []
+    for moves_for_player in moves_by_player:
+        move_commands = []
+        build_commands = []
+        mine_commands = []
 
-        for command in player:
-            if command.command == 'move':
-                move.append(command)
-            elif command.command == 'build':
-                build.append(command)
+        for command in moves_by_player:
+            if command.command == MOVE_COMMAND:
+                move_commands.append(command)
+            elif command.command == BUILD_COMMAND:
+                build_commands.append(command)
+            elif command.command == MINE_COMMAND:
+                mine_commands.append(command)
             else:
-                mine.append(command)
+                # TODO: panic!
+                pass
 
-        sorted_moves.append(move + build + mine)
+        sorted_moves.append(move_commands)
+        sorted_moves.append(build_commands)
+        sorted_moves.append(mine_commands)
 
     return sorted_moves
