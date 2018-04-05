@@ -85,5 +85,9 @@ The player with the greater number of **units** in the **Cell** will lose a numb
 Each player with nonzero **units** in the **Cell** will assign some number of **units** towards each other player with nonzero **units** in the **Cell** proportional to the enemy player's number of **units**, rounded down. Any leftover units will be randomly assigned towards an enemy player. 
 
   - For example, Player A has 8 units, Player B has 12 units, and Player C has 7 units. 
-    - Player A will send (12/19) of his 8 **units**, rounded down --> 5 **units** to Player B and (7/19) to his 8 **units**, rounded down 2 --> 2 **units** to Player C. The remaining **unit** (8 - 7 = 1) will be randomly assigned to Player B or Player C. 
+    - Player A will send (12/19) of his 8 **units**, rounded down --> 5 **units** to Player B and (7/19) of his 8 **units**, rounded down --> 2 **units** to Player C. The remaining **unit** (8 - 5 - 2 = 1) will be randomly assigned to Player B or Player C. 
+    - Player B will send (8/15) of his 12 **units**, rounded down --> 6 **units** to Player A and (7/15) of his 8 **units**, rounded down --> 5 **units** to Player C. The remaining **unit** (12 - 6 - 5 = 1) will be randomly assigned to Player A or Player C.
+    - Player C will send (8/20) of his 7 **units**, rounded down --> 2 **units** to Player A and (12/20) of his 7 **units**, rounded down --> 4 **units** to Player B. The remaining **units** (8 - 2 - 4 = 2) will be randomly assigned to Player A or Player B.
+    
+    After assignments are complete.
 
