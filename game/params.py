@@ -33,3 +33,14 @@ BUILDING_COST = 100      # The resource cost to construct an individual building
 
 UNIT_COST = 5           # The resource cost of producing a single additional unit.
 MAX_RESOURCES = 50      # The maximum resource value for an individual cell.
+
+
+# ------------------------------------------------------------------------------
+# Starting player positions
+# Intended to be roughly equidistant for each number of players
+one_player = [(10,10)]
+two_players = [(5,5), (15,15)]
+three_players = [(5,5), (10,14), (15,5)]
+four_players = [(5,5), (5,15), (15,5), (15,15)]
+
+STARTING_POSITIONS = [one_player, two_players, three_players, four_players]
