@@ -89,5 +89,25 @@ Each player with nonzero **units** in the **Cell** will assign some number of **
     - Player B will send (8/15) of his 12 **units**, rounded down --> 6 **units** to Player A and (7/15) of his 8 **units**, rounded down --> 5 **units** to Player C. The remaining **unit** (12 - 6 - 5 = 1) will be randomly assigned to Player A or Player C.
     - Player C will send (8/20) of his 7 **units**, rounded down --> 2 **units** to Player A and (12/20) of his 7 **units**, rounded down --> 4 **units** to Player B. The remaining **units** (8 - 2 - 4 = 2) will be randomly assigned to Player A or Player B.
     
-    After assignments are complete.
+    After assignments are complete, the assigned **units** between each pair of players will fight, with the weaker group eliminated and the strong group losing a number of **units** equal to the number of the weaker group. Let's assume that all randomly assigned **units** are just sent to the first enemy player, alphabetically. If we use tuples to represent the players and the **units** they send towards each other:
+    (A, B): (5 + 1, 6 + 1) = (6, 7) (Player A sends 6 **units** to Player B and Player B sends 7 **units** to Player A)
+    (A, C): (2, 2 + 1) = (2, 3)
+    (B, C): (5, 4)
+    
+    -  --> Player B retains 1 **unit**, Player A loses all **units** sent.
+    - Player A sends 6 **units** to Player B, Player B sends 7 **units** to Player A; Player A loses all sent **units**, Player B keeps 1 **unit**
+    - Player A sends 2 **units** to Player C, Player C sends 3 **units** to Player A; Player A loses all sent **units**, Player C keeps 1 **unit**
+    - Player B sends 5 **units** to Player C, Player C sends 4 **units** to Player B; Player B keeps 1 **unit**, Player C loses all sent **units**
+    
+    After combat, the number of **units** in each **Cell** will be updated accordingly.
+    
+    So Player B keeps 2 **units** in total and Player C keeps 1 **unit** in total.
+    
+    Keep repeating the above process until there are no more than one players with nonzero **units** in the **Cell**.
+    
+    So Player B would fight Player C, and Player B would keep 1 **unit**, and Player C would lose all **units**.
+    
+    Result: Player B keeps 1 **unit**, Players A and C lose all **units**.
+    
+    
 
