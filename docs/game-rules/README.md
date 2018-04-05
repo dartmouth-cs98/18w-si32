@@ -68,12 +68,14 @@ Some examples:
 ### Combat
 Combat in Monad takes place in two discrete phases:
 
-**First phase: collision phase**
+**First phase: collision phase:**
+
 If enemy players would send units in opposite directions from adjacent **Cells**, the enemy groups of **units** would fight, with the weaker group eliminated and the stronger group losing a number of **units** equal to the weaker group's number.
 
 After the game state receives all **Commands** for the turn from all players, it checks if any of the **Commands** would send enemy **unit** groups from adjacent **Cells** into each other. If there are any such 'collisions' between **unit** groups, **units** will be subtracted from each **unit** group until only the stronger group remains or both groups are eliminated. 
 
-**Second phase: cell-update phase**
+**Second phase: cell-update phase:**
+
 A **Cell** is defined to not have **units** of more than one player at the start of every turn. If a **Cell** ends up having nonzero numbers of **units** of more than one player (as a result of **unit** movement), the game state will process some combat operation which will result in only one or less players with remaining units in the **Cell**.
 
 For example, Player A sends 8 **units** North from **(2, 4)** and Player B sends 5 **units** South from **(2, 5)**; these two **Commands** will be replaced by an effectively equal single **Command** of "Player A sending 3 **units** North from **(2, 4)**.
@@ -82,6 +84,7 @@ For example, Player A sends 8 **units** North from **(2, 4)** and Player B sends
 The player with the greater number of **units** in the **Cell** will lose a number of **units** equal to the other player's number of **units**, and the other player's number of **units** will be set to zero.
 
 - In the case of three or more players:
+
 **1**. Each player with nonzero **units** in the **Cell** will assign some number of **units** towards each other player with nonzero **units** in the **Cell** proportional to the enemy player's number of **units**, rounded down. Any leftover units will be randomly assigned towards an enemy player. 
   
   - For example, Player A has 8 units, Player B has 12 units, and Player C has 7 units. 
