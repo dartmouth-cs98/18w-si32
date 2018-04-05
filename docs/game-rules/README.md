@@ -1,27 +1,27 @@
 # Game Rules
 
 ### General
-Si32 is a game played by AI agents designed by you, the user. Once you have uploaded your code for an AI agent,
-it will be pitted against other Si32 agents across the internet in order to determine your ranking. Si32 is a
-turn-based game played in grid-based environments. Each player controls multiple units, which means that during
-each turn in Si32 each player passes an array of commands to the game state. A command will have the following properties: the tile from which to send units from, the type of command (move, build, or mine), the direction (if the command is of type move or build), and the number of units involved in that command. The game state then executes these commands, updates the locations/statuses of the players'
-units, updates the status of the map, and then awaits another set of commands from each player.
+Monad (a.k.a. Si32) is a RTS (real-time-strategy) style game played by AI agents designed by you, the user. Users upload bots based on a template (see 'Your First Bot'), which can then compete against Monad bots written by other users over the internet. 
 
-### Rules
-Si32 is a turn-based game where each player is trying to amass enough units to occupy the most area and buildings
-on the map. Usually this goal is achieved as a result of being able to perform two subroutines as efficiently as
-possible. These subroutines are
-1. Constructing a lot buildings in order to produce more units
-2. Gathering a lot of resources in order to construct more buildings
-Each player begins with one unit and enough resources to create one building, and from there on, whichever player
-that is able to most efficiently produce units and control buildings will eventually win the game.
+Monad is a turn-based strategy game played in a grid of **Cells**. Each player controls an army of **units**, each with the ability to mine **resource** (a type of currency used to build **buildings** - which spawn more units), move around the grid, or build **buildings**. During
+each turn in Monad, each player's bot will process information about the game state and determine its next move, which will be communicated as an array of **Command** objects. A **Command** will determine what the units in each Cell will do in the player's turn. It contains the following information - it will specify a **Cell**, a type of action (**move**, **build**, or **mine**), a direction (if the action is of type **move** or **build**), and a number of **units**. The game will then execute these **Commands** (perform the action for the specified number of **units** in the specified cell), update the locations of the players'
+**units**, updates the status of the map and the players, and then await another set of **Commands** from each player.
+
+### Objective
+The objective of Monad is to destroy each opponent's buildings and become the sole player with buildings on the map.
+
+Usually, this goal is achieved by performing several subtasks better or more efficiently than the opponents, namely:
+- Gathering **resources** (to accelerate **building** production)
+- Constructing **buildings** (to accelerate **unit** production)
+- Controlling the map area to maximize favorable combat scenarios (destroying enemy **buildings**) and to minimize opponent **unit** mobility
+
+Each player starts the game with a single **unit** and 100 **resources** (just enough to create one building).
 
 ### Victory
-There are three ways in which a player can win a game of si32
-1. They are the only player controlling buildings
-2. They have been the only player controlling units for more than 10 turns
-3. If 300 turns have passed and there is no winner, the player who has produced the most units over the course of
-the game will win
+There are three ways in which a player can win a game of Monad
+1. They are the only player controlling a nonzero number of **buildings**.
+2. They have been the only player controlling a nonzero number of **units** for the last 10 turns.
+3. If 2000 turns have passed and no winner has been determined by the last two conditions, the player controlling more units at the time is the winner.
 
 ### Maps
 Each game of Si32 will be played on one of a variety of maps. However, although the maps may be different, they
