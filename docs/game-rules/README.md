@@ -84,14 +84,14 @@ For example, Player A sends 8 **units** North from **(2, 4)** and Player B sends
 The player with the greater number of **units** in the **Cell** will lose a number of **units** equal to the other player's number of **units**, and the other player's number of **units** will be set to zero.
 
 - In the case of three or more players:
-**1**. Each player with nonzero **units** in the **Cell** will assign some number of **units** towards each other player with nonzero **units** in the **Cell** proportional to the enemy player's number of **units**, rounded down. Any leftover units will be randomly assigned towards an enemy player. 
+-**1**. Each player with nonzero **units** in the **Cell** will assign some number of **units** towards each other player with nonzero **units** in the **Cell** proportional to the enemy player's number of **units**, rounded down. Any leftover units will be randomly assigned towards an enemy player. 
   
   - For example, Player A has 8 units, Player B has 12 units, and Player C has 7 units. 
     - Player A will send (12/19) of his 8 **units**, rounded down --> 5 **units** to Player B and (7/19) of his 8 **units**, rounded down --> 2 **units** to Player C. The remaining **unit** (8 - 5 - 2 = 1) will be randomly assigned to Player B or Player C. 
     - Player B will send (8/15) of his 12 **units**, rounded down --> 6 **units** to Player A and (7/15) of his 8 **units**, rounded down --> 5 **units** to Player C. The remaining **unit** (12 - 6 - 5 = 1) will be randomly assigned to Player A or Player C.
     - Player C will send (8/20) of his 7 **units**, rounded down --> 2 **units** to Player A and (12/20) of his 7 **units**, rounded down --> 4 **units** to Player B. The remaining **units** (8 - 2 - 4 = 2) will be randomly assigned to Player A or Player B.
 
-**2**. After assignments are complete, the assigned **units** between each pair of players will fight, with the weaker group eliminated and the strong group losing a number of **units** equal to the number of the weaker group. Let's assume that all randomly assigned **units** are just sent to the first enemy player, alphabetically. If we use tuples to represent the players and the **units** they send towards each other:
+-**2**. After assignments are complete, the assigned **units** between each pair of players will fight, with the weaker group eliminated and the strong group losing a number of **units** equal to the number of the weaker group. Let's assume that all randomly assigned **units** are just sent to the first enemy player, alphabetically. If we use tuples to represent the players and the **units** they send towards each other:
 
    (A, B): (5 + 1, 6 + 1) = (6, 7) (Player A sends 6 **units** to Player B and Player B sends 7 **units** to Player A)
    
@@ -103,11 +103,11 @@ The player with the greater number of **units** in the **Cell** will lose a numb
    - Player A sends 2 **units** to Player C, Player C sends 3 **units** to Player A; Player A loses all sent **units**, Player C keeps 1 **unit**
    - Player B sends 5 **units** to Player C, Player C sends 4 **units** to Player B; Player B keeps 1 **unit**, Player C loses all sent **units**
     
-**3**. After combat, the number of **units** in each **Cell** will be updated accordingly.
+-**3**. After combat, the number of **units** in each **Cell** will be updated accordingly.
     
    So Player B keeps 2 **units** in total and Player C keeps 1 **unit** in total.
     
-**4**. Keep repeating the above process until there are no more than one players with nonzero **units** in the **Cell**.
+-**4**. Keep repeating the above process until there are no more than one players with nonzero **units** in the **Cell**.
     
    So Player B would fight Player C, and Player B would keep 1 **unit**, and Player C would lose all **units**.
     
