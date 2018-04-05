@@ -61,15 +61,20 @@ Some examples:
 - **Building** has 3 allied **units** docked, enemy attacking force has 8 **units** --> enemy loses 8 attacking **units**, **building** and 3 allied **units** unaffected.
 - **Building** has 3 allied **units** docked, enemy attacking force has 15 **units** --> enemy loses 13 attacking **units**, **building** and 3 allied **units** are destroyed.
 - **Building** has 3 allied **units** docked, enemy attacking force has 12 **units** --> enemy loses 12 attacking **units**, **building** loses 3 allied **units**.
-**Building** has 3 allied **units** docked, enemy attacking force has 13 **units** --> enemy loses 123 attacking **units**, **building** and 3 allied **units** are destroyed.
+**Building** has 3 allied **units** docked, enemy attacking force has 13 **units** --> enemy loses 13 attacking **units**, **building** and 3 allied **units** are destroyed.
 
 
 
 ### Combat
-Combat in Si32 takes place in two discrete phases. In the first phase, after the game state has received all the
-unit commands both players, it checks if any of the commands send enemy units from adjacent tiles into each
-other.  
-If there are any such 'collisions' between units, then units from the marching armies will be subtracted from
-each other until none or the larger army remains. After this, the commands will be modified to reflect the (probably) smaller size of the new marching army.  
-After this, positions of units are updated, and in each tile, units from opposing armies are subtracted from each
-other until none or the larger army remains. So, at the start of each turn, for each tile there will be no more than one faction of unit.
+Combat in Monad takes place in two discrete phases:
+
+**First phase: collision phase**
+If enemy players would send units in opposite directions from adjacent **Cells**, the enemy groups of **units** would fight, with the weaker group eliminated and the stronger group losing a number of **units** equal to the weaker group's number.
+
+After the game state receives all **Commands** for the turn from all players, it checks if any of the **Commands** would send enemy **unit** groups from adjacent **Cells** into each other. If there are any such 'collisions' between **unit** groups, **units** will be subtracted from each **unit** group until only the stronger group remains or both groups are eliminated. 
+
+**Second phase: cell-update phase**
+A **Cell** is defined to not have **units** of more than one player at the start of every turn. If a **Cell** ends up having nonzero numbers of **units** of more than one player (as a result of **unit** movement), the game state will process a combat operation.
+
+In the case of two players:
+
