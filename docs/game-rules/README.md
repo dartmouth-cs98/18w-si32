@@ -70,9 +70,9 @@ Combat in Monad takes place in two discrete phases:
 
 **First phase: collision phase:**
 
-If enemy players would send units in opposite directions from adjacent **Cells**, the enemy groups of **units** would fight, with the weaker group eliminated and the stronger group losing a number of **units** equal to the weaker group's number.
+ If enemy players would send units in opposite directions from adjacent **Cells**, the enemy groups of **units** would fight, with the weaker group eliminated and the stronger group losing a number of **units** equal to the weaker group's number.
 
-After the game state receives all **Commands** for the turn from all players, it checks if any of the **Commands** would send enemy **unit** groups from adjacent **Cells** into each other. If there are any such 'collisions' between **unit** groups, **units** will be subtracted from each **unit** group until only the stronger group remains or both groups are eliminated. 
+ After the game state receives all **Commands** for the turn from all players, it checks if any of the **Commands** would send enemy **unit** groups from adjacent **Cells** into each other. If there are any such 'collisions' between **unit** groups, **units** will be subtracted from each **unit** group until only the stronger group remains or both groups are eliminated. 
 
 **Second phase: cell-update phase:**
 
