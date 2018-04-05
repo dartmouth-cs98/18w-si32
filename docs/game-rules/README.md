@@ -28,7 +28,7 @@ The map is the environment in which Monad games will be played. In order to test
 
 The map is *grid-based*:
 
-The map is composed of discrete **Cells**; each free **Cell** will initially contain some randomized amount of **resource**, and also up to one **building**, and any number of **units**. **Units** and **buildings** each occupy 1 **cell** at a time. A **cell** with an obstacle has no **resource**, and can contain no **units** or **buildings**. A **cell** containing a **building** cannot be mined for **resource** by any **unit**.
+The map is composed of discrete **Cells**, defined by a Cartesian coordinate; each free **Cell** will initially contain some randomized amount of **resource**, and also up to one **building**, and any number of **units**. **Units** and **buildings** each occupy 1 **cell** at a time. A **cell** with an obstacle has no **resource**, and can contain no **units** or **buildings**. A **cell** containing a **building** cannot be mined for **resource** by any **unit**.
 
 The map is *symmetric*:
 
@@ -76,11 +76,14 @@ After the game state receives all **Commands** for the turn from all players, it
 **Second phase: cell-update phase**
 A **Cell** is defined to not have **units** of more than one player at the start of every turn. If a **Cell** ends up having nonzero numbers of **units** of more than one player (as a result of **unit** movement), the game state will process some combat operation which will result in only one or less players with remaining units in the **Cell**.
 
+For example, Player A sends 8 **units** North from **(2, 4)** and Player B sends 5 **units** South from **(2, 5)**; these two **Commands** will be replaced by an effectively equal single **Command** of "Player A sending 3 **units** North from **(2, 4)**.
+
  - In the case of two players:
 The player with the greater number of **units** in the **Cell** will lose a number of **units** equal to the other player's number of **units**, and the other player's number of **units** will be set to zero.
 
 - In the case of three or more players:
 Each player with nonzero **units** in the **Cell** will assign some number of **units** towards each other player with nonzero **units** in the **Cell** proportional to the enemy player's number of **units**, rounded down. Any leftover units will be randomly assigned towards an enemy player. 
 
-  - For example,
+  - For example, Player A has 8 units, Player B has 12 units, and Player C has 7 units. 
+    - Player A will send (12/19) of his 8 **units**, rounded down --> 5 **units** to Player B and (7/19) to his 8 **units**, rounded down 2 --> 2 **units** to Player C. The remaining **unit** (8 - 7 = 1) will be randomly assigned to Player B or Player C. 
 
