@@ -99,9 +99,9 @@ The player with the greater number of **units** in the **Cell** will lose a numb
    
    (B, C): (5, 4)
     
-     - Player A sends 6 **units** to Player B, Player B sends 7 **units** to Player A; Player A loses all sent **units**, Player B keeps 1 **unit**
-     - Player A sends 2 **units** to Player C, Player C sends 3 **units** to Player A; Player A loses all sent **units**, Player C keeps 1 **unit**
-     - Player B sends 5 **units** to Player C, Player C sends 4 **units** to Player B; Player B keeps 1 **unit**, Player C loses all sent **units**
+    - Player A sends 6 **units** to Player B, Player B sends 7 **units** to Player A; Player A loses all sent **units**, Player B keeps 1 **unit**
+    - Player A sends 2 **units** to Player C, Player C sends 3 **units** to Player A; Player A loses all sent **units**, Player C keeps 1 **unit**
+    - Player B sends 5 **units** to Player C, Player C sends 4 **units** to Player B; Player B keeps 1 **unit**, Player C loses all sent **units**
     
   - **3**. After combat, the number of **units** in each **Cell** will be updated accordingly.
     
