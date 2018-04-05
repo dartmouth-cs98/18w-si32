@@ -8,9 +8,9 @@ each turn in Monad, each player's bot will process information about the game st
 **units**, updates the status of the map and the players, and then await another set of **Commands** from each player.
 
 ### Objective
-The objective of Monad is to destroy each opponent's buildings and become the sole player with buildings on the map.
+The objective of Monad is to destroy each enemy player's buildings and become the sole player with buildings on the map.
 
-Usually, this goal is achieved by performing several subtasks better or more efficiently than the opponents, namely:
+Usually, this goal is achieved by performing several subtasks better or more efficiently than enemy players, namely:
 - Gathering **resources** (to accelerate **building** production)
 - Constructing **buildings** (to accelerate **unit** production)
 - Controlling the map area to maximize favorable combat scenarios (destroying enemy **buildings**) and to minimize opponent **unit** mobility
@@ -36,28 +36,25 @@ In order to make games as fair as possible, and to minimize the effects of luck 
 
 
 ### Units
-Each unit controlled by a player is produced by buildings controlled by the player. Units can be considered
-properties of tiles on the map, in the sense that units are indistinguishable from one another, and can be
-identified only by their position on the map. Units are commanded by 'unit_commands' which have three possible
-forms.
+**Units** are the mobile agents controlled by the **player**, responsible for combat, **resource** gathering, and **building** construction. Each **unit** occupies one **cell** in the map. Each player controls a number of **units**, which is produced by the **buildings** they control. **Units** have no concept of health points and have no identifying characteristic besides their position on the map; they are essentially indistinguishable from one another. Therefore, there is no concept of a separate **unit** Object, and the map contains all the information about each player's **units** - each **Cell** of the map will simply hold an array of numbers indicating the numbers of **units** controlled by each player in that **Cell**.
 
-**Move** - Moves your unit in the direction of your choosing
+Units can be ordered around by **Commands** which have three possible types.
 
-**Build** - If there is no building where your unit is, and you have enough resources to build a building, this
-command will create a building in the square where your unit is located. If there is a building in the square
-where they are located, they will start working and help the building produce units faster
+('current **cell**' refers to the **cell** occupied by the unit)
 
-**Mine** - Gathers resource from the tile the unit is on, if there is resource remaining on the tile.
+**Move** - Move the unit in some direction by one **cell**
+
+**Build** - If there is no **building** in the current **cell**, and the player has enough **resource** for a building, create a building in the current **cell**. If there is a **building** in the **cell**, help the **building** produce new **units** faster. A **building** will be created instantly (within the turn) if it's possible to do so (unlike conventional RTS games like Warcraft where building production is an extended process and can be disrupted by enemies).
+
+**Mine** - Gather a unit of **resource** from the current **cell**, if there is any resource remaining.
 
 ### Buildings
-Buildings in Si32 have several noteworthy properties. First of all, creating a building costs 100 resources and,
-once a unit has been ordered to create one in an area where there is enough space for a building, will be created
-instantly.
-Each building will produce new units at a rate proportional to how many units a player has working in the
-building.
-Buildings can also be destroyed. If an enemy player commands enough of their units onto the tile where one of
-your buildings is placed, the building will be destroyed.
-Determining how many enemy units are "enough" to destroy a building is quite easy. In order to destroy a
+**Buildings** are static objects controlled by the **player**, which spawn new **units**. have several noteworthy properties. A **building** can be created by any **unit** on a free **cell**, and costs 100 units of **resource**. Each building occupies one **cell** in the map (although this may be changed later). A building will continuously spawn new **units** in the **cell** at a rate proportional to the number of allied **units** stationed at the building's **cell**. 
+
+Each building has an **intrinsic defense rating**.
+
+Buildings can destroyed through combat. If an enemy player sends a number of **units**
+ In order to destroy a
 building, one must march a number of opposing units onto the building's tile which is equal to the number of
 workers in the building + the inherent defense rating of the building. The default defense rating of buildings is
 10.
