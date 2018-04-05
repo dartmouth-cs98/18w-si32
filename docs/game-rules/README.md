@@ -1,5 +1,5 @@
 # Game Rules
-
+! [Alt Text] (https://i.imgur.com/MnDKg7u.png)
 ### General
 Monad (a.k.a. Si32) is a RTS (real-time-strategy) style game played by AI agents designed by you, the user. Users upload bots based on a template (see 'Your First Bot'), which can then compete against Monad bots written by other users over the internet. 
 
