@@ -94,18 +94,18 @@ The player with the greater number of **units** in the **Cell** will lose a numb
     (A, C): (2, 2 + 1) = (2, 3)
     (B, C): (5, 4)
     
-    -  --> Player B retains 1 **unit**, Player A loses all **units** sent.
-    - Player A sends 6 **units** to Player B, Player B sends 7 **units** to Player A; Player A loses all sent **units**, Player B keeps 1 **unit**
-    - Player A sends 2 **units** to Player C, Player C sends 3 **units** to Player A; Player A loses all sent **units**, Player C keeps 1 **unit**
-    - Player B sends 5 **units** to Player C, Player C sends 4 **units** to Player B; Player B keeps 1 **unit**, Player C loses all sent **units**
+   -  --> Player B retains 1 **unit**, Player A loses all **units** sent.
+   - Player A sends 6 **units** to Player B, Player B sends 7 **units** to Player A; Player A loses all sent **units**, Player B keeps 1 **unit**
+   - Player A sends 2 **units** to Player C, Player C sends 3 **units** to Player A; Player A loses all sent **units**, Player C keeps 1 **unit**
+   - Player B sends 5 **units** to Player C, Player C sends 4 **units** to Player B; Player B keeps 1 **unit**, Player C loses all sent **units**
     
 **3**. After combat, the number of **units** in each **Cell** will be updated accordingly.
     
-    So Player B keeps 2 **units** in total and Player C keeps 1 **unit** in total.
+   So Player B keeps 2 **units** in total and Player C keeps 1 **unit** in total.
     
 **4**. Keep repeating the above process until there are no more than one players with nonzero **units** in the **Cell**.
     
-    So Player B would fight Player C, and Player B would keep 1 **unit**, and Player C would lose all **units**.
+   So Player B would fight Player C, and Player B would keep 1 **unit**, and Player C would lose all **units**.
     
 **Result**: Player B keeps 1 **unit**, Players A and C lose all **units**.
     
