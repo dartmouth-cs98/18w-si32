@@ -51,13 +51,19 @@ Units can be ordered around by **Commands** which have three possible types.
 ### Buildings
 **Buildings** are static objects controlled by the **player**, which spawn new **units**. have several noteworthy properties. A **building** can be created by any **unit** on a free **cell**, and costs 100 units of **resource**. Each building occupies one **cell** in the map (although this may be changed later). A building will continuously spawn new **units** in the **cell** at a rate proportional to the number of allied **units** stationed at the building's **cell**. 
 
-Each building has an **intrinsic defense rating**.
+Each building has a default **intrinsic defense rating** of 10. The building essentially serves as an additional force of 10 **units** in combat when defending, which regenerates every turn.
 
-Buildings can destroyed through combat. If an enemy player sends a number of **units**
- In order to destroy a
-building, one must march a number of opposing units onto the building's tile which is equal to the number of
-workers in the building + the inherent defense rating of the building. The default defense rating of buildings is
-10.
+Buildings can destroyed through combat. If an enemy player sends a number of **units** equal to or greater than the number of allied units + the building's **intrinsic defense rating**, the building and all its allied **units** are destroyed (along with a number of enemy **units** equal to the number of allied **units** + the building's **intrinsic defense rating**). If the enemy player sends a number of **units** less than the building's **intrinsic defense rating**, all attacking enemy **units** are destroyed and the building and its allied **units** are unharmed. If the enemy player sends a number of **units** larger than the building's **intrinsic defense rating** but smaller than the sum of the **intrinsic defense rating** and its number of docked allied **units**, all attacking enemy **units** are destroyed but the building loses a number of allied **units** equal to the difference of the number of attacking enemy **units** and the **intrinsic defense rating** plus one.
+
+Some examples:
+- **Building** has no allied **units** docked, enemy attacking force has 8 **units** --> enemy loses 8 attacking **units**, **building** unaffected.
+- **Building** has no allied **units** docked, enemy attacking force has 10 **units** --> enemy loses 10 attacking **units**, **building** is destroyed.
+- **Building** has 3 allied **units** docked, enemy attacking force has 8 **units** --> enemy loses 8 attacking **units**, **building** and 3 allied **units** unaffected.
+- **Building** has 3 allied **units** docked, enemy attacking force has 15 **units** --> enemy loses 13 attacking **units**, **building** and 3 allied **units** are destroyed.
+- **Building** has 3 allied **units** docked, enemy attacking force has 12 **units** --> enemy loses 12 attacking **units**, **building** loses 3 allied **units**.
+**Building** has 3 allied **units** docked, enemy attacking force has 13 **units** --> enemy loses 123 attacking **units**, **building** and 3 allied **units** are destroyed.
+
+
 
 ### Combat
 Combat in Si32 takes place in two discrete phases. In the first phase, after the game state has received all the
