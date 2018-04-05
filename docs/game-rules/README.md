@@ -93,16 +93,15 @@ The player with the greater number of **units** in the **Cell** will lose a numb
 
   - **2**. After assignments are complete, the assigned **units** between each pair of players will fight, with the weaker group eliminated and the strong group losing a number of **units** equal to the number of the weaker group. Let's assume that all randomly assigned **units** are just sent to the first enemy player, alphabetically. If we use tuples to represent the players and the **units** they send towards each other:
 
-   (A, B): (5 + 1, 6 + 1) = (6, 7) (Player A sends 6 **units** to Player B and Player B sends 7 **units** to Player A)
-   
-   (A, C): (2, 2 + 1) = (2, 3)
-   
-   (B, C): (5, 4)
-    
+     (A, B): (5 + 1, 6 + 1) = (6, 7) (Player A sends 6 **units** to Player B and Player B sends 7 **units** to Player A)
      Player A sends 6 **units** to Player B, Player B sends 7 **units** to Player A; Player A loses all sent **units**, Player B keeps 1 **unit**
+     
+     (A, C): (2, 2 + 1) = (2, 3)
      Player A sends 2 **units** to Player C, Player C sends 3 **units** to Player A; Player A loses all sent **units**, Player C keeps 1 **unit**
+   
+     (B, C): (5, 4)
      Player B sends 5 **units** to Player C, Player C sends 4 **units** to Player B; Player B keeps 1 **unit**, Player C loses all sent **units**
-    
+       
   - **3**. After combat, the number of **units** in each **Cell** will be updated accordingly.
     
    So Player B keeps 2 **units** in total and Player C keeps 1 **unit** in total.
