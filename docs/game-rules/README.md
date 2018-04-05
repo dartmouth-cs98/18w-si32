@@ -115,6 +115,7 @@ The player with the greater number of **units** in the **Cell** will lose a numb
      So Player B would fight Player C, and Player B would keep 1 **unit**, and Player C would lose all **units**.
     
   **Result**: Player B keeps 1 **unit**, Players A and C lose all **units**.
+  
      ![Alt Text](https://i.imgur.com/NKPlpRR.png)
     
     
