@@ -12,7 +12,7 @@ from game.Cell import Cell
 from game.Rules import Rules
 from game.Logger import Logger
 
-from game.params import MAX_ITERS
+from game.params import MAX_ITERS, STARTING_POSITIONS
 
 # ------------------------------------------------------------------------------
 # GameState
@@ -53,13 +53,18 @@ class GameState(Game):
     def initialize_players(self, bots, map):  # initalizes players
         i = 0
         self.players = []
+        positions = STARTING_POSITIONS[len(bots)]
 
-        # hardcoded for two bots
-        self.players.append(Player(0, self.map, bots[0], (5, 5)))
-        self.players.append(Player(1, self.map, bots[1], (15, 15)))
+        # Should accept any number of bots now
 
-        self.map.get_cell((4,4)).create_building(0)
-        self.map.get_cell((16,16)).create_building(1)
+        # Create a player object for each bot
+        for count, bot in enumerate(bots):
+            self.players.append(Player(count, self.map, bots[count], positions[count]))
+
+        # Create a starting building for each player
+        for player in self.players:
+            self.map.get_cell(player.starting_pos).create_building(player.playerId)
+
 
     # --------------------------------------------------------------------------
     # MAIN FUNCTIONS
