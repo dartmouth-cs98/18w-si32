@@ -24,16 +24,16 @@ There are three ways in which a player can win a game of Monad
 3. If 2000 turns have passed and no winner has been determined by the last two conditions, the player controlling more units at the time is the winner.
 
 ### Maps
-Each game of Si32 will be played on one of a variety of maps. However, although the maps may be different, they
-all share a few characteristics:
+The map is the environment in which Monad games will be played. In order to test the versatility of bots and to decrease predictability of matches, the map will be randomized in terms of **resource** distribution and **obstacle** distribution. However, they all share a few basic characteristics:
 
-*Symmetric*: In order to make games as fair as possible, each player will start on either side of a symmetric
-map. This means that at the start of the game they will have access to the same environment/resources, and
-therefore elements of luck/variance  affecting who wins the game will be minimized
+The map is *grid-based*:
 
-*Grid-based*: Each map will be composed of discrete tiles which units, buildings and resources can occupy. Units
-occupy 1 tile at a time and buildings occupy 2x2 tiles. A different amount of resources resides in
-each tile of the map
+The map is composed of discrete **Cells**; each free **Cell** will initially contain some randomized amount of **resource**, and also up to one **building**, and any number of **units**. **Units** and **buildings** each occupy 1 **cell** at a time. A **cell** with an obstacle has no **resource**, and can contain no **units** or **buildings**. A **cell** containing a **building** cannot be mined for **resource** by any **unit**.
+
+The map is *symmetric*:
+
+In order to make games as fair as possible, and to minimize the effects of luck and variance in determining the outcome of the match, the map will be symmetric in terms of **resource** and **obstacle** distribution, and each player will start in a symmetric part of the map (e.g. in a 4-player game, each player will begin with their starter unit at the center of a quadrant of the map, and each quadrant will initially contain the same total amount of **resource** and **obstacles**). This will make sure that each player will initially have access to the same environment/resources.
+
 
 ### Units
 Each unit controlled by a player is produced by buildings controlled by the player. Units can be considered
