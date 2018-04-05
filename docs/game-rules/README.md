@@ -20,8 +20,8 @@ Each player starts the game with a single **unit** and 100 **resources** (just e
 ### Victory
 There are three ways in which a player can win a game of Monad
 1. They are the only player controlling a nonzero number of **buildings**.
-2. They have been the only player controlling a nonzero number of **units** for the last 10 turns.
-3. If 2000 turns have passed and no winner has been determined by the last two conditions, the player controlling more units at the time is the winner.
+2. They have been the only player controlling a nonzero number of **units** for the last **10** turns.
+3. If **2000** turns have passed and no winner has been determined by the last two conditions, the player controlling more units at the time is the winner.
 
 ### Maps
 The map is the environment in which Monad games will be played. In order to test the versatility of bots and to decrease predictability of matches, the map will be randomized in terms of **resource** distribution and **obstacle** distribution. However, they all share a few basic characteristics:
@@ -74,7 +74,13 @@ If enemy players would send units in opposite directions from adjacent **Cells**
 After the game state receives all **Commands** for the turn from all players, it checks if any of the **Commands** would send enemy **unit** groups from adjacent **Cells** into each other. If there are any such 'collisions' between **unit** groups, **units** will be subtracted from each **unit** group until only the stronger group remains or both groups are eliminated. 
 
 **Second phase: cell-update phase**
-A **Cell** is defined to not have **units** of more than one player at the start of every turn. If a **Cell** ends up having nonzero numbers of **units** of more than one player (as a result of **unit** movement), the game state will process a combat operation.
+A **Cell** is defined to not have **units** of more than one player at the start of every turn. If a **Cell** ends up having nonzero numbers of **units** of more than one player (as a result of **unit** movement), the game state will process some combat operation which will result in only one or less players with remaining units in the **Cell**.
 
-In the case of two players:
+ - In the case of two players:
+The player with the greater number of **units** in the **Cell** will lose a number of **units** equal to the other player's number of **units**, and the other player's number of **units** will be set to zero.
+
+- In the case of three or more players:
+Each player with nonzero **units** in the **Cell** will assign some number of **units** towards each other player with nonzero **units** in the **Cell** proportional to the enemy player's number of **units**, rounded down. Any leftover units will be randomly assigned towards an enemy player. 
+
+For example,
 
