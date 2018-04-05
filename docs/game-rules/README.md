@@ -84,7 +84,6 @@ For example, Player A sends 8 **units** North from **(2, 4)** and Player B sends
 The player with the greater number of **units** in the **Cell** will lose a number of **units** equal to the other player's number of **units**, and the other player's number of **units** will be set to zero.
 
 - In the case of three or more players:
-
 **1**. Each player with nonzero **units** in the **Cell** will assign some number of **units** towards each other player with nonzero **units** in the **Cell** proportional to the enemy player's number of **units**, rounded down. Any leftover units will be randomly assigned towards an enemy player. 
   
   - For example, Player A has 8 units, Player B has 12 units, and Player C has 7 units. 
