@@ -36,9 +36,7 @@ class MatchSinglePage extends React.PureComponent {
         <div key={b._id} style={styles.bot}>
           <div style={{display: "flex", alignItems: "flex-end"}}>
             <span style={styles.botRank}>{b.rank}</span>
-            <div style={styles.botName}>
-              {b.name}
-            </div>
+            <Link style={styles.botName} href={`/bots/${b._id}`}>{b.name}</Link>
             <span style={styles.botVersion}>v{b.version}</span>
             { b.user._id == this.props.sessionUserId ?
               <span style={styles.ownBotTag}>(You)</span> :

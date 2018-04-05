@@ -3,6 +3,7 @@ import Radium from "radium";
 import _ from "lodash";
 import { connect } from "react-redux";
 
+
 import { Page, Wrapper, TitleBar } from "../layout";
 import Button from "../common/button";
 
@@ -16,8 +17,9 @@ import { fetchRankings, fetchUser, followUser, unfollowUser, joinGroup, leaveGro
 import { fetchBots } from "../../data/bot/botActions";
 import { fetchMatches } from "../../data/match/matchActions";
 import { getMatchesForUser } from "../../data/match/matchSelectors";
-//import { getBotsForUser } from "../../data/bot/botSelectors";
+import { getBotsForUser } from "../../data/bot/botSelectors";
 import { colors, constants } from "../../style";
+import SkillHistoryChart from "../common/SkillHistoryChart";
 
 class ProfilePage extends React.Component {
   constructor(props) {
@@ -116,7 +118,16 @@ class ProfilePage extends React.Component {
               </div>
             </div>
 
-            <div style={styles.skillGraphWrap}>
+            <div style={[styles.skillGraphWrap, styles.stat]}>
+              <div style={styles.statTitle}>Rating history</div>
+              <div style={styles.skillGraph}>
+                <SkillHistoryChart
+                  height={350}
+                  width={900}
+                  data={this.props.profileUser.trueSkillHistory}
+                  bots={this.props.bots}
+                />
+              </div>
             </div>
 
           </div>
@@ -164,7 +175,7 @@ const mapStateToProps = (state, props) => ({
   profileUser: state.users.records[props.id],
   matches: getMatchesForUser(state, props.id),
   isOwnProfile: (state.session.user || {})._id === props.id,
-  // bots: getBotsForUser(state, props.id),
+  bots: getBotsForUser(state, props.id),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Radium(ProfilePage));
@@ -200,14 +211,20 @@ const styles = {
     fontSize: constants.fontSizes.larger,
     marginTop: 5,
   },
+  statsRow: {
+    display: "flex",
+  },
   stat: {
     margin: "15px 0",
+  },
+  stats: {
+    flex: 1,
   },
   secondary: {
     display: "flex",
     borderTop: `1px solid ${colors.border}`,
     paddingTop: 20,
-    marginTop: 30,
+    marginTop: 0,
     main: {
       width: "60%",
       marginRight: 50,
@@ -216,6 +233,9 @@ const styles = {
     sidebar: {
       flex: 1,
     },
+  },
+  skillGraph: {
+    marginTop: 15,
   },
   groupList: {
     marginBottom: 15,

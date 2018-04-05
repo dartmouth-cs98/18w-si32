@@ -3,6 +3,7 @@ const auth = require("../auth");
 const s3 = require("../files/s3");
 const Bot = require("../models").Bot;
 const { AccessError, MalformedError } = require("../errors");
+const { DEFAULT_MU, DEFAULT_SIGMA } = require("../lib/trueskill");
 
 const botRouter = new Router();
 
@@ -34,6 +35,7 @@ botRouter.post("/", async (ctx) => {
   const { key } = await s3.uploadBot(ctx.state.userId, bot._id, ctx.request.body.files.code);
   bot.code = key;
   bot.versionHistory.push({ timestamp: new Date(), version: 1 });
+  bot.trueSkillHistory.push({ timestamp: new Date(), score: { mu: DEFAULT_MU, sigma: DEFAULT_SIGMA } });
   bot.save();
 
   // delete this file to mark it as handled

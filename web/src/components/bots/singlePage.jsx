@@ -3,6 +3,8 @@ import Radium from "radium";
 import { connect } from "react-redux";
 import { Page, Wrapper, TitleBar } from "../layout";
 import { fetchBot, updateBotCode } from "../../data/bot/botActions";
+import { colors, constants } from "../../style";
+import SkillHistoryChart from "../common/SkillHistoryChart";
 
 class BotSinglePage extends React.PureComponent {
   constructor(props) {
@@ -25,14 +27,11 @@ class BotSinglePage extends React.PureComponent {
     this.input.click();
   }
 
-  submit = (event) => {
-    event.preventDefault();
-    // TODO validation
-
-
-  }
-
   render() {
+    if (!this.props.bot) {
+      return null;
+    }
+
     return (
       <Page>
         <TitleBar
@@ -43,6 +42,28 @@ class BotSinglePage extends React.PureComponent {
         />
         <input ref={(input) => this.input = input} type="file" style={styles.inputFile} onChange={this.handleFileChange} />
         <Wrapper>
+           <div style={styles.statsRow}>
+            <div style={styles.stats}>
+              <div style={styles.stat}>
+                <div style={styles.statTitle}>Current Rating</div>
+                <p style={styles.statBody}>{this.props.bot.trueSkill.mu.toFixed(1)}</p>
+              </div>
+            </div>
+
+            <div style={[styles.skillGraphWrap, styles.stat]}>
+              <div style={styles.statTitle}>Rating history</div>
+              <div style={styles.skillGraph}>
+                <SkillHistoryChart
+                  height={350}
+                  width={900}
+                  useBotName={false}
+                  data={this.props.bot.trueSkillHistory}
+                  bots={[this.props.bot]}
+                />
+              </div>
+            </div>
+
+          </div>
         </Wrapper>
       </Page>
     );
@@ -57,7 +78,71 @@ const styles = {
     top: -10,
     display: "none",
     left: -10,
-  }
+  },
+  groupActionBox: {
+    width: "100%",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingTop: "20px"
+  },
+  followingButton: {
+    borderColor: colors.border,
+    borderWidth: 1,
+    color: colors.medGray,
+    width: 150,
+    height: 40,
+    ":hover": {
+      background: "transparent",
+      borderWidth: 2,
+      color: colors.medGray,
+    },
+  },
+  statTitle: {
+    color: colors.red,
+    fontSize: constants.fontSizes.smaller,
+    textTransform: "uppercase",
+  },
+  statBody: {
+    color: colors.darkGray,
+    fontSize: constants.fontSizes.larger,
+    marginTop: 5,
+  },
+  statsRow: {
+    display: "flex",
+  },
+  stat: {
+    margin: "15px 0",
+  },
+  stats: {
+    flex: 1,
+  },
+  secondary: {
+    display: "flex",
+    borderTop: `1px solid ${colors.border}`,
+    paddingTop: 20,
+    marginTop: 0,
+    main: {
+      width: "60%",
+      marginRight: 50,
+      flexGrow: 0,
+    },
+    sidebar: {
+      flex: 1,
+    },
+  },
+  skillGraph: {
+    marginTop: 15,
+  },
+  groupList: {
+    marginBottom: 15,
+    marginTop: 5,
+  },
+  groupTitle: {
+    display: "flex",
+    alignItems: "center",
+  },
 };
 
 const mapDispatchToProps = (dispatch, props) => ({
@@ -66,7 +151,7 @@ const mapDispatchToProps = (dispatch, props) => ({
 });
 
 const mapStateToProps = (state, props) => ({
-  bot: state.bots.records[props.id] || {},
+  bot: state.bots.records[props.id] || null,
   userId: state.session.userId,
 });
 
