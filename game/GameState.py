@@ -144,18 +144,25 @@ class GameState(Game):
             return False
 
     def check_unit_victory_condition(self):
-        player1_b = self.players[0].has_building()
-        player2_b = self.players[1].has_building()
+        player_has_building = []
+        remaining_players_indices = []
 
-        if (player1_b and not player2_b):
-            self.winner = self.players[0]
+        i = 0
+
+        while i < len(self.players):
+            if self.players[i].has_building():
+                player_has_building.append(True)
+                remaining_players_indices.append(i)
+
+            else: player_has_building.append(False)
+
+            i += 1
+
+        # If only one player still has buildings, clearly they have won
+        if len(remaining_players_indices) = 1:
             return True
 
-        if (player2_b and not player1_b):
-            self.winner = self.players[1]
-            return True
-
-        return False
+        else: return False
 
     def check_unit_victory_condition_multi(self):
         i = 0
