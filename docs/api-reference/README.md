@@ -101,3 +101,79 @@ Get (return) a list of all of cells (`Cell` instances) in which enemy players co
 Notice that this is distinct from the `get_enemy_buildings()` function in that it returns a list of cells, rather than a list of buildings (`Building` instances). 
 
 #### Building Data (Getters)
+
+**get\_my\_building\_count()**
+
+```
+get_my_building_count()
+```
+
+Get (return) a count (number) of all buildings over which the invoking player has control. 
+
+**get\_enemy\_building\_count()**
+
+```
+get_enemy_building_count()
+```
+
+Get (return) a count (number) over which enemy players have control. Enemy players are defined as all players who are not the invoking player. 
+
+**get\_my\_buildings()**
+
+```
+get_my_buildings()
+```
+
+Get (return) a list of all buildings (`Building` instances) over which the invoking player has control. 
+
+**get\_enemy\_buildings()**
+
+```
+get_enemy_buildings()
+```
+
+Get (return) a list of all buildings (`Building` instances) over enemy players have control. Enemy players are defined as all players who are not the invoking player.
+
+**get\_building\_potential()**
+
+```
+get_building_potential()
+```
+
+Get (return) the number of buildings that the invoking player may currently contruct given the value of resources that this player currently possesses. 
+
+### Unit Data (Getters)
+
+**get\_my\_total\_unit\_count()**
+
+```
+get_my_total_unit_count()
+```
+
+Get (return) the total number of units on the map over which the invoking player has control. 
+
+Notice that this is distinct from the number of cells on the map over which the invoking player has control — unit count represents total offensive and defensive power, while cell count describes the number of locations over which these units are allocated.
+
+```
+get_enemy_total_unit_count()
+```
+
+Get (return) the total number of units on the map over which enemy players have control. Enemy players are defined as all players who are not the invoking player.
+
+Notice that this is distinct from the number of cells on the map over which enemy players have control — unit count represents total offensive and defensive power, while cell count describes the number of locations over which these units are allocated.
+
+### Resource Data (Getters)
+
+**get\_my\_resource\_count()**
+
+```
+get_my_resource_count()
+```
+
+Get (return) the current total value of resources controlled by the invoking player. 
+
+
+
+
+
+

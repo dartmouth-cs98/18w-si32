@@ -205,7 +205,7 @@ class GameHelper:
             return position_from + (0, -1)
 
     # --------------------------------------------------------------------------
-    # UNIT GETTERS
+    # UNIT DATA GETTERS
 
     # Get a count of the total number of units I control.
     # Return: (number)
@@ -228,16 +228,22 @@ class GameHelper:
     # Return: (number)
     #   the number of units in <cell> controlled by player <playerId>
     def get_unit_count_by_cell(self, cell, playerId):
+        # TODO: make this so it does not require a playerId
+        # only one player may have control over a cell at any one time,
+        # so this should not be an issue!
         return cell.units[playerId]
 
     # Get the number of units in cell at position specified (<x>, <y>) controlled by <playerId>.
     # Return: (number)
     #   the number of units at the specified position controlled by player <playerId>
     def get_unit_count_by_position(self, x, y, playerId):
+        # TODO: make this so it does not require a playerId
+        # only one player may have control over a cell at any one time,
+        # so this should not be an issue!
         return self.map.get_cell((x, y)).units[playerId]
 
     # --------------------------------------------------------------------------
-    # RESOURCE GETTERS
+    # RESOURCE DATA GETTERS
 
     # Get the current value of the resources I possess.
     # Return: (number)
@@ -269,8 +275,6 @@ class GameHelper:
             return True
         return False
 
-
-
     # returns True if player with playerId1 has more units than player with playerId2
     def compare_total_units(self):
         if (self.get_total_units(self.myId) > self.get_total_units(self.eId)):
@@ -278,10 +282,7 @@ class GameHelper:
         else:
             return False
 
-
     # functions to return commands of various types
-
-
 
     # returns a sequence of commands at a cell so that - if the cell has resource less than number of units, send the unneeded units to the adjacent free cell with greatest resource; then, build on the cell if it's empty
     def efficient_mine_and_build(self, position):
