@@ -1,7 +1,7 @@
 # Coordinate.py
 # Class definition for 'Coordinate'
 
-# Coordinate serves as useful helper class to aid in navigating board space. 
+# Coordinate serves as useful helper class to aid in navigating board space.
 #
 # Constructor Arguments
 # (tuples) - the tuple that is, essentially, cast to a Coordinate type.
@@ -17,12 +17,22 @@ class Coordinate(tuple):
     def y(self):
         return self[0]
 
-    """ Returns the vector addition of self and other """
+    # Returns the vector addition of self and other.
+    def add(self, other):
+        other = Coordinate(other)
+        return Coordinate((self.y + other.y, self.x + other.x))
+
+    # Returns the vector addition of self and other.
     def __add__(self, other):
         other = Coordinate(other)
         return Coordinate((self.y + other.y, self.x + other.x))
 
-    """ Returns the vector difference of self and other """
+    # Returns the vector difference of self and other.
     def __sub__(self, other):
+        other = Coordinate(other)
+        return Coordinate((self.y - other.y, self.x - other.x))
+
+    # Returns the vector difference of self and other.
+    def sub(self, other):
         other = Coordinate(other)
         return Coordinate((self.y - other.y, self.x - other.x))

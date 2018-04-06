@@ -12,11 +12,7 @@ from game.Cell import Cell
 from game.Rules import Rules
 from game.Logger import Logger
 
-<<<<<<< HEAD
-from game.params import MAX_ITERS, STARTING_POSITIONS
-=======
-from game.params import MAX_ITERS, MOVE_COMMAND, BUILD_COMMAND, MINE_COMMAND, DEBUG_LOG_FN
->>>>>>> helper updates and docs
+from game.params import MAX_ITERS, STARTING_POSITIONS, MOVE_COMMAND, BUILD_COMMAND, MINE_COMMAND, DEBUG_LOG_FN
 
 # ------------------------------------------------------------------------------
 # GameState
@@ -164,11 +160,11 @@ class GameState(Game):
 
             i += 1
 
-        # If only one player still has buildings, clearly they have won
-        if len(remaining_players_indices) = 1:
+        # if only one player still has buildings, clearly they have won
+        if len(remaining_players_indices) == 1:
             return True
-
-        else: return False
+        else:
+            return False
 
     def check_unit_victory_condition_multi(self):
         i = 0
@@ -311,12 +307,12 @@ class GameState(Game):
 def sort_moves(moves_by_player):
     sorted_moves = []
 
-    for moves_for_player in moves_by_player:
+    for individual_player_moves in moves_by_player:
         move_commands = []
         build_commands = []
         mine_commands = []
 
-        for command in moves_by_player:
+        for command in individual_player_moves:
             if command.command == MOVE_COMMAND:
                 move_commands.append(command)
             elif command.command == BUILD_COMMAND:
@@ -327,8 +323,6 @@ def sort_moves(moves_by_player):
                 # TODO: panic!
                 pass
 
-        sorted_moves.append(move_commands)
-        sorted_moves.append(build_commands)
-        sorted_moves.append(mine_commands)
+        sorted_moves.append(move_commands + build_commands + mine_commands)
 
     return sorted_moves
