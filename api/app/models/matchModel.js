@@ -96,11 +96,9 @@ _Match.statics.handleWorkerResponse = async (id, rankedBots, logKey, result={}) 
 
   // turn array of bots into obj keyed on bot ID storing ranked finish
   const botRankById = {};
-  _.each(rankedBots, (b, i) => {
+  _.each(rankedBots, b  => {
     botRankById[b._id] = b;
   });
-
-  console.log("bots", rankedBots);
 
   // store the individual bots' skills and rank in this match
   const newBots = _.map(match.bots, b => {
