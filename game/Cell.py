@@ -35,6 +35,10 @@ class Cell:
     def decrement_resource(self, number=1):
         self.resource = self.resource - number
 
+    # sets the resources of the cell to be completely depleted
+    def set_resources_depleted(self):
+        self.resource = 0
+
     # --------------------------------------------------------------------------
     # PLAYER UNIT METHODS
 

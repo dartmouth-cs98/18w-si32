@@ -7,14 +7,14 @@ def euclidean_distance(from_position, to_position):
 
 def do_turn(game):
 
-    game.log(game.building_potential())
+    game.log(game.get_building_potential())
     game.log(game.me["resources"])
 
     commands = []
 
     units = game.get_my_cells()
 
-    buildings = game.get_enemy_buildings()
+    buildings = game.get_enemy_building_sites()
     if len(buildings) > 0:
 
         closest_to_enemy = None
@@ -32,7 +32,7 @@ def do_turn(game):
             else:
                 [x, y] = s.position
 
-                e_buildings = game.get_enemy_buildings()
+                e_buildings = game.get_enemy_building_sites()
                 e_position = e_buildings[0].position
 
                 surrounding = []
@@ -56,8 +56,8 @@ def do_turn(game):
                 if m:
                     commands.append(m)
 
-        if (game.building_potential() > 0):
-            m = game.build(closest_to_enemy.position, game.my_units_at_pos(closest_to_enemy.position))
+        if (game.get_building_potential() > 0):
+            m = game.build(closest_to_enemy.position)
             if m:
                 commands.append(m)
 

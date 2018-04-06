@@ -1,7 +1,7 @@
 # Rules.py
 # Class implementation for 'Rules'
 
-from game.params import BUILDING_COST
+from game.params import BUILDING_COST, MOVE_COMMAND, BUILD_COMMAND, MINE_COMMAND
 
 # Rules defines bulk of the game logic: how the various components of the game
 # interact and update the global state of the game.
@@ -27,35 +27,29 @@ class Rules:
         return cell.units[move.playerId] >= move.number_of_units
 
     def update_by_move(self, move):
-
-        # Only execute move if it has a non-zero number of units
-        if move.number_of_units > 0:
-
-            if move.command == 'move':
-                self.update_move_command(move)
-
-            if move.command == 'build':
-                self.update_build_command(move)
-
-            if move.command == 'mine':
-                self.update_mine_command(move)
+        if move.command == MOVE_COMMAND and move.number_of_units > 0:
+            # only execute move command if it has a non-zero number of units
+            self.update_move_command(move)
+        elif move.command == MINE_COMMAND and move.number_of_units > 0:
+            self.update_mine_command(move)
+        elif move.command == BUILD_COMMAND:
+            self.update_build_command(move)
 
     def update_move_command(self, move):
         old_cell = self.map.get_cell(move.position)
         new_cell = self.map.get_cell([old_cell.position[0] + move.direction[0], old_cell.position[1] + move.direction[1]])
 
-        if old_tile.units[move.playerId] < move.number_of_units:
-            move.number_of_units = old_tile.units[move.playerId]
+        if old_cell.units[move.playerId] < move.number_of_units:
+            move.number_of_units = old_cell.units[move.playerId]
 
-        old_tile.decrement_units(move.playerId, move.number_of_units)
-        new_tile.increment_units(move.playerId, move.number_of_units)
-
+        old_cell.decrement_units(move.playerId, move.number_of_units)
+        new_cell.increment_units(move.playerId, move.number_of_units)
 
     def update_mine_command(self, move):
         cell = self.map.get_cell(move.position)
 
         if cell.resource > 0:
-            # cach unit gathers one unit of resource from the cell when mining
+            # each unit gathers one unit of resource from the cell when mining
             if cell.resource >= move.number_of_units:
                 cell.decrement_resource(move.number_of_units)
                 self.players[move.playerId].increment_resources(move.number_of_units)
@@ -63,14 +57,10 @@ class Rules:
             # if there are more miners than resources, take whatever remains
             else:
                 self.players[move.playerId].increment_resources(cell.resource)
-                cell.resource = 0
+                cell.set_resources_depleted()
 
     def update_build_command(self, move):
         cell = self.map.get_cell(move.position)
-
-        # two cases for building:
-        # - making a new building
-        # - increasing the resource value of an existing building
 
         # if there is no building, create one
         if cell.building is None:
