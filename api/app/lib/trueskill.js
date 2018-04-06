@@ -12,13 +12,13 @@ const DEFAULT_SIGMA = 25.0 / 3;
   *   returns a map of player ids to their new mu and sigma
   * IMPT: This method does not mutate the player objects themselves, it only returns what their new score should be
 */
-module.exports.returnNewSkillOfPlayers = (playersInRankedOrder) => {
-  const playerSkills = playersInRankedOrder.map((playerObj, idx) => {
+module.exports.returnNewSkillOfPlayers = (players) => {
+  const playerSkills = players.map((playerObj) => {
     const skillScore = playerObj.skill || {mu: DEFAULT_MU, sigma: DEFAULT_SIGMA};
     return {
       _id: playerObj._id.toString(),
       skill: [skillScore.mu || DEFAULT_MU, skillScore.sigma || DEFAULT_SIGMA],
-      rank: idx,    // players index in playersInRankedOrder gives their relative rank in this game
+      rank: playerObj.rank,
     };
   });
 

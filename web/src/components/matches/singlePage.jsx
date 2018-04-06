@@ -54,9 +54,7 @@ class MatchSinglePage extends React.PureComponent {
   }
 
   renderFailed = () => {
-    if (this.props.match.result.reason == "BOT_CRASHED") {
-      return (<div style={styles.failureMessage}>{"a bot crashed, we don't have a replay for this game :("}</div>);
-    }
+    return (<div style={styles.failureMessage}>{"we don't have a replay for this game :("}</div>);
   }
 
   renderReplay = () => {
@@ -65,6 +63,10 @@ class MatchSinglePage extends React.PureComponent {
     }
 
     if (this.state.log) {
+      if (this.state.log.turns.length === 0) {
+        return this.renderFailed();
+      }
+
       return <ReplayVisualizer hideSelectButton replay={this.state.log} />;
     }
 

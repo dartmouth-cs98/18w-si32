@@ -25,6 +25,8 @@ class Player:
     def __init__(self, playerId, map, bot, starting_pos):
         self.bot = bot
 
+        self.rank = None # finih position
+
         self.winner = False
         self.timed_out = False
         self.crashed = False
