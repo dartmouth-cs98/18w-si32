@@ -181,14 +181,14 @@ class GameHelper:
         for col in self.map.cells:
             for cell in col:
                 if cell.building and cell.building.ownerId != self.myId:
-                    blds.append(building)
+                    blds.append(cell.building)
         return blds
 
     # Get the total number of buildings that I can currently construct.
     # Return: (number)
     #   the number of buildings I can construct, assuming full resource use
     def get_building_potential(self):
-        return int(self.my_resource_count() / 100)
+        return int(self.get_my_resource_count() / 100)
 
     # TODO: rename this, its confusing
     def position_towards(self, position_from, position_to):
