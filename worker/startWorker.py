@@ -3,7 +3,7 @@ import traceback
 from Bot import DockerBot
 from game.GameState import GameState
 from waitForGame import pollUntilGameReady
-from endpoints import post_match_success, post_match_crash
+from endpoints import post_match_results
 
 gameClasses = {
     'SimpleGame': GameState
@@ -31,22 +31,18 @@ def run_worker():
             print("Got results.")
 
             # send the results back to the server
-            post_match_success(matchId, game.get_log())
+            post_match_results(matchId, game.get_log())
 
         except Exception as err:
             print("GAME ERR")
             print(err)
-            crashedBot = None
-            for b in bots:
-                if not b.is_running():
-                    crashedBot = b.name
+            for p in game.players:
+                if not p.bot.is_running():
+                    p.crashed = True
 
-            print("%s crashed" % crashedBot)
-
-            if crashedBot:
-                rankedPlayers = game.get_ranked_by_units()
-                reordered  = [{'_id': p.bot.name} for p in rankedPlayers if p.bot.name != crashedBot] + [{'_id': crashedBot, 'crashed': True}] # move crashed bot to the end
-                post_match_crash(matchId, reordered, crashedBot)
+            game.rank_players()
+            game.log_winner()
+            post_match_results(matchId, game.get_log())
 
             # TODO handle if no bot crashed, meaning the error was ours
 

@@ -53,7 +53,7 @@ class GameState(Game):
     def initialize_players(self, bots, map):  # initalizes players
         i = 0
         self.players = []
-        positions = STARTING_POSITIONS[len(bots)]
+        positions = STARTING_POSITIONS[len(bots) - 1]
 
         # Should accept any number of bots now
 
@@ -74,7 +74,7 @@ class GameState(Game):
 
     def game_loop(self):
         # loop until somebody wins, or we time out!
-        while self.winner is None:
+        while not self.is_game_over():
             # reset log for this turn
             self.logger.barebones_new_turn(self.map)
 
@@ -86,14 +86,13 @@ class GameState(Game):
 
             self.iter += 1
 
-            self.check_game_over()
 
         # once game ends, log one more turn, so that viz has a final state to work with
-
-        # uncomment this line and comment the one under to get more verbose log
-        # self.logger.new_turn(self.map)
         self.logger.barebones_new_turn(self.map)
         self.logger.end_turn()
+        
+        self.rank_players()
+        self.log_winner()
 
 
     # send all players the updated game state so they can make decisions
@@ -131,92 +130,50 @@ class GameState(Game):
 
     # returns true if at least one player in the game is still "alive"
     # in terms of valid code execution
-    def has_living_player(self):
+    def has_running_player(self):
         for p in self.players:
             # if any player is alive, return true
             if not (p.crashed or p.timed_out):
                 return True
         return False
 
-    def check_game_over(self):
-        if (self.check_unit_victory_condition()) or (self.time_limit_reached()) or not self.has_living_player():
-            self.log_winner()
-            return True
-        else:
-            return False
+    def is_game_over(self):
+        return self.has_combat_winner() or self.time_limit_reached() or not self.has_running_player()
 
-    def check_unit_victory_condition(self):
-        player_has_building = []
-        remaining_players_indices = []
+    def rank_players(self):
+        crashed_players = [] # bots that crashed
+        valid_players = [] # bots that did not crash
 
-        i = 0
+        # partition players by whether they crashed
+        for p in self.players:
+            (crashed_players if p.crashed else valid_players).append(p)
 
-        while i < len(self.players):
-            if self.players[i].has_building():
-                player_has_building.append(True)
-                remaining_players_indices.append(i)
+        # first we order by # of units, then by # of buildings
+        # effectively, this uses units as tiebreaker, since the sort is stable
+        ranked_players = sorted(valid_players, key=lambda p: p.total_units(), reverse=True)
+        ranked_players = sorted(ranked_players, key=lambda p: len(p.get_buildings()), reverse=True)
 
-            else: player_has_building.append(False)
+        for i, p in enumerate(ranked_players):
+            p.rank = i + 1
 
-            i += 1
+        # we'll say that all crashed players tied
+        rank_crashed = len(valid_players) + 1
+        for p in crashed_players:
+            p.rank = rank_crashed
 
-        # if only one player still has buildings, clearly they have won
-        if len(remaining_players_indices) == 1:
-            return True
-        else:
-            return False
+        # put them all together
+        self.ranked_players = ranked_players + crashed_players
 
-    def check_unit_victory_condition_multi(self):
-        i = 0
-        index = -1
+    def log_winner(self):
+        self.logger.add_ranked_players(self.ranked_players)
 
-        players_with_buildings = 0 #the number of players who own at least one building
+    # returns true if only one player has buildings left
+    def has_combat_winner(self):
+        return sum([1 for p in self.players if p.has_building()]) == 1
 
-        for player in self.players:
-            if player.has_building(): #if a player has a building
-                index = i #save their ID
-                players_with_buildings += 1
-            i += 1
-
-        if (players_with_buildings == 1): #if only one player has nonzero buildings, then they are the winner
-            self.winner = self.players[index] #the saved ID must therefore also be the winner's ID
-            return True
-
-        return False
-
+    # returns true if the game is over due to time
     def time_limit_reached(self):
-        if self.iter < MAX_ITERS:
-            return False
-
-        p1units = self.players[0].total_units()
-        p2units = self.players[1].total_units()
-
-        if p1units > p2units:
-            self.winner = self.players[0]
-
-        else:
-            self.winner = self.players[1]
-
-        return True
-
-    def time_limit_reached_multi(self): #if time limit reached, the player with the highest number of units is the winner
-        if self.iter < MAX_ITERS:
-            return False
-
-        max_player = -1 #ID of the player with the most units (so far)
-        max_units = -1 # number of units controlled by 'max_player'
-
-        i = 0
-        for player in self.players:
-            if (player.total_units() >= max_units):
-                max_player = i
-                max_units = player.total_units()
-
-            i += 1
-
-        self.winner = self.players[max_player]
-
-        return True
+        return self.iter >= MAX_ITERS
 
     # --------------------------------------------------------------------------
     # PLAYER MOVEMENT FUNCTIONS
@@ -282,16 +239,6 @@ class GameState(Game):
         s = sorted(self.players, key=lambda player: player.total_units()) #sort the list of players by their number of units
 
         return s.reverse() #return the reversed list since the players with the most units are ranked first
-
-    def log_winner(self):
-        result = self.players
-        if result[0] != self.winner:
-            temp = result[0]
-            result[0] = result[1]
-            result[1] = temp
-
-        for player in result:
-            self.logger.add_ranked_player(player)
 
     # TODO: write a multiplayer version of log_winner
 

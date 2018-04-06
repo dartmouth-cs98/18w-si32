@@ -23,6 +23,7 @@ class MatchSinglePage extends React.PureComponent {
         return {};
       }
     }).then(log => {
+      console.log("log", log);
       this.setState({ log });
     });
   }
@@ -54,17 +55,20 @@ class MatchSinglePage extends React.PureComponent {
   }
 
   renderFailed = () => {
-    if (this.props.match.result.reason == "BOT_CRASHED") {
-      return (<div style={styles.failureMessage}>{"a bot crashed, we don't have a replay for this game :("}</div>);
-    }
+    return (<div style={styles.failureMessage}>{"we don't have a replay for this game :("}</div>);
   }
 
   renderReplay = () => {
+    console.log(this.props.match);
     if (this.props.match.result.success == false) {
       return this.renderFailed();
     }
 
     if (this.state.log) {
+      if (this.state.log.turns.length === 0) {
+        return this.renderFailed();
+      }
+
       return <ReplayVisualizer hideSelectButton replay={this.state.log} />;
     }
 

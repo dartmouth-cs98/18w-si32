@@ -31,7 +31,7 @@ const _Match = new Schema({
 });
 
 _Match.statics.createWithBots = (userId, botIds) => {
-  assert(botIds.length == 2 && _.every(botIds, _.isString), "Need two bots to start a match!");
+  assert(2 <= botIds.length && botIds.length <= 4 && _.every(botIds, _.isString), "Need 2-4 bots to start a match!");
   return Bot.find({
     "_id": { $in: botIds }
   }).select({ code: 1, _id: 1, name: 1, user: 1, version: 1 }).lean().then(bots => {
@@ -97,11 +97,10 @@ _Match.statics.handleWorkerResponse = async (id, rankedBots, logKey, result={}) 
   // turn array of bots into obj keyed on bot ID storing ranked finish
   const botRankById = {};
   _.each(rankedBots, (b, i) => {
-    botRankById[b._id] = {
-      ...b,
-      rank: i + 1,
-    };
+    botRankById[b._id] = b;
   });
+
+  console.log("bots", rankedBots);
 
   // store the individual bots' skills and rank in this match
   const newBots = _.map(match.bots, b => {

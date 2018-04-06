@@ -15,20 +15,6 @@ def get_bot_file(url, bnum):
     urllib.request.urlretrieve(url, '/bot' + str(bnum) + '/bot.py')
 
 # on success, just send the messagepack+gzipped game log
-def post_match_success(matchId, log):
+def post_match_results(matchId, log):
     files = {'log': ('log.mp.gz', log)}
     return requests.post(API + '/result/' + matchId, files=files)
-
-
-# on failure, send reasoning why
-def post_match_crash(matchId, rankedBots, crashedBot):
-    body = {
-        'matchId': matchId,
-        'result': {
-            'success': False,
-            'reason': 'BOT_CRASHED',
-        },
-        'rankedBots': rankedBots,
-    }
-
-    return requests.post(API + '/failed/' + matchId, json=body)
