@@ -13,10 +13,10 @@ import { Page, Wrapper } from "../layout";
 
 import { colors, constants } from "../../style";
 
-const BotView = Radium(({ bot, isSelected, showOwner }) => {
+const BotView = Radium(({ bot, isSelected, selectedStyle=null, showOwner }) => {
   if (!bot) return null;
   return (
-    <div style={[styles.bot.wrapper, isSelected ? styles.bot.selected : null]}>
+    <div style={[styles.bot.wrapper, isSelected ? (selectedStyle || styles.bot.selected) : null]}>
       <div style={styles.bot.title}>
         { bot.name }
       </div>
@@ -27,7 +27,7 @@ const BotView = Radium(({ bot, isSelected, showOwner }) => {
 
 });
 
-const MatchBotList = ({ bots, botClicked, showOwner }) => {
+const MatchBotList = ({ bots, botClicked, showOwner, selectedBots }) => {
   let followingStatus = null;
   return (
     <div style={styles.botListWrap}>
@@ -45,7 +45,7 @@ const MatchBotList = ({ bots, botClicked, showOwner }) => {
             </div>)
             : null }
           <div onClick={() => botClicked(b._id)} style={styles.bot}>
-            <BotView bot={b} showOwner={showOwner} />
+            <BotView bot={b} showOwner={showOwner} selectedStyle={styles.selectedInList} isSelected={b._id in selectedBots} />
           </div>
         </div>
         );
@@ -57,7 +57,12 @@ const MatchBotList = ({ bots, botClicked, showOwner }) => {
 class MatchCreatePage extends React.PureComponent {
   constructor(props) {
     super(props);
-    this.state = { ownBot: false, otherBot: false, query: "", otherBots: [] };
+    this.state = { 
+      selectedOwnBot: false,
+      selectedOtherBots: {},
+      query: "",
+      otherBots: [],
+    };
     this.botSearcher = new Fuse([], {});
   }
 
@@ -115,13 +120,19 @@ class MatchCreatePage extends React.PureComponent {
 
   chooseOwnBot = (botId) => {
     this.setState({
-      ownBot: this.props.bots[botId],
+      selectedOwnBot: this.props.bots[botId],
     });
   }
 
   chooseOtherBot = (botId) => {
+    const selectedBots = Object.assign({}, this.state.selectedOtherBots);
+    if (botId in selectedBots) {
+      delete selectedBots[botId];
+    } else {
+      selectedBots[botId] = this.props.bots[botId];
+    }
     this.setState({
-      otherBot: this.props.bots[botId],
+      selectedOtherBots: selectedBots,
     });
   }
 
@@ -131,7 +142,12 @@ class MatchCreatePage extends React.PureComponent {
       error: false,
     });
 
-    this.props.create([this.state.ownBot._id, this.state.otherBot._id]).then((m) => {
+    const botIds = [this.state.selectedOwnBot._id];
+    for(let id in this.state.selectedOtherBots) {
+      botIds.push(id);
+    }
+
+    this.props.create(botIds).then((m) => {
       history.push(`/matches/${m[0]._id}`);
     })
     .catch(err => {
@@ -168,6 +184,23 @@ class MatchCreatePage extends React.PureComponent {
     );
   }
 
+  renderSelectedBots = () => {
+    // render all bots that have been selected
+    let els = _.map(this.state.selectedOtherBots, (b) => (
+      <div key={b._id} onClick={() => this.chooseOtherBot(b._id)} style={styles.bot}>
+        <BotView bot={b} isSelected showOwner />
+      </div>
+    ));
+
+    // add placeholders up to the max # of bots selectable
+    let i = els.length;
+    while ((i = els.length) < 3) {
+      els.push(<div key={i} style={styles.selectedBotHolder}>{ i > 0 ? "(optional)" : null }</div>);
+    }
+
+    return els;
+  }
+
   render() {
     return (
       <Page>
@@ -178,26 +211,27 @@ class MatchCreatePage extends React.PureComponent {
             <Message kind="error" style={{marginTop: 15, alignSelf: "center"}}>{ this.state.error }</Message>
 
             <div style={styles.selectionRow}>
-              <div style={[styles.selectStep, {marginRight: 30, paddingRight: 30, borderRight: `1px solid ${colors.border}`}]}>
-                <div style={[styles.selectStep.title]}>1. Choose one of your bots</div>
+              <div style={styles.selectStep}>
+                <div style={[styles.selectStep.title]}>Choose one of your bots</div>
                 
                 <div style={styles.selector}>
                   <div style={[styles.selectedBotWrap, {marginBottom: 10}]}>
-                    { this.state.ownBot ? <BotView bot={this.state.ownBot} isSelected /> : <div style={styles.selectedBotHolder} /> }
+                    { this.state.selectedOwnBot ? <BotView bot={this.state.selectedOwnBot} isSelected /> : <div style={styles.selectedBotHolder} /> }
                   </div>
                   <MatchBotList
                     botClicked={this.chooseOwnBot}
                     bots={ _.filter(this.props.bots, (b) => b.user._id == this.props.sessionUserId) }
+                    selectedBots={{[this.state.selectedOwnBot._id]: true}} 
                     showOwner={false}
                   />
                 </div>
               </div>
 
               <div style={styles.selectStep}>
-                <div style={styles.selectStep.title}>2. Choose a bot to fight against</div>
+                <div style={styles.selectStep.title}>Choose 1-3 bots to fight against</div>
                 <div style={styles.selector}>
                     <div style={styles.selectedBotWrap}>
-                      { this.state.otherBot? <BotView bot={this.state.otherBot} showOwner isSelected /> : <div style={styles.selectedBotHolder} /> }
+                      { this.renderSelectedBots() }
                     </div>
                     <Input
                       name="user-search"
@@ -211,6 +245,7 @@ class MatchCreatePage extends React.PureComponent {
                       botClicked={this.chooseOtherBot}
                       bots={this.state.otherBots}
                       showOwner={true}
+                      selectedBots={this.state.selectedOtherBots}
                     />
                 </div>
               </div>
@@ -237,18 +272,16 @@ const styles = {
     fontSize: constants.fontSizes.large,
   },
   botListWrap: {
-    maxHeight: 460,
-    overflow: "auto",
   },
   bot: {
     cursor: "pointer",
-    margin: "5px 0",
+    margin: "0",
     wrapper: {
       display: "flex",
       alignItems: "center",
       flex: 1,
       justifyContent: "space-between",
-      padding: "2px 10px",
+      padding: "5px 10px",
     },
     title: {
       color: colors.red,
@@ -269,27 +302,34 @@ const styles = {
       background: colors.sand,
       padding: "10px",
       borderRadius: 3,
+      margin: "5px 0",
       height: 42,
       border: `1px solid ${colors.lightGray}`,
     },
+  },
+  selectedInList: {
+    opacity: .3,
+    backgroundColor: colors.sand,
   },
   selectedBotHolder: {
     height: 42,
     borderRadius: 3,
     border: `2px dashed ${colors.border}`,
+    margin: "5px 0",
+    display: "flex",
+    color: colors.lightGray,
+    alignItems: "center",
+    paddingLeft: 10,
   },
   selectStep: {
-    flex: 1,
+    marginBottom: 50, 
     title: {
       fontSize: constants.fontSizes.large,
       marginBottom: 10,
     },
   },
   selectionRow: {
-    display: "flex",
-    alignItems: "top",
-    paddingTop: 15,
-    minHeight: 570,
+    paddingTop: 30,
   },
   selector: {
     flex: 1,
@@ -297,7 +337,7 @@ const styles = {
   },
   createButton: {
     width: 300,
-    margin: "40px auto",
+    margin: "10px auto",
   },
   followingMarker: {
     fontSize: constants.fontSizes.smaller,
@@ -305,6 +345,7 @@ const styles = {
     textTransform: "uppercase",
     padding: "0px 10px",
     marginTop: 15,
+    marginBottom: 5,
   },
 };
 
