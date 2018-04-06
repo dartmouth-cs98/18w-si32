@@ -23,7 +23,6 @@ class MatchSinglePage extends React.PureComponent {
         return {};
       }
     }).then(log => {
-      console.log("log", log);
       this.setState({ log });
     });
   }
@@ -59,7 +58,6 @@ class MatchSinglePage extends React.PureComponent {
   }
 
   renderReplay = () => {
-    console.log(this.props.match);
     if (this.props.match.result.success == false) {
       return this.renderFailed();
     }
