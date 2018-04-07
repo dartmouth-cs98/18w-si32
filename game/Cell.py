@@ -50,8 +50,8 @@ class Cell:
         if (self.units[player] >= number):
             self.units[player] -= number
 
-    def set_units(self, player, number_of_units):
-        self.units[player] = number_of_units
+    def set_units(self, player, num_units):
+        self.units[player] = num_units
 
     # --------------------------------------------------------------------------
     # BUILDING METHODS

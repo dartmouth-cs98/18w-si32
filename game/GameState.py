@@ -90,7 +90,7 @@ class GameState(Game):
         # once game ends, log one more turn, so that viz has a final state to work with
         self.logger.barebones_new_turn(self.map)
         self.logger.end_turn()
-        
+
         self.rank_players()
         self.log_winner()
 
@@ -192,10 +192,9 @@ class GameState(Game):
 
         for move in moves:
             if tuple(move.position) not in cells:
-                cells[tuple(move.position)] = move.number_of_units
-
+                cells[tuple(move.position)] = move.num_units
             else:
-                cells[tuple(move.position)] += move.number_of_units
+                cells[tuple(move.position)] += move.num_units
 
         return cells
 

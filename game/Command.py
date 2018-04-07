@@ -12,11 +12,11 @@ from game.params import MOVE_COMMAND, BUILD_COMMAND, MINE_COMMAND
 # playerID          -  the ID of the player issuing this command.
 # position (tuple)  -  the board position in which this command originates.
 # command           -  the type of command issued.
-# number_of_units   -  the number of units involved in this command.
+# num_units         -  the number of units involved in this command.
 # direction (tuple) -  the direction associated with this command.
 
 class Command:
-    def __init__(self, playerId, position, command, number_of_units, direction):
+    def __init__(self, playerId, position, command, num_units, direction):
         self.playerId = playerId
 
         self.command = command
@@ -25,17 +25,17 @@ class Command:
         self.position = Coordinate(position)
 
         # catch people trying to send negative number of units
-        if number_of_units >= 1:
-            self.number_of_units = number_of_units
+        if num_units >= 1:
+            self.num_units = num_units
         else:
-            self.number_of_units = 0
+            self.num_units = 0
 
     def decrement_units(self, number=1):
-        if self.number_of_units >= number:
-            self.number_of_units -= number
+        if self.num_units >= number:
+            self.num_units -= number
         else:
-            self.number_of_units = 0
+            self.num_units = 0
 
     @classmethod
     def from_dict(cls, playerId, d):
-        return cls(playerId, d["location"], d["command"], d["number_of_units"], d["direction"])
+        return cls(playerId, d["location"], d["command"], d["num_units"], d["direction"])

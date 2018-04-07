@@ -106,13 +106,13 @@ class Logger:
             'u': command.playerId,
             'p': coded_position,
             'd': direction,
-            'n': command.number_of_units,
+            'n': command.num_units,
         }
 
         self.turn_log['cmd'].append(clean_command)
 
     def add_ranked_players(self, players):
-        for p in players: 
+        for p in players:
             self.log['rankedBots'].append({
                 '_id': p.bot.name,
                 'crashed': p.crashed,

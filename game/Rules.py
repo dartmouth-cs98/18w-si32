@@ -24,13 +24,13 @@ class Rules:
 
     def enough_units(self, move):
         cell = self.map.get_cell(move.position)
-        return cell.units[move.playerId] >= move.number_of_units
+        return cell.units[move.playerId] >= move.num_units
 
     def update_by_move(self, move):
-        if move.command == MOVE_COMMAND and move.number_of_units > 0:
+        if move.command == MOVE_COMMAND and move.num_units > 0:
             # only execute move command if it has a non-zero number of units
             self.update_move_command(move)
-        elif move.command == MINE_COMMAND and move.number_of_units > 0:
+        elif move.command == MINE_COMMAND and move.num_units > 0:
             self.update_mine_command(move)
         elif move.command == BUILD_COMMAND:
             self.update_build_command(move)
@@ -39,20 +39,20 @@ class Rules:
         old_cell = self.map.get_cell(move.position)
         new_cell = self.map.get_cell([old_cell.position[0] + move.direction[0], old_cell.position[1] + move.direction[1]])
 
-        if old_cell.units[move.playerId] < move.number_of_units:
-            move.number_of_units = old_cell.units[move.playerId]
+        if old_cell.units[move.playerId] < move.num_units:
+            move.num_units = old_cell.units[move.playerId]
 
-        old_cell.decrement_units(move.playerId, move.number_of_units)
-        new_cell.increment_units(move.playerId, move.number_of_units)
+        old_cell.decrement_units(move.playerId, move.num_units)
+        new_cell.increment_units(move.playerId, move.num_units)
 
     def update_mine_command(self, move):
         cell = self.map.get_cell(move.position)
 
         if cell.resource > 0:
             # each unit gathers one unit of resource from the cell when mining
-            if cell.resource >= move.number_of_units:
-                cell.decrement_resource(move.number_of_units)
-                self.players[move.playerId].increment_resources(move.number_of_units)
+            if cell.resource >= move.num_units:
+                cell.decrement_resource(move.num_units)
+                self.players[move.playerId].increment_resources(move.num_units)
 
             # if there are more miners than resources, take whatever remains
             else:
@@ -125,18 +125,18 @@ class Rules:
                         current_cell = self.map.get_cell(cell.position)
                         enemy_cell = self.map.get_cell(enemy_move.position)
 
-                        if current_move.number_of_units > enemy_move.number_of_units:
-                            current_move.decrement_units(enemy_move.number_of_units)
-                            current_cell.decrement_units(m, enemy_move.number_of_units)
-                            enemy_cell.decrement_units(n, enemy_move.number_of_units)
+                        if current_move.num_units > enemy_move.num_units:
+                            current_move.decrement_units(enemy_move.num_units)
+                            current_cell.decrement_units(m, enemy_move.num_units)
+                            enemy_cell.decrement_units(n, enemy_move.num_units)
 
                             enemy_set[new_position].pop(i)
                             i -= 1
 
-                        elif current_move.number_of_units < enemy_move.number_of_units:
-                            enemy_move.decrement_units(current_move.number_of_units)
-                            current_cell.decrement_units(m, current_move.number_of_units)
-                            enemy_cell.decrement_units(n, current_move.number_of_units)
+                        elif current_move.num_units < enemy_move.num_units:
+                            enemy_move.decrement_units(current_move.num_units)
+                            current_cell.decrement_units(m, current_move.num_units)
+                            enemy_cell.decrement_units(n, current_move.num_units)
 
                             current_move = False
 
@@ -147,8 +147,8 @@ class Rules:
                             player_moves.pop(index)
                             enemy_set[new_position].pop(i)
 
-                            current_cell.decrement_units(m, current_move.number_of_units)
-                            enemy_cell.decrement_units(n, current_move.number_of_units)
+                            current_cell.decrement_units(m, current_move.num_units)
+                            enemy_cell.decrement_units(n, current_move.num_units)
 
                             current_move = False
 
@@ -190,18 +190,18 @@ class Rules:
                         current_cell = self.map.get_cell(cell.position)
                         enemy_cell = self.map.get_cell(enemy_move.position)
 
-                        if current_move.number_of_units > enemy_move.number_of_units:
-                            current_move.decrement_units(enemy_move.number_of_units)
-                            current_cell.decrement_units(0, enemy_move.number_of_units)
-                            enemy_cell.decrement_units(1, enemy_move.number_of_units)
+                        if current_move.num_units > enemy_move.num_units:
+                            current_move.decrement_units(enemy_move.num_units)
+                            current_cell.decrement_units(0, enemy_move.num_units)
+                            enemy_cell.decrement_units(1, enemy_move.num_units)
 
                             enemy_set[new_position].pop(i)
                             i -= 1
 
-                        elif current_move.number_of_units < enemy_move.number_of_units:
-                            enemy_move.decrement_units(current_move.number_of_units)
-                            current_cell.decrement_units(0, current_move.number_of_units)
-                            enemy_cell.decrement_units(1, current_move.number_of_units)
+                        elif current_move.num_units < enemy_move.num_units:
+                            enemy_move.decrement_units(current_move.num_units)
+                            current_cell.decrement_units(0, current_move.num_units)
+                            enemy_cell.decrement_units(1, current_move.num_units)
 
                             current_move = False
 
@@ -212,8 +212,8 @@ class Rules:
                             player_moves.pop(index)
                             enemy_set[new_position].pop(i)
 
-                            current_cell.decrement_units(0, current_move.number_of_units)
-                            enemy_cell.decrement_units(1, current_move.number_of_units)
+                            current_cell.decrement_units(0, current_move.num_units)
+                            enemy_cell.decrement_units(1, current_move.num_units)
 
                             current_move = False
 
