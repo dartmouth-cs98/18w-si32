@@ -102,7 +102,8 @@ class Rules:
 
         return moves
 
-    #multi-player version of 'combat' method (m and n are the playerIds of the two players to check for opposing collisions, since there will be more than two players in total)
+    # multi-player version of 'combat' method
+    # (m and n are the playerIds of the two players to check for opposing collisions, since there will be more than two players in total)
     def combat_multi(self, player_moves, enemy_set, m, n):
         index = 0
 

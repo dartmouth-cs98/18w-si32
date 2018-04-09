@@ -42,6 +42,7 @@ class Map:
             return None
 
      # returns list of adjacent cells
+     # TODO: make this a method of Cell to get adjacent 
     def get_adjacent_squares(self, position, direction=None):
         # If we don't need a specific direction, return all adjacent squares
         if direction is None:
