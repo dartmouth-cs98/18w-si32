@@ -81,18 +81,6 @@ class Canvas extends React.PureComponent {
     this.sp.h = this.sp.rows * (this.sp.cell_h + CELL_OFFSET_Y) + BORDER_OFFSET_Y*2;
   }
 
-  // add the border to main map graphics
-  addBorderToStage = () => {
-    /*this.mapGraphics.lineStyle(1, GRID_OUTLINE_COLOR, 1);
-    this.mapGraphics.drawPolygon([
-      0, 0,
-      this.sp.w - 1, 1,
-      this.sp.w - 1, this.sp.h - 1,
-      1, this.sp.h - 1,
-      0, 0
-    ]);*/
-  }
-
   // add the grid to main map graphics
   addGridToStage = () => {
     // iterate over rows
