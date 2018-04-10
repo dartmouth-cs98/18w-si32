@@ -7,6 +7,7 @@
 # (tuples) - the tuple that is, essentially, cast to a Coordinate type.
 
 # TODO: why is y first and x second in the coordinate??
+from game.params import Direction
 
 class Coordinate():
     # using named args to avoid any confusion about ordering
@@ -30,30 +31,29 @@ class Coordinate():
     # returns the coordinates that you arrive at by moving 1 step in direction from current cell
     def adjacent_in_direction(self, direction):
         if direction is None: return self
+    
+        assert(type(direction) is Direction)
 
-        # TODO find adjacent square based off direction provided
-        return self
+        direction_deltas = {}
+        direction_deltas[Direction.NORTH] = Coordinate(0, -1)
+        direction_deltas[Direction.SOUTH] = Coordinate(0, -1)
+        direction_deltas[Direction.EAST] = Coordinate(1, 0)
+        direction_deltas[Direction.WEST] = Coordinate(-1, 0)
+        direction_deltas[Direction.NONE] = Coordinate(0, 0)
 
-        '''return Coordinate(
-                x = self.x + direction[0],
-                y = self.y + direction[1],
-            )'''
+        return self + direction_deltas[direction]
 
     # Returns the vector addition of self and other.
     def __add__(self, other):
-        other = Coordinate(other)
-        return Coordinate((self.y + other.y, self.x + other.x))
+        assert(type(other) is Coordinate)
+        return Coordinate(x = self.x + other.x, y = self.y + other.y)
 
     # Returns the vector difference of self and other.
     def __sub__(self, other):
-        other = Coordinate(other)
-        return Coordinate((self.y - other.y, self.x - other.x))
-
-    # Returns the vector difference of self and other.
-    def sub(self, other):
-        other = Coordinate(other)
-        return Coordinate((self.y - other.y, self.x - other.x))
+        assert(type(other) is Coordinate)
+        return Coordinate(x = self.x - other.x, y = self.y - other.y)
 
     def __eq__(self, other):
+        assert(type(other) is Coordinate)
         return self.x == other.x and self.y == other.y
 

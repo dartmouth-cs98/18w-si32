@@ -8,7 +8,7 @@ from enum import IntEnum
 # Movement Directions 
 
 # currently contains directions for old and new (hex) grids
-class Directions(IntEnum):
+class Direction(IntEnum):
     EAST = 1
     NORTH = 2
     SOUTH = 3

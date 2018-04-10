@@ -5,7 +5,7 @@ import sys
 import json
 import pickle
 
-from game.params import MOVE_COMMAND, BUILD_COMMAND, MINE_COMMAND, BUILDING_COST, Directions
+from game.params import MOVE_COMMAND, BUILD_COMMAND, MINE_COMMAND, BUILDING_COST, Direction
 from game.Coordinate import Coordinate
 from game.Command import Command
 
@@ -36,7 +36,7 @@ class GameHelper:
     # Return: (Command)
     #   the move command to accomplish the specified movement.
     def move(self, position_from, num_units, direction):
-        return Command(self.myId, position_from, MOVE_COMMAND, num_units, direction)
+        return Command(self.myId, Coordinate(position_from), MOVE_COMMAND, num_units, direction)
 
     # Create and return a move command, with an additional layer of abstraction.
     # Return: (Command)
@@ -49,13 +49,13 @@ class GameHelper:
             return None
 
         if position_from.x < position_to.x:
-            d = Directions.EAST
+            d = Direction.EAST
         elif position_from.x > position_to.x:
-            d = Directions.WEST
+            d = Direction.WEST
         elif position_from.y < position_to.y:
-            d = Directions.SOUTH
+            d = Direction.SOUTH
         elif position_from.y > position_to.y:
-            d = Directions.NORTH
+            d = Direction.NORTH
 
         # TODO: make this smarter by
         # avoiding enemy units, enemy buildings, or stronger enemy buildings
@@ -72,13 +72,13 @@ class GameHelper:
         #   do we care though that this unit will also be able to mine as well?
         #   the difference is small, but it will be more realistic in some sense
         #   if we have this logic.
-        return Command(self.myId, position, BUILD_COMMAND, 1, Directions.NONE)
+        return Command(self.myId, Coordinate(position), BUILD_COMMAND, 1, Direction.NONE)
 
     # Create and return a mine command.
     # Return: (Command)
     #   the mine command to accomplish the specified mining procedure.
     def mine(self, position, num_units):
-        return Command(self.myId, position, MINE_COMMAND, num_units, Directions.NONE)
+        return Command(self.myId, Coordinate(position), MINE_COMMAND, num_units, Direction.NONE)
 
     # --------------------------------------------------------------------------
     # CELL GETTERS

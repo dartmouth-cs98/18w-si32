@@ -7,6 +7,7 @@ import signal
 from random import random, randint
 
 from game.Command import Command
+from game.Coordinate import Coordinate
 
 from game.params import INITIAL_RESOURCES
 
@@ -67,6 +68,7 @@ class Player:
                 commands = pickle.loads(eval(move_str))
                 for command in commands:
                     command.playerId = self.playerId
+                    command.position = Coordinate(command.position)
 
         except TimeoutError as err:
             # if the bot timed out, mark so
