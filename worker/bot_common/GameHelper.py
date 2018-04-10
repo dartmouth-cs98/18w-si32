@@ -5,7 +5,7 @@ import sys
 import json
 import pickle
 
-from game.params import MOVE_COMMAND, BUILD_COMMAND, MINE_COMMAND, DIRECTIONS
+from game.params import MOVE_COMMAND, BUILD_COMMAND, MINE_COMMAND, DIRECTIONS, BUILDING_COST
 from game.Coordinate import Coordinate
 from game.Command import Command
 
@@ -192,7 +192,7 @@ class GameHelper:
     # Return: (number)
     #   the number of buildings I can construct, assuming full resource use
     def get_building_potential(self):
-        return int(self.get_my_resource_count() / 100)
+        return int(self.get_my_resource_count() / BUILDING_COST)
 
     # --------------------------------------------------------------------------
     # UNIT DATA GETTERS

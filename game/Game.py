@@ -31,10 +31,6 @@ class Game(ABC):
 
     @abstractmethod
     def start(self):
-        pass
-
-    @abstractmethod
-    def game_loop(self):
         """
         General game loop will probably look something like:
         while game not over:

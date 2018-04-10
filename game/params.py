@@ -38,8 +38,8 @@ DEFENSE_RATING = 10      # The default defense value of a single building.
 # ------------------------------------------------------------------------------
 # Map
 
-MAP_WIDTH = 20           # The width of the game map.
-MAP_HEIGHT = 20          # The height of the game map.
+DEFAULT_MAP_WIDTH = 20           # The width of the game map.
+DEFAULT_MAP_HEIGHT = 20          # The height of the game map.
 
 # ------------------------------------------------------------------------------
 # Player
@@ -57,12 +57,11 @@ BUILDING_COST = 100      # The resource cost to construct an individual building
 UNIT_COST = 5           # The resource cost of producing a single additional unit.
 MAX_RESOURCES = 50      # The maximum resource value for an individual cell.
 
-
 # ------------------------------------------------------------------------------
 # Starting player positions
 # Intended to be roughly equidistant for each number of players
 one_player = [(10,10)]
-two_players = [(5,5), (15,15)]
+two_players = [(2,2), (17,17)]
 three_players = [(5,5), (10,14), (15,5)]
 four_players = [(5,5), (5,15), (15,5), (15,15)]
 

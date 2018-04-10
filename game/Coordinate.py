@@ -29,6 +29,8 @@ class Coordinate():
 
     # returns the coordinates that you arrive at by moving 1 step in direction from current cell
     def adjacent_in_direction(self, direction):
+        if direction is None: return self
+
         return Coordinate(
                 x = self.x + direction[0],
                 y = self.y + direction[1],

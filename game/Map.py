@@ -4,19 +4,19 @@
 from .Cell import Cell
 from .Coordinate import Coordinate
 
-from game.params import MAP_WIDTH, MAP_HEIGHT
+from game.params import DEFAULT_MAP_WIDTH, DEFAULT_MAP_HEIGHT
 
 # Constructor Arguments
 # num_players (number) - the number of players involved in the game with which
 #                        this map is associated.
 
 class Map:
-    def __init__(self, num_players):
+    def __init__(self, num_players, width=DEFAULT_MAP_WIDTH, height=DEFAULT_MAP_HEIGHT):
         self.num_players = num_players
 
-        self.cells = self.initialize_map(MAP_WIDTH, MAP_HEIGHT)
-        self.width = MAP_WIDTH
-        self.height = MAP_HEIGHT
+        self.cells = self.initialize_map(width, height)
+        self.width = width
+        self.height = height
 
     # --------------------------------------------------------------------------
     # Initializing Function
@@ -37,39 +37,17 @@ class Map:
 
     # return cell at specified position
     def get_cell(self, position):
+        assert(type(position) is Coordinate)
+
         if self.position_in_range(position):
             return self.cells[position.x][position.y]
         else:
             return None
 
-     # returns list of adjacent cells
-     # TODO: make this a method of Cell to get adjacent 
-    def get_adjacent_squares(self, position, direction=None):
-        # If we don't need a specific direction, return all adjacent squares
-        if direction is None:
-            result = []
-            squares = []
-
-            squares.append(Coordinate(position[0]+1, position[1]))  # Square to the right
-            #squares.append([position[0]-1, position[1]])  # Square to the left
-            #squares.append([position[0], position[1]+1])  # Square below
-            #squares.append([position[0], position[1]-1])  # Square down
-
-             # return legal cells
-            for square in squares:
-                if self.cell_in_range(square):
-                    result.append(self.get_cell(square))
-
-            return result
-
-        # check if adjacent cell in desired direction exists
-        else:
-            new_pos = Coordinate(position[0] + direction[0], position[1] + direction[1])
-            if self.position_in_range(new_pos):
-                return self.get_cell(new_pos)
-
     # check if coordinates are contained by map
     def position_in_range(self, position):
+        assert(type(position) is Coordinate)
+
         return not ((position.x < 0) or (position.x >= (self.width - 1)) or (position.y < 0) or (position.y >= (self.height - 1)))
 
     # check if cell is within map
