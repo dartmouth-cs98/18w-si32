@@ -31,12 +31,13 @@ class Coordinate():
     def adjacent_in_direction(self, direction):
         if direction is None: return self
 
+        # TODO find adjacent square based off direction provided
         return self
 
-        return Coordinate(
+        '''return Coordinate(
                 x = self.x + direction[0],
                 y = self.y + direction[1],
-            )
+            )'''
 
     # Returns the vector addition of self and other.
     def __add__(self, other):
