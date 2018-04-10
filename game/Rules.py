@@ -19,7 +19,7 @@ class Rules:
         return self.within_bounds(move) and self.enough_units(move)
 
     def within_bounds(self, move):
-        new_coords = move.position.add(move.direction)
+        new_coords = move.position.adjacent_in_direction(move.direction)
         return self.map.position_in_range(new_coords)
 
     def enough_units(self, move):
@@ -37,7 +37,9 @@ class Rules:
 
     def update_move_command(self, move):
         old_cell = self.map.get_cell(move.position)
-        new_cell = self.map.get_cell([old_cell.position[0] + move.direction[0], old_cell.position[1] + move.direction[1]])
+
+        destination_pos = move.position.adjacent_in_direction(move.direction) 
+        new_cell = self.map.get_cell(destination_pos)
 
         if old_cell.units[move.playerId] < move.num_units:
             move.num_units = old_cell.units[move.playerId]
@@ -176,8 +178,8 @@ class Rules:
             current_move = player_moves[index]
             cell = self.map.get_cell(current_move.position)
 
-            new_position = (cell.position[0] + current_move.direction[0],
-            cell.position[1] + current_move.direction[1])
+            new_position = (cell.position.x + current_move.direction[0],
+            cell.position.y + current_move.direction[1])
 
             if new_position in enemy_set:  # Check if opposing player has moves coming from new position
                 i = 0

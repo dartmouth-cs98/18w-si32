@@ -6,6 +6,7 @@ import json
 import pickle
 
 from game.params import MOVE_COMMAND, BUILD_COMMAND, MINE_COMMAND, DIRECTIONS
+from game.Coordinate import Coordinate
 from game.Command import Command
 
 # ------------------------------------------------------------------------------
@@ -41,16 +42,19 @@ class GameHelper:
     # Return: (Command)
     #   the move command to accomplish the specified movement, or None.
     def move_towards(self, position_from, position_to, num_units=None):
-        if pos_equal(position_from, position_to):
+        position_to = Coordinate(position_to)
+        position_from = Coordinate(position_from)
+
+        if position_from == position_to:
             return None
 
-        if position_from[0] < position_to[0]:
+        if position_from.x < position_to.x:
             d = 'right'
-        elif position_from[0] > position_to[0]:
+        elif position_from.x > position_to.x:
             d = 'left'
-        elif position_from[1] < position_to[1]:
+        elif position_from.y < position_to.y:
             d = 'down'
-        elif position_from[1] > position_to[1]:
+        elif position_from.y > position_to.y:
             d = 'up'
 
         # TODO: make this smarter by
@@ -84,7 +88,7 @@ class GameHelper:
     #   Cell at <position> if <position> is valid, else None
     def get_cell(self, x, y):
         # map handles validity check
-        return self.map.get_cell((x, y))
+        return self.map.get_cell(Coordinate(x, y))
 
     # Get count of all of my cells on the map.
     # Return: (number)
@@ -190,20 +194,6 @@ class GameHelper:
     def get_building_potential(self):
         return int(self.get_my_resource_count() / 100)
 
-    # TODO: rename this, its confusing
-    def position_towards(self, position_from, position_to):
-        if pos_equal(position_from, position_to):
-            return position_from
-
-        if position_from[0] < position_to[0]:
-            return position_from + (1, 0)
-        elif position_from[0] > position_to[0]:
-            return position_from + (-1, 0)
-        elif position_from[1] < position_to[1]:
-            return position_from + (0, 1)
-        elif position_from[1] > position_to[1]:
-            return position_from + (0, -1)
-
     # --------------------------------------------------------------------------
     # UNIT DATA GETTERS
 
@@ -240,7 +230,7 @@ class GameHelper:
         # TODO: make this so it does not require a playerId
         # only one player may have control over a cell at any one time,
         # so this should not be an issue!
-        return self.map.get_cell((x, y)).units[playerId]
+        return self.get_cell(x, y).units[playerId]
 
     # --------------------------------------------------------------------------
     # RESOURCE DATA GETTERS
@@ -532,8 +522,3 @@ class GameHelper:
         print(pickle.dumps(commands))
         sys.stdout.flush()
 
-# ------------------------------------------------------------------------------
-# HELPER FUNCTIONS
-
-def pos_equal(a, b):
-    return a[0] == b[0] and a[1] == b[1]

@@ -19,7 +19,7 @@ from game.params import MAX_RESOURCES, DEFENSE_RATING, UNIT_COST
 
 class Cell:
     def __init__(self, position, num_players):
-        self.position = Coordinate(position)
+        self.position = position
 
         # amount of resource in the cell (will be randomized for now)
         self.resource = randint(0, MAX_RESOURCES)

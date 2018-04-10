@@ -2,6 +2,7 @@
 # Class implementation for 'Map'
 
 from .Cell import Cell
+from .Coordinate import Coordinate
 
 from game.params import MAP_WIDTH, MAP_HEIGHT
 
@@ -25,7 +26,7 @@ class Map:
         for i in range(width):
             col = []
             for j in range(height):
-                new_cell = Cell([i, j], self.num_players)
+                new_cell = Cell(Coordinate(x=i, y=j), self.num_players)
                 col.append(new_cell)
             cells.append(col)
 
@@ -37,7 +38,7 @@ class Map:
     # return cell at specified position
     def get_cell(self, position):
         if self.position_in_range(position):
-            return self.cells[position[0]][position[1]]
+            return self.cells[position.x][position.y]
         else:
             return None
 
@@ -49,10 +50,10 @@ class Map:
             result = []
             squares = []
 
-            squares.append([position[0]+1, position[1]])  # Square to the right
-            squares.append([position[0]-1, position[1]])  # Square to the left
-            squares.append([position[0], position[1]+1])  # Square below
-            squares.append([position[0], position[1]-1])  # Square down
+            squares.append(Coordinate(position[0]+1, position[1]))  # Square to the right
+            #squares.append([position[0]-1, position[1]])  # Square to the left
+            #squares.append([position[0], position[1]+1])  # Square below
+            #squares.append([position[0], position[1]-1])  # Square down
 
              # return legal cells
             for square in squares:
@@ -63,13 +64,13 @@ class Map:
 
         # check if adjacent cell in desired direction exists
         else:
-            new_pos = (position[0] + direction[0], position[1] + direction[1])
+            new_pos = Coordinate(position[0] + direction[0], position[1] + direction[1])
             if self.position_in_range(new_pos):
                 return self.get_cell(new_pos)
 
     # check if coordinates are contained by map
     def position_in_range(self, position):
-        return not ((position[0] < 0) or (position[0] >= (self.width - 1)) or (position[1] < 0) or (position[1] >= (self.height - 1)))
+        return not ((position.x < 0) or (position.x >= (self.width - 1)) or (position.y < 0) or (position.y >= (self.height - 1)))
 
     # check if cell is within map
     def cell_in_range(self, cell):

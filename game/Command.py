@@ -22,7 +22,11 @@ class Command:
         self.command = command
 
         self.direction = direction
-        self.position = Coordinate(position)
+
+        if isinstance(position, Coordinate):
+            self.position = position
+        else:
+            self.position = Coordinate(x = position[0], y = position[1])
 
         # catch people trying to send negative number of units
         if num_units >= 1:

@@ -69,8 +69,8 @@ class Logger:
             this_row = []
             for c in row:
                 cleaned_cell = {}
-                if (tuple(c.position) not in self.cell_resources) or (self.cell_resources[tuple(c.position)] != c.resource):
-                    self.cell_resources[(tuple(c.position))] = c.resource
+                if (c.position not in self.cell_resources) or (self.cell_resources[c.position] != c.resource):
+                    self.cell_resources[c.position] = c.resource
                     cleaned_cell['r'] = c.resource
                 for u in c.units:
                     if u > 0:
@@ -99,7 +99,7 @@ class Logger:
             (0,-1): 3
         }
 
-        coded_position = command.position[0] * self.width + command.position[1]
+        coded_position = command.position.x * self.width + command.position.y
 
         direction = coded_directions[tuple(command.direction)] if command.direction else None
         clean_command = {

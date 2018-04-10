@@ -9,6 +9,7 @@ from game.Game import Game
 from game.Player import Player
 from game.Map import Map
 from game.Cell import Cell
+from game.Coordinate import Coordinate
 from game.Rules import Rules
 from game.Logger import Logger
 
@@ -59,7 +60,8 @@ class GameState(Game):
 
         # Create a player object for each bot
         for count, bot in enumerate(bots):
-            self.players.append(Player(count, self.map, bots[count], positions[count]))
+            pos = Coordinate(x=positions[count][0], y = positions[count][1])
+            self.players.append(Player(count, self.map, bots[count], pos))
 
         # Create a starting building for each player
         for player in self.players:
@@ -113,7 +115,7 @@ class GameState(Game):
         # run both players moves through combat phase, return updated list of moves
         moves_by_player = self.rules.update_combat_phase(moves_by_player)
         moves_by_player = sort_moves(moves_by_player)
-        moves_by_player = self.add_implicit_commands(moves_by_player)
+        #moves_by_player = self.add_implicit_commands(moves_by_player)
 
         for player_moves in moves_by_player:
             self.execute_moves(player_moves)
@@ -191,10 +193,10 @@ class GameState(Game):
         cells = {}
 
         for move in moves:
-            if tuple(move.position) not in cells:
-                cells[tuple(move.position)] = move.num_units
+            if move.position not in cells:
+                cells[move.position] = move.num_units
             else:
-                cells[tuple(move.position)] += move.num_units
+                cells[move.position] += move.num_units
 
         return cells
 
@@ -211,11 +213,11 @@ class GameState(Game):
             command_count = counts[i]
 
             for cell_position in command_count:
-                cell = self.map.get_cell(list(cell_position))
+                cell = self.map.get_cell(cell_position)
 
                 if command_count[cell_position] < cell.units[i]:
                     remaining_units = cell.units[i] - command_count[cell_position]
-                    new_moves[i].append(Command(i, list(cell_position), MINE_COMMAND, remaining_units, [0,0]))
+                    new_moves[i].append(Command(i, cell_position, MINE_COMMAND, remaining_units, [0,0]))
 
             i += 1
 
