@@ -40,6 +40,9 @@ class Command:
         else:
             self.num_units = 0
 
+    def __repr__(self):
+        return str(self.position) + " " + str(self.num_units) + " " + str(self.direction)
+
     @classmethod
     def from_dict(cls, playerId, d):
         return cls(playerId, d["location"], d["command"], d["num_units"], d["direction"])

@@ -156,25 +156,29 @@ class Cell:
             building_owner = self.building.ownerId
             attacker = 1 - building_owner
 
-            #  check if building will be destroyed by enemy units
+            # remove units the building handles on its own
+            self.units[attacker] = max(0, self.units[attacker] - DEFENSE_RATING)
+
+            # if any units remain, they kill units from the building
             if self.units[attacker] > 0:
-                if self.units[attacker] > DEFENSE_RATING + self.units[building_owner]:
+                if self.units[attacker] > self.units[building_owner]:
                     # building will be destroyed
                     self.destroy_building()
-                    self.units[attacker] -= DEFENSE_RATING + self.units[building_owner]
+                    self.units[attacker] -= self.units[building_owner]
                     self.units[building_owner] = 0
-                    return
                 else:
                     # building not destroyed
                     self.units[attacker] = 0
-                    self.units[building_owner] -= DEFENSE_RATING - self.units[attacker]
+                    self.units[building_owner] -= self.units[attacker]
 
             # check if new units should be produced
             while self.building.resources >= UNIT_COST:
+                print("building producing")
                 self.increment_units(building_owner, 1)
                 self.building.resources -= UNIT_COST
                 players[self.building.ownerId].increment_units_produced()
 
+            # update buildings status towards producing more units
             self.building.increment_resources()
 
     # --------------------------------------------------------------------------

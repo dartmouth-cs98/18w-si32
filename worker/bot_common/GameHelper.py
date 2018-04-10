@@ -53,9 +53,9 @@ class GameHelper:
         elif position_from.x > position_to.x:
             d = Direction.WEST
         elif position_from.y < position_to.y:
-            d = Direction.SOUTH
+            d = Direction.SOUTHWEST
         elif position_from.y > position_to.y:
-            d = Direction.NORTH
+            d = Direction.NORTHEAST
 
         # TODO: make this smarter by
         # avoiding enemy units, enemy buildings, or stronger enemy buildings
@@ -244,7 +244,8 @@ class GameHelper:
         return 0
 
     def my_units_at_pos(self, pos):
-        return self.map.get_cell(pos).units[self.myId]
+        c = self.map.get_cell(pos)
+        return c.units[self.myId]
 
     # returns True if player with playerId1 has higher unit count at pos1 than player with playerId2 has at pos2
     def compare_unit_count(self, pos1, pos2):

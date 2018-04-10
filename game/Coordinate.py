@@ -9,6 +9,27 @@
 # TODO: why is y first and x second in the coordinate??
 from game.params import Direction
 
+direction_deltas = [
+    { # for even rows, at index 0 since this handles row % 2 == 0
+        Direction.NORTHWEST : (-1, -1),
+        Direction.NORTHEAST : (0, -1),
+        Direction.EAST      : (1, 0),
+        Direction.SOUTHEAST : (0, 1),
+        Direction.SOUTHWEST : (-1, 1),
+        Direction.WEST      : (-1, 0),
+        Direction.NONE      : (0, 0)
+    },
+    { # for even rows, at index 1 since this handles row % 2 == 1
+        Direction.NORTHWEST : (0, -1),
+        Direction.NORTHEAST : (1, -1),
+        Direction.EAST      : (1, 0),
+        Direction.SOUTHEAST : (1, 1),
+        Direction.SOUTHWEST : (0, 1),
+        Direction.WEST      : (-1, 0),
+        Direction.NONE      : (0, 0)
+    }
+]
+
 class Coordinate():
     # using named args to avoid any confusion about ordering
     def __init__(self, x=None, y=None):
@@ -28,30 +49,18 @@ class Coordinate():
     def __hash__(self):
         return hash((self.x, self.y))
 
+    def __str__(self):
+        return "(%d, %d)" % (self.x, self.y)
+
     # returns the coordinates that you arrive at by moving 1 step in direction from current cell
     def adjacent_in_direction(self, direction):
         if direction is None: return self
     
         assert(type(direction) is Direction)
 
-        direction_deltas = {}
-        direction_deltas[Direction.NORTH] = Coordinate(0, -1)
-        direction_deltas[Direction.SOUTH] = Coordinate(0, 1)
-        direction_deltas[Direction.EAST] = Coordinate(1, 0)
-        direction_deltas[Direction.WEST] = Coordinate(-1, 0)
-        direction_deltas[Direction.NONE] = Coordinate(0, 0)
+        delta = direction_deltas[self.y % 2][direction]
 
-        return self + direction_deltas[direction]
-
-    # Returns the vector addition of self and other.
-    def __add__(self, other):
-        assert(type(other) is Coordinate)
-        return Coordinate(x = self.x + other.x, y = self.y + other.y)
-
-    # Returns the vector difference of self and other.
-    def __sub__(self, other):
-        assert(type(other) is Coordinate)
-        return Coordinate(x = self.x - other.x, y = self.y - other.y)
+        return Coordinate(self.x + delta[0], self.y + delta[1])
 
     def __eq__(self, other):
         assert(type(other) is Coordinate)

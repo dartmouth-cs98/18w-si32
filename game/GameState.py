@@ -164,7 +164,7 @@ class GameState(Game):
 
     # returns true if only one player has buildings left
     def has_combat_winner(self):
-        return sum([1 for p in self.players if p.has_building()]) == 1
+        return sum([1 for p in self.players if p.has_building()]) <= 1
 
     # returns true if the game is over due to time
     def time_limit_reached(self):

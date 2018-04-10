@@ -77,8 +77,8 @@ class Canvas extends React.PureComponent {
     this.sp.cell_w = Math.floor((this.props.size || BASE_SCENE_W) / this.sp.cols);
     this.sp.cell_h = Math.floor((this.props.size || BASE_SCENE_H) / this.sp.rows);
 
-    this.sp.w = this.sp.cols * (this.sp.cell_w + CELL_OFFSET_X) + BORDER_OFFSET_X*2;
-    this.sp.h = this.sp.rows * (this.sp.cell_h + CELL_OFFSET_Y) + BORDER_OFFSET_Y*2;
+    this.sp.w = this.sp.cols * (this.sp.cell_w + CELL_OFFSET_X);
+    this.sp.h = this.sp.rows * (this.sp.cell_h + CELL_OFFSET_Y);
   }
 
   // add the grid to main map graphics
@@ -90,8 +90,12 @@ class Canvas extends React.PureComponent {
         const r = this.getCellColorAlpha(i, j);
         this.mapGraphics.beginFill(r.c, r.a);
 
-        const xpos = j * (this.sp.cell_w + CELL_OFFSET_X) + BORDER_OFFSET_X;
-        const ypos = i * (this.sp.cell_h + CELL_OFFSET_Y) + BORDER_OFFSET_Y;
+        const xpos = j * (this.sp.cell_w + CELL_OFFSET_X);
+        let ypos = i * (this.sp.cell_h + CELL_OFFSET_Y);
+
+        if (j % 2 == 0) {
+          ypos += 10;
+        }
 
         this.mapGraphics.drawRect(xpos, ypos, this.sp.cell_w, this.sp.cell_h);
 

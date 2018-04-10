@@ -23,12 +23,12 @@ class Map:
 
     def initialize_map(self, width, height):
         cells = []
-        for i in range(width):
-            col = []
-            for j in range(height):
-                new_cell = Cell(Coordinate(x=i, y=j), self.num_players)
-                col.append(new_cell)
-            cells.append(col)
+        for r in range(height):
+            row = []
+            for c in range(width):
+                new_cell = Cell(Coordinate(x=c, y=r), self.num_players)
+                row.append(new_cell)
+            cells.append(row)
 
         return cells
 
@@ -40,7 +40,7 @@ class Map:
         assert(type(position) is Coordinate)
 
         if self.position_in_range(position):
-            return self.cells[position.x][position.y]
+            return self.cells[position.y][position.x]
         else:
             return None
 
@@ -48,7 +48,7 @@ class Map:
     def position_in_range(self, position):
         assert(type(position) is Coordinate)
 
-        return not ((position.x < 0) or (position.x >= (self.width - 1)) or (position.y < 0) or (position.y >= (self.height - 1)))
+        return ((position.x >= 0) and (position.x < (self.width - 1)) and (position.y >= 0) and (position.y < (self.height - 1)))
 
     # check if cell is within map
     def cell_in_range(self, cell):

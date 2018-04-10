@@ -9,15 +9,13 @@ from enum import IntEnum
 
 # currently contains directions for old and new (hex) grids
 class Direction(IntEnum):
-    EAST = 1
-    NORTH = 2
-    SOUTH = 3
-    WEST = 4
-    NORTHEAST = 5
-    NORTHWEST = 6
-    SOUTHEAST = 7
-    SOUTHWEST = 8
-    NONE = 9
+    EAST        = 1
+    WEST        = 2
+    NORTHEAST   = 3
+    NORTHWEST   = 4
+    SOUTHEAST   = 5
+    SOUTHWEST   = 6
+    NONE        = 7
 
     def opposite(self):
         if self == Direction.EAST:
@@ -26,11 +24,17 @@ class Direction(IntEnum):
         if self == Direction.WEST:
             return Direction.EAST
 
-        if self == Direction.NORTH:
-            return Direction.SOUTH
+        if self == Direction.NORTHEAST:
+            return Direction.SOUTHWEST
 
-        if self == Direction.SOUTH:
-            return Direction.NORTH
+        if self == Direction.SOUTHWEST:
+            return Direction.NORTHEAST
+
+        if self == Direction.NORTHWEST:
+            return Direction.SOUTHEAST
+
+        if self == Direction.SOUTHEAST:
+            return Direction.NORTHWEST
 
         return self.NONE
 
@@ -84,7 +88,7 @@ MAX_RESOURCES = 50      # The maximum resource value for an individual cell.
 # Starting player positions
 # Intended to be roughly equidistant for each number of players
 one_player = [(10,10)]
-two_players = [(2,2), (17,17)]
+two_players = [(0,0), (18,18)]
 three_players = [(5,5), (10,14), (15,5)]
 four_players = [(5,5), (5,15), (15,5), (15,15)]
 
