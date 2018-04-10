@@ -36,7 +36,7 @@ class Coordinate():
 
         direction_deltas = {}
         direction_deltas[Direction.NORTH] = Coordinate(0, -1)
-        direction_deltas[Direction.SOUTH] = Coordinate(0, -1)
+        direction_deltas[Direction.SOUTH] = Coordinate(0, 1)
         direction_deltas[Direction.EAST] = Coordinate(1, 0)
         direction_deltas[Direction.WEST] = Coordinate(-1, 0)
         direction_deltas[Direction.NONE] = Coordinate(0, 0)
@@ -55,5 +55,6 @@ class Coordinate():
 
     def __eq__(self, other):
         assert(type(other) is Coordinate)
+
         return self.x == other.x and self.y == other.y
 

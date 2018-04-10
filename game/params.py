@@ -19,6 +19,21 @@ class Direction(IntEnum):
     SOUTHWEST = 8
     NONE = 9
 
+    def opposite(self):
+        if self == Direction.EAST:
+            return Direction.WEST
+
+        if self == Direction.WEST:
+            return Direction.EAST
+
+        if self == Direction.NORTH:
+            return Direction.SOUTH
+
+        if self == Direction.SOUTH:
+            return Direction.NORTH
+
+        return self.NONE
+
 
 # ------------------------------------------------------------------------------
 # Command

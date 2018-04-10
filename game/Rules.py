@@ -123,7 +123,7 @@ class Rules:
 
                     enemy_move = enemy_set[new_position][i]
 
-                    if self.opposite_direction(current_move.direction, enemy_move.direction):
+                    if current_move.direction.opposite() == enemy_move.direction:
 
                         current_cell = self.map.get_cell(cell.position)
                         enemy_cell = self.map.get_cell(enemy_move.position)
@@ -187,7 +187,7 @@ class Rules:
 
                     enemy_move = enemy_set[new_position][i]
 
-                    if self.opposite_direction(current_move.direction, enemy_move.direction):
+                    if current_move.direction.opposite() == enemy_move.direction:
 
                         current_cell = self.map.get_cell(cell.position)
                         enemy_cell = self.map.get_cell(enemy_move.position)
@@ -274,10 +274,6 @@ class Rules:
                 sets[1][move.position].append(move)
 
         return sets
-
-    def opposite_direction(self, direction1, direction2):
-        temp = (direction1[0]*-1, direction1[1]*-1)
-        return (temp[0] == direction2[0]) and (temp[1] == direction2[1])
 
     def player_has_enough_resources(self, playerId):
         return self.players[playerId].resources >= BUILDING_COST
