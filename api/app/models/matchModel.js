@@ -92,7 +92,7 @@ _Match.statics.handleWorkerResponse = async (id, rankedBots, logKey, result={}) 
 
   // update the bot AND user skills. Because bots are own by users, this function will always
   // update both as needed.
-  const botSkills = await Bot.updateSkillByRankedFinish(_.map(rankedBots, b => b._id), match._id);
+  const botSkills = await Bot.updateSkillByRankedFinish(rankedBots, match._id);
 
   // turn array of bots into obj keyed on bot ID storing ranked finish
   const botRankById = {};

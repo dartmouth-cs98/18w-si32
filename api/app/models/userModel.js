@@ -53,16 +53,18 @@ _User.pre("save", function(next) {
   next();
 });
 
-_User.statics.updateSkillByRankedFinish = async function(rankedUserIds, matchId) {
-  const users = await User.find({ "_id": { "$in": rankedUserIds }});
-  assert(users.length == rankedUserIds.length);
+_User.statics.updateSkillByRankedFinish = async function(rankedUsers, matchId) {
+  const userIds = _.map(rankedUsers, u => u._id);
+  const users = await User.find({ "_id": { "$in": userIds }});
+  assert(users.length == rankedUsers.length);
 
   const usersById = _.reduce(users, (acc, user) => { acc[user._id] = user; return acc; }, {});
 
-  // set up bots in format needed for trueskill
-  const usersToSkill = _.map(rankedUserIds, userId =>  ({
-    _id: userId,
-    skill: usersById[userId].trueSkill,
+  // set up users in format needed for trueskill
+  const usersToSkill = _.map(rankedUsers, u =>  ({
+    _id: u._id,
+    skill: usersById[u._id].trueSkill,
+    rank: u.rank,
   }));
 
   // compute the new skills
