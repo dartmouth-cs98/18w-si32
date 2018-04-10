@@ -130,7 +130,6 @@ class Canvas extends React.PureComponent {
   animate() {
     this.mapGraphics.clear();
     this.addGridToStage();
-    this.addBorderToStage();
 
     // render the stage container
     this.renderer.render(this.stage);
