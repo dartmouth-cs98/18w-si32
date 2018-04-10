@@ -31,6 +31,8 @@ class Coordinate():
     def adjacent_in_direction(self, direction):
         if direction is None: return self
 
+        return self
+
         return Coordinate(
                 x = self.x + direction[0],
                 y = self.y + direction[1],

@@ -178,8 +178,7 @@ class Rules:
             current_move = player_moves[index]
             cell = self.map.get_cell(current_move.position)
 
-            new_position = (cell.position.x + current_move.direction[0],
-            cell.position.y + current_move.direction[1])
+            new_position = cell.position.adjacent_in_direction(current_move.direction)
 
             if new_position in enemy_set:  # Check if opposing player has moves coming from new position
                 i = 0

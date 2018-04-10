@@ -91,21 +91,12 @@ class Logger:
         self.log['turns'].append(self.turn_log)
 
     def add_move(self, command):
-        coded_directions = {
-            (0, 0): -1,
-            (1,0): 0,
-            (0,1): 1,
-            (-1,0): 2,
-            (0,-1): 3
-        }
-
         coded_position = command.position.x * self.width + command.position.y
 
-        direction = coded_directions[tuple(command.direction)] if command.direction else None
         clean_command = {
             'u': command.playerId,
             'p': coded_position,
-            'd': direction,
+            'd': command.direction,
             'n': command.num_units,
         }
 

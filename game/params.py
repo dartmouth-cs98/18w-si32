@@ -1,16 +1,23 @@
 # params.py
+from enum import IntEnum
+
 # Game parameters that remain consistent across all game variations / iterations.
+
 
 # ------------------------------------------------------------------------------
 # Movement Directions 
 
-DIRECTIONS = {
-    'left'  : [-1, 0],
-    'right' : [1,  0],
-    'up'    : [0, -1],
-    'down'  : [0,  1],
-    'none'  : [0,  0],
-}
+class Directions(IntEnum):
+    EAST = 1
+    NORTH = 2
+    SOUTH = 3
+    WEST = 4
+    NORTHEAST = 5
+    NORTHWEST = 6
+    SOUTHEAST = 7
+    SOUTHWEST = 8
+    NONE = 9
+
 
 # ------------------------------------------------------------------------------
 # Command
