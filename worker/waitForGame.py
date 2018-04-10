@@ -5,16 +5,14 @@ import time
 def pollUntilGameReady():
 
     r = endpoints.is_game_ready()
-    response_json = r.json()
 
-    while not new_game_available(response_json):
+    while not new_game_available(r):
         time.sleep(2)
         r = endpoints.is_game_ready()
-        response_json = r.json()
 
-    print(response_json)
+    print(r)
 
-    return response_json['bots'], response_json['gameType'], response_json['id']
+    return r['bots'], r['gameType'], r['id']
 
 def new_game_available(response_json):
     if ('newGame' in response_json) and (response_json['newGame']):

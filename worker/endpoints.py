@@ -9,7 +9,10 @@ if 'api_route' in os.environ:
     API = os.environ['api_route']
 
 def is_game_ready():
-    return requests.get(API + '/nextTask')
+    try:
+        return requests.get(API + '/nextTask').json()
+    except requests.exceptions.ConnectionError as err:
+        return { 'newGame': False }
 
 def get_bot_file(url, bnum):
     urllib.request.urlretrieve(url, '/bot' + str(bnum) + '/bot.py')
