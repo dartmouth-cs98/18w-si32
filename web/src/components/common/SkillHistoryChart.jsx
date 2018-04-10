@@ -62,7 +62,7 @@ const SkillHistoryChart = ({ data, width, height, bots, useBotName = true }) => 
     <LineChart width={width} height={height} data={formattedData}>
       { _.map(refLines, r => (
         <ReferenceLine key={r.label+r.x} x={r.x} stroke={colors.medGray} strokeDasharray="4 6">
-          <Label position="insideTopRight" fontSize="12" fill={colors.medGray}>
+          <Label position="insideTopLeft" fontSize="12" fill={colors.medGray}>
             {r.label}
           </Label>
         </ReferenceLine>

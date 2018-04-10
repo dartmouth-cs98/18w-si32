@@ -58,16 +58,18 @@ _Bot.statics.findByUser = (userId) => {
 // Consumes an ordered array of how bots finished in a match. Updates the skill
 // for both the bots AND the users that own the bots. Returns the new bot skills,
 // keyed on the bot ID
-_Bot.statics.updateSkillByRankedFinish = async (rankedBotIds, matchId) => {
-  const bots = await Bot.find({ "_id": { "$in": rankedBotIds }});
-  assert(bots.length == rankedBotIds.length);
+_Bot.statics.updateSkillByRankedFinish = async (rankedBots, matchId) => {
+  const botIds = _.map(rankedBots, b => b._id);
+  const bots = await Bot.find({ "_id": { "$in": botIds }});
+  assert(bots.length == rankedBots.length);
 
   const botsById = _.reduce(bots, (acc, bot) => { acc[bot._id] = bot; return acc; }, {});
 
   // set up bots in format needed for trueskill
-  const botsToSkill = _.map(rankedBotIds, botId =>  ({
-    _id: botId,
-    skill: botsById[botId].trueSkill,
+  const botsToSkill = _.map(rankedBots, bot =>  ({
+    _id: bot._id,
+    skill: botsById[bot._id].trueSkill,
+    rank: bot.rank,
   }));
 
   // compute the new skills
@@ -96,7 +98,7 @@ _Bot.statics.updateSkillByRankedFinish = async (rankedBotIds, matchId) => {
   });
 
   // update the skill of the users that own the bots
-  const rankedUsers = _.uniq(rankedBotIds.map(botId => botsById[botId].user.toString()));
+  const rankedUsers = _.uniqBy(rankedBots.map(bot => ({ _id: botsById[bot._id].user.toString(), rank: bot.rank })), "_id");
 
   // if any user had more than 1 bot in the match, don't do anything to the user scores
   // A user score should only be updated in an even match

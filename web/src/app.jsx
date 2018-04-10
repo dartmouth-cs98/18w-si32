@@ -23,8 +23,7 @@ class App extends React.Component {
     // store the new view (not in state since it could be large)
     this.main = html;
 
-    // touch state to trigger a render
-    this.setState({ a: Math.random() });
+    this.forceUpdate();
   }
 
   render() {

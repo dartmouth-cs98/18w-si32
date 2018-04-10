@@ -59,8 +59,12 @@ class DockerBot(Bot):
         self.proc = Popen(command, stdout=PIPE, stdin=PIPE)
 
     def is_running(self):
-        container = client.containers.get(self.name)
-        return container.status == "running"
+        try:
+            container = client.containers.get(self.name)
+            return container.status == "running"
+        except docker.errors.NotFound as err:
+            print("Container not found, saying not running...")
+            return False
 
     # remove docker container
     def cleanup(self):
