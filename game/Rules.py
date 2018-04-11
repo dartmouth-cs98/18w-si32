@@ -69,8 +69,8 @@ class Rules:
                 self.players[move.playerId].decrement_resources(BUILDING_COST)
 
 
-    def update_combat_phase_multi(self, moves):
-        sets = self.moves_to_dictionary_multi(moves) #dictionaries
+    def update_combat_phase(self, moves):
+        sets = self.moves_to_dictionary(moves) #dictionaries
 
         num_players = len(sets)
 
@@ -86,25 +86,26 @@ class Rules:
             j = i - 1
 
             while (j >= 0):
-                moves[i], moves[j] = self.combat_multi(moves[i], sets[j], i, j)
-                sets = self.moves_to_dictionary_multi(moves)
+                moves[i], moves[j] = self.combat(moves[i], sets[j], i, j)
+                sets = self.moves_to_dictionary(moves)
                 j -= 1
 
             i -= 1
 
         return moves
 
-
+    '''
     def update_combat_phase(self, moves):
         sets = self.moves_to_dictionary(moves)
 
         moves[0], moves[1] = self.combat(moves[0], sets[1])
 
         return moves
+    '''
 
     # multi-player version of 'combat' method
     # (m and n are the playerIds of the two players to check for opposing collisions, since there will be more than two players in total)
-    def combat_multi(self, player_moves, enemy_set, m, n):
+    def combat(self, player_moves, enemy_set, m, n):
         index = 0
 
         while index < len(player_moves):
@@ -168,7 +169,7 @@ class Rules:
 
         return player_moves, enemy_moves
 
-
+    '''
     def combat(self, player_moves, enemy_set):
         index = 0
 
@@ -232,9 +233,10 @@ class Rules:
                 enemy_moves.append(move)
 
         return player_moves, enemy_moves
+    '''
 
     #multi-player version of moves_to_dictionary, takes a variable 'moves', which is a list of lists of Commands (one Command list for each player, a.k.a. a 'move')
-    def moves_to_dictionary_multi(self, moves):
+    def moves_to_dictionary(self, moves):
 
         num_players = len(moves) #the number of players, corresponds to the number of 'moves'
         sets = [] #a list of dictionaries (mapping positions to Commands of a player from that position)
@@ -256,7 +258,7 @@ class Rules:
 
         return sets
 
-
+    '''
     def moves_to_dictionary(self, moves):
         sets = [{}, {}]
 
@@ -273,6 +275,7 @@ class Rules:
                 sets[1][tuple(move.position)].append(move)
 
         return sets
+    '''
 
     def opposite_direction(self, direction1, direction2):
         temp = (direction1[0]*-1, direction1[1]*-1)
