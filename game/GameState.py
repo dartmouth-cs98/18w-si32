@@ -228,13 +228,15 @@ class GameState(Game):
     def get_log(self):
         return self.logger.get_log()
 
+    '''
     def get_ranked_by_units(self):
         if self.players[0].total_units() > self.players[1].total_units():
             return self.players
 
         return [self.players[1], self.players[0]]
+    '''
 
-    def get_ranked_by_units_multi(self):
+    def get_ranked_by_units(self):
         s = sorted(self.players, key=lambda player: player.total_units()) #sort the list of players by their number of units
 
         return s.reverse() #return the reversed list since the players with the most units are ranked first

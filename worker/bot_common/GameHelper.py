@@ -18,12 +18,20 @@ class GameHelper:
     def __init__(self):
         # first thing the game server sends us through STDIN is our player id
         self.myId = pickle.load(sys.stdin.buffer)
-        self.eId = 1 - self.myId
+
+        # second thing it sends through STDIN is the number of players?
+        self.numPlayers = pickle.load(sys.stdin.buffer)
+
+        #self.eId = 1 - self.myId #case for two players
+
+        #list of enemy IDs
+        self.eIds = list(range(self.numPlayers))
+        self.eIds.remove(self.myId)
 
         self.me = { "resources": 0 }
 
         self.turn_handler = None
-        self.logfile = open("./game" + str(self.eId) + ".log", "w")
+        self.logfile = open("./game" + str(self.myId) + ".log", "w")
 
     def __del__(self):
         self.logfile.close()
@@ -44,6 +52,8 @@ class GameHelper:
         if pos_equal(position_from, position_to):
             return None
 
+        d = None
+
         if position_from[0] < position_to[0]:
             d = 'right'
         elif position_from[0] > position_to[0]:
@@ -53,10 +63,9 @@ class GameHelper:
         elif position_from[1] > position_to[1]:
             d = 'up'
 
-        # TODO: make this smarter by
-        # avoiding enemy units, enemy buildings, or stronger enemy buildings
+        # TODO: make this smarter by avoiding enemy units, enemy buildings, or stronger enemy buildings
 
-        num_units = num_units if num_units else self.my_units_at_pos(position_from)
+        num_units = num_units if num_units else self.get_unit_count_by_position(position_from[0], position_from[1])
         return self.move(position_from, num_units, d)
 
     # Create and return a build command.
@@ -98,6 +107,12 @@ class GameHelper:
     def get_enemy_cell_count(self):
         return len(self.get_enemy_cells())
 
+    # Get count of all cells controlled by player with playerId on the map.
+    # Return: (number)
+    #   the number of cells on the map that are controlled by player with playerId
+    def get_player_cell_count(self, playerId):
+        return len(self.get_player_cells(playerId))
+
     # Get a list of all my cells on the map.
     # Return: (list of Cell)
     #   list of all my cells
@@ -108,7 +123,18 @@ class GameHelper:
     # Return: (list of Cell)
     #   list of all enemy cells
     def get_enemy_cells(self):
-        return self.get_occupied_cells(self.eId)
+        enemy_cells = []
+        for eId in self.eIds:
+            single_enemy_cells = self.get_occupied_cells(eId)
+            for single_enemy_cell in single_enemy_cells:
+                enemy_cells.append(single_enemy_cell)
+        return enemy_cells
+
+    # Get a list of all cells controlled by player with playerId on the map.
+    # Return: (list of Cell)
+    #   list of all cells controlled by player with playerId
+    def get_player_cells(self, playerId):
+        return self.get_occupied_cells(playerId)
 
     # Get a list of all cells in which I have a building.
     # Return: (list of Cell)
@@ -162,16 +188,17 @@ class GameHelper:
     def get_enemy_building_count(self):
         return len(self.get_enemy_buildings())
 
+    #Get a count of all buildings on the map controlled by player with playerId
+    #Return: (number)
+    #the number of buildings on the map controlled by player with playerId
+    def get_player_building_count(self, playerId):
+        return len(self.get_player_buildings(playerId))
+
     # Get a list of all my buildings on the map.
     # Return: (list of Building)
     #   list of buildings on the map that I control
     def get_my_buildings(self):
-        blds = []
-        for col in self.map.cells:
-            for cell in col:
-                if cell.building and cell.building.ownerId == self.myId:
-                    blds.append(cell.building)
-        return blds
+        return self.get_player_buildings(self.myId)
 
     # Get a list of all my buildings on the map.
     # Return: (list of Building)
@@ -184,13 +211,23 @@ class GameHelper:
                     blds.append(cell.building)
         return blds
 
+    #Get a list of all buildings controlled by a certain player
+    #Return: (list of building)
+    def get_player_buildings(self, playerId):
+        blds = []
+        for col in self.map.cells:
+            for cell in col:
+                if cell.building and cell.building.ownerId == playerId:
+                    blds.append(cell.building)
+        return blds
+
     # Get the total number of buildings that I can currently construct.
     # Return: (number)
     #   the number of buildings I can construct, assuming full resource use
     def get_building_potential(self):
         return int(self.get_my_resource_count() / 100)
 
-    # TODO: rename this, its confusing
+    # TODO: rename this, it's confusing
     def position_towards(self, position_from, position_to):
         if pos_equal(position_from, position_to):
             return position_from
@@ -211,14 +248,23 @@ class GameHelper:
     # Return: (number)
     #   a count of the total number of units that I control
     def get_my_total_unit_count(self):
-        return self.get_total_unit_count(self.myId)
+        return self.get_player_unit_count(self.myId)
 
+    # Get a count of the total number of units that ALL enemies control together
+    # Return: (number)
+    # a count of the total number of units that ALL enemies control together
     def get_enemy_total_unit_count(self):
-        # TODO: need a way to get all enemy player ids, generalized for n players
-        pass
+        count = 0
+        for eId in self.eIds:
+            count += self.get_player_unit_count(eId)
 
-    # gets the total number of units controlled by player with playerId
-    def get_total_unit_count(self, playerId):
+        return count
+
+    # Get a count of the total number of units that player with playerId controls
+    # Return: (number)
+    # a count of the total number of units that player with playerId controls
+
+    def get_player_unit_count(self, playerId):
         count = 0
         for cell in self.get_occupied_cells(playerId):
             count += cell.units[playerId]
@@ -227,20 +273,26 @@ class GameHelper:
     # Get the number of units in <cell> controlled by <playerId>.
     # Return: (number)
     #   the number of units in <cell> controlled by player <playerId>
-    def get_unit_count_by_cell(self, cell, playerId):
-        # TODO: make this so it does not require a playerId
+
+    #Warning: this can't be called between conclusion of movement that puts units from different players onto same cell but before combat resolution so that only one player gains control of the cell
+    def get_unit_count_by_cell(self, cell):
         # only one player may have control over a cell at any one time,
         # so this should not be an issue!
-        return cell.units[playerId]
+        if all(i == 0 for i in cell.units):
+            return 0
+        else:
+            j = 0
+            while cell.units[j] == 0:
+                j += 1
+            return cell.units[j]
 
     # Get the number of units in cell at position specified (<x>, <y>) controlled by <playerId>.
     # Return: (number)
     #   the number of units at the specified position controlled by player <playerId>
-    def get_unit_count_by_position(self, x, y, playerId):
-        # TODO: make this so it does not require a playerId
+    def get_unit_count_by_position(self, x, y):
         # only one player may have control over a cell at any one time,
         # so this should not be an issue!
-        return self.map.get_cell((x, y)).units[playerId]
+        return self.get_unit_count_by_cell(self.map.get_cell((x, y)))
 
     # --------------------------------------------------------------------------
     # RESOURCE DATA GETTERS
@@ -253,31 +305,37 @@ class GameHelper:
             return self.me["resources"]
         return 0
 
-    def my_units_at_pos(self, pos):
-        return self.map.get_cell(pos).units[self.myId]
-
-    # returns True if player with playerId1 has higher unit count at pos1 than player with playerId2 has at pos2
-    def compare_unit_count(self, pos1, pos2):
-        if (self.get_cell(pos1[0], pos1[1]).units[self.myId] > self.get_cell(pos2[0], pos2[1]).units[self.eId]):
+    # returns True if there are more units at pos1 than there are units located at pos2
+    def compare_unit_count_between_positions(self, pos1, pos2):
+        if (self.get_unit_count_by_position(pos1[0], pos1[1]) > self.get_unit_count_by_position(pos2[0], pos2[1])):
             return True
         return False
 
     # returns True if player with playerId1 has more resource than player with playerId2
-    def compare_resource(self):
-        if (self.players[self.myId].resource > self.players[self.eId].resource):
+    # resource information shared between players?
+    '''
+    def compare_resource(self, eId):
+        if (self.get_my_resource_count > self.players[eId].resource):
             return True
         return False
+    '''
 
     # returns True if player with playerId1 has higher building count than player with playerId2
-    def compare_building_count(self):
-        if (self.get_number_of_buildings_belonging_to_player(
-                self.myId) > self.get_number_of_buildings_belonging_to_player(self.eId)):
+    def compare_building_count(self, playerId1=None, playerId2=None):
+        if (playerId1 == None | playerId2 == None):
+            playerId1 = 0
+            playerId2 = 1
+        if (self.get_player_building_count(playerId1
+                ) > self.get_player_building_count(playerId2)):
             return True
         return False
 
     # returns True if player with playerId1 has more units than player with playerId2
-    def compare_total_units(self):
-        if (self.get_total_units(self.myId) > self.get_total_units(self.eId)):
+    def compare_total_unit_count(self, playerId1=None, playerId2=None):
+        if (playerId1 == None | playerId2 == None):
+            playerId1 = 0
+            playerId2 = 1
+        if (self.get_player_unit_count(playerId1) > self.get_player_unit_count(playerId2)):
             return True
         else:
             return False
@@ -285,6 +343,7 @@ class GameHelper:
     # functions to return commands of various types
 
     # returns a sequence of commands at a cell so that - if the cell has resource less than number of units, send the unneeded units to the adjacent free cell with greatest resource; then, build on the cell if it's empty
+    '''
     def efficient_mine_and_build(self, position):
         commands = []
 
@@ -393,29 +452,13 @@ class GameHelper:
             direction = (0, 0)
 
         return Command(self.myId, position_from, MOVE_COMMAND, number_of_units, direction)
+    '''
 
-    # get the number of buildings belonging to player with playerId
-    def get_number_of_buildings_belonging_to_player(self, playerId):
-        number_buildings = 0
 
-        j = 0
-        while (j < self.map.height):
-
-            i = 0
-            while (i < self.map.width):
-
-                if (self.get_cell(i, j).building is not None):
-                    if (self.get_cell(i, j).building.ownerId == playerId):
-                        number_buildings += 1
-
-                i += 1
-            j += 1
-
-        return number_buildings
-
+    #TODO: smarter distances than Manhattan
     # get the position of the nearest building from (x, y) that belongs to a player with playerId
     def get_nearest_building_position_and_distance_belonging_to_player(self, x, y, playerId):
-        if (self.get_number_of_buildings_belonging_to_player(playerId) > 0):
+        if (self.get_player_building_count(playerId) > 0):
             current_search_distance = 1
 
             while (True):
