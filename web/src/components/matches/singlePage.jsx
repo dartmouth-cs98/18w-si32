@@ -7,6 +7,7 @@ import { fetchMatch } from "../../data/match/matchActions";
 import { fetchLog } from "../../data/match/matchRoutes";
 import ReplayVisualizer from "../replay/ReplayVisualizer";
 import { constants, colors } from "../../style";
+import { COLORS } from "../replay/Canvas";
 
 class MatchSinglePage extends React.PureComponent {
   constructor(props) {
@@ -28,7 +29,9 @@ class MatchSinglePage extends React.PureComponent {
   }
 
   renderBots = () => {
-    const bots = _.sortBy(this.props.match.bots, "rank");
+    let bots = _.map(this.props.match.bots, (b, i) => ({ ...b, i }));
+    bots = _.sortBy(bots, "rank");
+
     return _.map(bots, b => (
       <div key={b._id} style={[styles.botRow, b.user._id == this.props.sessionUserId ? styles.ownBot : null]}>
         { b.crashed ? <div style={styles.crashed}>Crashed!</div> : "" }
@@ -36,7 +39,7 @@ class MatchSinglePage extends React.PureComponent {
         <div key={b._id} style={styles.bot}>
           <div style={{display: "flex", alignItems: "flex-end"}}>
             <span style={styles.botRank}>{b.rank}</span>
-            <Link style={styles.botName} href={`/bots/${b._id}`}>{b.name}</Link>
+            <Link style={[styles.botName, { color: "#" + COLORS[b.i].toString(16) }]} href={`/bots/${b._id}`}>{b.name}</Link>
             <span style={styles.botVersion}>v{b.version}</span>
             { b.user._id == this.props.sessionUserId ?
               <span style={styles.ownBotTag}>(You)</span> :

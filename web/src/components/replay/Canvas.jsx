@@ -15,7 +15,7 @@ const CELL_OFFSET_Y = 1;
 
 const BASE_SCENE_W = 600;
 
-const COLORS = [
+export const COLORS = [
   0xec0b43,
   0x274c77,
   0x22EB1A,

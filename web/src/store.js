@@ -28,6 +28,6 @@ const rootReducer = (state, action) => {
   return reducer(state, action);
 };
 
-let store = createStore(rootReducer, applyMiddleware(thunkMiddleware, logger));
+let store = createStore(rootReducer, applyMiddleware(thunkMiddleware));
 
 export default store;
