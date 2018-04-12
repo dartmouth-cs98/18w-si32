@@ -15,9 +15,11 @@ const CELL_OFFSET_Y = 1;
 
 const BASE_SCENE_W = 600;
 
-// TODO: generalize to n players?
-const COLOR_P0 = 0xec0b43;
-const COLOR_P1 = 0x274c77;
+const COLORS = [
+  0xec0b43,
+  0x274c77,
+  0x22EB1A,
+];
 
 // Helper functions for hexagonal math
 const getHexagonCorner = (center, size, i) => {
@@ -30,10 +32,7 @@ const getHexagonCorner = (center, size, i) => {
 };
 
 const getPlayerColor = (playerN) => {
-  if (playerN == 0) {
-    return COLOR_P0;
-  }
-  return COLOR_P1;
+  return COLORS[playerN];
 };
 
 // TODO: calibrate this value
@@ -135,13 +134,13 @@ class Canvas extends React.PureComponent {
       return { "c": NEUTRAL_CELL_COLOR, "a": NEUTRAL_CELL_ALPHA, "building": false };
     }
     let color, alpha;
-    if (units[0] > 0) {
-      color = COLOR_P0;
-      alpha = units[0] / MAX_UNITS;
-    } else if (units[1] > 0) {
-      color = COLOR_P1;
-      alpha = units[1] / MAX_UNITS;
-    }
+
+    _.each(units,  (unitVal, i) => {
+      if (unitVal > 0) {
+        color = COLORS[i];
+        alpha = unitVal / MAX_UNITS;
+      }
+    });
     return { "c": color, "a": alpha, "building": false };
   }
 
