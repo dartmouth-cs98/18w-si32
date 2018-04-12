@@ -26,7 +26,7 @@ def do_turn(game):
                 closest_to_enemy_distance = euclidean_distance(s.position, buildings[0].position)
 
             if (s.units[game.myId] < 8):
-                m = game.mine(s.position, game.my_units_at_pos(s.position))
+                m = game.mine(s.position, game.get_unit_count_by_position_tuple(s.position))
                 if m:
                     commands.append(m)
             else:
@@ -52,7 +52,7 @@ def do_turn(game):
                     m = game.move_towards(s.position,cell, 2)
                     if m:
                         commands.append(m)
-                m = game.mine(s.position, game.my_units_at_pos(s.position) - 2 * len(surrounding))
+                m = game.mine(s.position, game.get_unit_count_by_position_tuple(s.position) - 2 * len(surrounding))
                 if m:
                     commands.append(m)
 
