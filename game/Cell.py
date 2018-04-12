@@ -25,6 +25,8 @@ class Cell:
         self.resource = randint(0, MAX_RESOURCES)
         self.units = self.initialize_units_list(num_players)
 
+        self.num_players = num_players
+
         self.building = None
 
     # --------------------------------------------------------------------------
@@ -72,10 +74,31 @@ class Cell:
         self.update_units_number()
 
     def update_units_number(self):
-        while (self.units[0] > 0) and (self.units[1] > 0):
-            units = min(self.units[0], self.units[1])
-            self.units[0] -= units
-            self.units[1] -= units
+        contenders = []
+        for i in range(self.num_players):
+            if self.units[i] > 0:
+                contenders.append(i)
+
+        while (len(contenders) > 1):
+            print(len(contenders))
+            # units = min(contenders)#, self.units[2])
+            units = float("inf")
+            for index in contenders:
+                if (self.units[index] < units):
+                    units = self.units[index]
+            print(units)
+            to_remove = []
+            for index in contenders:
+                self.units[index] -= units
+                if (self.units[index] < 1):
+                    to_remove.append(index)
+            # for i in range(number_of_players):
+            #     units.append(0)
+            for index in to_remove:
+                contenders.remove(index)
+            # self.units[0] -= units
+            # self.units[1] -= units
+            # self.units[2] -= units
 
     def update_units_number_multi(self):
         while True: #keep performing combat until only one or less players remain

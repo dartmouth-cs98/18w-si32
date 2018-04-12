@@ -233,6 +233,9 @@ class GameHelper:
     # --------------------------------------------------------------------------
     # UNIT DATA GETTERS
 
+    def my_units_at_pos(self, pos):
+        return self.map.get_cell(pos).units[self.myId]
+
     # Get a count of the total number of units I control.
     # Return: (number)
     #   a count of the total number of units that I control
