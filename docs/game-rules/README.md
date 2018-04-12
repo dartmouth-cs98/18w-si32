@@ -49,9 +49,7 @@ Units can be ordered around by **Commands** which have three possible types.
 - **Mine** - Gather a unit of **resource** from the current **cell**, if there is any resource remaining.
 
 ### Buildings
-**Buildings** are static objects controlled by the **player**, which spawn new **units**. have several noteworthy properties. A **building** can be created by any **unit** on a free **cell**, and costs 100 units of **resource**. Each building occupies one **cell** in the map (although this may be changed later). A building will continuously spawn new **units** in the **cell** at a rate proportional to the number of allied **units** stationed at the building's **cell**. 
-
-Each building has a default **intrinsic defense rating** of 10. The building essentially serves as an additional force of 10 **units** in combat when defending, which regenerates every turn.
+**Buildings** are static objects controlled by the **player**, which spawn new **units**. have several noteworthy properties. A **building** can be created by any **unit** on a free **cell**, and costs 100 units of **resource**. Each building occupies one **cell** in the map (although this may be changed later). A building will continuously spawn new **units** in the **cell**.
 
 ### Combat
 Combat in Monad takes place in two discrete phases:
@@ -71,9 +69,22 @@ A **Cell** is defined to not have **units** of more than one player at the start
 Each player in the **Cell** will lose a number of **units** equal to the smallest number of **units** controlled by players with units within the cell, and this process will be repeated until only one player remains with units in the cell. 
   
 - For example, Player A has 8 units, Player B has 12 units, and Player C has 7 units. 
-  - Player A will send (12/19) of his 8 **units**, rounded down --> 5 **units** to Player B and (7/19) of his 8 **units**, rounded down --> 2 **units** to Player C. The remaining **unit** (8 - 5 - 2 = 1) will be randomly assigned to Player B or Player C. 
-  - Player B will send (8/15) of his 12 **units**, rounded down --> 6 **units** to Player A and (7/15) of his 8 **units**, rounded down --> 5 **units** to Player C. The remaining **unit** (12 - 6 - 5 = 1) will be randomly assigned to Player A or Player C.
-  - Player C will send (8/20) of his 7 **units**, rounded down --> 2 **units** to Player A and (12/20) of his 7 **units**, rounded down --> 4 **units** to Player B. The remaining **units** (8 - 2 - 4 = 2) will be randomly assigned to Player A or Player B.
+  - Each player will lose 7 **units** (smallest number among players), so Player A remains with 1 **unit** and Player B with **5 units**.
+  - This process is repeated with the remaining players A and B, so each player now loses 1 **unit**, and Player B ends with 4 **units**. He is the only player with units remaining in the cell, so end combat.
+  
+Each building has a default **intrinsic defense rating** (or defense points) of 10. The building essentially serves as an additional force of 10 **units** in combat when defending, which regenerates every turn.
+
+If a building is attacked - the defending player essentially gets extra 10 units in that combat step; however, units allied with the building will still be vulnerable to destruction even if the building would be unharmed without the aid of any allied units (units will always be sent first into battle, before the building's defense points are compromised). A building is destroyed if it loses all its defense points.
+
+For example,
+
+Some examples:
+- My **building** has no allied **units** docked, enemy attacking force has 8 **units** --> enemy loses 8 attacking **units**, my **building** is unaffected.
+- My **building** has no allied **units** docked, enemy attacking force has 10 **units** --> enemy loses 10 attacking **units**, my **building** is destroyed.
+- My **building** has 3 allied **units** docked, enemy attacking force has 8 **units** --> enemy loses 8 attacking **units**, I lose 3 **units**, my **building** is unaffected.
+- My **building** has 3 allied **units** docked, enemy attacking force has 15 **units** --> enemy loses 13 attacking **units**, my **building** and 3 allied **units** are destroyed.
+- My **building** has 3 allied **units** docked, enemy attacking force has 12 **units** --> enemy loses 12 attacking **units**, my **building** loses 3 allied **units**.
+- My **building** has 3 allied **units** docked, enemy attacking force has 13 **units** --> enemy loses 13 attacking **units**, my **building** and 3 allied **units** are destroyed.
 
 
     
