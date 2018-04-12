@@ -38,7 +38,7 @@ const getPlayerColor = (playerN) => {
 // TODO: calibrate this value
 const MAX_UNITS = 5;
 
-class Canvas extends React.PureComponent {
+class Canvas extends React.Component {
   constructor(props) {
     super(props);
 
@@ -65,11 +65,33 @@ class Canvas extends React.PureComponent {
     this.mapGraphics = new Graphics();
     this.stage.addChild(this.mapGraphics);
 
+    this.timeout = null;
+
     // inject the canvas
     this.gameCanvasRef.appendChild(this.app.view);
 
     // start the animation
     this.animate();
+  }
+
+  // never re-render the actual div
+  shouldComponentUpdate() {
+    return false;
+  }
+
+  componentWillReceiveProps(prevProps) {
+    // frame number changed but not playing, meaning user stepped
+    // call animate manually to re-render state
+    if ((this.props.frame != prevProps.frame && !this.props.play) || this.props.play != prevProps.play) {
+      setTimeout(() => {
+        this.animate();
+      });
+    }
+  }
+
+  componentWillUnmount() {
+    clearTimeout(this.timeout);
+    this.app.destroy();
   }
 
   // compute the scene parameters based on map dimensions
@@ -146,20 +168,20 @@ class Canvas extends React.PureComponent {
 
   // recursively render the stage with renderer
   animate() {
+    clearTimeout(this.timeout);
     this.mapGraphics.clear();
     this.addGridToStage();
 
     // render the stage container
     this.renderer.render(this.stage);
 
-    // and setup to render again in the future
-    // TODO: how quickly can we clock this and still get a smooth animation?
-    // do we for sure want to do a new frame every timestep of the animation?
-    // or do we maybe want to uncouple these?
-    setTimeout(() => requestAnimationFrame(this.animate), TICK_SPEED);
 
     if (this.props.play && (this.props.frame + 1) < this.props.replay.turns.length) {
       this.props.incrementFrame();
+
+      // if playing, render again
+      clearTimeout(this.timeout);
+      this.timeout = setTimeout(() => requestAnimationFrame(this.animate), TICK_SPEED);
     }
   }
 
