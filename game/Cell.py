@@ -19,7 +19,7 @@ from game.params import MAX_RESOURCES, DEFENSE_RATING, UNIT_COST
 
 class Cell:
     def __init__(self, position, num_players):
-        self.position = Coordinate(position)
+        self.position = position
 
         # amount of resource in the cell (will be randomized for now)
         self.resource = randint(0, MAX_RESOURCES)
@@ -164,21 +164,25 @@ class Cell:
                     break
                 i += 1
 
-
             #  check if building will be destroyed by enemy units
             if attacker is not None:
                 #TODO: fix up combat here - so that the multi-player combat algorithm applies to building squares
                 #I'll do this tomorrow, I swear
-                if self.units[attacker] > DEFENSE_RATING + self.units[building_owner]:
-                    # building will be destroyed
-                    self.destroy_building()
-                    self.units[attacker] -= DEFENSE_RATING + self.units[building_owner]
-                    self.units[building_owner] = 0
-                    return
-                else:
-                    # building not destroyed
-                    self.units[attacker] = 0
-                    self.units[building_owner] -= DEFENSE_RATING - self.units[attacker]
+
+                # remove units the building handles on its own
+                self.units[attacker] = max(0, self.units[attacker] - DEFENSE_RATING)
+
+                # if any units remain, they kill units from the building
+                if self.units[attacker] > 0:
+                    if self.units[attacker] > self.units[building_owner]:
+                        # building will be destroyed
+                        self.destroy_building()
+                        self.units[attacker] -= self.units[building_owner]
+                        self.units[building_owner] = 0
+                    else:
+                        # building not destroyed
+                        self.units[attacker] = 0
+                        self.units[building_owner] -= self.units[attacker]
 
             # check if new units should be produced
             while self.building.resources >= UNIT_COST:
@@ -186,6 +190,7 @@ class Cell:
                 self.building.resources -= UNIT_COST
                 players[self.building.ownerId].increment_units_produced()
 
+            # update buildings status towards producing more units
             self.building.increment_resources()
 
     # --------------------------------------------------------------------------

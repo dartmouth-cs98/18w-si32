@@ -7,7 +7,7 @@ def do_turn(game):
 
     units = game.get_my_cells()
 
-    buildings = game.get_enemy_buildings()
+    buildings = game.get_enemy_building_sites()
     if len(buildings) > 0:
         for s in units:
             m = game.move_towards(s.position,buildings[0].position)
@@ -16,7 +16,6 @@ def do_turn(game):
 
 
     # done for this turn, send all my commands
-    # return commands
-    return []
+    return commands
 
 GameHelper.register_turn_handler(do_turn)

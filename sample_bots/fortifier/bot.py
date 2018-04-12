@@ -3,7 +3,7 @@ import time
 from GameHelper import GameHelper
 
 def euclidean_distance(from_position, to_position):
-    return abs(from_position[0] - to_position[0]) + abs(from_position[1] - to_position[1])
+    return abs(from_position.x - to_position.x) + abs(from_position.y - to_position.y)
 
 def do_turn(game):
 
@@ -37,14 +37,14 @@ def do_turn(game):
 
                 surrounding = []
 
-                if x < e_position[0]:
+                if x < e_position.x:
                     surrounding.append([x + 1, y])
-                elif x > e_position[0]:
+                elif x > e_position.y:
                     surrounding.append([x - 1, y])
 
-                if  y < e_position[1]:
+                if  y < e_position.y:
                     surrounding.append([x, y + 1])
-                elif y > e_position[1]:
+                elif y > e_position.y:
                     surrounding.append([x, y - 1])
 
 
