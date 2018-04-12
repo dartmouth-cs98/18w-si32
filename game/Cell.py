@@ -154,10 +154,21 @@ class Cell:
     def update_building_status(self, players):
         if self.building is not None:
             building_owner = self.building.ownerId
-            attacker = 1 - building_owner
+
+            attacker = None
+
+            i = 0
+            for unit_number in self.units:
+                if (i != building_owner & unit_number > 0):
+                    attacker = i
+                    break
+                i += 1
+
 
             #  check if building will be destroyed by enemy units
-            if self.units[attacker] > 0:
+            if attacker is not None:
+                #TODO: fix up combat here - so that the multi-player combat algorithm applies to building squares
+                #I'll do this tomorrow, I swear
                 if self.units[attacker] > DEFENSE_RATING + self.units[building_owner]:
                     # building will be destroyed
                     self.destroy_building()
