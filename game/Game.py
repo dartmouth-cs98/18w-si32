@@ -14,6 +14,7 @@ from abc import ABC, abstractmethod
 class Game(ABC):
     def __init__(self, bots):
         self.bots = bots
+        numBots = len(self.bots)
 
         for b in bots:
             b.prep()
@@ -23,6 +24,7 @@ class Game(ABC):
 
         for i, b in enumerate(bots):
             b.write_binary(pickle.dumps(i))
+            b.write_binary(pickle.dumps(numBots))
 
         super().__init__()
 

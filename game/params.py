@@ -88,7 +88,7 @@ MAX_RESOURCES = 50      # The maximum resource value for an individual cell.
 # Starting player positions
 # Intended to be roughly equidistant for each number of players
 one_player = [(10,10)]
-two_players = [(0,0), (18,18)]
+two_players = [(1,1), (18,18)]
 three_players = [(5,5), (10,14), (15,5)]
 four_players = [(5,5), (5,15), (15,5), (15,15)]
 

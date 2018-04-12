@@ -154,26 +154,38 @@ class Cell:
     def update_building_status(self, players):
         if self.building is not None:
             building_owner = self.building.ownerId
-            attacker = 1 - building_owner
 
-            # remove units the building handles on its own
-            self.units[attacker] = max(0, self.units[attacker] - DEFENSE_RATING)
+            attacker = None
 
-            # if any units remain, they kill units from the building
-            if self.units[attacker] > 0:
-                if self.units[attacker] > self.units[building_owner]:
-                    # building will be destroyed
-                    self.destroy_building()
-                    self.units[attacker] -= self.units[building_owner]
-                    self.units[building_owner] = 0
-                else:
-                    # building not destroyed
-                    self.units[attacker] = 0
-                    self.units[building_owner] -= self.units[attacker]
+            i = 0
+            for unit_number in self.units:
+                if (i != building_owner & unit_number > 0):
+                    attacker = i
+                    break
+                i += 1
+
+            #  check if building will be destroyed by enemy units
+            if attacker is not None:
+                #TODO: fix up combat here - so that the multi-player combat algorithm applies to building squares
+                #I'll do this tomorrow, I swear
+
+                # remove units the building handles on its own
+                self.units[attacker] = max(0, self.units[attacker] - DEFENSE_RATING)
+
+                # if any units remain, they kill units from the building
+                if self.units[attacker] > 0:
+                    if self.units[attacker] > self.units[building_owner]:
+                        # building will be destroyed
+                        self.destroy_building()
+                        self.units[attacker] -= self.units[building_owner]
+                        self.units[building_owner] = 0
+                    else:
+                        # building not destroyed
+                        self.units[attacker] = 0
+                        self.units[building_owner] -= self.units[attacker]
 
             # check if new units should be produced
             while self.building.resources >= UNIT_COST:
-                print("building producing")
                 self.increment_units(building_owner, 1)
                 self.building.resources -= UNIT_COST
                 players[self.building.ownerId].increment_units_produced()

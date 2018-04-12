@@ -71,8 +71,8 @@ class Rules:
                 self.players[move.playerId].decrement_resources(BUILDING_COST)
 
 
-    def update_combat_phase_multi(self, moves):
-        sets = self.moves_to_dictionary_multi(moves) #dictionaries
+    def update_combat_phase(self, moves):
+        sets = self.moves_to_dictionary(moves) #dictionaries
 
         num_players = len(sets)
 
@@ -88,33 +88,33 @@ class Rules:
             j = i - 1
 
             while (j >= 0):
-                moves[i], moves[j] = self.combat_multi(moves[i], sets[j], i, j)
-                sets = self.moves_to_dictionary_multi(moves)
+                moves[i], moves[j] = self.combat(moves[i], sets[j], i, j)
+                sets = self.moves_to_dictionary(moves)
                 j -= 1
 
             i -= 1
 
         return moves
 
-
+    '''
     def update_combat_phase(self, moves):
         sets = self.moves_to_dictionary(moves)
 
         moves[0], moves[1] = self.combat(moves[0], sets[1])
 
         return moves
+    '''
 
     # multi-player version of 'combat' method
     # (m and n are the playerIds of the two players to check for opposing collisions, since there will be more than two players in total)
-    def combat_multi(self, player_moves, enemy_set, m, n):
+    def combat(self, player_moves, enemy_set, m, n):
         index = 0
 
         while index < len(player_moves):
             current_move = player_moves[index]
             cell = self.map.get_cell(current_move.position)
 
-            new_position = (cell.position[0] + current_move.direction[0],
-            cell.position[1] + current_move.direction[1])
+            new_position = cell.position.adjacent_in_direction(current_move.direction) 
 
             if new_position in enemy_set:  # Check if opposing player has moves coming from new position
                 i = 0
@@ -170,7 +170,7 @@ class Rules:
 
         return player_moves, enemy_moves
 
-
+    '''
     def combat(self, player_moves, enemy_set):
         index = 0
 
@@ -233,9 +233,10 @@ class Rules:
                 enemy_moves.append(move)
 
         return player_moves, enemy_moves
+    '''
 
     #multi-player version of moves_to_dictionary, takes a variable 'moves', which is a list of lists of Commands (one Command list for each player, a.k.a. a 'move')
-    def moves_to_dictionary_multi(self, moves):
+    def moves_to_dictionary(self, moves):
 
         num_players = len(moves) #the number of players, corresponds to the number of 'moves'
         sets = [] #a list of dictionaries (mapping positions to Commands of a player from that position)
@@ -248,16 +249,16 @@ class Rules:
         while player < num_players:
 
             for move in moves[player]: #for each COMMAND of a player, check if the command's position is in the player's dictionary's keys; if not, add it with value as a singleton list with that Command. if it is, append to the value (list of Commands)
-                if tuple(move.position) not in sets[player]:
-                    sets[player][tuple(move.position)] = [move]
+                if move.position not in sets[player]:
+                    sets[player][move.position] = [move]
                 else:
-                    sets[player][tuple(move.position)].append(move)
+                    sets[player][move.position].append(move)
 
             player += 1
 
         return sets
 
-
+    '''
     def moves_to_dictionary(self, moves):
         sets = [{}, {}]
 
@@ -274,6 +275,7 @@ class Rules:
                 sets[1][move.position].append(move)
 
         return sets
+    '''
 
     def player_has_enough_resources(self, playerId):
         return self.players[playerId].resources >= BUILDING_COST
