@@ -15,13 +15,18 @@ def do_turn(game):
     units = game.get_my_cells()
 
     buildings = game.get_enemy_building_sites()
+    # print(buildings)
+    game.log(buildings)
+    game.log(units)
     if len(buildings) > 0:
 
         closest_to_enemy = None
         closest_to_enemy_distance = float("inf")
 
         for s in units:
+            game.log(euclidean_distance(s.position, buildings[0].position))
             if (euclidean_distance(s.position, buildings[0].position) < closest_to_enemy_distance):
+                game.log("new closest to enemy")
                 closest_to_enemy = s
                 closest_to_enemy_distance = euclidean_distance(s.position, buildings[0].position)
 
@@ -56,7 +61,8 @@ def do_turn(game):
                 if m:
                     commands.append(m)
 
-        if (game.get_building_potential() > 0):
+        game.log(closest_to_enemy)
+        if (closest_to_enemy is not None) and (game.get_building_potential() > 0):
             m = game.build(closest_to_enemy.position)
             if m:
                 commands.append(m)

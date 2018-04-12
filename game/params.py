@@ -2,7 +2,7 @@
 # Game parameters that remain consistent across all game variations / iterations.
 
 # ------------------------------------------------------------------------------
-# Movement Directions 
+# Movement Directions
 
 DIRECTIONS = {
     'left'  : [-1, 0],
@@ -22,7 +22,7 @@ BUILD_COMMAND = 'BUILD_COMMAND'
 # ------------------------------------------------------------------------------
 # Game
 
-MAX_ITERS = 2000         # The maximum number of turn iterations in a single game.
+MAX_ITERS = 200         # The maximum number of turn iterations in a single game.
 
 # ------------------------------------------------------------------------------
 # GameState
