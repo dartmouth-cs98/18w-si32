@@ -294,6 +294,9 @@ class GameHelper:
         # so this should not be an issue!
         return self.get_unit_count_by_cell(self.map.get_cell((x, y)))
 
+    def get_unit_count_by_position_tuple(self, coordinate):
+        return self.get_unit_count_by_cell(self.map.get_cell(coordinate))
+
     # --------------------------------------------------------------------------
     # RESOURCE DATA GETTERS
 
