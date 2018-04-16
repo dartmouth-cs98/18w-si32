@@ -10,14 +10,16 @@ from GameHelper import GameHelper
 
 game = GameHelper()
 ```
-Here the 'game' variable is the initialized object of the GameHelper, which provides a lot of useful methods, and allows your bot to read the game state. For the functions described below, they will be called from this GameHelper object.
+Here the 'game' variable is the initialized object of the GameHelper, which provides a lot of useful methods, and allows your bot to read, and interactt with, the game state.
+
+All functions described below in this API reference will be invoked using this GameHelper object.
 
 For example,
 ```
 game.move((1,1), 5, 'NORTHEAST')
 ```
-Will return a *move* command which will move 5 of your units from the cell at coordinates (1,1) to the adjacent cell in the northeasten direction.
-
+Will return a *move* command which will move 5 of your units from the cell at coordinates (1,1) to the adjacent cell in the Northeastern direction.
+#
 ### Command Creation
 
 **move()**
@@ -56,7 +58,7 @@ Creates and returns a _mine_ command to instruct _num\_units_ units at the posit
 
 If the there are fewer than _num\_units_ units at the specified position, then all of the invoking player's units at that position will be instructed to mine.
 
-#### Cell Data (Getters)
+### Cell Data (Getters)
 
 **get\_cell()**
 
@@ -72,7 +74,7 @@ Get (return) the cell (`Cell` instance) that exists at the location specified by
 get_my_cell_count()
 ```
 
-Get (return) a count (number) of the map cells in which the invoking player has units.
+Get (return) the count (number) of map cells in which the invoking player has units.
 
 **get\_enemy\_cell\_count()**
 
@@ -118,7 +120,7 @@ Get (return) a list of all of cells (`Cell` instances) in which enemy players co
 
 Notice that this is distinct from the `get_enemy_buildings()` function in that it returns a list of cells, rather than a list of buildings (`Building` instances).
 
-#### Building Data (Getters)
+### Building Data (Getters)
 
 **get\_my\_building\_count()**
 
@@ -172,6 +174,7 @@ Get (return) the total number of units on the map over which the invoking player
 
 Notice that this is distinct from the number of cells on the map over which the invoking player has control — unit count represents total offensive and defensive power, while cell count describes the number of locations over which these units are allocated.
 
+**get_enemy_total_unit_count()**
 ```
 get_enemy_total_unit_count()
 ```
