@@ -18,15 +18,21 @@ from game.params import MAX_RESOURCES, DEFENSE_RATING, UNIT_COST
 # num_players (number) - the number of players involved in this game instance.
 
 class Cell:
-    def __init__(self, position, num_players):
-        self.position = position
+    def __init__(self, position, num_players, occupiable = True):
+        self.position = Coordinate(position)
 
         # amount of resource in the cell (will be randomized for now)
         self.resource = randint(0, MAX_RESOURCES)
         self.units = self.initialize_units_list(num_players)
 
+        self.num_players = num_players
+
         self.building = None
 
+        self.occupiable = occupiable
+
+    def occupiable(self):
+        return self.occupiable
     # --------------------------------------------------------------------------
     # RESOURCE METHODS
 
@@ -68,129 +74,58 @@ class Cell:
     # UPDATE FUNCTIONS
 
     def update_cell(self, players):
-        self.update_building_status(players)
-        self.update_units_number()
+        self.update_units_and_building(players)
 
-    def update_units_number(self):
-        while (self.units[0] > 0) and (self.units[1] > 0):
-            units = min(self.units[0], self.units[1])
-            self.units[0] -= units
-            self.units[1] -= units
+    def update_units_and_building(self, players):
+        building_owner = self.building.ownerId  # player ID of player who owns the building on this cell
 
-    def update_units_number_multi(self):
-        while True: #keep performing combat until only one or less players remain
+        contenders = []  # player IDs of all players with nonzero units on the cell
 
-            i = 0
-            ids_players_with_units = []  # list which will contain the ids of all players with units on the cell
+        buffed_units = self.units[building_owner] + DEFENSE_RATING  # buff the number of units of the building owner
+        self.units[building_owner] = buffed_units
 
-            total_number_units = 0  # total number of units on the tile
+        for i in range(self.num_players):
+            if self.units[i] > 0:
+                contenders.append(i)
 
-            for player_unit_count in self.units:  # for the unit count of each player
-                if player_unit_count > 0:  # if it's nonzero
-                    total_number_units += player_unit_count  # sum into total number of units on the cell
-                    ids_players_with_units.append(
-                        i)  # append the id ('i') into the list containing ids of all players with units on the cell
+        while (len(contenders) > 1):
+            print(len(contenders))
+            # units = min(contenders)#, self.units[2])
+            units = float("inf")
+            for index in contenders:
+                if (self.units[index] < units):
+                    units = self.units[index]
+            print(units)
 
-                i += 1
+            to_remove = []  # IDs of players who have lost all units
+            for index in contenders:
+                self.units[index] -= units
+                if (self.units[index] <= 0):
+                    to_remove.append(index)
+            # for i in range(number_of_players):
+            #     units.append(0)
 
-            if len(ids_players_with_units) <= 1: #break out of loop if there's only one or less players with units in the cell
-                break
+            # remove players with all units destroyed
+            for index in to_remove:
+                contenders.remove(index)
+                # self.units[0] -= units
+                # self.units[1] -= units
+                # self.units[2] -= units
 
-            dict_units_sent = {}  # maps tuple (attacker id, attacked id) to the number of units sent by attacker
-            dict = {}  # maps pairs of IDs (expressed as tuples) to the number of units to send to each other
+        # check if building is destroyed and debuff the number of units
+        if (self.units[building_owner] == 0):
+            self.destroy_building()
+        elif (self.units[building_owner] <= DEFENSE_RATING and self.units[building_owner] > 0):
+            self.units[building_owner] = 0
+        else:
+            self.units[building_owner] = self.units[building_owner] - 10
 
-            for id_player in ids_players_with_units:  # for the id 'id_player' of each player with units on the cell
+        # check if new units should be produced
+        while self.building.resources >= UNIT_COST:
+            self.increment_units(building_owner, 1)
+            self.building.resources -= UNIT_COST
+            players[self.building.ownerId].increment_units_produced()
 
-                number_player_units = self.units[
-                    id_player]  # the number of units on the tile controlled by player with id 'id_player'
-                total_number_enemy_units = total_number_units - number_player_units  # the total number of units controlled by all other players on the cell;
-
-                # list of enemy IDs is just the list of player IDs minus 'id_player'
-                ids_enemies_with_units = list(ids_players_with_units)
-                ids_enemies_with_units.remove(id_player)
-
-                # tallies total number delegated towards enemy combat
-                total_number_units_sent = 0
-
-                # distribute units to combat each enemy proportional to their unit strength
-                for id_enemy in ids_enemies_with_units:  # for the id 'id_enemy' of each other player with units on the cell
-                    number_enemy_units = self.units[id_enemy]
-                    number_units_sent_to_enemy = int((number_enemy_units / total_number_enemy_units) * number_player_units)
-
-                    dict_units_sent[(id_player, id_enemy)] = number_units_sent_to_enemy
-                    total_number_units_sent += number_units_sent_to_enemy
-
-                units_remaining = number_player_units - total_number_units_sent
-
-                # distribute remaining units randomly
-                k = 0
-                while (k < units_remaining):
-                    random_enemy_id = random.choice(ids_enemies_with_units)
-                    dict_units_sent[(id_player, random_enemy_id)] += 1
-                    k += 1
-
-
-
-            # create dict from dict_units_sent
-            for key in dict_units_sent:
-                rev_key = (key[1], key[0])
-                if key not in dict and rev_key not in dict:
-                    dict[key] = (dict_units_sent[key], dict_units_sent[rev_key])
-
-            #finally, perform all the combats
-            for key in dict:
-                self.in_square_two_player_combat(key[0], key[1], dict[key][0], dict[key][1])
-
-
-
-
-    # calculates combat between two players with the units they send toward each other
-    def in_square_two_player_combat(self, playerId1, playerId2, unitsId1, unitsId2):
-        smaller = min(unitsId1, unitsId2)
-        self.units[playerId1] -= smaller
-        self.units[playerId2] -= smaller
-
-    #TODO: generalize this
-    def update_building_status(self, players):
-        if self.building is not None:
-            building_owner = self.building.ownerId
-
-            attacker = None
-
-            i = 0
-            for unit_number in self.units:
-                if (i != building_owner & unit_number > 0):
-                    attacker = i
-                    break
-                i += 1
-
-            #  check if building will be destroyed by enemy units
-            if attacker is not None:
-                #TODO: fix up combat here - so that the multi-player combat algorithm applies to building squares
-                #I'll do this tomorrow, I swear
-
-                # remove units the building handles on its own
-                self.units[attacker] = max(0, self.units[attacker] - DEFENSE_RATING)
-
-                # if any units remain, they kill units from the building
-                if self.units[attacker] > 0:
-                    if self.units[attacker] > self.units[building_owner]:
-                        # building will be destroyed
-                        self.destroy_building()
-                        self.units[attacker] -= self.units[building_owner]
-                        self.units[building_owner] = 0
-                    else:
-                        # building not destroyed
-                        self.units[attacker] = 0
-                        self.units[building_owner] -= self.units[attacker]
-
-            # check if new units should be produced
-            while self.building.resources >= UNIT_COST:
-                self.increment_units(building_owner, 1)
-                self.building.resources -= UNIT_COST
-                players[self.building.ownerId].increment_units_produced()
-
-            # update buildings status towards producing more units
             self.building.increment_resources()
 
     # --------------------------------------------------------------------------
