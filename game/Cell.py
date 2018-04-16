@@ -77,11 +77,19 @@ class Cell:
         self.update_units_and_building(players)
 
     def update_units_and_building(self, players):
+<<<<<<< HEAD
+        building_owner = self.building.ownerId #player ID of player who owns the building on this cell
+
+        contenders = [] #player IDs of all players with nonzero units on the cell
+
+        buffed_units = self.units[building_owner] + DEFENSE_RATING #buff the number of units of the building owner
+=======
         building_owner = self.building.ownerId  # player ID of player who owns the building on this cell
 
         contenders = []  # player IDs of all players with nonzero units on the cell
 
         buffed_units = self.units[building_owner] + DEFENSE_RATING  # buff the number of units of the building owner
+>>>>>>> 985e32ebabfb505f2be52e776e204791a9ec207a
         self.units[building_owner] = buffed_units
 
         for i in range(self.num_players):
@@ -97,7 +105,12 @@ class Cell:
                     units = self.units[index]
             print(units)
 
+<<<<<<< HEAD
+
+            to_remove = [] #IDs of players who have lost all units
+=======
             to_remove = []  # IDs of players who have lost all units
+>>>>>>> 985e32ebabfb505f2be52e776e204791a9ec207a
             for index in contenders:
                 self.units[index] -= units
                 if (self.units[index] <= 0):
@@ -105,6 +118,16 @@ class Cell:
             # for i in range(number_of_players):
             #     units.append(0)
 
+<<<<<<< HEAD
+            #remove players with all units destroyed
+            for index in to_remove:
+                contenders.remove(index)
+            # self.units[0] -= units
+            # self.units[1] -= units
+            # self.units[2] -= units
+        
+        #check if building is destroyed and debuff the number of units
+=======
             # remove players with all units destroyed
             for index in to_remove:
                 contenders.remove(index)
@@ -113,6 +136,7 @@ class Cell:
                 # self.units[2] -= units
 
         # check if building is destroyed and debuff the number of units
+>>>>>>> 985e32ebabfb505f2be52e776e204791a9ec207a
         if (self.units[building_owner] == 0):
             self.destroy_building()
         elif (self.units[building_owner] <= DEFENSE_RATING and self.units[building_owner] > 0):
