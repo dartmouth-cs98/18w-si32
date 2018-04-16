@@ -78,6 +78,7 @@ class Cell:
 
     def update_units_and_building(self, players):
         has_building = not (self.building is None)
+        building_owner = None
 
         if has_building:
             building_owner = self.building.ownerId  # player ID of player who owns the building on this cell
