@@ -21,3 +21,6 @@ node_modules
 dist
 .idea
 tags
+
+# robin's dope proprietary bots
+sample_bots/fortifier/bot.py

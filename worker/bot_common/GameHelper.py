@@ -233,9 +233,6 @@ class GameHelper:
     # --------------------------------------------------------------------------
     # UNIT DATA GETTERS
 
-    def my_units_at_pos(self, pos):
-        return self.map.get_cell(pos).units[self.myId]
-
     # Get a count of the total number of units I control.
     # Return: (number)
     #   a count of the total number of units that I control
@@ -281,16 +278,17 @@ class GameHelper:
     # Get the number of units in cell at position specified (<x>, <y>) controlled by <playerId>.
     # Return: (number)
     #   the number of units at the specified position controlled by player <playerId>
-    def get_unit_count_by_position(self, x, y):
+    def get_unit_count_by_position(self, x, y = None):
         # only one player may have control over a cell at any one time,
         # so this should not be an issue!
-        return self.get_cell(x, y)
+        if (y != None):
+            return self.get_unit_count_by_cell(self.get_cell((x, y)))
+        else:
+            self.get_unit_count_by_cell(self.get_cell(x))
 
     def my_units_at_pos(self, pos): # returns True if there are more units at pos1 than there are units located at pos2
-        return self.map.get_cell(pos).units[self.myId]
+        return self.get_cell(pos).units[self.myId]
 
-    def get_unit_count_by_position_tuple(self, coordinate):
-        return self.get_unit_count_by_cell(self.map.get_cell(coordinate))
 
     # --------------------------------------------------------------------------
     # RESOURCE DATA GETTERS

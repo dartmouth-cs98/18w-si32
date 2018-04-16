@@ -1,5 +1,5 @@
 import { createStore, applyMiddleware, combineReducers } from "redux";
-import logger from "redux-logger";
+//import logger from "redux-logger";
 import thunkMiddleware from "redux-thunk";
 import { reducer as formReducer } from "redux-form";
 
@@ -28,6 +28,6 @@ const rootReducer = (state, action) => {
   return reducer(state, action);
 };
 
-let store = createStore(rootReducer, applyMiddleware(thunkMiddleware, logger));
+let store = createStore(rootReducer, applyMiddleware(thunkMiddleware));
 
 export default store;

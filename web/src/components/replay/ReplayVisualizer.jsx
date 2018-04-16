@@ -30,6 +30,20 @@ class ReplayVisualizer extends React.PureComponent {
     }
   }
 
+  replayStepBack = () => {
+    this.setState({ 
+      play: false,
+      currentFrame: this.state.currentFrame - 1,
+    });
+  }
+
+  replayStepForward = () => {
+    this.setState({ 
+      play: false,
+      currentFrame: this.state.currentFrame + 1,
+    });
+  }
+
   resetReplayFile = () => {
     this.props.resetReplayFile();
   }
@@ -58,13 +72,11 @@ class ReplayVisualizer extends React.PureComponent {
   }
 
   render() {
-    let controlButtonText;
+    let ctrlButton;
     if (this.state.play) {
-      controlButtonText = "Pause Replay";
-    } else if (this.state.currentFrame == 0 || this.state.currentFrame === (this.props.replay.turns.length - 1)) {
-      controlButtonText = "Start Replay";
+      ctrlButton = <i className="fa fa-pause"></i>;
     } else {
-      controlButtonText = "Resume Replay";
+      ctrlButton = <i className="fa fa-play"></i>;
     }
 
     const progressPercentage = this.state.currentFrame === 0 ? 0 : Math.floor((this.state.currentFrame / (this.props.replay.turns.length - 1  ))*100);
@@ -74,7 +86,13 @@ class ReplayVisualizer extends React.PureComponent {
         { this.renderCanvas() }
         <div style={styles.controls}>
           <Button kind={"primary"} style={styles.controlButton} onClick={this.toggleReplayControl}>
-            <div>{controlButtonText}</div>
+            {ctrlButton}
+          </Button>
+          <Button kind={"tertiary"} style={styles.controlButtonSmall} onClick={this.replayStepBack}>
+             <i className="fa fa-step-backward"></i>
+          </Button>
+          <Button kind={"tertiary"} style={styles.controlButtonSmall} onClick={this.replayStepForward}>
+             <i className="fa fa-step-forward"></i>
           </Button>
           <div style={styles.progressContainer}>
             <Progress percentage={progressPercentage} />
@@ -119,8 +137,13 @@ const styles = {
     fontSize: "30px"
   },
   controlButton: {
-    width: 160,
+    width: 110,
     marginRight: 10,
+  },
+  controlButtonSmall: {
+    width: 30,
+    marginRight: 10,
+    fontSize: 15,
   },
   navigateButton: {
     width: 160,
