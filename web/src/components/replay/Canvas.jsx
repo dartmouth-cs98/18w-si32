@@ -3,7 +3,7 @@ import _ from "lodash";
 
 import { Application, Graphics, Point, Polygon } from "pixi.js";
 
-const TICK_SPEED = 30;
+const TICK_SPEED = 25;
 
 const SCENE_BACKGROUND_COLOR = 0xFFFFFF;
 // const GRID_OUTLINE_COLOR = 0xec0b43;

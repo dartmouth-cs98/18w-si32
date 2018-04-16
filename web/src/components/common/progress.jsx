@@ -4,11 +4,19 @@ import Radium from "radium";
 import { constants, colors } from "../../style";
 
 class Progress extends React.PureComponent {
+  onClick = (e) => {
+    if (!this.props.onClick) {
+      return;
+    }
+    var percent = e.nativeEvent.offsetX / this.barRef.offsetWidth;
+    this.props.onClick(percent);
+  }
+
   render() {
     const { percentage } = this.props;
     const fillPercentage = { width: `${percentage}%` };
     return (
-      <div style={styles.wrapper}>
+      <div style={styles.wrapper} ref={barRef => this.barRef = barRef} onClick={this.onClick}>
         <div style={{...styles.fill, ...fillPercentage }}></div>
       </div>
     );

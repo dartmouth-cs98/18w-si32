@@ -30,6 +30,12 @@ class ReplayVisualizer extends React.PureComponent {
     }
   }
 
+  scrubTo = (percentage) => {
+    this.setState({
+      currentFrame: Math.floor(this.props.replay.turns.length * percentage),
+    });
+  }
+
   replayStepBack = () => {
     this.setState({ 
       play: false,
@@ -95,7 +101,7 @@ class ReplayVisualizer extends React.PureComponent {
              <i className="fa fa-step-forward"></i>
           </Button>
           <div style={styles.progressContainer}>
-            <Progress percentage={progressPercentage} />
+            <Progress onClick={this.scrubTo} percentage={progressPercentage} />
           </div>
         </div>
         { this.props.hideSelectButton ? "" :
