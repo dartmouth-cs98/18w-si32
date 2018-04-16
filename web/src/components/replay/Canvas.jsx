@@ -1,9 +1,9 @@
 import React from "react";
 import _ from "lodash";
 
-import { Application, Graphics, Point, Polygon } from "pixi.js";
+import { Application, Graphics, Point, Polygon, Text } from "pixi.js";
 
-const TICK_SPEED = 30;
+const TICK_SPEED = 25;
 
 const SCENE_BACKGROUND_COLOR = 0xFFFFFF;
 // const GRID_OUTLINE_COLOR = 0xec0b43;
@@ -19,6 +19,7 @@ export const COLORS = [
   0xec0b43,
   0x274c77,
   0x22EB1A,
+  0xEB8D0C,
 ];
 
 // Helper functions for hexagonal math
@@ -65,6 +66,8 @@ class Canvas extends React.Component {
     this.mapGraphics = new Graphics();
     this.stage.addChild(this.mapGraphics);
 
+    this.textElements = {};
+
     this.timeout = null;
 
     // inject the canvas
@@ -79,12 +82,18 @@ class Canvas extends React.Component {
     return false;
   }
 
-  componentWillReceiveProps(prevProps) {
+  componentWillReceiveProps(nextProps) {
     // frame number changed but not playing, meaning user stepped
     // call animate manually to re-render state
-    if ((this.props.frame != prevProps.frame && !this.props.play) || this.props.play != prevProps.play) {
+    if ((this.props.frame != nextProps.frame && !this.props.play) || this.props.play != nextProps.play) {
       setTimeout(() => {
         this.animate();
+      });
+    }
+
+    if (this.props.showNums != nextProps.showNums && !this.props.play) {
+      setTimeout(() => {
+        this.drawCurrentFrame();
       });
     }
   }
@@ -111,8 +120,51 @@ class Canvas extends React.Component {
     this.sp.h = (this.sp.rows + .5) * this.sp.cell_height * 3/4 + CELL_OFFSET_Y * this.sp.rows;
   }
 
-  drawCell = (row, col, color, hasBuilding) => {
-    this.mapGraphics.beginFill(color.c, color.a);
+  drawUnitCount = (row, col, cell, alpha, center) => {
+    if (!this.props.showNums) { 
+      if (!_.isEmpty(this.textElements)) {
+        _.each(this.textElements, (v, key) => {
+          this.mapGraphics.removeChild(v);
+          delete this.textElements[key];
+        });
+      }
+    }
+
+    const textKey = `${row},${col}`;
+
+    // if no units
+    if (cell.u == 0 || cell.u == undefined) {
+      // and there was text there
+      if (textKey in this.textElements) {
+        // remove the text
+        this.mapGraphics.removeChild(this.textElements[textKey]);
+        delete this.textElements[textKey];
+      }
+    } else if(cell.u > 0) {
+      // if there are units, draw the label
+      let textColor = (alpha < .7 || alpha > 10 || cell.b != undefined) ? ("#" + COLORS[cell.p].toString(16)) : "#ffffff";
+
+      // if text already exists, just update it; otherwise create a text el and add it to the canvas
+      if (textKey in this.textElements) {
+        this.textElements[textKey].text = cell.u;
+        this.textElements[textKey].style.fill = textColor;
+      } else {
+        var text = new Text(cell.u, { fontFamily: "Arial", fontSize: 12, fill: textColor});
+
+        // setting the anchor point to 0.5 will center align the text... great for spinning!
+        text.anchor.set(0.5);
+        text.position.x = center.x;
+        text.position.y = center.y;
+        this.textElements[textKey] = text;
+        this.mapGraphics.addChild(text);
+      }
+    }
+  }
+
+  drawCell = (row, col, cell) => {
+    let { color, alpha } = this.getCellColorAlpha(cell);
+
+    this.mapGraphics.beginFill(color, alpha);
     const center = {
       x: col * (this.sp.cell_width + CELL_OFFSET_X) + this.sp.cell_width/2,
       y: row * (this.sp.cell_height * 3/4 + CELL_OFFSET_Y) + this.sp.cell_height/2,
@@ -125,12 +177,15 @@ class Canvas extends React.Component {
     const corners = new Polygon(_.range(0,6).map(i => getHexagonCorner(center, this.sp.cell_r, i)));
     this.mapGraphics.drawPolygon(corners);
 
-    if (hasBuilding) {
+    // if cell has a building, draw a star
+    if (cell.b != undefined) {
       this.mapGraphics.beginFill(0xFFFFFF);
       this.mapGraphics.drawStar(center.x, center.y, 6, this.sp.cell_r - 2, this.sp.cell_r / 3);
     }
 
     this.mapGraphics.endFill();
+
+    this.drawUnitCount(row, col, cell, alpha, center);
   }
 
   // add the grid to main map graphics
@@ -139,42 +194,53 @@ class Canvas extends React.Component {
     for (let i = 0; i < this.sp.rows; i++) {
       // iterate over columns
       for (let j = 0; j < this.sp.cols; j++) {
-        const r = this.getCellColorAlpha(i, j);
-        this.drawCell(j, i, r, r.building);
+        const cell = this.props.replay.turns[this.props.frame].map[i][j];
+
+        /* TODO pass var on whether text should be updated?
+        let prevCell = { u: [0, 0] };
+        if (this.props.frame > 0) {
+          prevCell = this.props.replay.turns[this.props.frame - 1].map[i][j];
+        }
+        */
+
+        this.drawCell(j, i, cell);
       }
     }
   }
 
-  getCellColorAlpha = (r, c) => {
-    const building = this.props.replay.turns[this.props.frame].map[r][c].b;
+  getCellColorAlpha = (cell) => {
+    const units = cell.u;
+    const building = cell.b;
     if (building != undefined) {
-      return { "c": getPlayerColor(building), "a": 1, "building": true };
+      return { "color": getPlayerColor(building), "alpha": 1 };
     }
 
-    const units = this.props.replay.turns[this.props.frame].map[r][c].u;
     if (!units) {
-      return { "c": NEUTRAL_CELL_COLOR, "a": NEUTRAL_CELL_ALPHA, "building": false };
+      return { "color": NEUTRAL_CELL_COLOR, "alpha": NEUTRAL_CELL_ALPHA };
     }
-    let color, alpha;
+    let color, alpha = 0;
 
-    _.each(units,  (unitVal, i) => {
-      if (unitVal > 0) {
-        color = COLORS[i];
-        alpha = unitVal / MAX_UNITS;
-      }
-    });
-    return { "c": color, "a": alpha, "building": false };
+    if (cell.u > 0) {
+      color = COLORS[cell.p];
+      alpha = cell.u / MAX_UNITS;
+    }
+    return { color, alpha, building };
+   }
+
+  drawCurrentFrame() {
+    this.mapGraphics.clear();
+    //this.mapGraphics.removeChildren();
+    this.addGridToStage();
+    //
+    // render the stage container
+    this.renderer.render(this.stage);
   }
 
   // recursively render the stage with renderer
   animate() {
     clearTimeout(this.timeout);
-    this.mapGraphics.clear();
-    this.addGridToStage();
 
-    // render the stage container
-    this.renderer.render(this.stage);
-
+    this.drawCurrentFrame();
 
     if (this.props.play && (this.props.frame + 1) < this.props.replay.turns.length) {
       this.props.incrementFrame();

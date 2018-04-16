@@ -4,7 +4,7 @@ import Canvas from "./Canvas";
 import Button from "../common/button";
 import Progress from "../common/progress";
 
-import { colors } from "../../style";
+import { colors, constants } from "../../style";
 
 class ReplayVisualizer extends React.PureComponent {
   constructor(props) {
@@ -13,6 +13,7 @@ class ReplayVisualizer extends React.PureComponent {
     this.state = {
       play: false,
       currentFrame: 0,
+      showNums: true,
     };
   }
 
@@ -28,6 +29,18 @@ class ReplayVisualizer extends React.PureComponent {
       // if we have reached the final frame, reset on button click
       this.setState({ currentFrame: 0 });
     }
+  }
+
+  toggleNums = (e) => {
+    this.setState({
+      showNums: !this.state.showNums,
+    });
+  }
+
+  scrubTo = (percentage) => {
+    this.setState({
+      currentFrame: Math.floor(this.props.replay.turns.length * percentage),
+    });
   }
 
   replayStepBack = () => {
@@ -67,6 +80,7 @@ class ReplayVisualizer extends React.PureComponent {
         replay={this.props.replay}
         frame={this.state.currentFrame}
         incrementFrame={this.incrementCurrentFrame}
+        showNums={this.state.showNums}
         play={this.state.play} />
     );
   }
@@ -95,16 +109,18 @@ class ReplayVisualizer extends React.PureComponent {
              <i className="fa fa-step-forward"></i>
           </Button>
           <div style={styles.progressContainer}>
-            <Progress percentage={progressPercentage} />
+            <Progress onClick={this.scrubTo} percentage={progressPercentage} />
           </div>
         </div>
-        { this.props.hideSelectButton ? "" :
-            <div style={styles.subRow}>
+        <div style={styles.options}>
+          { this.props.hideSelectButton ? "" :
               <Button kind={"tertiary"} style={styles.navigateButton} onClick={this.resetReplayFile}>
                 <div>&larr; Select Another File</div>
               </Button>
-            </div>
-        }
+          }
+          <label style={styles.option}><input type="checkbox" checked={this.state.showNums} onChange={this.toggleNums} /> <span style={styles.option.label}>Show numbers</span></label>
+
+        </div>
       </div>
     );
   }
@@ -118,12 +134,26 @@ const styles = {
     alignItems: "center",
     padding: "10px 0 0 0"
   },
-  subRow: {
+  options: {
     width: "80%",
     display: "flex",
     flexDirection: "row",
     justifyContent: "flex-start",
     alignItems: "center",
+    borderTop: `1px solid ${colors.border}`,
+    marginTop: 10,
+    marginLeft: 15,
+    marginRight: 15,
+    paddingTop: 10,
+  },
+  option: {
+    fontSize: constants.fontSizes.small,
+    color: colors.medGray,
+    display: "flex",
+    alignItems: "center",
+    label: {
+      marginLeft: 5,
+    }
   },
   controls: {
     width: "80%",
@@ -146,7 +176,8 @@ const styles = {
     fontSize: 15,
   },
   navigateButton: {
-    width: 160,
+    fontSize: constants.fontSizes.small,
+    marginRight: 20,
   },
   progressContainer: {
     flex: 1,

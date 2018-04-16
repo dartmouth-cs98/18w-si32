@@ -93,7 +93,10 @@ class GameHelper:
     # Get map cell at specified (x, y) coordinate.
     # Return: (Cell)
     #   Cell at <position> if <position> is valid, else None
-    def get_cell(self, x, y):
+    def get_cell(self, x, y = None):
+        if (type(x) == Coordinate):
+            return self.map.get_cell(x)
+
         # map handles validity check
         return self.map.get_cell(Coordinate(x, y))
 
@@ -282,13 +285,7 @@ class GameHelper:
         # only one player may have control over a cell at any one time,
         # so this should not be an issue!
 
-        #if one parameter, assume it's a tuple
-        if (y is None):
-            return self.get_unit_count_by_cell(self.get_cell(x[0], x[1]))
-
-        #if two parameters, assume they're coordinates
-        else:
-            return self.get_unit_count_by_cell(self.get_cell(x, y))
+        return self.get_unit_count_by_cell(self.get_cell(x, y))
 
     def my_units_at_pos(self, pos): # returns True if there are more units at pos1 than there are units located at pos2
         return self.get_cell(pos[0], pos[1]).units[self.myId]

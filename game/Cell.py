@@ -97,13 +97,11 @@ class Cell:
                 contenders.append(i)
 
         while (len(contenders) > 1):
-            print(len(contenders))
             # units = min(contenders)#, self.units[2])
             units = float("inf")
             for index in contenders:
                 if (self.units[index] < units):
                     units = self.units[index]
-            print(units)
 
             to_remove = []  # IDs of players who have lost all units
             for index in contenders:
@@ -130,12 +128,12 @@ class Cell:
                 self.units[building_owner] = self.units[building_owner] - 10
 
             # check if new units should be produced
-            while self.building.resources >= UNIT_COST:
+            while self.building.production_status >= UNIT_COST:
                 self.increment_units(building_owner, 1)
-                self.building.resources -= UNIT_COST
+                self.building.production_status -= UNIT_COST
                 players[self.building.ownerId].increment_units_produced()
 
-                self.building.increment_resources()
+            self.building.production_tick()
 
     # --------------------------------------------------------------------------
     # INITIALIZING FUNCTION
