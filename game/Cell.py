@@ -30,8 +30,12 @@ class Cell:
 
         self.building = None
 
-        self.occupiable = occupiable
+        self.occupiable = occupiable #whether the cell is blocked or free (True = free, False = blocked)
 
+    # --------------------------------------------------------------------------
+    # STATUS METHODS
+
+    #returns whether the cell is blocked or free
     def occupiable(self):
         return self.occupiable
     # --------------------------------------------------------------------------
@@ -78,11 +82,11 @@ class Cell:
         self.update_units_and_building(players)
 
     def update_units_and_building(self, players):
-        has_building = not (self.building is None)
-        building_owner = None
+        has_building = not (self.building is None) #whether the Cell has a building
+        building_owner = None # player ID of player who owns the building on this cell
 
         if has_building:
-            building_owner = self.building.ownerId  # player ID of player who owns the building on this cell
+            building_owner = self.building.ownerId
             buffed_units = self.units[building_owner] + DEFENSE_RATING  # buff the number of units of the building owner
             self.units[building_owner] = buffed_units
 

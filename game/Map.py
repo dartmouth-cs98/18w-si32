@@ -28,7 +28,7 @@ class Map:
             row = []
             for c in range(width):
 
-                #roughly 1 in 5 cells are blocked
+                #(maybe adjust later) distribution of roughly 1 in 5 cells blocked
                 p = randint(1, 5)
                 if p == 1:
                     occupiable = False
@@ -76,6 +76,10 @@ class Map:
     # check if cell is within map
     def cell_in_range(self, cell):
         return self.position_in_range(cell.position)
+
+    #check if position is free
+    def position_free(self, position):
+        return self.position_in_range(position) and self.get_cell(position).occupiable()
 
     # check if cell is free
     def cell_free(self, cell):
