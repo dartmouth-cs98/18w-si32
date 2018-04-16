@@ -19,6 +19,7 @@ export const COLORS = [
   0xec0b43,
   0x274c77,
   0x22EB1A,
+  0xEB8D0C,
 ];
 
 // Helper functions for hexagonal math
