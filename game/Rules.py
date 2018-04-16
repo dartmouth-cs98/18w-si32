@@ -19,8 +19,8 @@ class Rules:
         return self.within_bounds(move) and self.enough_units(move)
 
     def within_bounds(self, move):
-        new_coords = move.position.add(move.direction)
-        return self.map.position_in_range(new_coords)
+        new_coords = move.position.adjacent_in_direction(move.direction)
+        return self.map.position_in_range(new_coords) and self.map.cell_free(self.map.get_cell(new_coords))
 
     def enough_units(self, move):
         cell = self.map.get_cell(move.position)
@@ -37,7 +37,9 @@ class Rules:
 
     def update_move_command(self, move):
         old_cell = self.map.get_cell(move.position)
-        new_cell = self.map.get_cell([old_cell.position[0] + move.direction[0], old_cell.position[1] + move.direction[1]])
+
+        destination_pos = move.position.adjacent_in_direction(move.direction) 
+        new_cell = self.map.get_cell(destination_pos)
 
         if old_cell.units[move.playerId] < move.num_units:
             move.num_units = old_cell.units[move.playerId]
@@ -112,8 +114,7 @@ class Rules:
             current_move = player_moves[index]
             cell = self.map.get_cell(current_move.position)
 
-            new_position = (cell.position[0] + current_move.direction[0],
-            cell.position[1] + current_move.direction[1])
+            new_position = cell.position.adjacent_in_direction(current_move.direction) 
 
             if new_position in enemy_set:  # Check if opposing player has moves coming from new position
                 i = 0
@@ -122,7 +123,7 @@ class Rules:
 
                     enemy_move = enemy_set[new_position][i]
 
-                    if self.opposite_direction(current_move.direction, enemy_move.direction):
+                    if current_move.direction.opposite() == enemy_move.direction:
 
                         current_cell = self.map.get_cell(cell.position)
                         enemy_cell = self.map.get_cell(enemy_move.position)
@@ -177,8 +178,7 @@ class Rules:
             current_move = player_moves[index]
             cell = self.map.get_cell(current_move.position)
 
-            new_position = (cell.position[0] + current_move.direction[0],
-            cell.position[1] + current_move.direction[1])
+            new_position = cell.position.adjacent_in_direction(current_move.direction)
 
             if new_position in enemy_set:  # Check if opposing player has moves coming from new position
                 i = 0
@@ -187,7 +187,7 @@ class Rules:
 
                     enemy_move = enemy_set[new_position][i]
 
-                    if self.opposite_direction(current_move.direction, enemy_move.direction):
+                    if current_move.direction.opposite() == enemy_move.direction:
 
                         current_cell = self.map.get_cell(cell.position)
                         enemy_cell = self.map.get_cell(enemy_move.position)
@@ -249,10 +249,10 @@ class Rules:
         while player < num_players:
 
             for move in moves[player]: #for each COMMAND of a player, check if the command's position is in the player's dictionary's keys; if not, add it with value as a singleton list with that Command. if it is, append to the value (list of Commands)
-                if tuple(move.position) not in sets[player]:
-                    sets[player][tuple(move.position)] = [move]
+                if move.position not in sets[player]:
+                    sets[player][move.position] = [move]
                 else:
-                    sets[player][tuple(move.position)].append(move)
+                    sets[player][move.position].append(move)
 
             player += 1
 
@@ -263,23 +263,19 @@ class Rules:
         sets = [{}, {}]
 
         for move in moves[0]:
-            if tuple(move.position) not in sets[0]:
-                sets[0][tuple(move.position)] = [move]
+            if move.position not in sets[0]:
+                sets[0][move.position] = [move]
             else:
-                sets[0][tuple(move.position)].append(move)
+                sets[0][move.position].append(move)
 
         for move in moves[1]:
-            if tuple(move.position) not in sets[1]:
-                sets[1][tuple(move.position)] = [move]
+            if move.position not in sets[1]:
+                sets[1][move.position] = [move]
             else:
-                sets[1][tuple(move.position)].append(move)
+                sets[1][move.position].append(move)
 
         return sets
     '''
-
-    def opposite_direction(self, direction1, direction2):
-        temp = (direction1[0]*-1, direction1[1]*-1)
-        return (temp[0] == direction2[0]) and (temp[1] == direction2[1])
 
     def player_has_enough_resources(self, playerId):
         return self.players[playerId].resources >= BUILDING_COST

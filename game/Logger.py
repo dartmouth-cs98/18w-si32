@@ -69,8 +69,8 @@ class Logger:
             this_row = []
             for c in row:
                 cleaned_cell = {}
-                if (tuple(c.position) not in self.cell_resources) or (self.cell_resources[tuple(c.position)] != c.resource):
-                    self.cell_resources[(tuple(c.position))] = c.resource
+                if (c.position not in self.cell_resources) or (self.cell_resources[c.position] != c.resource):
+                    self.cell_resources[c.position] = c.resource
                     cleaned_cell['r'] = c.resource
                 for u in c.units:
                     if u > 0:
@@ -91,21 +91,12 @@ class Logger:
         self.log['turns'].append(self.turn_log)
 
     def add_move(self, command):
-        coded_directions = {
-            (0, 0): -1,
-            (1,0): 0,
-            (0,1): 1,
-            (-1,0): 2,
-            (0,-1): 3
-        }
+        coded_position = command.position.x * self.width + command.position.y
 
-        coded_position = command.position[0] * self.width + command.position[1]
-
-        direction = coded_directions[tuple(command.direction)] if command.direction else None
         clean_command = {
             'u': command.playerId,
             'p': coded_position,
-            'd': direction,
+            'd': command.direction,
             'n': command.num_units,
         }
 

@@ -2,32 +2,40 @@
 # Class implementation for 'Map'
 
 from .Cell import Cell
+from .Coordinate import Coordinate
+from random import randint
 
-from game.params import MAP_WIDTH, MAP_HEIGHT
+from game.params import DEFAULT_MAP_WIDTH, DEFAULT_MAP_HEIGHT
 
 # Constructor Arguments
 # num_players (number) - the number of players involved in the game with which
 #                        this map is associated.
 
 class Map:
-    def __init__(self, num_players):
+    def __init__(self, num_players, width=DEFAULT_MAP_WIDTH, height=DEFAULT_MAP_HEIGHT):
         self.num_players = num_players
 
-        self.cells = self.initialize_map(MAP_WIDTH, MAP_HEIGHT)
-        self.width = MAP_WIDTH
-        self.height = MAP_HEIGHT
+        self.cells = self.initialize_map(width, height)
+        self.width = width
+        self.height = height
 
     # --------------------------------------------------------------------------
     # Initializing Function
 
     def initialize_map(self, width, height):
         cells = []
-        for i in range(width):
-            col = []
-            for j in range(height):
-                new_cell = Cell([i, j], self.num_players)
-                col.append(new_cell)
-            cells.append(col)
+        for r in range(height):
+            row = []
+            for c in range(width):
+                p = randint(1, 5)
+                if p == 1:
+                    occupiable = False
+                else:
+                    occupiable = True
+
+                new_cell = Cell(Coordinate(x=c, y=r), self.num_players, occupiable)
+                row.append(new_cell)
+            cells.append(row)
 
         return cells
 
@@ -36,44 +44,26 @@ class Map:
 
     # return cell at specified position
     def get_cell(self, position):
+        assert(type(position) is Coordinate)
+
         if self.position_in_range(position):
-            return self.cells[position[0]][position[1]]
+            return self.cells[position.y][position.x]
         else:
             return None
 
-     # returns list of adjacent cells
-     # TODO: make this a method of Cell to get adjacent 
-    def get_adjacent_squares(self, position, direction=None):
-        # If we don't need a specific direction, return all adjacent squares
-        if direction is None:
-            result = []
-            squares = []
-
-            squares.append([position[0]+1, position[1]])  # Square to the right
-            squares.append([position[0]-1, position[1]])  # Square to the left
-            squares.append([position[0], position[1]+1])  # Square below
-            squares.append([position[0], position[1]-1])  # Square down
-
-             # return legal cells
-            for square in squares:
-                if self.cell_in_range(square):
-                    result.append(self.get_cell(square))
-
-            return result
-
-        # check if adjacent cell in desired direction exists
-        else:
-            new_pos = (position[0] + direction[0], position[1] + direction[1])
-            if self.position_in_range(new_pos):
-                return self.get_cell(new_pos)
-
     # check if coordinates are contained by map
     def position_in_range(self, position):
-        return not ((position[0] < 0) or (position[0] >= (self.width - 1)) or (position[1] < 0) or (position[1] >= (self.height - 1)))
+        assert(type(position) is Coordinate)
+
+        return ((position.x >= 0) and (position.x < (self.width - 1)) and (position.y >= 0) and (position.y < (self.height - 1)))
 
     # check if cell is within map
     def cell_in_range(self, cell):
         return self.position_in_range(cell.position)
+
+    # check if cell is free
+    def cell_free(self, cell):
+        return self.cell_in_range(cell) and cell.occupiable()
 
     # returns only the state we care about for the game log
     def get_state(self):

@@ -5,7 +5,8 @@ import sys
 import json
 import pickle
 
-from game.params import MOVE_COMMAND, BUILD_COMMAND, MINE_COMMAND, DIRECTIONS
+from game.params import MOVE_COMMAND, BUILD_COMMAND, MINE_COMMAND, BUILDING_COST, Direction
+from game.Coordinate import Coordinate
 from game.Command import Command
 
 # ------------------------------------------------------------------------------
@@ -43,29 +44,30 @@ class GameHelper:
     # Return: (Command)
     #   the move command to accomplish the specified movement.
     def move(self, position_from, num_units, direction):
-        return Command(self.myId, position_from, MOVE_COMMAND, num_units, DIRECTIONS[direction])
+        return Command(self.myId, Coordinate(position_from), MOVE_COMMAND, num_units, direction)
 
     # Create and return a move command, with an additional layer of abstraction.
     # Return: (Command)
     #   the move command to accomplish the specified movement, or None.
     def move_towards(self, position_from, position_to, num_units=None):
-        if pos_equal(position_from, position_to):
+        position_to = Coordinate(position_to)
+        position_from = Coordinate(position_from)
+
+        if position_from == position_to:
             return None
 
-        d = None
-
-        if position_from[0] < position_to[0]:
-            d = 'right'
-        elif position_from[0] > position_to[0]:
-            d = 'left'
-        elif position_from[1] < position_to[1]:
-            d = 'down'
-        elif position_from[1] > position_to[1]:
-            d = 'up'
+        if position_from.x < position_to.x:
+            d = Direction.EAST
+        elif position_from.x > position_to.x:
+            d = Direction.WEST
+        elif position_from.y < position_to.y:
+            d = Direction.SOUTHWEST
+        elif position_from.y > position_to.y:
+            d = Direction.NORTHEAST
 
         # TODO: make this smarter by avoiding enemy units, enemy buildings, or stronger enemy buildings
 
-        num_units = num_units if num_units else self.get_unit_count_by_position(position_from[0], position_from[1])
+        num_units = num_units if num_units else self.get_unit_count_by_position(position_from.x, position_from.y)
         return self.move(position_from, num_units, d)
 
     # Create and return a build command.
@@ -77,13 +79,13 @@ class GameHelper:
         #   do we care though that this unit will also be able to mine as well?
         #   the difference is small, but it will be more realistic in some sense
         #   if we have this logic.
-        return Command(self.myId, position, BUILD_COMMAND, 1, DIRECTIONS["none"])
+        return Command(self.myId, Coordinate(position), BUILD_COMMAND, 1, Direction.NONE)
 
     # Create and return a mine command.
     # Return: (Command)
     #   the mine command to accomplish the specified mining procedure.
     def mine(self, position, num_units):
-        return Command(self.myId, position, MINE_COMMAND, num_units, DIRECTIONS["none"])
+        return Command(self.myId, Coordinate(position), MINE_COMMAND, num_units, Direction.NONE)
 
     # --------------------------------------------------------------------------
     # CELL GETTERS
@@ -93,7 +95,7 @@ class GameHelper:
     #   Cell at <position> if <position> is valid, else None
     def get_cell(self, x, y):
         # map handles validity check
-        return self.map.get_cell((x, y))
+        return self.map.get_cell(Coordinate(x, y))
 
     # Get count of all of my cells on the map.
     # Return: (number)
@@ -225,21 +227,8 @@ class GameHelper:
     # Return: (number)
     #   the number of buildings I can construct, assuming full resource use
     def get_building_potential(self):
-        return int(self.get_my_resource_count() / 100)
+        return int(self.get_my_resource_count() / BUILDING_COST)
 
-    # TODO: rename this, it's confusing
-    def position_towards(self, position_from, position_to):
-        if pos_equal(position_from, position_to):
-            return position_from
-
-        if position_from[0] < position_to[0]:
-            return position_from + (1, 0)
-        elif position_from[0] > position_to[0]:
-            return position_from + (-1, 0)
-        elif position_from[1] < position_to[1]:
-            return position_from + (0, 1)
-        elif position_from[1] > position_to[1]:
-            return position_from + (0, -1)
 
     # --------------------------------------------------------------------------
     # UNIT DATA GETTERS
@@ -295,7 +284,13 @@ class GameHelper:
     def get_unit_count_by_position(self, x, y):
         # only one player may have control over a cell at any one time,
         # so this should not be an issue!
-        return self.get_unit_count_by_cell(self.map.get_cell((x, y)))
+        return self.get_cell(x, y)
+
+    def my_units_at_pos(self, pos): # returns True if there are more units at pos1 than there are units located at pos2
+        return self.map.get_cell(pos).units[self.myId]
+
+    def get_unit_count_by_position_tuple(self, coordinate):
+        return self.get_unit_count_by_cell(self.map.get_cell(coordinate))
 
     # --------------------------------------------------------------------------
     # RESOURCE DATA GETTERS
@@ -578,8 +573,3 @@ class GameHelper:
         print(pickle.dumps(commands))
         sys.stdout.flush()
 
-# ------------------------------------------------------------------------------
-# HELPER FUNCTIONS
-
-def pos_equal(a, b):
-    return a[0] == b[0] and a[1] == b[1]

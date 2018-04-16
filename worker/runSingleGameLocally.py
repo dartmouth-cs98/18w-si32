@@ -3,6 +3,7 @@ from Bot import LocalBot
 from game.GameState import GameState
 from waitForGame import pollUntilGameReady
 
+# runs a single game with bots already existing on your computer and stores results in game.json
 
 gameClasses = {
     'SimpleGame': GameState
@@ -31,7 +32,8 @@ def execGame():
     for bot in bots:
         bot.cleanup()
 
-    # game.write_log("gameLog")
-    print(game.get_raw_log())
+    with open("game.json", "w") as f:
+        f.write(game.get_raw_log())
+        f.close()
 
 execGame()

@@ -9,6 +9,7 @@ from game.Game import Game
 from game.Player import Player
 from game.Map import Map
 from game.Cell import Cell
+from game.Coordinate import Coordinate
 from game.Rules import Rules
 from game.Logger import Logger
 
@@ -59,7 +60,8 @@ class GameState(Game):
 
         # Create a player object for each bot
         for count, bot in enumerate(bots):
-            self.players.append(Player(count, self.map, bots[count], positions[count]))
+            pos = Coordinate(x=positions[count][0], y=positions[count][1])
+            self.players.append(Player(count, self.map, bots[count], pos))
 
         # Create a starting building for each player
         for player in self.players:
@@ -69,10 +71,8 @@ class GameState(Game):
     # --------------------------------------------------------------------------
     # MAIN FUNCTIONS
 
+    # runs a game and returns when it is over
     def start(self):
-        self.game_loop()
-
-    def game_loop(self):
         # loop until somebody wins, or we time out!
         while not self.is_game_over():
             # reset log for this turn
@@ -123,11 +123,6 @@ class GameState(Game):
             for cell in col:
                 cell.update_cell(self.players)
 
-    def update_units_numbers(self):
-        for cells in self.map.cells:
-            for cell in cells:
-                cell.update_units_number()
-
     # returns true if at least one player in the game is still "alive"
     # in terms of valid code execution
     def has_running_player(self):
@@ -169,7 +164,7 @@ class GameState(Game):
 
     # returns true if only one player has buildings left
     def has_combat_winner(self):
-        return sum([1 for p in self.players if p.has_building()]) == 1
+        return sum([1 for p in self.players if p.has_building()]) <= 1
 
     # returns true if the game is over due to time
     def time_limit_reached(self):
@@ -191,10 +186,10 @@ class GameState(Game):
         cells = {}
 
         for move in moves:
-            if tuple(move.position) not in cells:
-                cells[tuple(move.position)] = move.num_units
+            if move.position not in cells:
+                cells[move.position] = move.num_units
             else:
-                cells[tuple(move.position)] += move.num_units
+                cells[move.position] += move.num_units
 
         return cells
 
@@ -202,25 +197,18 @@ class GameState(Game):
         new_moves = copy(moves)
         counts = []
 
-        for player in moves:
-            counts.append(self.count_units_sent(player))
+        for player_moves in moves:
+            counts.append(self.count_units_sent(player_moves))
 
-        i = 0
-
-        while i < len(counts):
-            command_count = counts[i]
-
+        for i, command_count in enumerate(counts):
             for cell_position in command_count:
-                cell = self.map.get_cell(list(cell_position))
+                cell = self.map.get_cell(cell_position)
 
                 if command_count[cell_position] < cell.units[i]:
                     remaining_units = cell.units[i] - command_count[cell_position]
-                    new_moves[i].append(Command(i, list(cell_position), MINE_COMMAND, remaining_units, [0,0]))
-
-            i += 1
+                    new_moves[i].append(Command(i, cell_position, MINE_COMMAND, remaining_units, direction=None))
 
         return new_moves
-
 
     def write_log(self, file_name):
         self.logger.write(file_name)
@@ -228,21 +216,7 @@ class GameState(Game):
     def get_log(self):
         return self.logger.get_log()
 
-    '''
-    def get_ranked_by_units(self):
-        if self.players[0].total_units() > self.players[1].total_units():
-            return self.players
-
-        return [self.players[1], self.players[0]]
-    '''
-
-    def get_ranked_by_units(self):
-        s = sorted(self.players, key=lambda player: player.total_units()) #sort the list of players by their number of units
-
-        return s.reverse() #return the reversed list since the players with the most units are ranked first
-
-    # TODO: write a multiplayer version of log_winner
-
+    # log to the debug file
     def log(self, out):
         self.debugLogFile.write(str(out) + "\n")
         self.debugLogFile.flush()

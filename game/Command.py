@@ -22,7 +22,11 @@ class Command:
         self.command = command
 
         self.direction = direction
-        self.position = Coordinate(position)
+
+        if isinstance(position, Coordinate):
+            self.position = position
+        else:
+            self.position = Coordinate(x = position[0], y = position[1])
 
         # catch people trying to send negative number of units
         if num_units >= 1:
@@ -35,6 +39,9 @@ class Command:
             self.num_units -= number
         else:
             self.num_units = 0
+
+    def __repr__(self):
+        return str(self.position) + " " + str(self.num_units) + " " + str(self.direction)
 
     @classmethod
     def from_dict(cls, playerId, d):
