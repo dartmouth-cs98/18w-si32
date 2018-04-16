@@ -77,12 +77,14 @@ class Cell:
         self.update_units_and_building(players)
 
     def update_units_and_building(self, players):
-        building_owner = self.building.ownerId  # player ID of player who owns the building on this cell
+        has_building = not (self.building is None)
+
+        if has_building:
+            building_owner = self.building.ownerId  # player ID of player who owns the building on this cell
+            buffed_units = self.units[building_owner] + DEFENSE_RATING  # buff the number of units of the building owner
+            self.units[building_owner] = buffed_units
 
         contenders = []  # player IDs of all players with nonzero units on the cell
-
-        buffed_units = self.units[building_owner] + DEFENSE_RATING  # buff the number of units of the building owner
-        self.units[building_owner] = buffed_units
 
         for i in range(self.num_players):
             if self.units[i] > 0:
@@ -112,21 +114,22 @@ class Cell:
                 # self.units[1] -= units
                 # self.units[2] -= units
 
-        # check if building is destroyed and debuff the number of units
-        if (self.units[building_owner] == 0):
-            self.destroy_building()
-        elif (self.units[building_owner] <= DEFENSE_RATING and self.units[building_owner] > 0):
-            self.units[building_owner] = 0
-        else:
-            self.units[building_owner] = self.units[building_owner] - 10
+        if (has_building):
+            # check if building is destroyed and debuff the number of units
+            if (self.units[building_owner] == 0):
+                self.destroy_building()
+            elif (self.units[building_owner] <= DEFENSE_RATING and self.units[building_owner] > 0):
+                self.units[building_owner] = 0
+            else:
+                self.units[building_owner] = self.units[building_owner] - 10
 
-        # check if new units should be produced
-        while self.building.resources >= UNIT_COST:
-            self.increment_units(building_owner, 1)
-            self.building.resources -= UNIT_COST
-            players[self.building.ownerId].increment_units_produced()
+            # check if new units should be produced
+            while self.building.resources >= UNIT_COST:
+                self.increment_units(building_owner, 1)
+                self.building.resources -= UNIT_COST
+                players[self.building.ownerId].increment_units_produced()
 
-            self.building.increment_resources()
+                self.building.increment_resources()
 
     # --------------------------------------------------------------------------
     # INITIALIZING FUNCTION

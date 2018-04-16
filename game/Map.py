@@ -5,7 +5,7 @@ from .Cell import Cell
 from .Coordinate import Coordinate
 from random import randint
 
-from game.params import DEFAULT_MAP_WIDTH, DEFAULT_MAP_HEIGHT
+from game.params import DEFAULT_MAP_WIDTH, DEFAULT_MAP_HEIGHT, STARTING_POSITIONS, one_player, two_players, three_players, four_players
 
 # Constructor Arguments
 # num_players (number) - the number of players involved in the game with which
@@ -27,11 +27,27 @@ class Map:
         for r in range(height):
             row = []
             for c in range(width):
+
+                #roughly 1 in 5 cells are blocked
                 p = randint(1, 5)
                 if p == 1:
                     occupiable = False
                 else:
                     occupiable = True
+
+                #if a cell is a starter position, make it free
+                if (self.num_players == 1):
+                    if ((c, r) in one_player):
+                        occupiable = True
+                elif (self.num_players == 2):
+                    if ((c, r) in two_players):
+                        occupiable = True
+                elif (self.num_players == 3):
+                    if ((c, r) in three_players):
+                        occupiable = True
+                elif (self.num_players == 4):
+                    if ((c, r) in four_players):
+                        occupiable = True
 
                 new_cell = Cell(Coordinate(x=c, y=r), self.num_players, occupiable)
                 row.append(new_cell)
