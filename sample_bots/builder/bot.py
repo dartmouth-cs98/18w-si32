@@ -16,14 +16,14 @@ def stage_1():
     commands = []
     for u in units:
         game.log(targetPos)
-        m = game.move_towards(u.position, targetPos, game.get_unit_count_by_position_tuple(u.position))
+        m = game.move_towards(u.position, targetPos, game.get_unit_count_by_position(u.position))
         if m:
             commands.append(m)
         else:
-            commands.append(game.mine(u.position, game.get_unit_count_by_position_tuple(u.position)))
+            commands.append(game.mine(u.position, game.get_unit_count_by_position(u.position)))
 
     if (game.building_potential() > 0):
-        m = game.build(targetPos, game.get_unit_count_by_position_tuple(targetPos))
+        m = game.build(targetPos, game.get_unit_count_by_position(targetPos))
         if m:
             commands.append(m)
             targetPos = game.position_towards(targetPos, e_buildings[0].position)
@@ -47,12 +47,12 @@ def stage_2():
     commands = []
 
     for u in units:
-        if game.get_unit_count_by_position_tuple(u.position) > 200:
-            m = game.move_towards(u.position, e_buildings[0].position, game.get_unit_count_by_position_tuple(u.position))
+        if game.get_unit_count_by_position(u.position) > 200:
+            m = game.move_towards(u.position, e_buildings[0].position, game.get_unit_count_by_position(u.position))
             if m:
                 commands.append(m)
         else:
-            m = game.move_towards(u.position, targetPos, game.get_unit_count_by_position_tuple(u.position))
+            m = game.move_towards(u.position, targetPos, game.get_unit_count_by_position(u.position))
             if m:
                 commands.append(m)
 

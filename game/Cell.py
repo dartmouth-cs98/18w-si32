@@ -16,6 +16,7 @@ from game.params import MAX_RESOURCES, DEFENSE_RATING, UNIT_COST
 # Constructor Arguments
 # position (tuple)     - tuple representing the map position of this cell instance.
 # num_players (number) - the number of players involved in this game instance.
+# occupiable (boolean) - True if this cell is standard, False if it is a wall. 
 
 class Cell:
     def __init__(self, position, num_players, occupiable = True):
@@ -29,8 +30,12 @@ class Cell:
 
         self.building = None
 
-        self.occupiable = occupiable
+        self.occupiable = occupiable #whether the cell is blocked or free (True = free, False = blocked)
 
+    # --------------------------------------------------------------------------
+    # STATUS METHODS
+
+    #returns whether the cell is blocked or free
     def occupiable(self):
         return self.occupiable
     # --------------------------------------------------------------------------
@@ -77,12 +82,15 @@ class Cell:
         self.update_units_and_building(players)
 
     def update_units_and_building(self, players):
-        building_owner = self.building.ownerId  # player ID of player who owns the building on this cell
+        has_building = not (self.building is None) #whether the Cell has a building
+        building_owner = None # player ID of player who owns the building on this cell
+
+        if has_building:
+            building_owner = self.building.ownerId
+            buffed_units = self.units[building_owner] + DEFENSE_RATING  # buff the number of units of the building owner
+            self.units[building_owner] = buffed_units
 
         contenders = []  # player IDs of all players with nonzero units on the cell
-
-        buffed_units = self.units[building_owner] + DEFENSE_RATING  # buff the number of units of the building owner
-        self.units[building_owner] = buffed_units
 
         for i in range(self.num_players):
             if self.units[i] > 0:
@@ -112,21 +120,22 @@ class Cell:
                 # self.units[1] -= units
                 # self.units[2] -= units
 
-        # check if building is destroyed and debuff the number of units
-        if (self.units[building_owner] == 0):
-            self.destroy_building()
-        elif (self.units[building_owner] <= DEFENSE_RATING and self.units[building_owner] > 0):
-            self.units[building_owner] = 0
-        else:
-            self.units[building_owner] = self.units[building_owner] - 10
+        if (has_building):
+            # check if building is destroyed and debuff the number of units
+            if (self.units[building_owner] == 0):
+                self.destroy_building()
+            elif (self.units[building_owner] <= DEFENSE_RATING and self.units[building_owner] > 0):
+                self.units[building_owner] = 0
+            else:
+                self.units[building_owner] = self.units[building_owner] - 10
 
-        # check if new units should be produced
-        while self.building.resources >= UNIT_COST:
-            self.increment_units(building_owner, 1)
-            self.building.resources -= UNIT_COST
-            players[self.building.ownerId].increment_units_produced()
+            # check if new units should be produced
+            while self.building.resources >= UNIT_COST:
+                self.increment_units(building_owner, 1)
+                self.building.resources -= UNIT_COST
+                players[self.building.ownerId].increment_units_produced()
 
-            self.building.increment_resources()
+                self.building.increment_resources()
 
     # --------------------------------------------------------------------------
     # INITIALIZING FUNCTION
