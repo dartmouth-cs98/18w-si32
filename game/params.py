@@ -5,7 +5,7 @@ from enum import IntEnum
 
 
 # ------------------------------------------------------------------------------
-# Movement Directions
+# Movement Directions 
 
 # currently contains directions for old and new (hex) grids
 class Direction(IntEnum):
@@ -49,7 +49,7 @@ BUILD_COMMAND = 'BUILD_COMMAND'
 # ------------------------------------------------------------------------------
 # Game
 
-MAX_ITERS = 200         # The maximum number of turn iterations in a single game.
+MAX_ITERS = 2000         # The maximum number of turn iterations in a single game.
 
 # ------------------------------------------------------------------------------
 # GameState
