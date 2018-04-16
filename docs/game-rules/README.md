@@ -1,9 +1,9 @@
 # Game Rules
 
 ### General
-Monad (a.k.a. Si32) is a RTS (real-time-strategy) style game played by AI agents designed by you, the user. Users upload bots based on a template (see 'Your First Bot'), which can then compete against Monad bots written by other users over the internet. 
+Monad (a.k.a. Si32) is a RTS (real-time-strategy) style game played by AI agents designed by you, the user. Users upload bots based on a template (see 'Your First Bot'), which can then compete against Monad bots written by other users over the internet.
 
-Monad is a turn-based strategy game played in a grid of **Cells**. Each player controls an army of **units**, each with the ability to mine **resource** (a type of currency used to build **buildings** - which spawn more units), move around the grid, or build **buildings**. During
+Monad is a turn-based strategy game played on a hex-based map composed of **Cells**. Each player controls an army of **units**, each with the ability to mine **resource** (a type of currency used to build **buildings** - which spawn more units), move around the grid, or build **buildings**. During
 each turn in Monad, each player's bot will process information about the game state and determine its next move, which will be communicated as an array of **Command** objects. A **Command** will determine what the units in each Cell will do in the player's turn. It contains the following information - it will specify a **Cell**, a type of action (**move**, **build**, or **mine**), a direction (if the action is of type **move** or **build**), and a number of **units**. The game will then execute these **Commands** (perform the action for the specified number of **units** in the specified cell), update the locations of the players'
 **units**, updates the status of the map and the players, and then await another set of **Commands** from each player.
 
@@ -29,6 +29,7 @@ The map is the environment in which Monad games will be played. In order to test
 The map is *grid-based*:
 
 The map is composed of discrete **Cells**, defined by a Cartesian coordinate; each free **Cell** will initially contain some randomized amount of **resource**, and also up to one **building**, and any number of **units**. **Units** and **buildings** each occupy 1 **cell** at a time. A **cell** with an obstacle has no **resource**, and can contain no **units** or **buildings**. A **cell** containing a **building** cannot be mined for **resource** by any **unit**.
+Note that as the cells are hex based, each cell will have 6 adjacent cells.
 
 The map is *symmetric*:
 
@@ -42,14 +43,14 @@ Units can be ordered around by **Commands** which have three possible types.
 
 ('current **cell**' refers to the **cell** occupied by the unit)
 
-- **Move** - Move the unit in some direction by one **cell**
+- **Move** - Move the unit to the adjacent **cell** in the specified direction. 
 
 - **Build** - If there is no **building** in the current **cell**, and the player has enough **resource** for a building, create a building in the current **cell**. If there is a **building** in the **cell**, help the **building** produce new **units** faster. A **building** will be created instantly (within the turn) if it's possible to do so (unlike conventional RTS games like Warcraft where building production is an extended process and can be disrupted by enemies).
 
 - **Mine** - Gather a unit of **resource** from the current **cell**, if there is any resource remaining.
 
 ### Buildings
-**Buildings** are static objects controlled by the **player**, which spawn new **units**. have several noteworthy properties. A **building** can be created by any **unit** on a free **cell**, and costs 100 units of **resource**. Each building occupies one **cell** in the map (although this may be changed later). A building will continuously spawn new **units** in the **cell** at a rate proportional to the number of allied **units** stationed at the building's **cell**. 
+**Buildings** are static objects controlled by the **player**, which spawn new **units**. have several noteworthy properties. A **building** can be created by any **unit** on a free **cell**, and costs 100 units of **resource**. Each building occupies one **cell** in the map (although this may be changed later). A building will continuously spawn new **units** in the **cell** at a rate proportional to the number of allied **units** stationed at the building's **cell**.
 
 Each building has a default **intrinsic defense rating** of 10. The building essentially serves as an additional force of 10 **units** in combat when defending, which regenerates every turn.
 
@@ -72,7 +73,7 @@ Combat in Monad takes place in two discrete phases:
 
  If enemy players would send units in opposite directions from adjacent **Cells**, the enemy groups of **units** would fight, with the weaker group eliminated and the stronger group losing a number of **units** equal to the weaker group's number.
 
- After the game state receives all **Commands** for the turn from all players, it checks if any of the **Commands** would send enemy **unit** groups from adjacent **Cells** into each other. If there are any such 'collisions' between **unit** groups, **units** will be subtracted from each **unit** group until only the stronger group remains or both groups are eliminated. 
+ After the game state receives all **Commands** for the turn from all players, it checks if any of the **Commands** would send enemy **unit** groups from adjacent **Cells** into each other. If there are any such 'collisions' between **unit** groups, **units** will be subtracted from each **unit** group until only the stronger group remains or both groups are eliminated.
 
 #### Second phase: cell-update phase:
 
@@ -84,10 +85,10 @@ For example, Player A sends 8 **units** North from **(2, 4)** and Player B sends
 The player with the greater number of **units** in the **Cell** will lose a number of **units** equal to the other player's number of **units**, and the other player's number of **units** will be set to zero.
 
 - In the case of three or more players:
-  - **1**. Each player with nonzero **units** in the **Cell** will assign some number of **units** towards each other player with nonzero **units** in the **Cell** proportional to the enemy player's number of **units**, rounded down. Any leftover units will be randomly assigned towards an enemy player. 
-  
-    - For example, Player A has 8 units, Player B has 12 units, and Player C has 7 units. 
-      - Player A will send (12/19) of his 8 **units**, rounded down --> 5 **units** to Player B and (7/19) of his 8 **units**, rounded down --> 2 **units** to Player C. The remaining **unit** (8 - 5 - 2 = 1) will be randomly assigned to Player B or Player C. 
+  - **1**. Each player with nonzero **units** in the **Cell** will assign some number of **units** towards each other player with nonzero **units** in the **Cell** proportional to the enemy player's number of **units**, rounded down. Any leftover units will be randomly assigned towards an enemy player.
+
+    - For example, Player A has 8 units, Player B has 12 units, and Player C has 7 units.
+      - Player A will send (12/19) of his 8 **units**, rounded down --> 5 **units** to Player B and (7/19) of his 8 **units**, rounded down --> 2 **units** to Player C. The remaining **unit** (8 - 5 - 2 = 1) will be randomly assigned to Player B or Player C.
       - Player B will send (8/15) of his 12 **units**, rounded down --> 6 **units** to Player A and (7/15) of his 8 **units**, rounded down --> 5 **units** to Player C. The remaining **unit** (12 - 6 - 5 = 1) will be randomly assigned to Player A or Player C.
       - Player C will send (8/20) of his 7 **units**, rounded down --> 2 **units** to Player A and (12/20) of his 7 **units**, rounded down --> 4 **units** to Player B. The remaining **units** (8 - 2 - 4 = 2) will be randomly assigned to Player A or Player B.
 
@@ -95,28 +96,25 @@ The player with the greater number of **units** in the **Cell** will lose a numb
 
      (A, B): (5 + 1, 6 + 1) = (6, 7) (Player A sends 6 **units** to Player B and Player B sends 7 **units** to Player A)
      Player A sends 6 **units** to Player B, Player B sends 7 **units** to Player A; Player A loses all sent **units**, Player B keeps 1 **unit**
-     
+
      (A, C): (2, 2 + 1) = (2, 3)
      Player A sends 2 **units** to Player C, Player C sends 3 **units** to Player A; Player A loses all sent **units**, Player C keeps 1 **unit**
-   
+
      (B, C): (5, 4)
      Player B sends 5 **units** to Player C, Player C sends 4 **units** to Player B; Player B keeps 1 **unit**, Player C loses all sent **units**
-     
-     ![Alt Text](https://i.imgur.com/MnDKg7u.png)
-       
-  - **3**. After combat, the number of **units** in each **Cell** will be updated accordingly.
-    
-     So Player B keeps 2 **units** in total and Player C keeps 1 **unit** in total.
-     
-     ![Alt Text](https://i.imgur.com/QvneJOx.png)
-    
-  - **4**. Keep repeating the above process until there are no more than one players with nonzero **units** in the **Cell**.
-    
-     So Player B would fight Player C, and Player B would keep 1 **unit**, and Player C would lose all **units**.
-    
-  **Result**: Player B keeps 1 **unit**, Players A and C lose all **units**.
-  
-     ![Alt Text](https://i.imgur.com/NKPlpRR.png)
-    
-    
 
+     ![Alt Text](https://i.imgur.com/MnDKg7u.png)
+
+  - **3**. After combat, the number of **units** in each **Cell** will be updated accordingly.
+
+     So Player B keeps 2 **units** in total and Player C keeps 1 **unit** in total.
+
+     ![Alt Text](https://i.imgur.com/QvneJOx.png)
+
+  - **4**. Keep repeating the above process until there are no more than one players with nonzero **units** in the **Cell**.
+
+     So Player B would fight Player C, and Player B would keep 1 **unit**, and Player C would lose all **units**.
+
+  **Result**: Player B keeps 1 **unit**, Players A and C lose all **units**.
+
+     ![Alt Text](https://i.imgur.com/NKPlpRR.png)
