@@ -57,7 +57,7 @@ class MatchSinglePage extends React.PureComponent {
   }
 
   renderFailed = () => {
-    return (<div style={styles.failureMessage}>{"we don't have a replay for this game :("}</div>);
+    return (<div><div style={[styles.replayAreaBox, styles.failureMessage]}>{"we don't have a replay for this game :("}</div></div>);
   }
 
   renderReplay = () => {
@@ -71,9 +71,9 @@ class MatchSinglePage extends React.PureComponent {
       }
 
       return <ReplayVisualizer hideSelectButton replay={this.state.log} />;
+    } else {
+      return <div><div style={[styles.replayAreaBox, styles.loading]}>Loading replay...</div></div>;
     }
-
-    return null;
   }
 
   renderNotDone = () => (
@@ -188,15 +188,23 @@ const styles = {
   botDeltaNegative: {
     color: colors.red,
   },
-  failureMessage: {
+  replayAreaBox: {
+    width: 570,
+    height: 540,
+    borderRadius: 3,
     display: "flex",
+    margin: "0px auto",
     alignItems: "center",
     justifyContent: "center",
-    padding: "100px 0",
-    borderRadius: 3,
-    border: `2px solid ${colors.border}`,
-    color: colors.lightGray,
     fontSize: constants.fontSizes.large,
+  },
+  failureMessage: {
+    border: `2px solid ${colors.border}`,
+    color: colors.medGray,
+  },
+  loading: {
+    border: `2px dashed ${colors.border}`,
+    color: colors.lightGray,
   },
   crashed: {
     textTransform: "uppercase",
