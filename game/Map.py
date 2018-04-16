@@ -3,6 +3,7 @@
 
 from .Cell import Cell
 from .Coordinate import Coordinate
+from random import randint
 
 from game.params import DEFAULT_MAP_WIDTH, DEFAULT_MAP_HEIGHT
 
@@ -26,7 +27,13 @@ class Map:
         for r in range(height):
             row = []
             for c in range(width):
-                new_cell = Cell(Coordinate(x=c, y=r), self.num_players)
+                p = randint(1, 5)
+                if p == 1:
+                    occupiable = False
+                else:
+                    occupiable = True
+
+                new_cell = Cell(Coordinate(x=c, y=r), self.num_players, occupiable)
                 row.append(new_cell)
             cells.append(row)
 
@@ -53,6 +60,10 @@ class Map:
     # check if cell is within map
     def cell_in_range(self, cell):
         return self.position_in_range(cell.position)
+
+    # check if cell is free
+    def cell_free(self, cell):
+        return self.cell_in_range(cell) and cell.occupiable()
 
     # returns only the state we care about for the game log
     def get_state(self):

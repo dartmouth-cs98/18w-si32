@@ -20,7 +20,7 @@ class Rules:
 
     def within_bounds(self, move):
         new_coords = move.position.adjacent_in_direction(move.direction)
-        return self.map.position_in_range(new_coords)
+        return self.map.position_in_range(new_coords) and self.map.cell_free(self.map.get_cell(new_coords))
 
     def enough_units(self, move):
         cell = self.map.get_cell(move.position)
