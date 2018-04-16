@@ -82,12 +82,18 @@ class Canvas extends React.Component {
     return false;
   }
 
-  componentWillReceiveProps(prevProps) {
+  componentWillReceiveProps(nextProps) {
     // frame number changed but not playing, meaning user stepped
     // call animate manually to re-render state
-    if ((this.props.frame != prevProps.frame && !this.props.play) || this.props.play != prevProps.play) {
+    if ((this.props.frame != nextProps.frame && !this.props.play) || this.props.play != nextProps.play) {
       setTimeout(() => {
         this.animate();
+      });
+    }
+
+    if (this.props.showNums != nextProps.showNums && !this.props.play) {
+      setTimeout(() => {
+        this.drawCurrentFrame();
       });
     }
   }
@@ -114,32 +120,15 @@ class Canvas extends React.Component {
     this.sp.h = (this.sp.rows + .5) * this.sp.cell_height * 3/4 + CELL_OFFSET_Y * this.sp.rows;
   }
 
-  drawCell = (row, col, cell) => {
-    if (cell.u > 0) {
-      //console.log("cell has units", row, col, cell.u, cell.p)
+  drawUnitCount = (row, col, cell, alpha, center) => {
+    if (!this.props.showNums) { 
+      if (!_.isEmpty(this.textElements)) {
+        _.each(this.textElements, (v, key) => {
+          this.mapGraphics.removeChild(v);
+          delete this.textElements[key];
+        });
+      }
     }
-
-    let { color, alpha, building } = this.getCellColorAlpha(cell);
-
-    this.mapGraphics.beginFill(color, alpha);
-    const center = {
-      x: col * (this.sp.cell_width + CELL_OFFSET_X) + this.sp.cell_width/2,
-      y: row * (this.sp.cell_height * 3/4 + CELL_OFFSET_Y) + this.sp.cell_height/2,
-    };
-
-    if (row % 2 == 0) {
-      center.x += this.sp.cell_width / 2;
-    }
-
-    const corners = new Polygon(_.range(0,6).map(i => getHexagonCorner(center, this.sp.cell_r, i)));
-    this.mapGraphics.drawPolygon(corners);
-
-    if (building) {
-      this.mapGraphics.beginFill(0xFFFFFF);
-      this.mapGraphics.drawStar(center.x, center.y, 6, this.sp.cell_r - 2, this.sp.cell_r / 3);
-    }
-
-    this.mapGraphics.endFill();
 
     const textKey = `${row},${col}`;
 
@@ -153,10 +142,7 @@ class Canvas extends React.Component {
       }
     } else if(cell.u > 0) {
       // if there are units, draw the label
-      let textColor = (alpha < .7 || alpha > 10) ? ("#" + COLORS[cell.p].toString(16)) : "#ffffff";
-      if (building) {
-        textColor = "#" + COLORS[cell.p].toString(16);
-      }
+      let textColor = (alpha < .7 || alpha > 10 || cell.b != undefined) ? ("#" + COLORS[cell.p].toString(16)) : "#ffffff";
 
       // if text already exists, just update it; otherwise create a text el and add it to the canvas
       if (textKey in this.textElements) {
@@ -173,6 +159,33 @@ class Canvas extends React.Component {
         this.mapGraphics.addChild(text);
       }
     }
+  }
+
+  drawCell = (row, col, cell) => {
+    let { color, alpha } = this.getCellColorAlpha(cell);
+
+    this.mapGraphics.beginFill(color, alpha);
+    const center = {
+      x: col * (this.sp.cell_width + CELL_OFFSET_X) + this.sp.cell_width/2,
+      y: row * (this.sp.cell_height * 3/4 + CELL_OFFSET_Y) + this.sp.cell_height/2,
+    };
+
+    if (row % 2 == 0) {
+      center.x += this.sp.cell_width / 2;
+    }
+
+    const corners = new Polygon(_.range(0,6).map(i => getHexagonCorner(center, this.sp.cell_r, i)));
+    this.mapGraphics.drawPolygon(corners);
+
+    // if cell has a building, draw a star
+    if (cell.b != undefined) {
+      this.mapGraphics.beginFill(0xFFFFFF);
+      this.mapGraphics.drawStar(center.x, center.y, 6, this.sp.cell_r - 2, this.sp.cell_r / 3);
+    }
+
+    this.mapGraphics.endFill();
+
+    this.drawUnitCount(row, col, cell, alpha, center);
   }
 
   // add the grid to main map graphics
@@ -199,16 +212,15 @@ class Canvas extends React.Component {
     const units = cell.u;
     const building = cell.b;
     if (building != undefined) {
-      return { "color": getPlayerColor(building), "alpha": 1, "building": true };
+      return { "color": getPlayerColor(building), "alpha": 1 };
     }
 
     if (!units) {
-      return { "color": NEUTRAL_CELL_COLOR, "alpha": NEUTRAL_CELL_ALPHA, "building": false };
+      return { "color": NEUTRAL_CELL_COLOR, "alpha": NEUTRAL_CELL_ALPHA };
     }
     let color, alpha = 0;
 
     if (cell.u > 0) {
-      //console.log(cell);
       color = COLORS[cell.p];
       alpha = cell.u / MAX_UNITS;
     }
