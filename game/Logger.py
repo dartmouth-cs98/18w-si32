@@ -72,9 +72,10 @@ class Logger:
                 if (c.position not in self.cell_resources) or (self.cell_resources[c.position] != c.resource):
                     self.cell_resources[c.position] = c.resource
                     cleaned_cell['r'] = c.resource
-                for u in c.units:
+                for owner, u in enumerate(c.units):
                     if u > 0:
-                        cleaned_cell['u'] = copy(c.units)
+                        cleaned_cell['u'] = u
+                        cleaned_cell['p'] = owner
                         break
 
                 if c.building:

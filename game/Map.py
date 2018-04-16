@@ -49,7 +49,7 @@ class Map:
                     if ((c, r) in four_players):
                         occupiable = True
 
-                new_cell = Cell(Coordinate(x=c, y=r), self.num_players, occupiable)
+                new_cell = Cell(Coordinate(x=c, y=r), self.num_players, True)
                 row.append(new_cell)
             cells.append(row)
 
@@ -79,11 +79,11 @@ class Map:
 
     #check if position is free
     def position_free(self, position):
-        return self.position_in_range(position) and self.get_cell(position).occupiable()
+        return self.position_in_range(position) and self.get_cell(position).occupiable
 
     # check if cell is free
     def cell_free(self, cell):
-        return self.cell_in_range(cell) and cell.occupiable()
+        return self.cell_in_range(cell) and cell.occupiable
 
     # returns only the state we care about for the game log
     def get_state(self):
