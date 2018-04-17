@@ -203,7 +203,7 @@ class Canvas extends React.Component {
         }
         */
 
-        this.drawCell(j, i, cell);
+        this.drawCell(i, j, cell);
       }
     }
   }
