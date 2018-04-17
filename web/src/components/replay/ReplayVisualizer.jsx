@@ -46,14 +46,14 @@ class ReplayVisualizer extends React.PureComponent {
   replayStepBack = () => {
     this.setState({ 
       play: false,
-      currentFrame: this.state.currentFrame - 1,
+      currentFrame: Math.max(0,this.state.currentFrame - 1),
     });
   }
 
   replayStepForward = () => {
     this.setState({ 
       play: false,
-      currentFrame: this.state.currentFrame + 1,
+      currentFrame: Math.min(this.state.currentFrame + 1, this.props.replay.turns.length - 1),
     });
   }
 

@@ -11,20 +11,20 @@ from game.params import Direction
 
 direction_deltas = [
     { # for even rows, at index 0 since this handles row % 2 == 0
-        Direction.NORTHWEST : (-1, -1),
-        Direction.NORTHEAST : (0, -1),
-        Direction.EAST      : (1, 0),
-        Direction.SOUTHEAST : (0, 1),
-        Direction.SOUTHWEST : (-1, 1),
-        Direction.WEST      : (-1, 0),
-        Direction.NONE      : (0, 0)
-    },
-    { # for even rows, at index 1 since this handles row % 2 == 1
         Direction.NORTHWEST : (0, -1),
         Direction.NORTHEAST : (1, -1),
         Direction.EAST      : (1, 0),
         Direction.SOUTHEAST : (1, 1),
         Direction.SOUTHWEST : (0, 1),
+        Direction.WEST      : (-1, 0),
+        Direction.NONE      : (0, 0)
+    },
+    { # for even rows, at index 1 since this handles row % 2 == 1
+        Direction.NORTHWEST : (-1, -1),
+        Direction.NORTHEAST : (0, -1),
+        Direction.EAST      : (1, 0),
+        Direction.SOUTHEAST : (0, 1),
+        Direction.SOUTHWEST : (-1, 1),
         Direction.WEST      : (-1, 0),
         Direction.NONE      : (0, 0)
     }
