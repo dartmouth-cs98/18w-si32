@@ -9,6 +9,10 @@ from game.params import MOVE_COMMAND, BUILD_COMMAND, MINE_COMMAND, BUILDING_COST
 from game.Coordinate import Coordinate
 from game.Command import Command
 
+from game.ObstacleMapProblem import ObstacleMapProblem
+
+from game.astar_search import astar_search
+
 # ------------------------------------------------------------------------------
 # GameHelper
 
@@ -327,7 +331,20 @@ class GameHelper:
             return True
         else:
             return False
-    
+
+    # --------------------------------------------------------------------------
+    # PATHFINDING
+    # INPUTS: "start" (a tuple), "goal" (a tuple)
+    # RETURN: a list of tuples indicating a possible path between "start" and "goal" positions
+    def path(self, start, goal):
+        if (not (self.get_cell(start[0], start[1])).occupiable) | (not (self.get_cell(goal[0], goal[1])).occupiable):
+            empty = []
+            return empty
+
+        p = ObstacleMapProblem(self.map, start, goal)
+
+        result = astar_search(p, p.manhattan_heuristic)
+        return result.path
 
     # --------------------------------------------------------------------------
     # LOGGING
