@@ -163,6 +163,7 @@ class Canvas extends React.Component {
           delete this.textElements[key];
         });
       }
+      return;
     }
 
     const textKey = `${row},${col}`;
