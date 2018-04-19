@@ -28,6 +28,16 @@ class MatchSinglePage extends React.PureComponent {
     });
   }
 
+  onFrameChanged = (frameNumber) => {
+    this.setState({ frameNumber });
+  }
+
+  onCellSelected = (row, col) => {
+    this.setState({
+      selectedCell: { row, col }
+    });
+  }
+
   renderBots = () => {
     let bots = _.map(this.props.match.bots, (b, i) => ({ ...b, i }));
     bots = _.sortBy(bots, "rank");
@@ -70,15 +80,20 @@ class MatchSinglePage extends React.PureComponent {
         return this.renderFailed();
       }
 
-      return <ReplayVisualizer hideSelectButton replay={this.state.log} />;
+      return  <ReplayVisualizer 
+        hideSelectButton
+        replay={this.state.log}
+        onFrameChanged={this.onFrameChanged}
+        onCellSelected={this.onCellSelected}
+      />;
     } else {
       return <div><div style={[styles.replayAreaBox, styles.loading]}>Loading replay...</div></div>;
     }
   }
 
   renderNotDone = () => (
-      <Page>
-        <Wrapper>
+    <Page>
+      <Wrapper>
         <div>Game is currently running, check back in a bit</div>
       </Wrapper>
     </Page>

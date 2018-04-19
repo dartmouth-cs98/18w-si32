@@ -23,38 +23,54 @@ class ReplayVisualizer extends React.PureComponent {
     });
   }
 
+  onCellClicked = (row, col) => {
+    this.setState({
+      selectedCell: { row, col }
+    });
+  }
+
   toggleReplayControl = () => {
     this.setState({ play: !this.state.play });
     if (this.state.currentFrame === (this.props.replay.turns.length - 1)) {
       // if we have reached the final frame, reset on button click
-      this.setState({ currentFrame: 0 });
+      this.setFrame(0);
     }
   }
 
-  toggleNums = (e) => {
+  setFrame = (frameNo) => {
+    this.setState({
+      currentFrame: frameNo,
+    });
+
+    if (this.props.onFrameChanged) {
+      this.props.onFrameChanged(frameNo);
+    }
+  }
+
+  toggleNums = () => {
     this.setState({
       showNums: !this.state.showNums,
     });
   }
 
   scrubTo = (percentage) => {
-    this.setState({
-      currentFrame: Math.floor(this.props.replay.turns.length * percentage),
-    });
+    this.setFrame(Math.floor(this.props.replay.turns.length * percentage));
   }
 
   replayStepBack = () => {
     this.setState({ 
       play: false,
-      currentFrame: Math.max(0,this.state.currentFrame - 1),
     });
+
+    this.setFrame(Math.max(0,this.state.currentFrame - 1));
   }
 
   replayStepForward = () => {
     this.setState({ 
       play: false,
-      currentFrame: Math.min(this.state.currentFrame + 1, this.props.replay.turns.length - 1),
     });
+
+    this.setFrame(Math.min(this.state.currentFrame + 1, this.props.replay.turns.length - 1));
   }
 
   resetReplayFile = () => {
@@ -62,8 +78,8 @@ class ReplayVisualizer extends React.PureComponent {
   }
 
   incrementCurrentFrame = () => {
-    const nextFrame = this.state.currentFrame + 1;
-    this.setState({ currentFrame: nextFrame });
+    const nextFrame = this.state.currentFrame + 1; 
+    this.setFrame(nextFrame);
 
     if ((nextFrame + 1) === this.props.replay.turns.length) {
       // if we have reached the end of the game
@@ -81,6 +97,8 @@ class ReplayVisualizer extends React.PureComponent {
         frame={this.state.currentFrame}
         incrementFrame={this.incrementCurrentFrame}
         showNums={this.state.showNums}
+        onCellClicked={this.onCellClicked}
+        selectedCell={this.state.selectedCell}
         play={this.state.play} />
     );
   }
