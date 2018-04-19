@@ -285,7 +285,7 @@ class GameHelper:
         # only one player may have control over a cell at any one time,
         # so this should not be an issue!
 
-        return self.get_unit_count_by_cell(self.get_cell(Coordinate(x, y)))
+        return self.get_unit_count_by_cell(self.get_cell(x, y))
 
     def my_units_at_pos(self, pos): # returns True if there are more units at pos1 than there are units located at pos2
         return self.get_cell(pos[0], pos[1]).units[self.myId]
