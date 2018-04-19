@@ -49,6 +49,7 @@ class Map:
                     if ((c, r) in four_players):
                         occupiable = True
 
+                #new_cell = Cell(Coordinate(x=c, y=r), self.num_players, occupiable)
                 new_cell = Cell(Coordinate(x=c, y=r), self.num_players, True)
                 row.append(new_cell)
             cells.append(row)
