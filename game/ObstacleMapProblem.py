@@ -1,3 +1,5 @@
+from game.Coordinate import Coordinate
+
 class ObstacleMapProblem:
 
     def __init__(self, map, start, goal):
@@ -8,7 +10,7 @@ class ObstacleMapProblem:
         self.goal_state = goal
 
     def __str__(self):
-        string =  "Obstacle map problem: "
+        string = "Obstacle map problem: "
         return string
 
 
@@ -35,9 +37,12 @@ class ObstacleMapProblem:
         directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]
 
         for direction in directions:
-            new_state = state + direction
-            if (self.map.get_cell(new_state).occupiable):
-                successor_list.append(new_state)
+            new_state = (state[0] + direction[0], state[1] + direction[1])
+            cell = self.map.get_cell(Coordinate(new_state[0], new_state[1]))
+
+            if not (cell is None):
+                if cell.occupiable:
+                    successor_list.append(new_state)
 
         return successor_list
 

@@ -266,7 +266,7 @@ class GameHelper:
     # Return: (number)
     #   the number of units in <cell> controlled by player <playerId>
 
-    #Warning: this can't be called between conclusion of movement that puts units from different players onto same cell but before combat resolution so that only one player gains control of the cell
+    #warning: this can't be called between conclusion of movement that puts units from different players onto same cell but before combat resolution so that only one player gains control of the cell
     def get_unit_count_by_cell(self, cell):
         # only one player may have control over a cell at any one time,
         # so this should not be an issue!
@@ -281,11 +281,11 @@ class GameHelper:
     # Get the number of units in cell at position specified (<x>, <y>) controlled by <playerId>.
     # Return: (number)
     #   the number of units at the specified position controlled by player <playerId>
-    def get_unit_count_by_position(self, x, y = None):
+    def get_unit_count_by_position(self, x, y=None):
         # only one player may have control over a cell at any one time,
         # so this should not be an issue!
 
-        return self.get_unit_count_by_cell(self.get_cell(x, y))
+        return self.get_unit_count_by_cell(self.get_cell(Coordinate(x, y)))
 
     def my_units_at_pos(self, pos): # returns True if there are more units at pos1 than there are units located at pos2
         return self.get_cell(pos[0], pos[1]).units[self.myId]
@@ -308,15 +308,6 @@ class GameHelper:
             return True
         return False
 
-    # returns True if player with playerId1 has more resource than player with playerId2
-    # resource information shared between players?
-    '''
-    def compare_resource(self, eId):
-        if (self.get_my_resource_count > self.players[eId].resource):
-            return True
-        return False
-    '''
-
     # returns True if player with playerId1 has higher building count than player with playerId2
     def compare_building_count(self, playerId1=None, playerId2=None):
         if (playerId1 == None | playerId2 == None):
@@ -336,208 +327,7 @@ class GameHelper:
             return True
         else:
             return False
-
-    # functions to return commands of various types
-
-    # returns a sequence of commands at a cell so that - if the cell has resource less than number of units, send the unneeded units to the adjacent free cell with greatest resource; then, build on the cell if it's empty
-    '''
-    def efficient_mine_and_build(self, position):
-        commands = []
-
-        resource_at_cell = self.get_cell(position[0], position[1]).resource
-        units_at_cell = self.get_cell(position[0], position[1]).units[self.myId]
-
-        # if there's more than enough units, move them to adjacent free cells
-
-        if (resource_at_cell < units_at_cell):
-
-            if (resource_at_cell > 0):
-                commands.append(self.mine(self.myId, position, resource_at_cell))
-            greatest = self.get_free_position_with_greatest_resource_of_range(position[0], position[1], 1)
-
-            # if there is a free adjacent cell, move to the one with the greatest resource
-            if greatest is not None:
-                if greatest[1] is not None:
-                    direction = (greatest[1][0] - position[0], greatest[1][1] - position[1])
-                    # build if there's room on the cell
-
-
-                    if (self.get_cell(position[0], position[1]).building is not None) | (
-                                self.players[self.myId].resource < resource_cost):
-
-                        commands.append(self.move(self.myId, position, units_at_cell - resource_at_cell, direction))
-                    else:
-
-                        commands.append(self.move(self.myId, position, units_at_cell - resource_at_cell - 1, direction))
-                        commands.append(self.build(self.myId, position, 1))
-
-        # else, have them all (minus one) gather resource, then build (if there is no building), or all gather resource (if there is a building)
-        else:
-
-            if (self.get_cell(position[0], position[1]).building is not None) | (
-                        self.players[self.myId].resource < resource_cost):
-                commands.append(self.mine(position, units_at_cell))
-            else:
-                commands.append(self.mine(position, units_at_cell - 1))
-                commands.append(self.build(self.myId, position, 1))
-
-        for command in commands:
-            if (command.number_of_units <= 0):
-                commands.remove(command)
-
-        return commands
-
-    def bad_single_move_towards_cell_avoiding_things(self, position_from, position_to, number_of_units,
-                                                     things_to_avoid):
-
-        # returns True if cell at (x, y) contains an enemy building
-        def cell_contains_enemy_building(x, y):
-            return (self.get_cell(x, y).building is not None) & ((self.get_cell(x, y).building.ownerId == self.eId))
-
-        # returns True if cell at (x, y) contains an enemy building whose defense value is higher than the number of our units to command
-        def cell_contains_stronger_enemy_building(x, y):
-            return cell_contains_enemy_building(x, y) & (
-                self.get_cell(x, y).building.defense >= number_of_units)
-
-        # returns True of cell at (x, y) contains enemy units
-        def cell_contains_enemy_units(x, y):
-            return self.get_cell(x, y).units[(self.eId)] > 0
-
-        x0 = position_from[0]
-        y0 = position_from[1]
-        x1 = position_to[0]
-        y1 = position_to[1]
-
-        xy_difference = (x1 - x0, y1 - y0)
-
-        if (things_to_avoid == 'buildings'):
-            if (xy_difference[0] > 0) & (not cell_contains_enemy_building(x0 + 1, y0)):
-                direction = (1, 0)
-            elif (xy_difference[1] > 0) & (not cell_contains_enemy_building(x0, y0 + 1)):
-                direction = (0, 1)
-            elif (not cell_contains_enemy_building(x0 - 1, y0)):
-                direction = (-1, 0)
-            elif (not cell_contains_enemy_building(x0, y0 - 1)):
-                direction = (0, -1)
-            else:
-                direction = (0, 0)
-
-        elif (things_to_avoid == 'stronger buildings'):
-            if (xy_difference[0] > 0) & (not cell_contains_stronger_enemy_building(x0 + 1, y0)):
-                direction = (1, 0)
-            elif (xy_difference[1] > 0) & (not cell_contains_stronger_enemy_building(x0, y0 + 1)):
-                direction = (0, 1)
-            elif (not cell_contains_enemy_building(x0 - 1, y0)):
-                direction = (-1, 0)
-            elif (not cell_contains_enemy_building(x0, y0 - 1)):
-                direction = (0, -1)
-            else:
-                direction = (0, 0)
-
-        elif (things_to_avoid == 'units'):
-            if (xy_difference[0] > 0) & (not cell_contains_enemy_units(x0 + 1, y0)):
-                direction = (1, 0)
-            elif (xy_difference[1] > 0) & (not cell_contains_enemy_units(x0, y0 + 1)):
-                direction = (0, 1)
-            elif (not cell_contains_enemy_building(x0 - 1, y0)):
-                direction = (-1, 0)
-            elif (not cell_contains_enemy_building(x0, y0 - 1)):
-                direction = (0, -1)
-            else:
-                direction = (0, 0)
-        else:
-            direction = (0, 0)
-
-        return Command(self.myId, position_from, MOVE_COMMAND, number_of_units, direction)
-    '''
-
-
-    #TODO: smarter distances than Manhattan
-    # get the position of the nearest building from (x, y) that belongs to a player with playerId
-    def get_nearest_building_position_and_distance_belonging_to_player(self, x, y, playerId):
-        if (self.get_player_building_count(playerId) > 0):
-            current_search_distance = 1
-
-            while (True):
-                for m in range(-1 * current_search_distance, current_search_distance + 1):
-                    n = current_search_distance - abs(m)
-
-                    if (self.map.cell_in_range((x + m, y + n))):
-                        if (self.get_cell(x + m, y + n).building is not None):
-                            if (self.get_cell(x + m, y + n).building.ownerId == playerId):
-                                return ((x + m, y + n), current_search_distance)
-                    elif (self.map.cell_in_range((x + m, y - n))):
-                        if (self.get_cell(x + m, y - n).building is not None):
-                            if (self.get_cell(x + m, y + n).building.ownerId == playerId):
-                                return ((x + m, y - n), current_search_distance)
-
-                current_search_distance += 1
-        else:
-            return None
-
-    def get_nearest_enemy_building_position(self):
-
-        my_buildings = self.my_buildings()
-        enemy_buildings = self.enemy_buildings()
-
-        smallest_distance = 10000
-        closest_building = None
-
-        for building in my_buildings:
-            for enemy_building in enemy_buildings:
-                manhattan_distance = abs(building.position[0] - enemy_building.position[0]) + abs(
-                    building.position[1] - enemy_building.position[1])
-                if (manhattan_distance < smallest_distance):
-                    smallest_distance = manhattan_distance
-                    closest_building = enemy_building
-
-        return closest_building.position
-
-    # return the position of the cell with the greatest resource of a specified distance away from a specified cell
-    def get_free_position_with_greatest_resource_of_range(self, x, y, r):
-        greatest_resource = 0
-        greatest_position = None
-
-        for m in range((-1 * r), (r + 1)):
-            n = r - abs(m)
-
-            if (self.map.cell_in_range((x + m, y + n))):
-                if (self.get_cell(x + m, y + n).building is None) & (
-                            self.get_cell(x + m, y + n).resource > greatest_resource):
-                    greatest_resource = self.get_cell(x + m, y + n).resource
-                    greatest_position = self.get_cell(x + m, y + n).position
-
-            if (self.map.cell_in_range((x + m, y - n))):
-                if (self.get_cell(x + m, y - n).building is None) & (
-                            self.get_cell(x + m, y - n).resource > greatest_resource):
-                    greatest_resource = self.get_cell(x + m, y - n).resource
-                    greatest_position = self.get_cell(x + m, y - n).position
-
-        return (greatest_resource, greatest_position)
-
-    def get_adjacent_free_position_with_greatest_resource(self, x, y):
-        return self.get_free_position_with_greatest_resource_of_range(x, y, 1)
-
-    # ignores buildings, needs to be rewritten with a proper search algorithm like A-star
-    def get_nearest_player_unit_pos_to_cell(self, x, y, playerId):
-        nearest_enemy = None
-        distance = math.inf
-        for cell in self.get_occupied_cells(playerId):
-            separation = abs(cell.position[0] - x) + abs(cell.position[1] - y)
-            if separation < distance:
-                distance = separation
-                nearest_enemy = cell.position
-
-        return (nearest_enemy, distance)
-
-    def get_nearest_enemy_unit_pos_to_cell(self, x, y):
-        return self.get_nearest_player_unit_pos_to_cell(x, y, self.eId)
-
-    def get_nearest_friendly_unit_pos_to_cell(self, x, y):
-        return self.get_nearest_player_unit_pos_to_cell(x, y, self.eId)
-
-    def are_my_units_closer_to_cell(self, x, y):
-        return self.get_nearest_friendly_unit_pos_to_cell(x, y)[1] > self.get_nearest_enemy_unit_pos_to_cell(x, y)[1]
+    
 
     # --------------------------------------------------------------------------
     # LOGGING

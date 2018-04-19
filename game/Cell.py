@@ -16,7 +16,7 @@ from game.params import MAX_RESOURCES, DEFENSE_RATING, UNIT_COST
 # Constructor Arguments
 # position (tuple)     - tuple representing the map position of this cell instance.
 # num_players (number) - the number of players involved in this game instance.
-# occupiable (boolean) - True if this cell is standard, False if it is a wall. 
+# occupiable (boolean) - True if this cell is standard, False if it is a wall.
 
 class Cell:
     def __init__(self, position, num_players, occupiable = True):
@@ -32,12 +32,7 @@ class Cell:
 
         self.occupiable = occupiable #whether the cell is blocked or free (True = free, False = blocked)
 
-    # --------------------------------------------------------------------------
-    # STATUS METHODS
 
-    #returns whether the cell is blocked or free
-    def occupiable(self):
-        return self.occupiable
     # --------------------------------------------------------------------------
     # RESOURCE METHODS
 
