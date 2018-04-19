@@ -31,7 +31,7 @@ class ReplayVisualizer extends React.PureComponent {
     }
   }
 
-  toggleNums = (e) => {
+  toggleNums = () => {
     this.setState({
       showNums: !this.state.showNums,
     });
@@ -44,14 +44,14 @@ class ReplayVisualizer extends React.PureComponent {
   }
 
   replayStepBack = () => {
-    this.setState({ 
+    this.setState({
       play: false,
       currentFrame: Math.max(0,this.state.currentFrame - 1),
     });
   }
 
   replayStepForward = () => {
-    this.setState({ 
+    this.setState({
       play: false,
       currentFrame: Math.min(this.state.currentFrame + 1, this.props.replay.turns.length - 1),
     });
