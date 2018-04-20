@@ -32,12 +32,7 @@ class Cell:
 
         self.occupiable = occupiable #whether the cell is blocked or free (True = free, False = blocked)
 
-    # --------------------------------------------------------------------------
-    # STATUS METHODS
 
-    #returns whether the cell is blocked or free
-    def occupiable(self):
-        return self.occupiable
     # --------------------------------------------------------------------------
     # RESOURCE METHODS
 

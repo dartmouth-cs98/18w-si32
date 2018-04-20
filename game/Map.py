@@ -49,7 +49,7 @@ class Map:
                     if ((c, r) in four_players):
                         occupiable = True
 
-                #new_cell = Cell(Coordinate(x=c, y=r), self.num_players, occupiable)
+                #new_cell = Cell(Coordinate(x=c, y=r), self.num_players, occupiable) #comment this in for blocked cells
                 new_cell = Cell(Coordinate(x=c, y=r), self.num_players, True)
                 row.append(new_cell)
             cells.append(row)
@@ -91,4 +91,10 @@ class Map:
         return self.cells
 
     def __str__(self):
-        return str(self.cells)
+        s = "Blocked cells:\n"
+        for r in self.cells:
+            for cell in r:
+                if (not cell.occupiable):
+                    s += str(cell.position)
+                    s += " "
+        return s
