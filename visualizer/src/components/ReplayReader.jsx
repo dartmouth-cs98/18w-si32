@@ -1,7 +1,11 @@
 import React, { PureComponent } from "react";
 
-// need to do window.require here instead of require
-// to deconflict electron and webpack 'require' functions
+import Button from "./button";
+
+import { colors, constants } from "../style";
+
+// need to do 'window.require' here instead of 'require'
+// to deconflict electron and webpack require functions
 const fs = window.require("fs");
 const { dialog } = window.require("electron").remote;
 
@@ -53,8 +57,32 @@ class ReplayReader extends PureComponent {
 
   render() {
     return (
-      <div onClick={this.openFileDialog}>Click Me</div>
+      <div style={styles.container}>
+        <div style={styles.mainText}>Monad Match Visualizer</div>
+        <Button kind={"primary"} style={styles.fileSelectButton} onClick={this.openFileDialog}>
+          <div>Select a Replay File</div>
+        </Button>
+      </div>
     );
+  }
+}
+
+const styles = {
+  container: {
+    width: "100%",
+    height: "100%",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center"
+  },
+  mainText: {
+    fontSize: constants.fontSizes.largest,
+    color: colors.blue,
+    paddingBottom: "30px",
+  },
+  fileSelectButton: {
+    width: 180,
   }
 }
 
