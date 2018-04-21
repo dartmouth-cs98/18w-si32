@@ -10,7 +10,9 @@
     "electron-dev": "concurrently \"BROWSER=none npm start\" \"wait-on http://localhost:3000 && electron .\""
   },
   "dependencies": {
+    "color": "^3.0.0",
     "electron-is-dev": "^0.3.0",
+    "radium": "^0.24.0",
     "react": "^16.3.2",
     "react-dom": "^16.3.2",
     "react-scripts": "1.1.4"

@@ -1,26 +1,34 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 
-import "./App.css";
-import ReplayReader from "./ReplayReader";
-import ReplayVisualizer from "./ReplayVisualizer";
+import ReplayReader from "./components/ReplayReader";
+import ReplayVisualizer from "./components/ReplayVisualizer";
 
-class App extends Component {
+class App extends PureComponent {
   constructor(props) {
-    super(props)
+    super(props);
 
     this.state = {
-      replayLoaded: false
-    }
+      replay: null,
+    };
   }
 
-  handleReplayLoad = () => {
+  setReplayFile = (f) => {
+    this.setState({ replay: f });
+  }
+
+  resetReplayFile = () => {
     this.setState({
-      replayedLoaded: true
+      replay: null
     });
   }
 
   render() {
-    const main = this.state.replayLoaded ? <ReplayVisualizer /> : <ReplayReader />
+    let main;
+    if (this.state.replay) {
+      main = <ReplayVisualizer replay={this.state.replay} resetReplayFile={this.resetReplayFile} />;
+    } else {
+      main = <ReplayReader setReplayFile={this.setReplayFile} />;
+    }
 
     return (
       <div className="App">
