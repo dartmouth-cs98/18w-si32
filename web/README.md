@@ -14,7 +14,7 @@ to build the client and serve it on your machine at `localhost:4000`.
 In either case, any changes to code inside `/src` should propagate through without
 needing to rebuild.  
 
-## Deploying
+## Deployment
 
 `npm run build` will build the app for deployment into the `/dist` folder.
 
