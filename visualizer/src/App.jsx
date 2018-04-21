@@ -20,7 +20,8 @@ class App extends PureComponent {
   }
 
   componentWillMount() {
-    //
+    // dynamically set the root element width / height on
+    // electron app window resize event
     win.on("resize", () => {
       this.setState({
         mainWidth: win.getSize()[0],
@@ -34,9 +35,7 @@ class App extends PureComponent {
   }
 
   resetReplayFile = () => {
-    this.setState({
-      replay: null
-    });
+    this.setState({ replay: null });
   }
 
   render() {
