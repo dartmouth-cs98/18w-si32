@@ -135,7 +135,7 @@ const styles = {
     padding: "10px 0 0 0"
   },
   options: {
-    width: "80%",
+    width: "100%",
     display: "flex",
     flexDirection: "row",
     justifyContent: "flex-start",
@@ -156,7 +156,7 @@ const styles = {
     }
   },
   controls: {
-    width: "80%",
+    width: "100%",
     marginTop: 10,
     display: "flex",
     flex: 1,

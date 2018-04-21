@@ -6,6 +6,9 @@ const PROGRESS_HEIGHT = 18;
 
 const BODY_WIDTH = 1280;
 
+// desktop app only 
+const MAIN_WINDOW_VERTICAL_PADDING = 30;
+
 // latex style names
 const fontSizes = {
   largest: 30,
@@ -23,5 +26,6 @@ export default {
   BUTTON_HEIGHT,
   PROGRESS_HEIGHT,
   BODY_WIDTH,
+  MAIN_WINDOW_VERTICAL_PADDING,
   fontSizes,
 };

@@ -3,6 +3,8 @@ import React, { PureComponent } from "react";
 import ReplayReader from "./components/ReplayReader";
 import ReplayVisualizer from "./components/ReplayVisualizer";
 
+import { constants } from "./style";
+
 const remote = window.require("electron").remote;
 const win = remote.getCurrentWindow();
 
@@ -18,12 +20,13 @@ class App extends PureComponent {
   }
 
   componentWillMount() {
+    //
     win.on("resize", () => {
       this.setState({
         mainWidth: win.getSize()[0],
         mainHeight: win.getSize()[1]
-      })
-    })
+      });
+    });
   }
 
   setReplayFile = (f) => {
@@ -48,7 +51,7 @@ class App extends PureComponent {
       <div style={{
           ...styles.container,
           width: this.state.mainWidth,
-          height: this.state.mainHeight
+          height: this.state.mainHeight - constants.MAIN_WINDOW_VERTICAL_PADDING
         }}>
         {main}
       </div>
@@ -61,7 +64,7 @@ const styles = {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
   }
 }
 
