@@ -74,17 +74,21 @@ class DockerBot(Bot):
         call("rm -r /bot%d/*" % self.playerNum, shell=True)
 
 
-# for local running of players' own bots in testing
+# The Bot wrapper for local bot development.
+#
+# Constructor Arguments
+# fp (string)      - file path to the botfile.
+# playerNum (int)  - player number assigned to this player in match (ID).
 class LocalBot(Bot):
-    def __init__(self, name, playerNum):
-        self.name = name
+    def __init__(self, fp, playerNum):
+        self.name = fp
         self.playerNum = playerNum
 
     def prep(self):
         return
 
     def run(self):
-        command = ["python", "./%s/bot.py" % self.name]
+        command = ["python", "./%s" % self.name]
         self.proc = Popen(command, stdout=PIPE, stdin=PIPE)
 
     def cleanup(self):
