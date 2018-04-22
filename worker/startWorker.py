@@ -1,13 +1,9 @@
 import traceback
 
-from Bot import DockerBot
+from game.Bot import DockerBot
 from game.GameState import GameState
 from waitForGame import pollUntilGameReady
 from endpoints import post_match_results
-
-gameClasses = {
-    'SimpleGame': GameState
-}
 
 def run_worker():
     while True:
@@ -20,7 +16,8 @@ def run_worker():
         # create a bot object for each bot that's in this match
         for b in botSpecs:
             bots.append(DockerBot(b['id'], b['index'], b['url']))
-        game = gameClasses[gameType](bots)
+
+        game = GameState(bots)
 
         try:
             # we'll need more than just a log at some point

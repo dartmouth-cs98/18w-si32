@@ -6,10 +6,6 @@ def euclidean_distance(from_position, to_position):
     return abs(from_position.x - to_position.x) + abs(from_position.y - to_position.y)
 
 def do_turn(game):
-
-    game.log(game.get_building_potential())
-    game.log(game.me["resources"])
-
     commands = []
 
     units = game.get_my_cells()
