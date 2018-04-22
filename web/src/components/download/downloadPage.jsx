@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 
 import Page from "../layout/page";
 
-class FeedPage extends React.PureComponent {
+class DownloadPage extends React.PureComponent {
   constructor(props) {
     super(props);
   }
@@ -12,7 +12,7 @@ class FeedPage extends React.PureComponent {
     return (
       <Page>
         <div style={styles.wrapper}>
-          Feed Content
+          Download Content
         </div>
       </Page>
     );
@@ -31,4 +31,4 @@ const styles = {
   }
 };
 
-export default connect(null, null)(FeedPage);
+export default connect(null, null)(DownloadPage);

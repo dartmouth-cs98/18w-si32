@@ -12,7 +12,7 @@ import DashboardPage from "./components/dashboard/dashboardPage";
 
 import LeaderboardPage from "./components/leaderboard/leaderboardPage";
 import ReplayPage from "./components/replay/replayPage";
-import FeedPage from "./components/feed/feedPage";
+import DownloadPage from "./components/download/downloadPage";
 
 import BotListPage from "./components/bots/listPage";
 import BotSinglePage from "./components/bots/singlePage";
@@ -46,8 +46,8 @@ const routes = [
     action: () => <DashboardPage />
   },
   {
-    path: "/feed",
-    action: () => <FeedPage />
+    path: "/downloads",
+    action: () => <DownloadPage />
   },
   {
     path: "/leaderboards",

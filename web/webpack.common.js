@@ -1,9 +1,9 @@
-const path = require('path');
+const path = require("path");
 const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
-const AutoDllPlugin = require('autodll-webpack-plugin');
-const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
+const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
+const AutoDllPlugin = require("autodll-webpack-plugin");
+const HardSourceWebpackPlugin = require("hard-source-webpack-plugin");
 
 module.exports = {
   entry: "./src/index.js",
@@ -23,7 +23,10 @@ module.exports = {
         test: /\.css$/,
         use: ["style-loader", "css-loader"]
       },
-      { test: /\.(png|woff|woff2|eot|ttf|svg)$/, loader: 'url-loader?limit=100000' }
+      {
+        test: /\.(png|woff|woff2|eot|ttf|svg)$/,
+        loader: "url-loader?limit=100000"
+      }
     ]
   },
   resolve: {
@@ -37,24 +40,24 @@ module.exports = {
     new AutoDllPlugin({
       inject: true, // will inject the DLL bundle to index.html
       debug: true,
-      filename: '[name].js',
-      path: './dll',
+      filename: "[name].js",
+      path: "./dll",
       plugins: [
         // new UglifyJsPlugin()
       ],
       entry: {
         vendor: [
-          'react',
-          'react-redux',
-          'universal-router',
-          'superagent',
-          'color',
-          'react-dom',
-          'lodash',
-          'redux',
-          'radium',
+          "react",
+          "react-redux",
+          "universal-router",
+          "superagent",
+          "color",
+          "react-dom",
+          "lodash",
+          "redux",
+          "radium",
         ]
       }
-    }),
+    })
   ],
 };
