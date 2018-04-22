@@ -10,32 +10,35 @@ from game.params import DEFAULT_MAP_WIDTH, DEFAULT_MAP_HEIGHT, STARTING_POSITION
 # Constructor Arguments
 # num_players (number) - the number of players involved in the game with which
 #                        this map is associated.
+# uniform (boolean)    - True if distribution of map resources should be uniform, False otherwise
+# width (number)       - the width of the map (in cells)
+# height (number)      - the height of the map (in cells)
 
 class Map:
-    def __init__(self, num_players, width=DEFAULT_MAP_WIDTH, height=DEFAULT_MAP_HEIGHT):
+    def __init__(self, num_players, uniform, width=DEFAULT_MAP_WIDTH, height=DEFAULT_MAP_HEIGHT):
         self.num_players = num_players
 
-        self.cells = self.initialize_map(width, height)
+        self.cells = self.initialize_map(width, height, uniform)
         self.width = width
         self.height = height
 
     # --------------------------------------------------------------------------
     # Initializing Function
 
-    def initialize_map(self, width, height):
+    def initialize_map(self, width, height, uniform):
         cells = []
         for r in range(height):
             row = []
             for c in range(width):
 
-                #(maybe adjust later) distribution of roughly 1 in 5 cells blocked
+                # (maybe adjust later) distribution of roughly 1 in 5 cells blocked
                 p = randint(1, 5)
                 if p == 1:
                     occupiable = False
                 else:
                     occupiable = True
 
-                #if a cell is a starter position, make it free
+                # if a cell is a starter position, make it free
                 if (self.num_players == 1):
                     if ((c, r) in one_player):
                         occupiable = True
@@ -49,8 +52,8 @@ class Map:
                     if ((c, r) in four_players):
                         occupiable = True
 
-                #new_cell = Cell(Coordinate(x=c, y=r), self.num_players, occupiable) #comment this in for blocked cells
-                new_cell = Cell(Coordinate(x=c, y=r), self.num_players, True)
+                new_cell = Cell(Coordinate(x=c, y=r), self.num_players, True, uniform)
+
                 row.append(new_cell)
             cells.append(row)
 

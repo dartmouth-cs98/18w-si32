@@ -2,28 +2,28 @@
 # Class implementation for 'Cell'
 
 import itertools
-import random
 from random import randint
 
 from game.Building import Building
 from game.Coordinate import Coordinate
 
-from game.params import MAX_RESOURCES, DEFENSE_RATING, UNIT_COST
+from game.params import MAX_RESOURCES, UNIFORM_RESOURCES, DEFENSE_RATING, UNIT_COST
 
 
 # A Cell represents a single, atomic cell of the game map.
 #
 # Constructor Arguments
-# position (tuple)     - tuple representing the map position of this cell instance.
-# num_players (number) - the number of players involved in this game instance.
-# occupiable (boolean) - True if this cell is standard, False if it is a wall.
+# position (tuple)     - tuple representing the map position of this cell instance
+# num_players (number) - the number of players involved in this game instance
+# occupiable (boolean) - True if this cell is standard, False if it is a wall
+# uniform (boolean)    - True if distribution of map resources should be uniform, False otherwise
 
 class Cell:
-    def __init__(self, position, num_players, occupiable = True):
+    def __init__(self, position, num_players, occupiable=True, uniform=False):
         self.position = Coordinate(position)
 
         # amount of resource in the cell (will be randomized for now)
-        self.resource = randint(0, MAX_RESOURCES)
+        self.resource = randint(0, MAX_RESOURCES) if (not uniform) else UNIFORM_RESOURCES
         self.units = self.initialize_units_list(num_players)
 
         self.num_players = num_players
