@@ -65,9 +65,9 @@ class Map:
                     row.append(new_cell)
                 cells.append(row)
 
-            if (self.num_players == 1):
+            if self.num_players == 1:
                 players_reachable = True
-            elif (self.num_players == 2):
+            elif self.num_players == 2:
                 if len(self.path(two_players[0], two_players[1])) > 0:
                     players_reachable = True
             elif self.num_players == 3:
