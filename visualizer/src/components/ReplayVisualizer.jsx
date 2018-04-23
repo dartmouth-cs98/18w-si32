@@ -1,10 +1,10 @@
 import React from "react";
 
 import Canvas from "./Canvas";
-import Button from "../common/button";
-import Progress from "../common/progress";
+import Button from "./button";
+import Progress from "./progress";
 
-import { colors, constants } from "../../style";
+import { colors, constants } from "../style";
 
 class ReplayVisualizer extends React.PureComponent {
   constructor(props) {
@@ -23,27 +23,11 @@ class ReplayVisualizer extends React.PureComponent {
     });
   }
 
-  onCellClicked = (row, col) => {
-    this.setState({
-      selectedCell: { row, col }
-    });
-  }
-
   toggleReplayControl = () => {
     this.setState({ play: !this.state.play });
     if (this.state.currentFrame === (this.props.replay.turns.length - 1)) {
       // if we have reached the final frame, reset on button click
-      this.setFrame(0);
-    }
-  }
-
-  setFrame = (frameNo) => {
-    this.setState({
-      currentFrame: frameNo,
-    });
-
-    if (this.props.onFrameChanged) {
-      this.props.onFrameChanged(frameNo);
+      this.setState({ currentFrame: 0 });
     }
   }
 
@@ -54,23 +38,23 @@ class ReplayVisualizer extends React.PureComponent {
   }
 
   scrubTo = (percentage) => {
-    this.setFrame(Math.floor(this.props.replay.turns.length * percentage));
+    this.setState({
+      currentFrame: Math.floor(this.props.replay.turns.length * percentage),
+    });
   }
 
   replayStepBack = () => {
     this.setState({
       play: false,
+      currentFrame: Math.max(0,this.state.currentFrame - 1),
     });
-
-    this.setFrame(Math.max(0,this.state.currentFrame - 1));
   }
 
   replayStepForward = () => {
     this.setState({
       play: false,
+      currentFrame: Math.min(this.state.currentFrame + 1, this.props.replay.turns.length - 1),
     });
-
-    this.setFrame(Math.min(this.state.currentFrame + 1, this.props.replay.turns.length - 1));
   }
 
   resetReplayFile = () => {
@@ -78,8 +62,8 @@ class ReplayVisualizer extends React.PureComponent {
   }
 
   incrementCurrentFrame = () => {
-    const nextFrame = this.state.currentFrame + 1; 
-    this.setFrame(nextFrame);
+    const nextFrame = this.state.currentFrame + 1;
+    this.setState({ currentFrame: nextFrame });
 
     if ((nextFrame + 1) === this.props.replay.turns.length) {
       // if we have reached the end of the game
@@ -97,8 +81,6 @@ class ReplayVisualizer extends React.PureComponent {
         frame={this.state.currentFrame}
         incrementFrame={this.incrementCurrentFrame}
         showNums={this.state.showNums}
-        onCellClicked={this.onCellClicked}
-        selectedCell={this.state.selectedCell}
         play={this.state.play} />
     );
   }
@@ -153,7 +135,7 @@ const styles = {
     padding: "10px 0 0 0"
   },
   options: {
-    width: "80%",
+    width: "100%",
     display: "flex",
     flexDirection: "row",
     justifyContent: "flex-start",
@@ -174,7 +156,7 @@ const styles = {
     }
   },
   controls: {
-    width: "80%",
+    width: "100%",
     marginTop: 10,
     display: "flex",
     flex: 1,

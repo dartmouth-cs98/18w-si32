@@ -10,7 +10,7 @@ Thumbs.db
 
 *.log
 log.json
-
+game.json
 
 __pycache__
 *.pyc

@@ -57,9 +57,10 @@ def do_turn(game):
                     commands.append(m)
 
         if (game.get_building_potential() > 0):
-            m = game.build(closest_to_enemy.position)
-            if m:
-                commands.append(m)
+            if (closest_to_enemy):
+                m = game.build(closest_to_enemy.position)
+                if m:
+                    commands.append(m)
 
 
     # done for this turn, send all my commands

@@ -16,7 +16,7 @@ from game.params import MAX_RESOURCES, DEFENSE_RATING, UNIT_COST
 # Constructor Arguments
 # position (tuple)     - tuple representing the map position of this cell instance.
 # num_players (number) - the number of players involved in this game instance.
-# occupiable (boolean) - True if this cell is standard, False if it is a wall. 
+# occupiable (boolean) - True if this cell is standard, False if it is a wall.
 
 class Cell:
     def __init__(self, position, num_players, occupiable = True):
@@ -32,12 +32,7 @@ class Cell:
 
         self.occupiable = occupiable #whether the cell is blocked or free (True = free, False = blocked)
 
-    # --------------------------------------------------------------------------
-    # STATUS METHODS
 
-    #returns whether the cell is blocked or free
-    def occupiable(self):
-        return self.occupiable
     # --------------------------------------------------------------------------
     # RESOURCE METHODS
 
@@ -118,6 +113,8 @@ class Cell:
                 # self.units[1] -= units
                 # self.units[2] -= units
 
+        print(has_building)
+        print(self.building)
         if (has_building):
             # check if building is destroyed and debuff the number of units
             if (self.units[building_owner] == 0):
@@ -128,12 +125,13 @@ class Cell:
                 self.units[building_owner] = self.units[building_owner] - 10
 
             # check if new units should be produced
-            while self.building.production_status >= UNIT_COST:
-                self.increment_units(building_owner, 1)
-                self.building.production_status -= UNIT_COST
-                players[self.building.ownerId].increment_units_produced()
+            if (self.building):
+                while self.building.production_status >= UNIT_COST:
+                    self.increment_units(building_owner, 1)
+                    self.building.production_status -= UNIT_COST
+                    players[self.building.ownerId].increment_units_produced()
 
-            self.building.production_tick()
+                self.building.production_tick()
 
     # --------------------------------------------------------------------------
     # INITIALIZING FUNCTION
