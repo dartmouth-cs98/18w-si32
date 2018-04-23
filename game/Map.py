@@ -7,6 +7,10 @@ from random import randint
 
 from game.params import DEFAULT_MAP_WIDTH, DEFAULT_MAP_HEIGHT, STARTING_POSITIONS, one_player, two_players, three_players, four_players
 
+from game.ObstacleMapProblem import ObstacleMapProblem
+from game.astar_search import astar_search
+
+
 # Constructor Arguments
 # num_players (number) - the number of players involved in the game with which
 #                        this map is associated.
@@ -23,36 +27,55 @@ class Map:
     # Initializing Function
 
     def initialize_map(self, width, height):
+
+        players_reachable = False #whether each player can reach each every other player
+
         cells = []
-        for r in range(height):
-            row = []
-            for c in range(width):
 
-                #(maybe adjust later) distribution of roughly 1 in 5 cells blocked
-                p = randint(1, 5)
-                if p == 1:
-                    occupiable = False
-                else:
-                    occupiable = True
+        #if some subset of players cannot reach each other, then re-initialize
+        while (not players_reachable):
+            cells = []
+            for r in range(height):
+                row = []
+                for c in range(width):
 
-                #if a cell is a starter position, make it free
-                if (self.num_players == 1):
-                    if ((c, r) in one_player):
-                        occupiable = True
-                elif (self.num_players == 2):
-                    if ((c, r) in two_players):
-                        occupiable = True
-                elif (self.num_players == 3):
-                    if ((c, r) in three_players):
-                        occupiable = True
-                elif (self.num_players == 4):
-                    if ((c, r) in four_players):
+                    #(maybe adjust later) distribution of roughly 1 in 5 cells blocked
+                    p = randint(1, 5)
+                    if p == 1:
+                        occupiable = False
+                    else:
                         occupiable = True
 
-                #new_cell = Cell(Coordinate(x=c, y=r), self.num_players, occupiable) #comment this in for blocked cells
-                new_cell = Cell(Coordinate(x=c, y=r), self.num_players, True)
-                row.append(new_cell)
-            cells.append(row)
+                    #if a cell is a starter position, make it free
+                    if (self.num_players == 1):
+                        if ((c, r) in one_player):
+                            occupiable = True
+                    elif (self.num_players == 2):
+                        if ((c, r) in two_players):
+                            occupiable = True
+                    elif (self.num_players == 3):
+                        if ((c, r) in three_players):
+                            occupiable = True
+                    elif (self.num_players == 4):
+                        if ((c, r) in four_players):
+                            occupiable = True
+
+                    #new_cell = Cell(Coordinate(x=c, y=r), self.num_players, occupiable) #comment this in for blocked cells
+                    new_cell = Cell(Coordinate(x=c, y=r), self.num_players, True)
+                    row.append(new_cell)
+                cells.append(row)
+
+            if (self.num_players == 1):
+                players_reachable = True
+            elif (self.num_players == 2):
+                if len(self.path(two_players[0], two_players[1])) > 0:
+                    players_reachable = True
+            elif (self.num_players == 3):
+                if (len(self.path(three_players[0], three_players[1])) > 0) and (len(self.path(three_players[0], three_players[2])) > 0) and (len(self.path(three_players[1], three_players[2])) > 0):
+                    players_reachable = True
+            elif (self.num_players == 4):
+                if (len(self.path(four_players[0], four_players[1])) > 0) and (len(self.path(four_players[0], four_players[2])) > 0) and (len(self.path(four_players[0], four_players[3])) > 0) and (len(self.path(four_players[1], four_players[2])) > 0) and (len(self.path(four_players[1], four_players[3])) > 0) and (len(self.path(four_players[2], four_players[3])) > 0):
+                    players_reachable = True
 
         return cells
 
@@ -89,6 +112,19 @@ class Map:
     # returns only the state we care about for the game log
     def get_state(self):
         return self.cells
+
+    # INPUTS: "start" (a tuple), "goal" (a tuple)
+    # RETURN: a list of tuples indicating a possible path between "start" and "goal" positions
+    def path(self, start, goal):
+        if (not (self.get_cell(start[0], start[1])).occupiable) | (
+        not (self.get_cell(goal[0], goal[1])).occupiable):
+            empty = []
+            return empty
+
+        p = ObstacleMapProblem(self.map, start, goal)
+
+        result = astar_search(p, p.manhattan_heuristic)
+        return result.path
 
     def __str__(self):
         s = "Blocked cells:\n"

@@ -10,7 +10,6 @@ from game.Coordinate import Coordinate
 from game.Command import Command
 
 from game.ObstacleMapProblem import ObstacleMapProblem
-
 from game.astar_search import astar_search
 
 # ------------------------------------------------------------------------------
