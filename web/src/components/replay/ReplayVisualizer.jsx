@@ -27,6 +27,10 @@ class ReplayVisualizer extends React.PureComponent {
     this.setState({
       selectedCell: { row, col }
     });
+
+    if (this.props.onCellSelected) {
+      this.props.onCellSelected({ row, col });
+    }
   }
 
   toggleReplayControl = () => {

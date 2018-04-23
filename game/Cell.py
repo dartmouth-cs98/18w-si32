@@ -113,8 +113,6 @@ class Cell:
                 # self.units[1] -= units
                 # self.units[2] -= units
 
-        print(has_building)
-        print(self.building)
         if (has_building):
             # check if building is destroyed and debuff the number of units
             if (self.units[building_owner] == 0):

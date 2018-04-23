@@ -5,10 +5,10 @@ import { Application, Graphics, Point, Polygon, Text } from "pixi.js";
 
 const TICK_SPEED = 25;
 
-const SCENE_BACKGROUND_COLOR = 0xFFFFFF;
+export const SCENE_BACKGROUND_COLOR = 0xFFFFFF;
 // const GRID_OUTLINE_COLOR = 0xec0b43;
-const NEUTRAL_CELL_COLOR = 0x56666b;
-const NEUTRAL_CELL_ALPHA = 0.1;
+export const NEUTRAL_CELL_COLOR = 0x56666b;
+export const NEUTRAL_CELL_ALPHA = 0.1;
 
 const CELL_OFFSET_X = 1;
 const CELL_OFFSET_Y = 1;
@@ -23,7 +23,7 @@ export const COLORS = [
 ];
 
 // Helper functions for hexagonal math
-const getHexagonCorner = (center, size, i) => {
+export const getHexagonCorner = (center, size, i) => {
   let angle_deg = 60 * i   + 30;
   let angle_rad = Math.PI / 180 * angle_deg;
   return new Point(
@@ -32,7 +32,7 @@ const getHexagonCorner = (center, size, i) => {
   );
 };
 
-const getPlayerColor = (playerN) => {
+export const getPlayerColor = (playerN) => {
   return COLORS[playerN];
 };
 
@@ -229,14 +229,15 @@ class Canvas extends React.Component {
   }
 
   drawSelectedCell = () => {
-    if (this.props.selectedCell) {
-      this.mapGraphics.lineStyle(4, 0xFFFFFF, 1); 
-      const { row, col } = this.props.selectedCell;
-      const cell = this.props.replay.turns[this.props.frame].map[row][col];
-      this.drawCell(row, col, cell);
-      this.mapGraphics.lineStyle(0, 0x000000, 1); 
+    if (!this.props.selectedCell) {
+      return;
     }
 
+    this.mapGraphics.lineStyle(4, 0xFFFFFF, 1); 
+    const { row, col } = this.props.selectedCell;
+    const cell = this.props.replay.turns[this.props.frame].map[row][col];
+    this.drawCell(row, col, cell, true);
+    this.mapGraphics.lineStyle(0, 0x000000, 1); 
   }
 
   // add the grid to main map graphics

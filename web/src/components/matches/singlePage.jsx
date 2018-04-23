@@ -6,6 +6,7 @@ import { Page, Wrapper, TitleBar, Link } from "../layout";
 import { fetchMatch } from "../../data/match/matchActions";
 import { fetchLog } from "../../data/match/matchRoutes";
 import ReplayVisualizer from "../replay/ReplayVisualizer";
+import CellDetail from "../replay/CellDetails";
 import { constants, colors } from "../../style";
 import { COLORS } from "../replay/Canvas";
 
@@ -32,9 +33,10 @@ class MatchSinglePage extends React.PureComponent {
     this.setState({ frameNumber });
   }
 
-  onCellSelected = (row, col) => {
+  onCellSelected = ({row, col}) => {
     this.setState({
-      selectedCell: { row, col }
+      selectedRow: row, 
+      selectedCol: col, 
     });
   }
 
@@ -120,6 +122,14 @@ class MatchSinglePage extends React.PureComponent {
             <div style={styles.matchInfo}>
               <h3 style={styles.title}>Bot Finish Order</h3>
               { this.renderBots() }
+              <div style={styles.cellDetail}>
+                <CellDetail
+                  log={this.state.log}
+                  turn={this.state.frameNumber}
+                  row={this.state.selectedRow} 
+                  col={this.state.selectedCol} 
+                />
+              </div>
             </div>
           </div>
         </Wrapper>
