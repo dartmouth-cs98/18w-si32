@@ -94,9 +94,6 @@ class CellDetail extends React.Component {
       return null;
     }
 
-    if (!row || !col) {
-      return null;
-    }
     const cell = log.turns[turn].map[row][col];
     const loc = col * log.w + row;
     const commands = log.turns[turn].cmd.filter(c => (c.t == loc || c.p == loc && c.d != DIRECTIONS.NONE));

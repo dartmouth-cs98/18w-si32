@@ -124,7 +124,7 @@ class MatchSinglePage extends React.PureComponent {
               { this.renderBots() }
               <div style={styles.cellDetail}>
                 <h3 style={styles.title}>Cell Details</h3>
-                { this.state.selectedRow ? 
+                { this.state.selectedRow != undefined ? 
                     <CellDetail
                       log={this.state.log}
                       turn={this.state.frameNumber}
