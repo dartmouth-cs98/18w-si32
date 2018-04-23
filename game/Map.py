@@ -33,7 +33,7 @@ class Map:
         cells = []
 
         #if some subset of players cannot reach each other, then re-initialize
-        while (not players_reachable):
+        while not players_reachable:
             cells = []
             for r in range(height):
                 row = []
@@ -47,17 +47,17 @@ class Map:
                         occupiable = True
 
                     #if a cell is a starter position, make it free
-                    if (self.num_players == 1):
-                        if ((c, r) in one_player):
+                    if self.num_players == 1:
+                        if (c, r) in one_player:
                             occupiable = True
-                    elif (self.num_players == 2):
-                        if ((c, r) in two_players):
+                    elif self.num_players == 2:
+                        if (c, r) in two_players:
                             occupiable = True
-                    elif (self.num_players == 3):
-                        if ((c, r) in three_players):
+                    elif self.num_players == 3:
+                        if (c, r) in three_players:
                             occupiable = True
-                    elif (self.num_players == 4):
-                        if ((c, r) in four_players):
+                    elif self.num_players == 4:
+                        if (c, r) in four_players:
                             occupiable = True
 
                     #new_cell = Cell(Coordinate(x=c, y=r), self.num_players, occupiable) #comment this in for blocked cells
@@ -70,10 +70,10 @@ class Map:
             elif (self.num_players == 2):
                 if len(self.path(two_players[0], two_players[1])) > 0:
                     players_reachable = True
-            elif (self.num_players == 3):
+            elif self.num_players == 3:
                 if (len(self.path(three_players[0], three_players[1])) > 0) and (len(self.path(three_players[0], three_players[2])) > 0) and (len(self.path(three_players[1], three_players[2])) > 0):
                     players_reachable = True
-            elif (self.num_players == 4):
+            elif self.num_players == 4:
                 if (len(self.path(four_players[0], four_players[1])) > 0) and (len(self.path(four_players[0], four_players[2])) > 0) and (len(self.path(four_players[0], four_players[3])) > 0) and (len(self.path(four_players[1], four_players[2])) > 0) and (len(self.path(four_players[1], four_players[3])) > 0) and (len(self.path(four_players[2], four_players[3])) > 0):
                     players_reachable = True
 
@@ -116,12 +116,11 @@ class Map:
     # INPUTS: "start" (a tuple), "goal" (a tuple)
     # RETURN: a list of tuples indicating a possible path between "start" and "goal" positions
     def path(self, start, goal):
-        if (not (self.get_cell(start[0], start[1])).occupiable) | (
-        not (self.get_cell(goal[0], goal[1])).occupiable):
+        if (not (self.get_cell(start)).occupiable) | (not (self.get_cell(goal)).occupiable):
             empty = []
             return empty
 
-        p = ObstacleMapProblem(self.map, start, goal)
+        p = ObstacleMapProblem(self, start, goal)
 
         result = astar_search(p, p.manhattan_heuristic)
         return result.path
