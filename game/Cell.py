@@ -82,6 +82,7 @@ class Cell:
 
         if has_building:
             building_owner = self.building.ownerId
+            original_units = self.units[building_owner]
             buffed_units = self.units[building_owner] + DEFENSE_RATING  # buff the number of units of the building owner
             self.units[building_owner] = buffed_units
 
@@ -126,6 +127,12 @@ class Cell:
 
             # check if new units should be produced
             if (self.building):
+
+                # Reset original number of units. If there are 0
+                # units, it means that enemies
+                if self.units[building_owner] == 0:
+                    self.units[building_owner] = original_units
+
                 while self.building.production_status >= UNIT_COST:
                     self.increment_units(building_owner, 1)
                     self.building.production_status -= UNIT_COST
