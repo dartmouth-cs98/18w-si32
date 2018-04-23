@@ -93,10 +93,13 @@ class Logger:
 
     def add_move(self, command):
         coded_position = command.position.x * self.width + command.position.y
+        target = command.position.adjacent_in_direction(command.direction)
+        coded_target = target.x * self.width + target.y
 
         clean_command = {
             'u': command.playerId,
             'p': coded_position,
+            't': coded_target,
             'd': command.direction,
             'n': command.num_units,
         }

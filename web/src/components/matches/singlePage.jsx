@@ -6,6 +6,7 @@ import { Page, Wrapper, TitleBar, Link } from "../layout";
 import { fetchMatch } from "../../data/match/matchActions";
 import { fetchLog } from "../../data/match/matchRoutes";
 import ReplayVisualizer from "../replay/ReplayVisualizer";
+import CellDetail from "../replay/CellDetails";
 import { constants, colors } from "../../style";
 import { COLORS } from "../replay/Canvas";
 
@@ -25,6 +26,17 @@ class MatchSinglePage extends React.PureComponent {
       }
     }).then(log => {
       this.setState({ log });
+    });
+  }
+
+  onFrameChanged = (frameNumber) => {
+    this.setState({ frameNumber });
+  }
+
+  onCellSelected = ({row, col}) => {
+    this.setState({
+      selectedRow: row, 
+      selectedCol: col, 
     });
   }
 
@@ -70,15 +82,20 @@ class MatchSinglePage extends React.PureComponent {
         return this.renderFailed();
       }
 
-      return <ReplayVisualizer hideSelectButton replay={this.state.log} />;
+      return  <ReplayVisualizer 
+        hideSelectButton
+        replay={this.state.log}
+        onFrameChanged={this.onFrameChanged}
+        onCellSelected={this.onCellSelected}
+      />;
     } else {
       return <div><div style={[styles.replayAreaBox, styles.loading]}>Loading replay...</div></div>;
     }
   }
 
   renderNotDone = () => (
-      <Page>
-        <Wrapper>
+    <Page>
+      <Wrapper>
         <div>Game is currently running, check back in a bit</div>
       </Wrapper>
     </Page>
@@ -105,6 +122,16 @@ class MatchSinglePage extends React.PureComponent {
             <div style={styles.matchInfo}>
               <h3 style={styles.title}>Bot Finish Order</h3>
               { this.renderBots() }
+              <div style={styles.cellDetail}>
+                <h3 style={styles.title}>Cell Details</h3>
+                { this.state.selectedRow != undefined ? 
+                    <CellDetail
+                      log={this.state.log}
+                      turn={this.state.frameNumber}
+                      row={this.state.selectedRow} 
+                      col={this.state.selectedCol} 
+                    /> : <div style={styles.cellDetail.placeholder}>Click on a cell to see specifics.</div> }
+              </div>
             </div>
           </div>
         </Wrapper>
@@ -213,6 +240,13 @@ const styles = {
     marginBottom: 3,
     fontSize: constants.fontSizes.small,
   },
+  cellDetail: {
+    marginTop: 30,
+    placeholder: {
+      color: colors.lightGray,
+      fontSize: constants.fontSizes.medium,
+    }
+  }
 };
 
 const mapDispatchToProps = (dispatch, props) => ({
