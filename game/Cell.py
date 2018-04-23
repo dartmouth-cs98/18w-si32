@@ -82,17 +82,17 @@ class Cell:
 
         if has_building:
             building_owner = self.building.ownerId
-            original_units = self.units[building_owner]
             buffed_units = self.units[building_owner] + DEFENSE_RATING  # buff the number of units of the building owner
             self.units[building_owner] = buffed_units
 
         contenders = []  # player IDs of all players with nonzero units on the cell
 
+
         for i in range(self.num_players):
             if self.units[i] > 0:
                 contenders.append(i)
 
-        while (len(contenders) > 1):
+        while len(contenders) > 1:
             # units = min(contenders)#, self.units[2])
             units = float("inf")
             for index in contenders:
@@ -114,23 +114,26 @@ class Cell:
                 # self.units[1] -= units
                 # self.units[2] -= units
 
-        if (has_building):
-            # check if building is destroyed and debuff the number of units
-            if (self.units[building_owner] == 0):
+        print(has_building)
+        print(self.building)
+        if has_building:
+            difference = buffed_units - self.units[building_owner]
+            # check if building is destroyed and debuff the number of units if necessary
+
+            # destroy building if building has lost all defense points
+            if self.units[building_owner] == 0:
                 self.destroy_building()
-            elif (self.units[building_owner] <= DEFENSE_RATING and self.units[building_owner] > 0):
-                self.units[building_owner] = 0
+            # building absorbs all damage
+            elif (difference < DEFENSE_RATING) and (difference >= 0):
+                self.units[building_owner] = self.units[building_owner] + difference # get back the "killed units" since damage was absorbed
+                self.units[building_owner] = self.units[building_owner] - 10 # remove building contribution from unit count
+            # building does not absorb all damage
             else:
-                self.units[building_owner] = self.units[building_owner] - 10
+                self.units[building_owner] = self.units[building_owner] + DEFENSE_RATING - 1 # absorb as much damage as possible without being destroyed
+                self.units[building_owner] = self.units[building_owner] - 10 # remove building contribution from unit count
 
             # check if new units should be produced
-            if (self.building):
-
-                # Reset original number of units. If there are 0
-                # units, it means that enemies
-                if self.units[building_owner] == 0:
-                    self.units[building_owner] = original_units
-
+            if self.building:
                 while self.building.production_status >= UNIT_COST:
                     self.increment_units(building_owner, 1)
                     self.building.production_status -= UNIT_COST
