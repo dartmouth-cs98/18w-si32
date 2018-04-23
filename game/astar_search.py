@@ -57,33 +57,29 @@ def astar_search(search_problem, heuristic_fn):
     while (pqueue):
         node = heappop(pqueue)
 
-        if search_problem.goal_test(node.state): #if we reach the goal, backchain and return the solution path
-                                                 #along with its cost
+        if search_problem.goal_test(node.state): # if we reach the goal, backchain and return the solution path
+                                                 # along with its cost
             path = backchain(node)
             solution.path = path
             solution.cost = node.cost
             return solution
 
-        successor_state_list = search_problem.get_successors(node.state) #list of current state's successors
+        successor_state_list = search_problem.get_successors(node.state) # list of current state's successors
 
         for successor_state in successor_state_list:
-            solution.nodes_visited += 1 #checking a node for addition to the frontier counts as "visiting" it
+            solution.nodes_visited += 1 # checking a node for addition to the frontier counts as "visiting" it
 
-            #add the node to the frontier if:
-                #it hasn't been visited yet
+            # add the node to the frontier if:
+
+            # it hasn't been visited yet
             if successor_state not in visited_cost:
                 visited_cost[successor_state] = visited_cost[node.state] + search_problem.transition_cost_fn(node.state, successor_state)
                 successor_node = AstarNode(successor_state, heuristic_fn(successor_state), node, search_problem.transition_cost_fn(node.state, successor_state), visited_cost[node.state] + search_problem.transition_cost_fn(node.state, successor_state))
                 heappush(pqueue, successor_node)
-                #if it's been visited but we just found a lower path cost for it
+            # if it's been visited but we just found a lower path cost for it
             elif visited_cost[node.state] + search_problem.transition_cost_fn(node.state, successor_state) < visited_cost[successor_state]:
                 visited_cost[successor_state] = visited_cost[node.state] + search_problem.transition_cost_fn(node.state, successor_state)
                 successor_node = AstarNode(successor_state, heuristic_fn(successor_state), node, search_problem.transition_cost_fn(node.state, successor_state), visited_cost[node.state] + search_problem.transition_cost_fn(node.state, successor_state))
                 heappush(pqueue, successor_node)
-
-                #We can get away with not actually removing the nodes with more expensive costs from the frontier when we find a node with the same state but cheaper cost, because if we follow Prof.Balkcom's marking procedure,
-                #they are just as good as removed, because those nodes will just eventually be popped and none of their successors will be added to the frontier, since those successors will all come up with higher path costs
-                #than they already have (which would be the costs they get from the previous visit from the cheaper node with same state, which were already popped, as it is a priority queue). So they're physically not removed,
-                #but their potential influence on the search will be revoked
 
     return solution
