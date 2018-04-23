@@ -28,25 +28,25 @@ class Map:
 
     def initialize_map(self, width, height):
 
-        players_reachable = False #whether each player can reach each every other player
+        players_reachable = False # whether each player can reach each every other player
 
         cells = []
 
-        #if some subset of players cannot reach each other, then re-initialize
+        # if some subset of players cannot reach each other, then re-initialize
         while not players_reachable:
             cells = []
             for r in range(height):
                 row = []
                 for c in range(width):
 
-                    #(maybe adjust later) distribution of roughly 1 in 5 cells blocked
+                    # (maybe adjust later) distribution of roughly 1 in 5 cells blocked
                     p = randint(1, 5)
                     if p == 1:
                         occupiable = False
                     else:
                         occupiable = True
 
-                    #if a cell is a starter position, make it free
+                    # if a cell is a starter position, make it free
                     if self.num_players == 1:
                         if (c, r) in one_player:
                             occupiable = True
@@ -60,7 +60,7 @@ class Map:
                         if (c, r) in four_players:
                             occupiable = True
 
-                    #new_cell = Cell(Coordinate(x=c, y=r), self.num_players, occupiable) #comment this in for blocked cells
+                    # new_cell = Cell(Coordinate(x=c, y=r), self.num_players, occupiable) #comment this in for blocked cells
                     new_cell = Cell(Coordinate(x=c, y=r), self.num_players, True)
                     row.append(new_cell)
                 cells.append(row)
