@@ -123,12 +123,14 @@ class MatchSinglePage extends React.PureComponent {
               <h3 style={styles.title}>Bot Finish Order</h3>
               { this.renderBots() }
               <div style={styles.cellDetail}>
-                <CellDetail
-                  log={this.state.log}
-                  turn={this.state.frameNumber}
-                  row={this.state.selectedRow} 
-                  col={this.state.selectedCol} 
-                />
+                <h3 style={styles.title}>Cell Details</h3>
+                { this.state.selectedRow ? 
+                    <CellDetail
+                      log={this.state.log}
+                      turn={this.state.frameNumber}
+                      row={this.state.selectedRow} 
+                      col={this.state.selectedCol} 
+                    /> : <div style={styles.cellDetail.placeholder}>Click on a cell to see specifics.</div> }
               </div>
             </div>
           </div>
@@ -238,6 +240,13 @@ const styles = {
     marginBottom: 3,
     fontSize: constants.fontSizes.small,
   },
+  cellDetail: {
+    marginTop: 30,
+    placeholder: {
+      color: colors.lightGray,
+      fontSize: constants.fontSizes.medium,
+    }
+  }
 };
 
 const mapDispatchToProps = (dispatch, props) => ({
