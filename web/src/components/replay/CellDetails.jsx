@@ -72,7 +72,7 @@ class CellDetail extends React.Component {
     const loc = col * log.w + row;
     const forDirection = commands.filter(c => (c.p == loc && c.d == direction));
     const n = forDirection.map(c => c.n);
-    return { player: cell.p, n: _.reduce(n, (a, curVal) => a+curVal, 0) };
+    return { player: cell.p || cell.b, n: _.reduce(n, (a, curVal) => a+curVal, 0) };
   }
 
   // return who is moving into current cell with direction 
@@ -253,7 +253,7 @@ const styles = {
       color: "black",
     },
     inactive: {
-      opacity: .3,
+      opacity: .2,
     },
 
     outWrap: {
