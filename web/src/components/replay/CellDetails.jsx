@@ -72,7 +72,7 @@ class CellDetail extends React.Component {
     const loc = col * log.w + row;
     const forDirection = commands.filter(c => (c.p == loc && c.d == direction));
     const n = forDirection.map(c => c.n);
-    return { player: cell.p, n: _.reduce(n, (a, curVal) => a+curVal, 0) };
+    return { player: cell.p || cell.b, n: _.reduce(n, (a, curVal) => a+curVal, 0) };
   }
 
   // return who is moving into current cell with direction 
@@ -86,6 +86,15 @@ class CellDetail extends React.Component {
 
     const n = forDirection.map(c => c.n);
     return { player: forDirection[0].u, n: _.reduce(n, (a, curVal) => a+curVal, 0) };
+  }
+
+  getResources = () => {
+    let i = this.props.turn || 0;
+    while (i > 0 && !("r" in this.props.log.turns[i].map[this.props.row][this.props.col])) {
+      i--;
+    }
+
+    return this.props.log.turns[i].map[this.props.row][this.props.col].r;
   }
 
   render() {
@@ -148,6 +157,8 @@ class CellDetail extends React.Component {
             <div>
               <h3 style={styles.inner.title}>Units</h3>
               <p>{ cell.u || "-" }</p>
+              <h3 style={styles.inner.title}>Resources</h3>
+              <p>{ this.getResources() }</p>
             </div>
           </div>
         </div>
@@ -253,7 +264,7 @@ const styles = {
       color: "black",
     },
     inactive: {
-      opacity: .3,
+      opacity: .2,
     },
 
     outWrap: {
