@@ -156,9 +156,9 @@ class CellDetail extends React.Component {
           <div style={styles.inner.wrap}>
             <div>
               <h3 style={styles.inner.title}>Units</h3>
-              <p>{ cell.u || "-" }</p>
+              <p style={styles.inner.stat}>{ cell.u || "-" }</p>
               <h3 style={styles.inner.title}>Resources</h3>
-              <p>{ this.getResources() }</p>
+              <p style={styles.inner.stat}>{ this.getResources() }</p>
             </div>
           </div>
         </div>
@@ -317,8 +317,11 @@ const styles = {
       fontSize: constants.fontSizes.smaller,
       fontWeight: 500,
       textTransform: "uppercase",
-    }
-
+      marginTop: 5,
+    },
+    stat: {
+      margin: "5px 0 8px",
+    },
   }
 };
 
