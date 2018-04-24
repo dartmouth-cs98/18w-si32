@@ -88,6 +88,15 @@ class CellDetail extends React.Component {
     return { player: forDirection[0].u, n: _.reduce(n, (a, curVal) => a+curVal, 0) };
   }
 
+  getResources = () => {
+    let i = this.props.turn || 0;
+    while (i > 0 && !("r" in this.props.log.turns[i].map[this.props.row][this.props.col])) {
+      i--;
+    }
+
+    return this.props.log.turns[i].map[this.props.row][this.props.col].r;
+  }
+
   render() {
     const { turn = 0, row, col, log } = this.props;
     if (!log) {
@@ -148,6 +157,8 @@ class CellDetail extends React.Component {
             <div>
               <h3 style={styles.inner.title}>Units</h3>
               <p>{ cell.u || "-" }</p>
+              <h3 style={styles.inner.title}>Resources</h3>
+              <p>{ this.getResources() }</p>
             </div>
           </div>
         </div>

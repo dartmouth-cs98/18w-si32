@@ -7,6 +7,7 @@ import { fetchMatch } from "../../data/match/matchActions";
 import { fetchLog } from "../../data/match/matchRoutes";
 import ReplayVisualizer from "../replay/ReplayVisualizer";
 import CellDetail from "../replay/CellDetails";
+import GameStats from "../replay/GameStats";
 import { constants, colors } from "../../style";
 import { COLORS } from "../replay/Canvas";
 
@@ -122,6 +123,14 @@ class MatchSinglePage extends React.PureComponent {
             <div style={styles.matchInfo}>
               <h3 style={styles.title}>Bot Finish Order</h3>
               { this.renderBots() }
+              <div style={styles.cellDetail}>
+                <h3 style={styles.title}>Current Game Stats</h3>
+                <GameStats
+                  log={this.state.log}
+                  turn={this.state.frameNumber}
+                  bots={this.props.match.bots}
+                /> 
+              </div>
               <div style={styles.cellDetail}>
                 <h3 style={styles.title}>Cell Details</h3>
                 { this.state.selectedRow != undefined ? 
