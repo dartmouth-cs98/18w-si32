@@ -31,7 +31,7 @@ botRouter.post("/", async (ctx) => {
     user: ctx.state.userId,
     trueSkill: {},
   });
-  console.log("GOT HERE")
+  
   const { key } = await s3.uploadBot(ctx.state.userId, bot._id, ctx.request.body.files.code);
   bot.code = key;
   bot.versionHistory.push({ timestamp: new Date(), version: 1 });
