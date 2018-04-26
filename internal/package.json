@@ -6,11 +6,16 @@
   "repository": "https://github.com/dartmouth-cs98/18w-si32",
   "main": "index.js",
   "scripts": {
+    "assets": "npm run devkit && npm run visualizer",
     "devkit": "npm run devkit-rm && npm run devkit-zip && npm run devkit-cp && npm run devkit-clean",
     "devkit-rm": "aws s3 rm s3://monad-assets/devkit.zip",
     "devkit-zip": "zip -r devkit.zip ../devkit",
     "devkit-cp": "aws s3 cp devkit.zip s3://monad-assets/ --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers full=emailaddress=kyle.dotterrer.18@dartmouth.edu",
-    "devkit-clean": "rm -f devkit.zip"
+    "devkit-clean": "rm -f devkit.zip",
+    "visualizer": "npm run visualizer-rm && npm run visualizer-build && npm run visualizer-cp",
+    "visualizer-rm": "aws s3 rm s3://monad-assets/monad-visualizer-0.1.0.dmg",
+    "visualizer-build": "cd ../visualizer && npm run electron-pack",
+    "visualizer-cp": "aws s3 cp ../visualizer/dist/monad-visualizer-0.1.0.dmg s3://monad-assets/ --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers full=emailaddress=kyle.dotterrer.18@dartmouth.edu"
   },
   "license": "ISC"
 }
