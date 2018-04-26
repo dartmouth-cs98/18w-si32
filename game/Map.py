@@ -7,6 +7,9 @@ from random import randint
 
 from game.params import DEFAULT_MAP_WIDTH, DEFAULT_MAP_HEIGHT, STARTING_POSITIONS, one_player, two_players, three_players, four_players
 
+from game.ObstacleMapProblem import ObstacleMapProblem
+from game.astar_search import astar_search
+
 # Constructor Arguments
 # num_players (number) - the number of players involved in the game with which
 #                        this map is associated.
@@ -14,17 +17,41 @@ from game.params import DEFAULT_MAP_WIDTH, DEFAULT_MAP_HEIGHT, STARTING_POSITION
 # width (number)       - the width of the map (in cells)
 # height (number)      - the height of the map (in cells)
 
+
 class Map:
     def __init__(self, num_players, uniform, width=DEFAULT_MAP_WIDTH, height=DEFAULT_MAP_HEIGHT):
         self.num_players = num_players
-
-        self.cells = self.initialize_map(width, height, uniform)
         self.width = width
         self.height = height
 
+        players_reachable = False  # whether each player can reach each every other player
+
+        # keep initializing self.cells until we get a map where each player can reach every other player
+        while not players_reachable:
+            # print("LOOP")
+            self.cells = self.initialize_map(width, height, uniform)
+
+            if self.num_players == 1:
+                players_reachable = True
+            elif self.num_players == 2:
+                if len(self.path(Coordinate(two_players[0]), Coordinate(two_players[1]))) > 0:
+                    players_reachable = True
+            elif self.num_players == 3:
+                if (len(self.path(Coordinate(three_players[0]), Coordinate(three_players[1]))) > 0) and (
+                        len(self.path(Coordinate(three_players[0]), Coordinate(three_players[2]))) > 0) and (
+                        len(self.path(Coordinate(three_players[1]), Coordinate(three_players[2]))) > 0):
+                    players_reachable = True
+            elif self.num_players == 4:
+                if (len(self.path(Coordinate(four_players[0]), Coordinate(four_players[1]))) > 0) and (
+                        len(self.path(Coordinate(four_players[0]), Coordinate(four_players[2]))) > 0) and (
+                        len(self.path(Coordinate(four_players[0]), Coordinate(four_players[3]))) > 0) and (
+                        len(self.path(Coordinate(four_players[1]), Coordinate(four_players[2]))) > 0) and (
+                        len(self.path(Coordinate(four_players[1]), Coordinate(four_players[3]))) > 0) and (
+                        len(self.path(Coordinate(four_players[2]), Coordinate(four_players[3]))) > 0):
+                    players_reachable = True
+
     # --------------------------------------------------------------------------
     # Initializing Function
-
     def initialize_map(self, width, height, uniform):
         cells = []
         for r in range(height):
@@ -32,7 +59,7 @@ class Map:
             for c in range(width):
 
                 # (maybe adjust later) distribution of roughly 1 in 5 cells blocked
-                p = randint(1, 5)
+                p = randint(1, 4)
                 if p == 1:
                     occupiable = False
                 else:
@@ -52,7 +79,8 @@ class Map:
                     if ((c, r) in four_players):
                         occupiable = True
 
-                new_cell = Cell(Coordinate(x=c, y=r), self.num_players, True, uniform)
+                # new_cell = Cell(Coordinate(x=c, y=r), self.num_players, True, uniform) # ALL cells are free
+                new_cell = Cell(Coordinate(x=c, y=r), self.num_players, occupiable, uniform)
 
                 row.append(new_cell)
             cells.append(row)
@@ -60,6 +88,18 @@ class Map:
         return cells
 
     # --------------------------------------------------------------------------
+    # INPUTS: "start" (a tuple), "goal" (a tuple)
+    # RETURN: a list of tuples indicating a possible path between "start" and "goal" positions
+    def path(self, start, goal):
+        if (not (self.get_cell(start)).occupiable) | (not (self.get_cell(goal)).occupiable):
+            empty = []
+            return empty
+
+        p = ObstacleMapProblem(self, start, goal)
+
+        result = astar_search(p, p.manhattan_heuristic)
+
+        return result.path
     # Helper functions
 
     # return cell at specified position
@@ -94,10 +134,13 @@ class Map:
         return self.cells
 
     def __str__(self):
-        s = "Blocked cells:\n"
+        b = "Blocked cells:\n"
+        f = "\nFree cells:\n"
         for r in self.cells:
             for cell in r:
                 if (not cell.occupiable):
-                    s += str(cell.position)
-                    s += " "
-        return s
+                    b += str(cell.position)
+                    b += " "
+                else:
+                    f += str(cell.position)
+        return b + f
