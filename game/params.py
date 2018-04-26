@@ -5,7 +5,7 @@ from enum import IntEnum
 
 
 # ------------------------------------------------------------------------------
-# Movement Directions 
+# Movement Directions
 
 # currently contains directions for old and new (hex) grids
 class Direction(IntEnum):
@@ -83,6 +83,7 @@ BUILDING_COST = 100      # The resource cost to construct an individual building
 
 UNIT_COST = 5           # The resource cost of producing a single additional unit.
 MAX_RESOURCES = 50      # The maximum resource value for an individual cell.
+UNIFORM_RESOURCES = 20  # The resource value for an individual cell on uniformly distributed map.
 
 # ------------------------------------------------------------------------------
 # Starting player positions

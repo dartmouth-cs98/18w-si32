@@ -4,4 +4,5 @@
   * [Your First Bot](getting-started/your-first-bot.md)
 * [Game Rules](game-rules/README.md)
 * [Strategies](strategies/README.md)
+* [Downloads](downloads/README.md)
 * [API Reference](api-reference/README.md)

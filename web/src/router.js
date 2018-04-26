@@ -8,11 +8,10 @@ import LandingPage from "./components/landing/landingPage";
 import LoginPage from "./components/user/loginPage";
 import ProfilePage from "./components/user/profilePage";
 import RegisterPage from "./components/user/registerPage";
-import DashboardPage from "./components/dashboard/dashboardPage";
 
 import LeaderboardPage from "./components/leaderboard/leaderboardPage";
 import ReplayPage from "./components/replay/replayPage";
-import FeedPage from "./components/feed/feedPage";
+import DownloadPage from "./components/download/downloadPage";
 
 import BotListPage from "./components/bots/listPage";
 import BotSinglePage from "./components/bots/singlePage";
@@ -44,10 +43,6 @@ const routes = [
   {
     path: "/dashboard",
     action: () => <DashboardPage />
-  },
-  {
-    path: "/feed",
-    action: () => <FeedPage />
   },
   {
     path: "/leaderboards",

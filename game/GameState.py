@@ -19,19 +19,12 @@ from game.params import MAX_ITERS, STARTING_POSITIONS, MOVE_COMMAND, BUILD_COMMA
 # GameState
 
 # Constructor Arguments
-# bots (list) - a list of the bots involved in this game instance.
+# bots (list)       - a list of the bots involved in this game instance
+# uniform (boolean) - True if distribution of map resources should be uniform, False otherwise
 
 class GameState(Game):
-    def __init__(self, bots):
-
-        # Game state is determined by map, players, and rules.
-        # Higher level game state takes these objects and runs games, allowing for a
-        # game agnostic framework
-        #
-        # GB - I'm more tightly coupling these at the moment to get things off
-        # the ground. Won't be hard to abstract back out when needed.
-
-        self.map = Map(len(bots))
+    def __init__(self, bots, uniform=False):
+        self.map = Map(len(bots), uniform)
 
         self.initialize_players(bots, self.map)
 

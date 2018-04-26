@@ -11,6 +11,7 @@ Thumbs.db
 *.log
 log.json
 game.json
+sample.json
 
 __pycache__
 *.pyc
