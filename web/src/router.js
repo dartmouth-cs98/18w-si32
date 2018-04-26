@@ -11,7 +11,7 @@ import RegisterPage from "./components/user/registerPage";
 
 import LeaderboardPage from "./components/leaderboard/leaderboardPage";
 import ReplayPage from "./components/replay/replayPage";
-import DownloadPage from "./components/download/downloadPage";
+import DashboardPage from "./components/dashboard/dashboardPage";
 
 import BotListPage from "./components/bots/listPage";
 import BotSinglePage from "./components/bots/singlePage";

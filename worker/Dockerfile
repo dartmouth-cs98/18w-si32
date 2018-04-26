@@ -22,9 +22,8 @@ RUN pip install -r ./requirements.txt
 ADD ./worker /app
 
 # add the game engine in
-ADD ./game /app/game
+ADD ./worker/bot_common/game /app/game
 RUN cp -r /app/game /app/bot_common
-
 
 # accept a build arg for the api url to hit for games. set arg as env variable
 ARG api_route=http://docker.for.mac.host.internal:3000/worker

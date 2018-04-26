@@ -1,6 +1,6 @@
 import traceback
 
-from game.Bot import DockerBot
+from game.DockerBot import DockerBot
 from game.GameState import GameState
 from waitForGame import pollUntilGameReady
 from endpoints import post_match_results
