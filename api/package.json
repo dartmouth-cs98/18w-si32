@@ -15,7 +15,7 @@
     "start": "nodemon app/index.js",
     "prepush": "npm run lint"
   },
-  "author": "",
+  "author": "Monad Team",
   "license": "ISC",
   "dependencies": {
     "@koa/cors": "^2.2.1",

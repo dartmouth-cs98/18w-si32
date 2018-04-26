@@ -8,7 +8,7 @@
     "build": "./node_modules/gitbook-cli/bin/gitbook.js build",
     "deploy": "./node_modules/gitbook-cli/bin/gitbook.js build && surge _book"
   },
-  "author": "",
+  "author": "Monad Team",
   "license": "ISC",
   "dependencies": {
     "gitbook-cli": "^2.3.2"

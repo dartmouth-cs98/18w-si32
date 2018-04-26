@@ -1,0 +1,16 @@
+{
+  "name": "internal",
+  "author": "Monad Team",
+  "version": "1.0.0",
+  "description": "",
+  "repository": "https://github.com/dartmouth-cs98/18w-si32",
+  "main": "index.js",
+  "scripts": {
+    "devkit": "npm run devkit-rm && npm run devkit-zip && npm run devkit-cp && npm run devkit-clean",
+    "devkit-rm": "aws s3 rm s3://monad-assets/devkit.zip",
+    "devkit-zip": "zip -r devkit.zip ../devkit",
+    "devkit-cp": "aws s3 cp devkit.zip s3://monad-assets/ --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers full=emailaddress=kyle.dotterrer.18@dartmouth.edu",
+    "devkit-clean": "rm -f devkit.zip"
+  },
+  "license": "ISC"
+}
