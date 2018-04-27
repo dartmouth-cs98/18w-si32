@@ -100,12 +100,9 @@ class Map:
         result = astar_search(p, p.manhattan_heuristic)
 
         return result.path
-    # Helper functions
 
     # return cell at specified position
     def get_cell(self, position):
-        assert(type(position) is Coordinate)
-
         if not self.position_in_range(position):
             return None
 

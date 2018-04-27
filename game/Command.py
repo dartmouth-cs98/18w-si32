@@ -16,6 +16,7 @@ from game.params import MOVE_COMMAND, BUILD_COMMAND, MINE_COMMAND, Direction
 # direction (tuple) -  the direction associated with this command.
 
 class Command:
+    __slots__ = 'playerId', 'command', 'position', 'direction', 'num_units'
     def __init__(self, playerId, position, command, num_units, direction):
         self.playerId = playerId
 

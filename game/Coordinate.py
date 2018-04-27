@@ -30,7 +30,9 @@ direction_deltas = [
     }
 ]
 
-class Coordinate():
+class Coordinate:
+    __slots__ = 'x', 'y'
+
     # using named args to avoid any confusion about ordering
     def __init__(self, x=None, y=None):
         if isinstance(x, Coordinate):
@@ -47,7 +49,7 @@ class Coordinate():
         return iter(tuple((self.x, self.y)))
 
     def __hash__(self):
-        return hash((self.x, self.y))
+        return self.x * 100 + self.y
 
     def __str__(self):
         return "(%d, %d)" % (self.x, self.y)
@@ -55,8 +57,6 @@ class Coordinate():
     # returns the coordinates that you arrive at by moving 1 step in direction from current cell
     def adjacent_in_direction(self, direction):
         if direction is None: return self
-    
-        assert(type(direction) is Direction)
 
         delta = direction_deltas[self.y & 1][direction]
 

@@ -16,7 +16,10 @@ class Rules:
         self.players = players
 
     def verify_move(self, move):
-        return self.within_bounds(move) and self.enough_units(move)
+        if move.command == MOVE_COMMAND:
+            return self.within_bounds(move) and self.enough_units(move)
+        return self.enough_units(move)
+
 
     def within_bounds(self, move):
         new_coords = move.position.adjacent_in_direction(move.direction)

@@ -22,10 +22,6 @@ class GameHelper:
         self.myId = pickle.load(sys.stdin.buffer)
         self.eId = 1 - self.myId
 
-    # reads in the game state and loads it
-    def load_state(self):
-        self.map = pickle.load(sys.stdin.buffer)
-
     def create_move_command(self, location, direction, n_units):
         return {
             'playerId': self.myId,

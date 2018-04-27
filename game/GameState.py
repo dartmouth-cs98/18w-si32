@@ -1,7 +1,6 @@
 # GameState.py
 # Class implementation for GameState
 
-import json
 from copy import copy
 
 from game.Command import Command

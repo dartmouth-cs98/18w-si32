@@ -18,6 +18,7 @@ def write(buf, message):
 
     # tell the consumer how many bytes to expect
     buf.write(struct.pack("i", len(packed)))
+    buf.flush()
 
     # then send the actual data
     buf.write(packed)
@@ -56,7 +57,7 @@ class LocalBot(Bot):
 
     def run(self):
         command = ["python", "./%s" % self.name]
-        self.proc = Popen(command, stdout=PIPE, stdin=PIPE)
+        self.proc = Popen(command, stdout=PIPE, stdin=PIPE, bufsize=50000)
 
     def cleanup(self):
         try:
