@@ -72,7 +72,7 @@ class GameState(Game):
         # loop until somebody wins, or we time out!
         while not self.is_game_over():
             # reset log for this turn
-            self.logger.barebones_new_turn(self.map, self.players)
+            self.logger.new_turn(self.map, self.players)
 
             self.send_state()
             self.read_moves()
@@ -83,7 +83,7 @@ class GameState(Game):
             self.iter += 1
 
         # once game ends, log one more turn, so that viz has a final state to work with
-        self.logger.barebones_new_turn(self.map, self.players)
+        self.logger.new_turn(self.map, self.players)
         self.logger.end_turn()
 
         self.rank_players()

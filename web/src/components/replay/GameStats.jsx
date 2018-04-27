@@ -28,6 +28,7 @@ const GameStats = ({ turn=0, log, bots }) => {
   let units = [];
   let buildings = [];
   let area = [];
+  let resources = thisTurn.res;
 
   // initialize the arrays to 0
   _.each(log.rankedBots, () => {
@@ -59,7 +60,7 @@ const GameStats = ({ turn=0, log, bots }) => {
   });
 
   // zip them into one array
-  const stats = _.zip(units, buildings, area);
+  const stats = _.zip(units, buildings, area, resources);
 
   return (
     <table style={styles.table} width="100%">
@@ -69,6 +70,7 @@ const GameStats = ({ turn=0, log, bots }) => {
           <th style={styles.th}>Units</th>
           <th style={styles.th}>Buildings</th>
           <th style={styles.th}>Area</th>
+          <th style={styles.th}>Resources</th>
         </tr>
       </thead>
       <tbody>
@@ -78,6 +80,7 @@ const GameStats = ({ turn=0, log, bots }) => {
               <td style={styles.stat}>{stat[0]}</td>
               <td style={styles.stat}>{stat[1]}</td>
               <td style={styles.stat}>{stat[2]}</td>
+              <td style={styles.stat}>{stat[3]}</td>
             </tr>
         )) }
       </tbody>
@@ -109,7 +112,7 @@ const styles = {
   },
   stat: {
     fontWeight: 400,
-    width: "25%",
+    width: "15%",
   },
 };
 

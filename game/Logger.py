@@ -29,37 +29,7 @@ class Logger:
 
     # turn log is a temporary array of moves built up over a turn that
     # gets pushed into the complete log at the end of a turn
-    def new_turn(self, map):
-        map_state = map.get_state()
-        cells = []
-
-        # when adding a turn to the log, only include cell data that's needed
-        # server will assume that it's zeros if the property is not included
-        for row in map_state:
-            this_row = []
-            for c in row:
-                cleaned_cell = { 'r': c.resource }
-                for u in c.units:
-                    if u > 0:
-                        cleaned_cell['u'] = copy(c.units)
-                        break
-
-                if c.building:
-                    cleaned_cell['b'] = c.building.ownerId
-
-                if len(cleaned_cell) == 0:
-                    cleaned_cell = None
-
-                this_row.append(cleaned_cell)
-            cells.append(this_row)
-        self.turn_log = {
-            'map': cells,
-            'cmd': []
-        }
-
-    # turn log is a temporary array of moves built up over a turn that
-    # gets pushed into the complete log at the end of a turn
-    def barebones_new_turn(self, map, players):
+    def new_turn(self, map, players):
         map_state = map.get_state()
         cells = []
 
