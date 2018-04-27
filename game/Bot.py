@@ -7,14 +7,14 @@ from subprocess import Popen, PIPE, call
 # read from the calling file/pipe 
 def read(buf):
     # read how many bytes we're expecting
-    (l,) = struct.unpack("i", buf.read(4))
+    (nBytes,) = struct.unpack("i", buf.read(4))
 
     # read and unpack that many bytes as the actual message
-    return msgpack.unpackb(buf.read(l), encoding='utf-8')
+    return msgpack.unpackb(buf.read(nBytes), raw=False)
 
 # write to the file/pipe
 def write(buf, message):
-    packed = msgpack.packb(message)
+    packed = msgpack.packb(message, use_bin_type=True)
 
     # tell the consumer how many bytes to expect
     buf.write(struct.pack("i", len(packed)))

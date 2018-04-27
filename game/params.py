@@ -42,9 +42,9 @@ class Direction(IntEnum):
 # ------------------------------------------------------------------------------
 # Command
 
-MOVE_COMMAND = 'MOVE_COMMAND'
-MINE_COMMAND = 'MINE_COMMAND'
-BUILD_COMMAND = 'BUILD_COMMAND'
+MOVE_COMMAND = "MOVE"
+MINE_COMMAND = "MINE"
+BUILD_COMMAND = "BUILD"
 
 # ------------------------------------------------------------------------------
 # Game
