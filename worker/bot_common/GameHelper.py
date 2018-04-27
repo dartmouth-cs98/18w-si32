@@ -3,14 +3,17 @@
 
 import sys
 import json
-import pickle
+import struct
+import msgpack
 
 from game.params import MOVE_COMMAND, BUILD_COMMAND, MINE_COMMAND, BUILDING_COST, Direction
 from game.Coordinate import Coordinate
 from game.Command import Command
+from game.Map import Map
 
 from game.ObstacleMapProblem import ObstacleMapProblem
 
+from game.Bot import read, write
 from game.astar_search import astar_search
 
 # ------------------------------------------------------------------------------
@@ -19,15 +22,17 @@ from game.astar_search import astar_search
 # A GameHelper instance wraps all of the game logic functionality into
 # a convenient package to aid users in bot development.
 
+
+
 class GameHelper:
     def __init__(self):
         # first thing the game server sends us through STDIN is our player id
-        self.myId = pickle.load(sys.stdin.buffer)
+        self.myId = read(sys.stdin.buffer)
 
-        # second thing it sends through STDIN is the number of players?
-        self.numPlayers = pickle.load(sys.stdin.buffer)
+        # second thing is number of players
+        self.numPlayers = read(sys.stdin.buffer)
 
-        #self.eId = 1 - self.myId #case for two players
+        self.map = None
 
         #list of enemy IDs
         self.eIds = list(range(self.numPlayers))
@@ -37,6 +42,8 @@ class GameHelper:
 
         self.turn_handler = None
         self.logfile = open("./game" + str(self.myId) + ".log", "w")
+        self.log(self.myId)
+
 
     def __del__(self):
         self.logfile.close()
@@ -371,11 +378,15 @@ class GameHelper:
 
     # reads in the game state and loads it
     def load_state(self):
-        state = pickle.load(sys.stdin.buffer)
-        self.map = state["map"]
-        self.me = state["player"]
+        state = read(sys.stdin.buffer)
+        
+        if self.map:
+            self.map.update_from_log(state["m"]) # update map from the passed log-formatted state
+        else: 
+            self.map = Map.create_from_log(state["m"], len(state["r"])) # or create map if needed
+
+        self.me["resources"] = state["r"][self.myId] # parse my resources out
 
     def send_commands(self, commands):
-        print(pickle.dumps(commands))
-        sys.stdout.flush()
+        write(sys.stdout.buffer, [c.to_dict() for c in commands])
 

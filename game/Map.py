@@ -106,10 +106,10 @@ class Map:
     def get_cell(self, position):
         assert(type(position) is Coordinate)
 
-        if self.position_in_range(position):
-            return self.cells[position.y][position.x]
-        else:
+        if not self.position_in_range(position):
             return None
+
+        return self.cells[position.y][position.x]
 
     # check if coordinates are contained by map
     def position_in_range(self, position):
@@ -123,7 +123,8 @@ class Map:
 
     #check if position is free
     def position_free(self, position):
-        return self.position_in_range(position) and self.get_cell(position).occupiable
+        c = self.get_cell(position)
+        return c is not None and c.occupiable
 
     # check if cell is free
     def cell_free(self, cell):
@@ -132,6 +133,23 @@ class Map:
     # returns only the state we care about for the game log
     def get_state(self):
         return self.cells
+
+    # methods to create/update a Map object based on the representation
+    # used in the game log
+    @classmethod
+    def create_from_log(cls, log_map, n_players):
+        m = cls(n_players, len(log_map[0]), len(log_map))
+
+        m.update_from_log(log_map)
+
+        return m
+
+
+    def update_from_log(self, log_map):
+        for (r, row) in enumerate(log_map):
+            for (c, log_cell) in enumerate(row):
+                cell = self.cells[r][c]
+                cell.update_from_log(log_cell)
 
     def __str__(self):
         b = "Blocked cells:\n"

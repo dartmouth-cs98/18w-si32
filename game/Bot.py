@@ -1,6 +1,27 @@
 import os
 import sys
+import msgpack 
+import struct
 from subprocess import Popen, PIPE, call
+
+# read from the calling file/pipe 
+def read(buf):
+    # read how many bytes we're expecting
+    (l,) = struct.unpack("i", buf.read(4))
+
+    # read and unpack that many bytes as the actual message
+    return msgpack.unpackb(buf.read(l), encoding='utf-8')
+
+# write to the file/pipe
+def write(buf, message):
+    packed = msgpack.packb(message)
+
+    # tell the consumer how many bytes to expect
+    buf.write(struct.pack("i", len(packed)))
+
+    # then send the actual data
+    buf.write(packed)
+    buf.flush() 
 
 
 # Bot is our internal wrapper around an end-user implementation of a bot
@@ -14,19 +35,11 @@ class Bot(object):
 
     # just read and return the next line from the bot's stdout
     def read(self):
-        return self.proc.stdout.readline()
+        return read(self.proc.stdout)
 
     # pass line through to the bot's stdin
-    def write(self, line):
-        self.proc.stdin.write(line.encode())
-        self.proc.stdin.flush()
-        return
-
-    # pass binary data through to the bot's stdin
-    def write_binary(self, data):
-        self.proc.stdin.write(data)
-        self.proc.stdin.flush()
-        return
+    def write(self, data):
+        write(self.proc.stdin, data)
 
 # The Bot wrapper for local bot development.
 #

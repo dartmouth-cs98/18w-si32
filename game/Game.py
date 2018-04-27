@@ -2,7 +2,6 @@
 # Class definition for 'Game'
 
 import sys
-import pickle
 from subprocess import Popen, PIPE
 from abc import ABC, abstractmethod
 
@@ -21,10 +20,6 @@ class Game(ABC):
 
         for b in bots:
             b.run()
-
-        for i, b in enumerate(bots):
-            b.write_binary(pickle.dumps(i))
-            b.write_binary(pickle.dumps(numBots))
 
         super().__init__()
 

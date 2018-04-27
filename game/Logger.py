@@ -59,7 +59,7 @@ class Logger:
 
     # turn log is a temporary array of moves built up over a turn that
     # gets pushed into the complete log at the end of a turn
-    def barebones_new_turn(self, map):
+    def barebones_new_turn(self, map, players):
         map_state = map.get_state()
         cells = []
 
@@ -85,8 +85,18 @@ class Logger:
             cells.append(this_row)
         self.turn_log = {
             'map': cells,
+            'res': [p.resources for p in players],
             'cmd': []
         }
+
+    # return the current information needed to set map state for a turn
+    def get_cur_turn(self):
+        return {
+                'm': self.turn_log['map'],
+                'r': self.turn_log['res'],
+                'w': self.log['w'],
+                'h': self.log['h']
+            }
 
     def end_turn(self):
         self.log['turns'].append(self.turn_log)

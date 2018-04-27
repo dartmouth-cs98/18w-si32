@@ -32,6 +32,19 @@ class Cell:
 
         self.occupiable = occupiable #whether the cell is blocked or free (True = free, False = blocked)
 
+    def update_from_log(self, log_cell):
+        if 'r' in log_cell:
+            self.resource = log_cell['r']
+        if 'b' in log_cell:
+            if self.building == None or self.building.ownerId != log_cell['b']:
+                self.building = Building(log_cell['b'])
+        if 'u' in log_cell:
+            for i in range(self.num_players):
+                if i == log_cell['p']:
+                    self.units[i] = log_cell['u']
+                else:
+                    self.units[i] = 0
+
 
     # --------------------------------------------------------------------------
     # RESOURCE METHODS
