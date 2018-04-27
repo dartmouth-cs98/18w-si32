@@ -66,10 +66,10 @@ class Map:
     def get_cell(self, position):
         assert(type(position) is Coordinate)
 
-        try:
-            return self.cells[position.y][position.x]
-        except IndexError:
+        if not self.position_in_range(position):
             return None
+
+        return self.cells[position.y][position.x]
 
     # check if coordinates are contained by map
     def position_in_range(self, position):
