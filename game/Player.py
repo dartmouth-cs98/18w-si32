@@ -2,7 +2,6 @@
 # Class definition for 'Player'
 
 import json
-import pickle
 import signal
 from random import random, randint
 
@@ -44,12 +43,8 @@ class Player:
 
     # tell each bot their number, # of players in the game, and the initial map
     def send_init_data(self):
-        print("sending init data...")
         self.bot.write(self.playerId)
-        '''self.bot.write_msgpack({
-            'id': self.playerId,
-            'n': self.map.num_players
-        })'''
+        self.bot.write(self.map.num_players)
 
     def send_state(self, state):
         if self.crashed or self.timed_out:
@@ -66,12 +61,11 @@ class Player:
         commands = []
         try:
             with timeout(seconds=3):
-                move_str = self.bot.read()
+                move = self.bot.read()
 
                 # parse out the moves for this turn
-                commands = pickle.loads(eval(move_str))
+                commands = [Command.from_dict(self.playerId, c) for c in move]
                 for command in commands:
-                    command.playerId = self.playerId
                     command.position = Coordinate(command.position)
 
         except TimeoutError as err:

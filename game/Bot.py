@@ -1,8 +1,36 @@
 import os
 import sys
 import msgpack 
+import struct
 import json
 from subprocess import Popen, PIPE, call
+import msgpack
+
+# read from the calling file/pipe 
+def read(buf):
+    # always read how long first
+    #sys.stderr.write("reading\n")
+
+    # read how many bytes we're expecting
+    (l,) = struct.unpack("i", buf.read(4))
+
+    #sys.stderr.write(str(l))
+    #sys.stderr.write(" is the len\n")
+
+    # read and unpack the actual message
+    m = msgpack.unpackb(buf.read(l), encoding='utf-8')
+    #sys.stderr.write(str(m))
+
+    return m
+
+# write to the file/pipe
+def write(buf, message):
+    packed = msgpack.packb(message)
+    n = len(packed)
+
+    buf.write(struct.pack("i", n))
+    buf.write(packed)
+    buf.flush()
 
 
 # Bot is our internal wrapper around an end-user implementation of a bot
@@ -16,26 +44,15 @@ class Bot(object):
 
     # just read and return the next line from the bot's stdout
     def read(self):
-        return self.proc.stdout.readline()
+        return read(self.proc.stdout)
 
     # pass line through to the bot's stdin
-    def write(self, line):
-        #print("sending", line)
-        json.dump(line, self.proc.stdin)
-        self.proc.stdin.write('\n')
-        self.proc.stdin.flush()
+    def write(self, data):
+        write(self.proc.stdin, data)
 
     # pass binary data through to the bot's stdin
     def write_binary(self, data):
         print("writing binarY!")
-        return
-        self.proc.stdin.write(data)
-        self.proc.stdin.flush()
-        return
-
-    def write_msgpack(self, data):
-        self.proc.stdin.write(msgpack.dumps(data))
-        self.proc.stdin.flush()
 
 # The Bot wrapper for local bot development.
 #
@@ -52,7 +69,7 @@ class LocalBot(Bot):
 
     def run(self):
         command = ["python", "./%s" % self.name]
-        self.proc = Popen(command, stdout=PIPE, stdin=PIPE, bufsize=1, encoding='utf-8')
+        self.proc = Popen(command, stdout=PIPE, stdin=PIPE)
 
     def cleanup(self):
         try:

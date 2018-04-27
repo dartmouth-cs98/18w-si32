@@ -2,7 +2,6 @@
 # Class definition for 'Game'
 
 import sys
-import pickle
 from subprocess import Popen, PIPE
 from abc import ABC, abstractmethod
 
