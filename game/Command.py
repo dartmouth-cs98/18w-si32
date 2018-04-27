@@ -43,6 +43,8 @@ class Command:
     def __repr__(self):
         return str(self.position) + " " + str(self.num_units) + " " + str(self.direction)
 
+
+    # dictionary that we can serialize the command class with
     def to_dict(self):
         return {
                 'l': (self.position.x, self.position.y),
@@ -52,6 +54,8 @@ class Command:
             }
 
         return m
+
+    # construct class back from serialized dictionary
     @classmethod
     def from_dict(cls, playerId, d):
         return cls(playerId, d["l"], d["c"], d["n"], Direction(d["d"]))

@@ -41,7 +41,7 @@ class Player:
         starting_cell = self.map.get_cell(self.starting_pos)
         starting_cell.increment_units(playerId)
 
-    # tell each bot their number, # of players in the game, and the initial map
+    # tell each bot their number and # of players in the game
     def send_init_data(self):
         self.bot.write(self.playerId)
         self.bot.write(self.map.num_players)
@@ -50,7 +50,6 @@ class Player:
         if self.crashed or self.timed_out:
             return
 
-        # TODO resources
         self.bot.write(state)
 
     def get_move(self):

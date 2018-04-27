@@ -94,10 +94,11 @@ class GameState(Game):
 
     # send all players the updated game state so they can make decisions
     def send_state(self):
-        m = self.logger.get_cur_turn()
+        cur_state = self.logger.get_cur_turn() # use the logger's representation of the map
 
+        # and send that to everyone
         for p in self.players:
-            p.send_state(m)
+            p.send_state(cur_state)
 
     # read all moves from the players and update state accordingly
     def read_moves(self):

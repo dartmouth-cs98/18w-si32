@@ -2,35 +2,26 @@ import os
 import sys
 import msgpack 
 import struct
-import json
 from subprocess import Popen, PIPE, call
-import msgpack
 
 # read from the calling file/pipe 
 def read(buf):
-    # always read how long first
-    #sys.stderr.write("reading\n")
-
     # read how many bytes we're expecting
     (l,) = struct.unpack("i", buf.read(4))
 
-    #sys.stderr.write(str(l))
-    #sys.stderr.write(" is the len\n")
-
-    # read and unpack the actual message
-    m = msgpack.unpackb(buf.read(l), encoding='utf-8')
-    #sys.stderr.write(str(m))
-
-    return m
+    # read and unpack that many bytes as the actual message
+    return msgpack.unpackb(buf.read(l), encoding='utf-8')
 
 # write to the file/pipe
 def write(buf, message):
     packed = msgpack.packb(message)
-    n = len(packed)
 
-    buf.write(struct.pack("i", n))
+    # tell the consumer how many bytes to expect
+    buf.write(struct.pack("i", len(packed)))
+
+    # then send the actual data
     buf.write(packed)
-    buf.flush()
+    buf.flush() 
 
 
 # Bot is our internal wrapper around an end-user implementation of a bot
@@ -49,10 +40,6 @@ class Bot(object):
     # pass line through to the bot's stdin
     def write(self, data):
         write(self.proc.stdin, data)
-
-    # pass binary data through to the bot's stdin
-    def write_binary(self, data):
-        print("writing binarY!")
 
 # The Bot wrapper for local bot development.
 #

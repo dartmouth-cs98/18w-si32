@@ -94,6 +94,8 @@ class Map:
     def get_state(self):
         return self.cells
 
+    # methods to create/update a Map object based on the representation
+    # used in the game log
     @classmethod
     def create_from_log(cls, log_map, n_players):
         m = cls(n_players, len(log_map[0]), len(log_map))
