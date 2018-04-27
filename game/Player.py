@@ -117,6 +117,9 @@ class Player:
     def decrement_resources(self, number):
         self.resources -= number
 
+    def get_ID(self):
+        return self.playerId
+
 # ------------------------------------------------------------------------------
 # Timeout (Helper Class)
 
