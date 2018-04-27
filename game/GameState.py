@@ -79,7 +79,6 @@ class GameState(Game):
 
             self.iter += 1
 
-
         # once game ends, log one more turn, so that viz has a final state to work with
         self.logger.barebones_new_turn(self.map)
         self.logger.end_turn()
@@ -126,7 +125,7 @@ class GameState(Game):
         return False
 
     def is_game_over(self):
-        return self.has_combat_winner() or self.time_limit_reached() or not self.has_running_player()
+        return self.has_combat_winner() or self.time_limit_reached() or (not self.has_running_player())
 
     def rank_players(self):
         crashed_players = [] # bots that crashed
@@ -208,6 +207,9 @@ class GameState(Game):
 
     def get_log(self):
         return self.logger.get_log()
+
+    def get_ranked_players(self):
+        return self.ranked_players
 
     # log to the debug file
     def log(self, out):
