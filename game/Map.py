@@ -93,6 +93,21 @@ class Map:
     def get_state(self):
         return self.cells
 
+    @classmethod
+    def create_from_log(cls, log_map, n_players):
+        m = cls(n_players, len(log_map[0]), len(log_map))
+
+        m.update_from_log(log_map)
+
+        return m
+
+
+    def update_from_log(self, log_map):
+        for (r, row) in enumerate(log_map):
+            for (c, log_cell) in enumerate(row):
+                cell = self.cells[r][c]
+                cell.update_from_log(log_cell)
+
     def __str__(self):
         s = "Blocked cells:\n"
         for r in self.cells:

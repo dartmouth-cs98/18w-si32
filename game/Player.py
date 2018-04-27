@@ -42,17 +42,21 @@ class Player:
         starting_cell = self.map.get_cell(self.starting_pos)
         starting_cell.increment_units(playerId)
 
-    def send_state(self, players):
+    # tell each bot their number, # of players in the game, and the initial map
+    def send_init_data(self):
+        print("sending init data...")
+        self.bot.write(self.playerId)
+        '''self.bot.write_msgpack({
+            'id': self.playerId,
+            'n': self.map.num_players
+        })'''
+
+    def send_state(self, state):
         if self.crashed or self.timed_out:
             return
 
-        to_send = {
-            "map": self.map,
-            "player": {
-                "resources": self.resources
-            }
-        }
-        self.bot.write_binary(pickle.dumps(to_send))
+        # TODO resources
+        self.bot.write(state)
 
     def get_move(self):
         if self.crashed or self.timed_out:

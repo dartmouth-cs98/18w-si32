@@ -4,10 +4,12 @@
 import sys
 import json
 import pickle
+import msgpack
 
 from game.params import MOVE_COMMAND, BUILD_COMMAND, MINE_COMMAND, BUILDING_COST, Direction
 from game.Coordinate import Coordinate
 from game.Command import Command
+from game.Map import Map
 
 from game.ObstacleMapProblem import ObstacleMapProblem
 
@@ -19,24 +21,37 @@ from game.astar_search import astar_search
 # A GameHelper instance wraps all of the game logic functionality into
 # a convenient package to aid users in bot development.
 
+
+def read():
+    return json.loads(sys.stdin.readline())
+
 class GameHelper:
     def __init__(self):
         # first thing the game server sends us through STDIN is our player id
-        self.myId = pickle.load(sys.stdin.buffer)
+        #self.myId = msgpack.unpack(sys.stdin.buffer)
+        #self.log("got id")
+
+        self.myId = int(read())
+        self.numPlayers = 3
+
+
+        self.map = None
 
         # second thing it sends through STDIN is the number of players?
-        self.numPlayers = pickle.load(sys.stdin.buffer)
+        #self.numPlayers = pickle.load(sys.stdin.buffer)
 
         #self.eId = 1 - self.myId #case for two players
 
         #list of enemy IDs
         self.eIds = list(range(self.numPlayers))
-        self.eIds.remove(self.myId)
+        #self.eIds.remove(self.myId)
 
         self.me = { "resources": 0 }
 
         self.turn_handler = None
         self.logfile = open("./game" + str(self.myId) + ".log", "w")
+        #self.log("id", self.myId)
+        self.log("DONE")
 
     def __del__(self):
         self.logfile.close()
@@ -371,9 +386,13 @@ class GameHelper:
 
     # reads in the game state and loads it
     def load_state(self):
-        state = pickle.load(sys.stdin.buffer)
-        self.map = state["map"]
-        self.me = state["player"]
+        state = read()
+        
+        if self.map:
+            self.map.update_from_log(state["m"])
+        else: 
+            self.map = Map.create_from_log(state["m"], len(state["r"]))
+        self.me["resources"] = state["r"][self.myId] # parse my resources out
 
     def send_commands(self, commands):
         print(pickle.dumps(commands))

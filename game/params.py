@@ -49,7 +49,7 @@ BUILD_COMMAND = 'BUILD_COMMAND'
 # ------------------------------------------------------------------------------
 # Game
 
-MAX_ITERS = 2000         # The maximum number of turn iterations in a single game.
+MAX_ITERS = 3000         # The maximum number of turn iterations in a single game.
 
 # ------------------------------------------------------------------------------
 # GameState

@@ -22,10 +22,6 @@ class Game(ABC):
         for b in bots:
             b.run()
 
-        for i, b in enumerate(bots):
-            b.write_binary(pickle.dumps(i))
-            b.write_binary(pickle.dumps(numBots))
-
         super().__init__()
 
     def get_raw_log(self):

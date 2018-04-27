@@ -66,10 +66,14 @@ class GameState(Game):
 
     # runs a game and returns when it is over
     def start(self):
+        for p in self.players:
+            p.send_init_data()
+
+
         # loop until somebody wins, or we time out!
         while not self.is_game_over():
             # reset log for this turn
-            self.logger.barebones_new_turn(self.map)
+            self.logger.barebones_new_turn(self.map, self.players)
 
             self.send_state()
             self.read_moves()
@@ -81,7 +85,7 @@ class GameState(Game):
 
 
         # once game ends, log one more turn, so that viz has a final state to work with
-        self.logger.barebones_new_turn(self.map)
+        self.logger.barebones_new_turn(self.map, self.players)
         self.logger.end_turn()
 
         self.rank_players()
@@ -90,8 +94,10 @@ class GameState(Game):
 
     # send all players the updated game state so they can make decisions
     def send_state(self):
+        m = self.logger.get_cur_turn()
+
         for p in self.players:
-            p.send_state(self.players)
+            p.send_state(m)
 
     # read all moves from the players and update state accordingly
     def read_moves(self):

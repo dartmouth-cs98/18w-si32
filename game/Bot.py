@@ -1,5 +1,7 @@
 import os
 import sys
+import msgpack 
+import json
 from subprocess import Popen, PIPE, call
 
 
@@ -18,15 +20,22 @@ class Bot(object):
 
     # pass line through to the bot's stdin
     def write(self, line):
-        self.proc.stdin.write(line.encode())
+        #print("sending", line)
+        json.dump(line, self.proc.stdin)
+        self.proc.stdin.write('\n')
         self.proc.stdin.flush()
-        return
 
     # pass binary data through to the bot's stdin
     def write_binary(self, data):
+        print("writing binarY!")
+        return
         self.proc.stdin.write(data)
         self.proc.stdin.flush()
         return
+
+    def write_msgpack(self, data):
+        self.proc.stdin.write(msgpack.dumps(data))
+        self.proc.stdin.flush()
 
 # The Bot wrapper for local bot development.
 #
@@ -43,7 +52,7 @@ class LocalBot(Bot):
 
     def run(self):
         command = ["python", "./%s" % self.name]
-        self.proc = Popen(command, stdout=PIPE, stdin=PIPE)
+        self.proc = Popen(command, stdout=PIPE, stdin=PIPE, bufsize=1, encoding='utf-8')
 
     def cleanup(self):
         try:
