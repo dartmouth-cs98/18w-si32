@@ -1,8 +1,12 @@
 # train.py
 # Iteratively run matches and output result metadata.
 
+import os
 import sys
 import argparse
+
+# boilerplate for import from parent module
+sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
 from game.Bot import LocalBot
 from game.GameState import GameState
@@ -87,7 +91,7 @@ def parse_arguments():
 
     return args
 
-# print progress of training as static progress bar 
+# print progress of training as static progress bar
 def print_progress(iters, total):
     s_p = ('{0:.1f}').format(100 * (iters / float(total)))
     s_f = int(60 * iters // total)

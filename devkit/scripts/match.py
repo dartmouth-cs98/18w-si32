@@ -1,8 +1,12 @@
 # match.py
 # Runs a single match on your local machine, outputs results to "game.json"
 
+import os
 import sys
 import argparse
+
+# boilerplate for import from parent module
+sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
 from game.Bot import LocalBot
 from game.GameState import GameState

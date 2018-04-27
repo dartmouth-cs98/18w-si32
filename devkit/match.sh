@@ -1,3 +1,3 @@
 #!/bin/bash
 
-python match.py "$@"
+python ./scripts/match.py "$@"
