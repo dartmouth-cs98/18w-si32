@@ -66,9 +66,9 @@ class Map:
     def get_cell(self, position):
         assert(type(position) is Coordinate)
 
-        if self.position_in_range(position):
+        try:
             return self.cells[position.y][position.x]
-        else:
+        except IndexError:
             return None
 
     # check if coordinates are contained by map
@@ -83,7 +83,8 @@ class Map:
 
     #check if position is free
     def position_free(self, position):
-        return self.position_in_range(position) and self.get_cell(position).occupiable
+        c = self.get_cell(position)
+        return c is not None and c.occupiable
 
     # check if cell is free
     def cell_free(self, cell):

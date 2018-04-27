@@ -58,7 +58,7 @@ class Coordinate():
     
         assert(type(direction) is Direction)
 
-        delta = direction_deltas[self.y % 2][direction]
+        delta = direction_deltas[self.y & 1][direction]
 
         return Coordinate(self.x + delta[0], self.y + delta[1])
 
