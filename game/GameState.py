@@ -225,7 +225,7 @@ class GameState(Game):
 # ------------------------------------------------------------------------------
 # Helper Functions
 
-# sort moves so that they are executed in the order:
+# sort moves so that they are executed in the correct order:
 # move, build, mine
 def sort_moves(moves_by_player):
     sorted_moves = []
@@ -248,4 +248,10 @@ def sort_moves(moves_by_player):
 
         sorted_moves.append(move_commands + build_commands + mine_commands)
 
+    # end result is a flat list of the form
+    # sorted_moves = [
+    #   ...all move commands from all players...
+    #   ...all build commands from all players...
+    #   ...all mine commands from all players...
+    # ]
     return sorted_moves

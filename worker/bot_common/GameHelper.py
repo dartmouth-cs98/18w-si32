@@ -6,10 +6,10 @@ import json
 import struct
 import msgpack
 
-from game.params import MOVE_COMMAND, BUILD_COMMAND, MINE_COMMAND, BUILDING_COST, Direction
-from game.Coordinate import Coordinate
-from game.Command import Command
 from game.Map import Map
+from game.Command import Command
+from game.Coordinate import Coordinate
+from game.params import MOVE_COMMAND, BUILD_COMMAND, MINE_COMMAND, BUILDING_COST, Direction
 
 from game.ObstacleMapProblem import ObstacleMapProblem
 
@@ -21,8 +21,6 @@ from game.astar_search import astar_search
 
 # A GameHelper instance wraps all of the game logic functionality into
 # a convenient package to aid users in bot development.
-
-
 
 class GameHelper:
     def __init__(self):
@@ -190,7 +188,7 @@ class GameHelper:
         return cells
 
     # --------------------------------------------------------------------------
-    # BUILDING GETTERS
+    # BUILDING DATA GETTERS
 
     # Get a count of all buildings on the map that I control.
     # Return: (number)
@@ -341,6 +339,7 @@ class GameHelper:
 
     # --------------------------------------------------------------------------
     # PATHFINDING
+
     # INPUTS: "start" (a tuple), "goal" (a tuple)
     # RETURN: a list of tuples indicating a possible path between "start" and "goal" positions
     def path(self, start, goal):
@@ -361,7 +360,8 @@ class GameHelper:
         self.logfile.flush()
 
     # --------------------------------------------------------------------------
-    # INTERNAL - USER SHOULD NOT MODIFY
+    # GAME PROTOCOL
+    # USER MODIFICATION WILL LIKELY BREAK GAME - DO NOT TOUCH 
 
     @classmethod
     def register_turn_handler(cls, handler):
@@ -379,14 +379,13 @@ class GameHelper:
     # reads in the game state and loads it
     def load_state(self):
         state = read(sys.stdin.buffer)
-        
+
         if self.map:
             self.map.update_from_log(state["m"]) # update map from the passed log-formatted state
-        else: 
+        else:
             self.map = Map.create_from_log(state["m"], len(state["r"])) # or create map if needed
 
         self.me["resources"] = state["r"][self.myId] # parse my resources out
 
     def send_commands(self, commands):
         write(sys.stdout.buffer, [c.to_dict() for c in commands])
-
