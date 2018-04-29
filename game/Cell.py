@@ -7,7 +7,12 @@ from random import randint
 from game.Building import Building
 from game.Coordinate import Coordinate
 
-from game.params import MAX_RESOURCES, UNIFORM_RESOURCES, DEFENSE_RATING, UNIT_COST
+from game.params import (
+    UNIT_COST,
+    DEFENSE_RATING,
+    MAX_RESOURCES,
+    UNIFORM_RESOURCES,
+)
 
 
 # A Cell represents a single, atomic cell of the game map.

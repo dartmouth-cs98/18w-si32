@@ -1,7 +1,12 @@
 # Rules.py
 # Class implementation for 'Rules'
 
-from game.params import BUILDING_COST, MOVE_COMMAND, BUILD_COMMAND, MINE_COMMAND
+from game.params import (
+    MOVE_COMMAND,
+    MINE_COMMAND,
+    BUILD_COMMAND,
+    BUILDING_COST,
+)
 
 # Rules defines bulk of the game logic: how the various components of the game
 # interact and update the global state of the game.
