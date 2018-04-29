@@ -1,8 +1,7 @@
 # params.py
-from enum import IntEnum
-
 # Game parameters that remain consistent across all game variations / iterations.
 
+from enum import IntEnum
 
 # ------------------------------------------------------------------------------
 # Movement Directions
