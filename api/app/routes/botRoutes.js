@@ -25,13 +25,13 @@ botRouter.post("/", async (ctx) => {
   if (!s3.isPythonFile(ctx.request.body.files.code)) {
     throw new MalformedError("Bot must be a python file");
   }
-  // const {files, fields} = await asyncBusboy(ctx.req);
+  
   const bot = await Bot.create({
     name: ctx.request.body.fields.name,
     user: ctx.state.userId,
     trueSkill: {},
   });
-  
+
   const { key } = await s3.uploadBot(ctx.state.userId, bot._id, ctx.request.body.files.code);
   bot.code = key;
   bot.versionHistory.push({ timestamp: new Date(), version: 1 });

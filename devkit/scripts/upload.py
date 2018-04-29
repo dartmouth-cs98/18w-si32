@@ -1,5 +1,5 @@
 # upload.py
-# Command-line utility to uploads specified botfile.
+# Command-line utility to upload specified botfile to Monad servers.
 
 import sys
 import argparse
@@ -16,24 +16,32 @@ def main():
 
     API_BASE_URL = DEV_URL if args.dev else PROD_URL
 
+    # parse user input
     botfile = args.botfile[0]
     username = input("username: ")
     password = input("password: ")
     botname = input("bot name: ")
 
-    # make the auth request
+    # POST the auth request
     payload = {"username": username, "password": password}
     r = requests.post(API_BASE_URL + "/users/login", data=payload).json()
+
+    # if r.status_code != 200:
+    #     print("could not log you in with those credentials")
 
     # extract user ID information
     token = r["session"]["token"]
 
-    files = {"code": open(botfile, "rb")}
+    # POST the upload request
     payload = {"name": botname}
+    files = {"code": open(botfile, "rb")}
     auth = {"Authorization": "Bearer " + token}
     r = requests.post(API_BASE_URL + "/bots", data=payload, files=files, headers=auth)
 
-    print(r.status_code)
+    if r.status_code == 200:
+        print("success")
+    else:
+        print("failed to upload bot")
 
 # ------------------------------------------------------------------------------
 # Helpers
@@ -50,7 +58,7 @@ def parse_arguments():
                     action="store_const",
                     const=True,
                     default=False,
-                    help="specify development mode")
+                    help="specify local development mode")
 
     try:
         args = parser.parse_args()
