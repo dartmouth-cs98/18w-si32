@@ -1,29 +1,14 @@
+# Bot.py
+# Class definition for 'Bot'
+
 import os
 import sys
-import msgpack 
+import msgpack
 import struct
 from subprocess import Popen, PIPE, call
 
-# read from the calling file/pipe 
-def read(buf):
-    # read how many bytes we're expecting
-    (nBytes,) = struct.unpack("i", buf.read(4))
-
-    # read and unpack that many bytes as the actual message
-    return msgpack.unpackb(buf.read(nBytes), raw=False)
-
-# write to the file/pipe
-def write(buf, message):
-    packed = msgpack.packb(message, use_bin_type=True)
-
-    # tell the consumer how many bytes to expect
-    buf.write(struct.pack("i", len(packed)))
-    buf.flush()
-
-    # then send the actual data
-    buf.write(packed)
-    buf.flush() 
-
+# ------------------------------------------------------------------------------
+# Class Definitions
 
 # Bot is our internal wrapper around an end-user implementation of a bot
 # this class should handle prepping and running a bot in a separate
@@ -47,6 +32,7 @@ class Bot(object):
 # Constructor Arguments
 # fp (string)      - file path to the botfile.
 # playerNum (int)  - player number assigned to this player in match (ID).
+
 class LocalBot(Bot):
     def __init__(self, fp, playerNum):
         self.name = fp
@@ -65,3 +51,26 @@ class LocalBot(Bot):
         except Exception as e: # proc already exited
             print(e)
             pass
+
+# ------------------------------------------------------------------------------
+# Helper Functions
+
+# read from the calling file/pipe
+def read(buf):
+    # read how many bytes we're expecting
+    (nBytes,) = struct.unpack("i", buf.read(4))
+
+    # read and unpack that many bytes as the actual message
+    return msgpack.unpackb(buf.read(nBytes), raw=False)
+
+# write to the file/pipe
+def write(buf, message):
+    packed = msgpack.packb(message, use_bin_type=True)
+
+    # tell the consumer how many bytes to expect
+    buf.write(struct.pack("i", len(packed)))
+    buf.flush()
+
+    # then send the actual data
+    buf.write(packed)
+    buf.flush()

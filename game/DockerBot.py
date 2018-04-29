@@ -1,7 +1,11 @@
+# DockerBot.py
+# Class implementation for 'DockerBot'
+
 import os
 import sys
-from subprocess import Popen, PIPE, call
 import docker
+from subprocess import Popen, PIPE, call
+
 from game.Bot import Bot
 from endpoints import get_bot_file
 
@@ -48,4 +52,3 @@ class DockerBot(Bot):
 
         # remove bot code from volume that is persistent
         call("rm -r /bot%d/*" % self.playerNum, shell=True)
-

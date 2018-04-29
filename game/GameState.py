@@ -12,7 +12,14 @@ from game.Player import Player
 from game.Command import Command
 from game.Coordinate import Coordinate
 
-from game.params import MAX_ITERS, STARTING_POSITIONS, MOVE_COMMAND, BUILD_COMMAND, MINE_COMMAND, DEBUG_LOG_FN
+from game.params import (
+    MAX_ITERS,
+    DEBUG_LOG_FN,
+    MOVE_COMMAND,
+    MINE_COMMAND,
+    BUILD_COMMAND,
+    STARTING_POSITIONS,
+)
 
 # ------------------------------------------------------------------------------
 # GameState

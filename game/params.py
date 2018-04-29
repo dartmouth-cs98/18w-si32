@@ -88,9 +88,15 @@ UNIFORM_RESOURCES = 20  # The resource value for an individual cell on uniformly
 # ------------------------------------------------------------------------------
 # Starting player positions
 # Intended to be roughly equidistant for each number of players
-one_player = [(10,10)]
-two_players = [(1,1), (18,18)]
-three_players = [(5,5), (10,14), (15,5)]
-four_players = [(5,5), (5,15), (15,5), (15,15)]
 
-STARTING_POSITIONS = [one_player, two_players, three_players, four_players]
+ONE_PLAYER_START_POS = [(10,10)]
+TWO_PLAYER_START_POS = [(1,1), (18,18)]
+THREE_PLAYER_START_POS = [(5,5), (10,14), (15,5)]
+FOUR_PLAYER_START_POS = [(5,5), (5,15), (15,5), (15,15)]
+
+STARTING_POSITIONS = [
+    ONE_PLAYER_START_POS,
+    TWO_PLAYER_START_POS,
+    THREE_PLAYER_START_POS,
+    FOUR_PLAYER_START_POS
+]

@@ -1,11 +1,20 @@
 # Map.py
 # Class implementation for 'Map'
 
-from .Cell import Cell
-from .Coordinate import Coordinate
 from random import randint
 
-from game.params import DEFAULT_MAP_WIDTH, DEFAULT_MAP_HEIGHT, STARTING_POSITIONS, one_player, two_players, three_players, four_players
+from .Cell import Cell
+from .Coordinate import Coordinate
+
+from game.params import (
+    DEFAULT_MAP_WIDTH,
+    DEFAULT_MAP_HEIGHT,
+    STARTING_POSITIONS,
+    ONE_PLAYER_START_POS,
+    TWO_PLAYER_START_POS,
+    THREE_PLAYER_START_POS,
+    FOUR_PLAYER_START_POS,
+)
 
 from game.ObstacleMapProblem import ObstacleMapProblem
 from game.astar_search import astar_search
@@ -20,34 +29,33 @@ from game.astar_search import astar_search
 
 class Map:
     def __init__(self, num_players, uniform, width=DEFAULT_MAP_WIDTH, height=DEFAULT_MAP_HEIGHT):
-        self.num_players = num_players
         self.width = width
         self.height = height
+        self.num_players = num_players
 
         players_reachable = False  # whether each player can reach each every other player
 
         # keep initializing self.cells until we get a map where each player can reach every other player
         while not players_reachable:
-            # print("LOOP")
             self.cells = self.initialize_map(width, height, uniform)
 
             if self.num_players == 1:
                 players_reachable = True
             elif self.num_players == 2:
-                if len(self.path(Coordinate(two_players[0]), Coordinate(two_players[1]))) > 0:
+                if len(self.path(Coordinate(TWO_PLAYER_START_POS[0]), Coordinate(TWO_PLAYER_START_POS[1]))) > 0:
                     players_reachable = True
             elif self.num_players == 3:
-                if (len(self.path(Coordinate(three_players[0]), Coordinate(three_players[1]))) > 0) and (
-                        len(self.path(Coordinate(three_players[0]), Coordinate(three_players[2]))) > 0) and (
-                        len(self.path(Coordinate(three_players[1]), Coordinate(three_players[2]))) > 0):
+                if (len(self.path(Coordinate(THREE_PLAYER_START_POS[0]), Coordinate(THREE_PLAYER_START_POS[1]))) > 0) and (
+                        len(self.path(Coordinate(THREE_PLAYER_START_POS[0]), Coordinate(THREE_PLAYER_START_POS[2]))) > 0) and (
+                        len(self.path(Coordinate(THREE_PLAYER_START_POS[1]), Coordinate(THREE_PLAYER_START_POS[2]))) > 0):
                     players_reachable = True
             elif self.num_players == 4:
-                if (len(self.path(Coordinate(four_players[0]), Coordinate(four_players[1]))) > 0) and (
-                        len(self.path(Coordinate(four_players[0]), Coordinate(four_players[2]))) > 0) and (
-                        len(self.path(Coordinate(four_players[0]), Coordinate(four_players[3]))) > 0) and (
-                        len(self.path(Coordinate(four_players[1]), Coordinate(four_players[2]))) > 0) and (
-                        len(self.path(Coordinate(four_players[1]), Coordinate(four_players[3]))) > 0) and (
-                        len(self.path(Coordinate(four_players[2]), Coordinate(four_players[3]))) > 0):
+                if (len(self.path(Coordinate(FOUR_PLAYER_START_POS[0]), Coordinate(FOUR_PLAYER_START_POS[1]))) > 0) and (
+                        len(self.path(Coordinate(FOUR_PLAYER_START_POS[0]), Coordinate(FOUR_PLAYER_START_POS[2]))) > 0) and (
+                        len(self.path(Coordinate(FOUR_PLAYER_START_POS[0]), Coordinate(FOUR_PLAYER_START_POS[3]))) > 0) and (
+                        len(self.path(Coordinate(FOUR_PLAYER_START_POS[1]), Coordinate(FOUR_PLAYER_START_POS[2]))) > 0) and (
+                        len(self.path(Coordinate(FOUR_PLAYER_START_POS[1]), Coordinate(FOUR_PLAYER_START_POS[3]))) > 0) and (
+                        len(self.path(Coordinate(FOUR_PLAYER_START_POS[2]), Coordinate(FOUR_PLAYER_START_POS[3]))) > 0):
                     players_reachable = True
 
     # --------------------------------------------------------------------------
@@ -67,16 +75,16 @@ class Map:
 
                 # if a cell is a starter position, make it free
                 if (self.num_players == 1):
-                    if ((c, r) in one_player):
+                    if ((c, r) in ONE_PLAYER_START_POS):
                         occupiable = True
                 elif (self.num_players == 2):
-                    if ((c, r) in two_players):
+                    if ((c, r) in TWO_PLAYER_START_POS):
                         occupiable = True
                 elif (self.num_players == 3):
-                    if ((c, r) in three_players):
+                    if ((c, r) in THREE_PLAYER_START_POS):
                         occupiable = True
                 elif (self.num_players == 4):
-                    if ((c, r) in four_players):
+                    if ((c, r) in FOUR_PLAYER_START_POS):
                         occupiable = True
 
                 # new_cell = Cell(Coordinate(x=c, y=r), self.num_players, True, uniform) # ALL cells are free
