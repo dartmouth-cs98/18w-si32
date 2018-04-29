@@ -42,7 +42,7 @@ class Rules:
     def update_move_command(self, move):
         old_cell = self.map.get_cell(move.position)
 
-        destination_pos = move.position.adjacent_in_direction(move.direction) 
+        destination_pos = move.position.adjacent_in_direction(move.direction)
         new_cell = self.map.get_cell(destination_pos)
 
         if old_cell.units[move.playerId] < move.num_units:
@@ -76,17 +76,18 @@ class Rules:
 
 
     def update_combat_phase(self, moves):
-        sets = self.moves_to_dictionary(moves) #dictionaries
+        # dictionaries
+        sets = self.moves_to_dictionary(moves)
 
         num_players = len(sets)
 
         i = num_players - 1
 
-        #instead of checking only the two players, in a 3+ player game, check every pair of players for collisions
-        #we can still break down the collision checking into pairs of 2 since we can only have 2 players "colliding" anywhere
-        #(since at the start of every turn/movement there is only units of one player/faction in any square
+        # instead of checking only the two players, in a 3+ player game, check every pair of players for collisions
+        # we can still break down the collision checking into pairs of 2 since we can only have 2 players "colliding" anywhere
+        # (since at the start of every turn/movement there is only units of one player/faction in any square
 
-        #do the collision checking for each pair of players (order doesn't matter)
+        # do the collision checking for each pair of players (order doesn't matter)
         while (i >= 0):
 
             j = i - 1
@@ -100,32 +101,24 @@ class Rules:
 
         return moves
 
-    '''
-    def update_combat_phase(self, moves):
-        sets = self.moves_to_dictionary(moves)
-
-        moves[0], moves[1] = self.combat(moves[0], sets[1])
-
-        return moves
-    '''
-
     # multi-player version of 'combat' method
-    # (m and n are the playerIds of the two players to check for opposing collisions, since there will be more than two players in total)
+    # (m and n are the playerIds of the two players to check for opposing collisions)
     def combat(self, player_moves, enemy_set, m, n):
-        index = 0
+        player_idx = 0
 
-        while index < len(player_moves):
-            current_move = player_moves[index]
+        while player_idx < len(player_moves):
+            current_move = player_moves[player_idx]
             cell = self.map.get_cell(current_move.position)
 
-            new_position = cell.position.adjacent_in_direction(current_move.direction) 
+            new_position = cell.position.adjacent_in_direction(current_move.direction)
 
-            if new_position in enemy_set:  # Check if opposing player has moves coming from new position
-                i = 0
+            # Check if opposing player has moves coming from new position
+            if new_position in enemy_set:
+                enemy_idx = 0
 
-                while i < len(enemy_set[new_position]) and current_move:
+                while enemy_idx < len(enemy_set[new_position]) and current_move:
 
-                    enemy_move = enemy_set[new_position][i]
+                    enemy_move = enemy_set[new_position][enemy_idx]
 
                     if current_move.direction.opposite() == enemy_move.direction:
 
@@ -137,8 +130,8 @@ class Rules:
                             current_cell.decrement_units(m, enemy_move.num_units)
                             enemy_cell.decrement_units(n, enemy_move.num_units)
 
-                            enemy_set[new_position].pop(i)
-                            i -= 1
+                            enemy_set[new_position].pop(enemy_idx)
+                            enemy_idx -= 1
 
                         elif current_move.num_units < enemy_move.num_units:
                             enemy_move.decrement_units(current_move.num_units)
@@ -147,24 +140,23 @@ class Rules:
 
                             current_move = False
 
-                            player_moves.pop(index)
-                            index -= 1
+                            player_moves.pop(player_idx)
+                            player_idx -= 1
 
                         else:
-                            player_moves.pop(index)
-                            enemy_set[new_position].pop(i)
+                            player_moves.pop(player_idx)
+                            enemy_set[new_position].pop(enemy_idx)
 
                             current_cell.decrement_units(m, current_move.num_units)
                             enemy_cell.decrement_units(n, current_move.num_units)
 
                             current_move = False
 
-                            i -= 1
-                            index -= 1
+                            enemy_idx -= 1
+                            player_idx -= 1
 
-                    i += 1
-
-            index += 1
+                    enemy_idx += 1
+            player_idx += 1
 
         enemy_moves = []
 
@@ -174,72 +166,9 @@ class Rules:
 
         return player_moves, enemy_moves
 
-    '''
-    def combat(self, player_moves, enemy_set):
-        index = 0
-
-        while index < len(player_moves):
-            current_move = player_moves[index]
-            cell = self.map.get_cell(current_move.position)
-
-            new_position = cell.position.adjacent_in_direction(current_move.direction)
-
-            if new_position in enemy_set:  # Check if opposing player has moves coming from new position
-                i = 0
-
-                while i < len(enemy_set[new_position]) and current_move:
-
-                    enemy_move = enemy_set[new_position][i]
-
-                    if current_move.direction.opposite() == enemy_move.direction:
-
-                        current_cell = self.map.get_cell(cell.position)
-                        enemy_cell = self.map.get_cell(enemy_move.position)
-
-                        if current_move.num_units > enemy_move.num_units:
-                            current_move.decrement_units(enemy_move.num_units)
-                            current_cell.decrement_units(0, enemy_move.num_units)
-                            enemy_cell.decrement_units(1, enemy_move.num_units)
-
-                            enemy_set[new_position].pop(i)
-                            i -= 1
-
-                        elif current_move.num_units < enemy_move.num_units:
-                            enemy_move.decrement_units(current_move.num_units)
-                            current_cell.decrement_units(0, current_move.num_units)
-                            enemy_cell.decrement_units(1, current_move.num_units)
-
-                            current_move = False
-
-                            player_moves.pop(index)
-                            index -= 1
-
-                        else:
-                            player_moves.pop(index)
-                            enemy_set[new_position].pop(i)
-
-                            current_cell.decrement_units(0, current_move.num_units)
-                            enemy_cell.decrement_units(1, current_move.num_units)
-
-                            current_move = False
-
-                            i -= 1
-                            index -= 1
-
-                    i += 1
-
-            index += 1
-
-        enemy_moves = []
-
-        for moves in enemy_set.values():
-            for move in moves:
-                enemy_moves.append(move)
-
-        return player_moves, enemy_moves
-    '''
-
-    #multi-player version of moves_to_dictionary, takes a variable 'moves', which is a list of lists of Commands (one Command list for each player, a.k.a. a 'move')
+    # multi-player version of moves_to_dictionary
+    # takes a variable 'moves', which is a list of lists of Commands
+    # (one Command list for each player, a.k.a. a 'move')
     def moves_to_dictionary(self, moves):
 
         num_players = len(moves) #the number of players, corresponds to the number of 'moves'
@@ -252,34 +181,19 @@ class Rules:
 
         while player < num_players:
 
-            for move in moves[player]: #for each COMMAND of a player, check if the command's position is in the player's dictionary's keys; if not, add it with value as a singleton list with that Command. if it is, append to the value (list of Commands)
+            # for each COMMAND of a player
+            for move in moves[player]:
+                # check if the command's position is in the player's dictionary's keys
                 if move.position not in sets[player]:
+                    # if not, add it with value as a singleton list with that Command
                     sets[player][move.position] = [move]
                 else:
+                    # if it is, append to the value (list of Commands)
                     sets[player][move.position].append(move)
 
             player += 1
 
         return sets
-
-    '''
-    def moves_to_dictionary(self, moves):
-        sets = [{}, {}]
-
-        for move in moves[0]:
-            if move.position not in sets[0]:
-                sets[0][move.position] = [move]
-            else:
-                sets[0][move.position].append(move)
-
-        for move in moves[1]:
-            if move.position not in sets[1]:
-                sets[1][move.position] = [move]
-            else:
-                sets[1][move.position].append(move)
-
-        return sets
-    '''
 
     def player_has_enough_resources(self, playerId):
         return self.players[playerId].resources >= BUILDING_COST
