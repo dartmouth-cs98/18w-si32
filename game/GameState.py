@@ -3,14 +3,14 @@
 
 from copy import copy
 
-from game.Command import Command
-from game.Game import Game
-from game.Player import Player
 from game.Map import Map
 from game.Cell import Cell
-from game.Coordinate import Coordinate
+from game.Game import Game
 from game.Rules import Rules
 from game.Logger import Logger
+from game.Player import Player
+from game.Command import Command
+from game.Coordinate import Coordinate
 
 from game.params import MAX_ITERS, STARTING_POSITIONS, MOVE_COMMAND, BUILD_COMMAND, MINE_COMMAND, DEBUG_LOG_FN
 
