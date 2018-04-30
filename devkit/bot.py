@@ -7,6 +7,7 @@ def do_turn(game):
     # TURN START ---------------------------------------------------------------
     commands = []
 
+    # implement you bot logic here.
 
     return commands
     # TURN END -----------------------------------------------------------------

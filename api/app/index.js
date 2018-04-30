@@ -32,8 +32,6 @@ app
 
 // listen for requests
 app.listen(PORT);
-// const server = http.createServer(app);
-// server.listen(PORT);
 
 /* eslint-disable no-console */
 console.log(`Server listening on port ${PORT}`);

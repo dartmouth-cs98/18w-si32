@@ -42,7 +42,6 @@ class GameHelper:
         self.logfile = open("./game" + str(self.myId) + ".log", "w")
         self.log(self.myId)
 
-
     def __del__(self):
         self.logfile.close()
 
@@ -226,8 +225,9 @@ class GameHelper:
                     blds.append(cell.building)
         return blds
 
-    #Get a list of all buildings controlled by a certain player
-    #Return: (list of building)
+    # Get a list of all buildings controlled by a certain player
+    # Return: (list of building)
+    #   list of building instances controlled by <playerId> 
     def get_player_buildings(self, playerId):
         blds = []
         for col in self.map.cells:
@@ -477,7 +477,7 @@ class GameHelper:
 
     # --------------------------------------------------------------------------
     # GAME PROTOCOL
-    # USER MODIFICATION WILL LIKELY BREAK GAME - DO NOT TOUCH 
+    # USER MODIFICATION WILL LIKELY BREAK GAME - DO NOT TOUCH
 
     @classmethod
     def register_turn_handler(cls, handler):

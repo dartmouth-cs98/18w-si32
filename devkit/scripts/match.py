@@ -1,8 +1,12 @@
-# runMatch.py
+# match.py
 # Runs a single match on your local machine, outputs results to "game.json"
 
+import os
 import sys
 import argparse
+
+# boilerplate for import from parent module
+sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
 from game.Bot import LocalBot
 from game.GameState import GameState
@@ -11,14 +15,6 @@ MAX_ARGS = 4   # maximum of 4 bots in single match
 MIN_ARGS = 2   # minimum of 2 bots in single match
 
 REPLAY_FN = "game.json"
-
-class RequiredLength(argparse.Action):
-    def __call__(self, parser, args, values, option_string=None):
-        if (not MIN_ARGS <= len(values) <= MAX_ARGS):
-            msg = "must specify between {} and {} botfiles".format(MIN_ARGS, MAX_ARGS)
-            raise argparse.ArgumentTypeError(msg)
-
-        setattr(args, self.dest, values)
 
 # ------------------------------------------------------------------------------
 # Main
@@ -72,6 +68,18 @@ def parse_arguments():
 # custom action for requiring between 2-4 botfiles specified
 def required_length():
     return RequiredLength
+
+# ------------------------------------------------------------------------------
+# Helper Class Definition
+
+# consumed by argparse to define a range of arguments to accept
+class RequiredLength(argparse.Action):
+    def __call__(self, parser, args, values, option_string=None):
+        if (not MIN_ARGS <= len(values) <= MAX_ARGS):
+            m = "must specify between {} and {} botfiles".format(MIN_ARGS, MAX_ARGS)
+            raise argparse.ArgumentTypeError(m)
+
+        setattr(args, self.dest, values)
 
 # ------------------------------------------------------------------------------
 # Script
