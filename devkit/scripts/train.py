@@ -25,7 +25,7 @@ def main():
     botfiles = args.botfiles
     uniform_map = args.uniform
     n_players = len(args.botfiles)
-    iters = DEFAULT_ITERS if args.iters is None else int(args.iters[0])
+    iters = DEFAULT_ITERS if args.iters is None else int(args.iters)
 
     wins = {}
 
@@ -54,7 +54,7 @@ def main():
             bot.cleanup()
 
         # display progress
-        print_progress(i, iters)
+        print_progress(i + 1, iters)
 
     print("---------------PERFORMANCE REPORT---------------")
     for i in range(n_players):
