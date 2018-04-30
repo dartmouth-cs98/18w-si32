@@ -17,6 +17,11 @@ si32-api:
     - node_modules:/app/node_modules
   environment:
     PORT: 3000
+  command: >
+      /bin/sh -c "
+        sleep 2;
+        nodemon app/index.js
+      "
   links:
     - mongo
     - redis
