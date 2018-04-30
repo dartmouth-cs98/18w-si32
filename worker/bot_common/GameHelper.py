@@ -214,9 +214,9 @@ class GameHelper:
     def get_my_buildings(self):
         return self.get_player_buildings(self.myId)
 
-    # Get a list of all my buildings on the map.
+    # Get a list of all enemy buildings on the map.
     # Return: (list of Building)
-    #   list of buildings on the map that I control
+    #   list of buildings on the map that the enemy players control
     def get_enemy_buildings(self):
         blds = []
         for col in self.map.cells:
@@ -234,6 +234,58 @@ class GameHelper:
                 if cell.building and cell.building.ownerId == playerId:
                     blds.append(cell.building)
         return blds
+
+    #Get a list of all buildings on the map
+    #Return: (list of building)
+    def get_all_buildings(self):
+        all_blds = []
+
+        num_players = self.map.num_players
+        for i in range(num_players):
+            for building in self.get_player_buildings(i):
+                all_blds.append(building)
+
+        return all_blds
+
+    # Get a list of all my buildings' positions on the map.
+    # Return: (list of positions)
+    #   list of positions of buildings on the map that I control
+    def get_my_building_positions(self):
+        return self.get_player_building_positions(self.myId)
+
+    # Get a list of all enemy buildings on the map.
+    # Return: (list of Building)
+    #   list of buildings on the map that the enemy players control
+    def get_enemy_building_positions(self):
+        positions = []
+        for col in self.map.cells:
+            for cell in col:
+                if cell.building and cell.building.ownerId != self.myId:
+                    positions.append(cell.positions)
+        return positions
+
+    # Get a list of all buildings controlled by a certain player
+    # Return: (list of building)
+    def get_player_building_positions(self, playerId):
+        positions = []
+        for col in self.map.cells:
+            for cell in col:
+                if cell.building and cell.building.ownerId == playerId:
+                    positions.append(cell.position)
+        return positions
+
+    # Get a list of all buildings on the map
+    # Return: (list of building)
+    def get_all_building_positions(self):
+        all_bld_positions = []
+
+        num_players = self.map.num_players
+        for i in range(num_players):
+            for building in self.get_player_building_positions(i):
+                all_bld_positions.append(building)
+
+        return all_bld_positions
+
 
     # Get the total number of buildings that I can currently construct.
     # Return: (number)
@@ -351,6 +403,28 @@ class GameHelper:
 
         result = astar_search(p, p.manhattan_heuristic)
         return result.path
+
+    #Return the distance between two positions 'start' and 'goal'
+    def distance(self, start, goal):
+        if (not (self.get_cell(start[0], start[1])).occupiable) | (not (self.get_cell(goal[0], goal[1])).occupiable):
+            return None
+
+        p = ObstacleMapProblem(self.map, start, goal)
+
+        result = astar_search(p, p.manhattan_heuristic)
+        return len(result.path)
+
+    #Return the position of the closest building to 'pos'
+    def closest_building_pos(self, start):
+        closest_distance = float("inf")
+        closest_pos = None
+        all_bld_positions = self.get_all_building_positions()
+
+        for pos in all_bld_positions:
+            if self.distance(start, pos) < closest_distance:
+                closest_pos = pos
+
+        return closest_pos
 
     # --------------------------------------------------------------------------
     # LOGGING
