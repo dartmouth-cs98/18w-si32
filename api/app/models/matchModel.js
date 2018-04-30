@@ -17,6 +17,10 @@ const _Match = new Schema({
     type: Schema.Types.ObjectId,
     ref: "User"
   }],
+  isChallenge: {
+    type: Schema.Types.Boolean,
+    default: false,
+  },
   // all bots involved. A user may have multiple bots in one game so bots:users is not 1:1
   bots: [{ type: Schema.Types.Mixed }],
   status: {
@@ -30,7 +34,7 @@ const _Match = new Schema({
   timestamps: true
 });
 
-_Match.statics.createWithBots = (userId, botIds) => {
+_Match.statics.createWithBots = (userId, botIds, { isChallenge=false }) => {
   assert(2 <= botIds.length && botIds.length <= 4 && _.every(botIds, _.isString), "Need 2-4 bots to start a match!");
   return Bot.find({
     "_id": { $in: botIds }
@@ -45,6 +49,7 @@ _Match.statics.createWithBots = (userId, botIds) => {
     return Match.create({
       createdBy: userId,
       users: allUserIds,
+      isChallenge,
       bots: bots,
     });
   });
@@ -90,27 +95,45 @@ _Match.statics.handleWorkerResponse = async (id, rankedBots, logKey, result={}) 
   assert(match.status != "DONE", `match ${id} is already finished`);
   assert(rankedBots.length == match.bots.length, "Didn't get the correct number of ranked bots");
 
-  // update the bot AND user skills. Because bots are own by users, this function will always
-  // update both as needed.
-  const botSkills = await Bot.updateSkillByRankedFinish(rankedBots, match._id);
-
   // turn array of bots into obj keyed on bot ID storing ranked finish
   const botRankById = {};
   _.each(rankedBots, b  => {
     botRankById[b._id] = b;
   });
 
-  // store the individual bots' skills and rank in this match
-  const newBots = _.map(match.bots, b => {
-    const skill = botSkills[b._id];
-    b.trueSkill = {
-      mu: skill.prior.mu,
-      sigma: skill.prior.sigma,
-      delta: skill.mu - skill.prior.mu // how much this match changed the bot's skill
-    };
-    Object.assign(b, botRankById[b._id]);
-    return b;
-  });
+  // will store the updated bots for the match  
+  let newBots; 
+  
+  // when not a challenge match, update the rankings and store the changes
+  if (!match.isChallenge) {
+    // update the bot AND user skills. Because bots are own by users, this function will always
+    // update both as needed.
+    const botSkills = await Bot.updateSkillByRankedFinish(rankedBots, match._id);
+
+    // store the individual bots' skills and rank in this match
+    newBots = _.map(match.bots, b => {
+      const skill = botSkills[b._id];
+      b.trueSkill = {
+        mu: skill.prior.mu,
+        sigma: skill.prior.sigma,
+        delta: skill.mu - skill.prior.mu // how much this match changed the bot's skill
+      };
+      Object.assign(b, botRankById[b._id]);
+      return b;
+    });
+  } else {
+    // otherwise, for games that are challenges, just record the bots' skills 
+    const botIds = _.map(rankedBots, b => b._id);
+    const bots = await Bot.find({ "_id": { "$in": botIds }});
+    assert(bots.length == rankedBots.length);
+
+    newBots = _.map(match.bots, b => {
+      const fullBot = _.find(bots, { "_id": b._id });
+      Object.assign(b, botRankById[b._id]);
+      b.trueSkill = fullBot.trueSkill;
+      return b;
+    });
+  }
 
   // update and save the match back into the db
   match.result = result;

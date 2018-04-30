@@ -40,7 +40,7 @@ matchRouter.get("/:matchId", async (ctx) => {
 
 matchRouter.post("/", async (ctx) => {
   // TODO validate that the user passed in one of their own bots
-  const match = await Match.createWithBots(ctx.state.userId, ctx.request.body.botIds);
+  const match = await Match.createWithBots(ctx.state.userId, ctx.request.body.botIds, { isChallenge: true });
 
   ctx.body = { success: true, updatedRecords: [match] };
 });
