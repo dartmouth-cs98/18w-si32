@@ -25,7 +25,7 @@ botRouter.post("/", async (ctx) => {
   if (!s3.isPythonFile(ctx.request.body.files.code)) {
     throw new MalformedError("Bot must be a python file");
   }
-  
+
   const bot = await Bot.create({
     name: ctx.request.body.fields.name,
     user: ctx.state.userId,

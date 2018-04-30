@@ -15,6 +15,7 @@ PROD_URL = "https://lit-mountain-10578.herokuapp.com"
 def main():
     args = parse_arguments()
 
+    # hit the production URL by default
     API_BASE_URL = DEV_URL if args.dev else PROD_URL
 
     # parse user input
@@ -30,23 +31,22 @@ def main():
     if r.status_code != 200:
         print("could not authenticate you with those credentials")
         return
-        
-    print("HERE")
-    print(r)
 
-    # # extract user ID information
-    # token = r.json()["session"]["token"]
-    #
-    # # POST the upload request
-    # payload = {"name": botname}
-    # files = {"code": open(botfile, "rb")}
-    # auth = {"Authorization": "Bearer " + token}
-    # r = requests.post(API_BASE_URL + "/bots", data=payload, files=files, headers=auth)
-    #
-    # if r.status_code == 200:
-    #     print("success")
-    # else:
-    #     print("failed to upload bot")
+    # extract user ID information
+    token = r.json()["session"]["token"]
+
+    # POST the upload request
+    payload = {"name": botname}
+    files = {"code": open(botfile, "rb")}
+    auth = {"Authorization": "Bearer " + token}
+    r = requests.post(API_BASE_URL + "/bots", data=payload, files=files, headers=auth)
+
+    if r.status_code == 200:
+        print("success!")
+    else:
+        print("failed to upload bot :(")
+
+    return
 
 # ------------------------------------------------------------------------------
 # Helpers
