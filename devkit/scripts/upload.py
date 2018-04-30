@@ -2,6 +2,7 @@
 # Command-line utility to upload specified botfile to Monad servers.
 
 import sys
+import getpass
 import argparse
 import requests
 
@@ -19,29 +20,33 @@ def main():
     # parse user input
     botfile = args.botfile[0]
     username = input("username: ")
-    password = input("password: ")
+    password = getpass.getpass(prompt="password: ") #input("password: ")
     botname = input("bot name: ")
 
     # POST the auth request
     payload = {"username": username, "password": password}
-    r = requests.post(API_BASE_URL + "/users/login", data=payload).json()
+    r = requests.post(API_BASE_URL + "/users/login", data=payload)
 
-    # if r.status_code != 200:
-    #     print("could not log you in with those credentials")
+    if r.status_code != 200:
+        print("could not authenticate you with those credentials")
+        return
+        
+    print("HERE")
+    print(r)
 
-    # extract user ID information
-    token = r["session"]["token"]
-
-    # POST the upload request
-    payload = {"name": botname}
-    files = {"code": open(botfile, "rb")}
-    auth = {"Authorization": "Bearer " + token}
-    r = requests.post(API_BASE_URL + "/bots", data=payload, files=files, headers=auth)
-
-    if r.status_code == 200:
-        print("success")
-    else:
-        print("failed to upload bot")
+    # # extract user ID information
+    # token = r.json()["session"]["token"]
+    #
+    # # POST the upload request
+    # payload = {"name": botname}
+    # files = {"code": open(botfile, "rb")}
+    # auth = {"Authorization": "Bearer " + token}
+    # r = requests.post(API_BASE_URL + "/bots", data=payload, files=files, headers=auth)
+    #
+    # if r.status_code == 200:
+    #     print("success")
+    # else:
+    #     print("failed to upload bot")
 
 # ------------------------------------------------------------------------------
 # Helpers
