@@ -37,6 +37,7 @@ class Map:
 
         # keep initializing self.cells until we get a map where each player can reach every other player
         while not players_reachable:
+            #print("re-initializing")
             self.cells = self.initialize_map(width, height, uniform)
 
             if self.num_players == 1:
@@ -74,17 +75,17 @@ class Map:
                     occupiable = True
 
                 # if a cell is a starter position, make it free
-                if (self.num_players == 1):
-                    if ((c, r) in ONE_PLAYER_START_POS):
+                if self.num_players == 1:
+                    if (c, r) in ONE_PLAYER_START_POS:
                         occupiable = True
-                elif (self.num_players == 2):
-                    if ((c, r) in TWO_PLAYER_START_POS):
+                elif self.num_players == 2:
+                    if (c, r) in TWO_PLAYER_START_POS:
                         occupiable = True
-                elif (self.num_players == 3):
-                    if ((c, r) in THREE_PLAYER_START_POS):
+                elif self.num_players == 3:
+                    if (c, r) in THREE_PLAYER_START_POS:
                         occupiable = True
-                elif (self.num_players == 4):
-                    if ((c, r) in FOUR_PLAYER_START_POS):
+                elif self.num_players == 4:
+                    if (c, r) in FOUR_PLAYER_START_POS:
                         occupiable = True
 
                 # new_cell = Cell(Coordinate(x=c, y=r), self.num_players, True, uniform) # ALL cells are free
@@ -120,13 +121,13 @@ class Map:
     def position_in_range(self, position):
         assert(type(position) is Coordinate)
 
-        return ((position.x >= 0) and (position.x < (self.width - 1)) and (position.y >= 0) and (position.y < (self.height - 1)))
+        return (position.x >= 0) and (position.x < (self.width - 1)) and (position.y >= 0) and (position.y < (self.height - 1))
 
     # check if cell is within map
     def cell_in_range(self, cell):
         return self.position_in_range(cell.position)
 
-    #check if position is free
+    # check if position is free
     def position_free(self, position):
         c = self.get_cell(position)
         return c is not None and c.occupiable
@@ -148,7 +149,6 @@ class Map:
         m.update_from_log(log_map)
 
         return m
-
 
     def update_from_log(self, log_map):
         for (r, row) in enumerate(log_map):

@@ -286,13 +286,11 @@ class GameHelper:
 
         return all_bld_positions
 
-
     # Get the total number of buildings that I can currently construct.
     # Return: (number)
     #   the number of buildings I can construct, assuming full resource use
     def get_building_potential(self):
         return int(self.get_my_resource_count() / BUILDING_COST)
-
 
     # --------------------------------------------------------------------------
     # UNIT DATA GETTERS
@@ -327,7 +325,7 @@ class GameHelper:
     # Return: (number)
     #   the number of units in <cell> controlled by player <playerId>
 
-    #warning: this can't be called between conclusion of movement that puts units from different players onto same cell but before combat resolution so that only one player gains control of the cell
+    # warning: this can't be called between conclusion of movement that puts units from different players onto same cell but before combat resolution so that only one player gains control of the cell
     def get_unit_count_by_cell(self, cell):
         # only one player may have control over a cell at any one time,
         # so this should not be an issue!
@@ -395,33 +393,38 @@ class GameHelper:
     # INPUTS: "start" (a tuple), "goal" (a tuple)
     # RETURN: a list of tuples indicating a possible path between "start" and "goal" positions
     def path(self, start, goal):
-        if (not (self.get_cell(start[0], start[1])).occupiable) | (not (self.get_cell(goal[0], goal[1])).occupiable):
+        if (not (self.get_cell(start)).occupiable) | (not (self.get_cell(goal)).occupiable):
             empty = []
             return empty
 
-        p = ObstacleMapProblem(self.map, start, goal)
+        p = ObstacleMapProblem(self, start, goal)
 
         result = astar_search(p, p.manhattan_heuristic)
+
         return result.path
 
-    #Return the distance between two positions 'start' and 'goal'
+    # Return the distance between two positions 'start' and 'goal'
     def distance(self, start, goal):
-        if (not (self.get_cell(start[0], start[1])).occupiable) | (not (self.get_cell(goal[0], goal[1])).occupiable):
+        if (not (self.get_cell(start)).occupiable) | (not (self.get_cell(goal)).occupiable):
             return None
 
-        p = ObstacleMapProblem(self.map, start, goal)
+        p = ObstacleMapProblem(self, start, goal)
 
         result = astar_search(p, p.manhattan_heuristic)
+
         return len(result.path)
 
-    #Return the position of the closest building to 'pos'
+    # Return the position of the closest building to 'start'
     def closest_building_pos(self, start):
         closest_distance = float("inf")
         closest_pos = None
         all_bld_positions = self.get_all_building_positions()
 
         for pos in all_bld_positions:
+            if self.distance(start, pos) is None:
+                continue
             if self.distance(start, pos) < closest_distance:
+                closest_distance = self.distance(start, pos)
                 closest_pos = pos
 
         return closest_pos
