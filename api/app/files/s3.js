@@ -1,6 +1,5 @@
 const AWS = require("aws-sdk");
 const fs = require("fs");
-const _ = require("lodash");
 
 const s3 = new AWS.S3({signatureVersion: "v4"});
 
@@ -13,15 +12,21 @@ const MATCH_BUCKET = "si32-matches";
 const BOT_EXPIRE = 60 * 5;
 const MATCH_EXPIRE = 60 * 60;
 
+// NOTE: less secure...
+// just checking file extension now
 const isPythonFile = (file) => (
-  _.includes([
-    "text/x-python",
-    "text/plain",
-    "application/x-python-code",
-    "application/x-python",
-    "text/x-python-script"
-  ], file.type)
+  file.name.slice(-3) === ".py"
 );
+
+// const isPythonFile = (file) => (
+//   _.includes([
+//     "text/x-python",
+//     "text/plain",
+//     "application/x-python-code",
+//     "application/x-python",
+//     "text/x-python-script"
+//   ], file.type)
+// );
 
 const upload = (bucket, key, file, options={}) => {
   let body = file;
