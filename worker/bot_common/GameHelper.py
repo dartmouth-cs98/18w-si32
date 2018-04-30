@@ -127,6 +127,7 @@ class GameHelper:
     def get_player_cell_count(self, playerId):
         return len(self.get_player_cells(playerId))
 
+
     # Get a list of all my cells on the map.
     # Return: (list of Cell)
     #   list of all my cells
@@ -349,6 +350,18 @@ class GameHelper:
     def my_units_at_pos(self, pos): # returns True if there are more units at pos1 than there are units located at pos2
         return self.get_cell(pos[0], pos[1]).units[self.myId]
 
+    # ALLEGIANCE GETTER
+    # --------------------------------------------------------------------------
+
+    def get_pos_owner(self, pos):
+        cell = self.get_cell(pos[0], pos[1])
+        if all(i == 0 for i in cell.units):
+            return None
+        else:
+            j = 0
+            while cell.units[j] == 0:
+                j += 1
+            return j
 
     # --------------------------------------------------------------------------
     # RESOURCE DATA GETTERS
@@ -429,6 +442,32 @@ class GameHelper:
 
         return closest_pos
 
+    # Return the position of the closest building to 'start' controlled by player with ID 'id'
+    def closest_building_pos_by_id(self, start, id):
+        closest_distance = float("inf")
+        closest_pos = None
+        all_bld_positions = self.get_all_building_positions()
+
+        for pos in all_bld_positions:
+            if self.map.get_cell(pos).building.ownerId != id:
+                continue
+            if self.distance(start, pos) is None:
+                continue
+            if self.distance(start, pos) < closest_distance:
+                closest_distance = self.distance(start, pos)
+                closest_pos = pos
+
+        return closest_pos
+
+    # Return the number of units of a certain ID in the rectangular region with bottom left corner at 'bottom_left'
+    # and top right corner at 'top_right'
+    def get_unit_count_in_region_by_id(self, bottom_left, top_right, id):
+        units = 0
+        for x in range(bottom_left.x, top_right.x + 1):
+            for y in range(bottom_left.y, top_right.y + 1):
+                if self.get_pos_owner((x, y)) == id:
+                    units += self.get_unit_count_by_position(x, y)
+        return units
     # --------------------------------------------------------------------------
     # LOGGING
 
