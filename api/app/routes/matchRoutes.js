@@ -4,7 +4,10 @@ const auth = require("../auth");
 const s3 = require("../files/s3");
 const { Match } = require("../models");
 
-const { NotFoundError } = require("../errors");
+const { NotFoundError, MalformedError } = require("../errors");
+
+// maximum number of games a user can create in the queue at a time
+const MAX_QUEUED_GAMES = 3;
 
 const matchRouter = Router();
 
@@ -40,7 +43,16 @@ matchRouter.get("/:matchId", async (ctx) => {
 
 matchRouter.post("/", async (ctx) => {
   // TODO validate that the user passed in one of their own bots
-  const match = await Match.createWithBots(ctx.state.userId, ctx.request.body.botIds);
+  const queuedMatches = await Match.find({
+    createdBy: ctx.state.userId,
+    status: "QUEUED",
+  });
+
+  if (queuedMatches.length >= MAX_QUEUED_GAMES) {
+    throw new MalformedError("Wait for a game you're created to finish before starting another!");
+  }
+
+  const match = await Match.createWithBots(ctx.state.userId, ctx.request.body.botIds, { isChallenge: true });
 
   ctx.body = { success: true, updatedRecords: [match] };
 });
