@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const _ = require("lodash");
 const Bot = require("./botModel");
+const User = require("./userModel");
 const s3 = require("../files/s3");
 const { MalformedError } = require("../errors");
 const assert = require("assert");
@@ -10,7 +11,7 @@ const _Match = new Schema({
   createdBy: {
     type: Schema.Types.ObjectId,
     ref: "User",
-    required: true
+    required: false
   },
   // all users involved in this match
   users: [{
@@ -34,7 +35,7 @@ const _Match = new Schema({
   timestamps: true
 });
 
-_Match.statics.createWithBots = (userId, botIds, { isChallenge=false }) => {
+_Match.statics.createWithBots = (userId, botIds, { isChallenge=false, status="QUEUED" }) => {
   assert(2 <= botIds.length && botIds.length <= 4 && _.every(botIds, _.isString), "Need 2-4 bots to start a match!");
   return Bot.find({
     "_id": { $in: botIds }
@@ -49,42 +50,144 @@ _Match.statics.createWithBots = (userId, botIds, { isChallenge=false }) => {
     return Match.create({
       createdBy: userId,
       users: allUserIds,
-      isChallenge,
       bots: bots,
+      isChallenge,
+      status,
     });
   });
 };
 
-// finds, updates, and returns the next match to be played
-_Match.statics.getNext = () => {
-  return Match.findOneAndUpdate({
-    status: "QUEUED"
-  }, {
-    status: "RUNNING",
-  })
-  .sort({ createdAt: -1 })
-  .then(match => {
-    if (!match) {
-      return null;
+// how many bots to select the closest skill out of
+const BOT_SELECT_RANGE = 10;
+
+// selects a random bot to play in a match, with rating 
+// ideally somewhat close to skillMu
+// and no user in common with users in chosenBOts
+const getNextBotToPlay = async (targetMu, chosenBots) => {
+  const nBotsTotal = await Bot.count({});
+  // pick a random number out of all the bots, skewed left
+  const beta = Math.pow(Math.sin(Math.random()*Math.PI/2), 2); // transform uniform distribution to beta distribution
+  const botIdx = parseInt( ((beta < 0.5) ? 2*beta : 2*(1-beta)) * nBotsTotal ); // index of first player to choose
+
+  const bots = await Bot.aggregate([
+    {$match: {}},
+    {$project: {id: 1, user: 1, lastSkill: {$slice: ["$trueSkillHistory", -1]}}},
+    {$sort: {"lastSkill.timestamp": 1}}, // sort by most recently updated date w/ oldest first
+    {$sort: {lastDate: 1}}, // sort by most recently updated date w/ oldest first
+    {$skip: botIdx},// offset by our randomly distributed value
+    {$limit: BOT_SELECT_RANGE},
+  ]).exec();
+
+  let bestBot = { lastSkill: { mu: 1000000 }};
+
+  _.each(bots, b => {
+    if (Math.abs(b.lastSkill.mu - targetMu) > Math.abs(bestBot.lastSkill.mu - targetMu)) {
+      return;
     }
 
-    // get pre-signed AWS link for each bot
-    const bots = match.bots.map((bot,i) => (
-      {
-        name: bot.name,
-        id: bot._id,
-        index: i,
-        url: s3.getBotUrl(bot.code),
-      }
-    ));
+    if (_.some(chosenBots, chosenB => chosenB.user.toString() == b.user.toString())) {
+      return;
+    }
 
-    // return only what the worker needs
-    return {
-      bots,
-      id: match._id,
-      gameType: "SimpleGame", // everything is a SimpleGame at this point
-    };
+    // by the time we're here, the bot is the new best!
+    bestBot = b;
   });
+
+  return bestBot;
+}
+
+// creates and returns a non-challenge match 
+const getNextStandardMatch = async () => {
+  const nPlayersTotal = await User.count({});
+
+  let firstBot = null;
+  while (firstBot == null) {
+    // random number math from 
+    // https://stackoverflow.com/questions/16110758/generate-random-number-with-a-non-uniform-distribution
+    const beta = Math.pow(Math.sin(Math.random()*Math.PI/2), 2); // transform uniform distribution to beta distribution
+    const firstPlayerIdx = parseInt(((beta < 0.5) ? 2*beta : 2*(1-beta)) * nPlayersTotal); 
+
+    // from all users, select the one that is offset by firstPlayerIdx into
+    // those who haven't had their trueskill updated recently
+    const firstPlayer = await User.aggregate([
+      {$match: {}},
+      {$project: {_id: 1, lastSkill: {$slice: ["$trueSkillHistory", -1]}}},
+      {$sort: {"lastSkill.timestamp": 1}}, // sort by most recently updated date w/ oldest first
+      {$skip: firstPlayerIdx},// offset by our randomly distributed value
+      {$limit: 1},
+    ]).exec();
+
+    // select the bots of the chosen user
+    const playerBots = await Bot.find({ user: firstPlayer[0]._id }, { _id: 1, user: 1, trueSkillHistory: 1 });
+
+    // if the player has bots, select one at random
+    if (playerBots && playerBots.length > 0) {
+      firstBot = playerBots[Math.floor(Math.random() * playerBots.length)];
+    }
+  }
+
+  const targetSkill = firstBot.trueSkillHistory[firstBot.trueSkillHistory.length - 1].mu;
+  const matchSize = Math.floor(Math.random() * 3 + 2); // random number of players 2-4
+  const bots = [firstBot];
+
+  // loop to fill out the match players; but only make matchSize*2 attempts
+  let nTries = 0;
+  while (bots.length < matchSize && (nTries < matchSize * 2 || bots.length < 2)) {
+    const nextBot = await getNextBotToPlay(targetSkill, bots);
+    if (nextBot._id) {
+      bots.push(nextBot);
+    }
+    nTries++; // don't want to spin forever, just start a smaller match
+  }
+
+  // finally, create a match with all the bots we found
+  const botIds = _.map(bots, b => b._id.toString());
+  return Match.createWithBots(null, botIds, { isChallenge: false, status: "RUNNING" });
+}
+
+// get the next challenge match that's been queued
+const getNextChallengeMatch = async () => {
+  return Match.findOneAndUpdate({
+      status: "QUEUED"
+    }, {
+      status: "RUNNING",
+    })
+    .sort({ createdAt: -1 });
+}
+
+// finds, updates, and returns the next match to be played
+_Match.statics.getNext = async () => {
+
+  let match;
+  const useQueue = Math.random() < .7;
+  if (useQueue) {
+    match = await getNextStandardMatch();
+  } 
+
+  if (!useQueue || !match) {
+    match = await getNextChallengeMatch();
+  }
+
+  if (!match) {
+    return null;
+  }
+
+  // get pre-signed AWS link for each bot
+  const bots = match.bots.map((bot,i) => (
+    {
+      name: bot.name,
+      id: bot._id,
+      index: i,
+      url: s3.getBotUrl(bot.code),
+    }
+  ));
+
+  // return only what the worker needs
+  return {
+    bots,
+    id: match._id,
+    gameType: "SimpleGame", // everything is a SimpleGame at this point
+  };
 };
 
 _Match.statics.handleWorkerResponse = async (id, rankedBots, logKey, result={}) => {
