@@ -94,7 +94,7 @@ const getNextBotToPlay = async (targetMu, chosenBots) => {
   });
 
   return bestBot;
-}
+};
 
 // creates and returns a non-challenge match 
 const getNextStandardMatch = async () => {
@@ -143,7 +143,7 @@ const getNextStandardMatch = async () => {
   // finally, create a match with all the bots we found
   const botIds = _.map(bots, b => b._id.toString());
   return Match.createWithBots(null, botIds, { isChallenge: false, status: "RUNNING" });
-}
+};
 
 // get the next challenge match that's been queued
 const getNextChallengeMatch = async () => {
@@ -153,7 +153,7 @@ const getNextChallengeMatch = async () => {
       status: "RUNNING",
     })
     .sort({ createdAt: -1 });
-}
+};
 
 // finds, updates, and returns the next match to be played
 _Match.statics.getNext = async () => {
