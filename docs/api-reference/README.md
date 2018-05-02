@@ -1,25 +1,26 @@
 # API Reference
 
-In order to simplify the game experience, we have provided a game helper which will provide
-user bots with most of the information they might need for developing.
-At the top of your bot.py file, you will likely see the following lines:
-```
-import sys
-import time
-from GameHelper import GameHelper
+In order to simplify the development experience, we provided a helper library (`GameHelper`)
+that provides a simple API for interacting with the game engine.
 
+You may include this library by writing the lines below at the top of your botfile (`bot.py`) file.
+
+```
+from GameHelper import GameHelper
 game = GameHelper()
 ```
-Here the 'game' variable is the initialized object of the GameHelper, which provides a lot of useful methods, and allows your bot to read, and interactt with, the game state.
 
-All functions described below in this API reference will be invoked using this GameHelper object.
+All functions described below in this API reference will be invoked using this `GameHelper` object.
 
 For example,
+
 ```
 game.move((1,1), 5, 'NORTHEAST')
 ```
-Will return a *move* command which will move 5 of your units from the cell at coordinates (1,1) to the adjacent cell in the Northeastern direction.
-#
+
+returns a command that moves five (5) units from the cell at coordinates (1,1) to the
+adjacent cell in the Northeast direction.
+
 ### Command Creation
 
 **move()**
