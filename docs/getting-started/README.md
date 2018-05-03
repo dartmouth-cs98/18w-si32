@@ -195,18 +195,32 @@ bot would likely do different things based on what the new state looks like).
 
 ## Replays and Debugging
 
-One of the most useful features for you will be the replay visualization feature. Every game that's played=
-on Monad produces a game log, which tracks the state of the game after every turn, as well as what moves
-were made by each player.
-You can take this gamelog file and go to monad.surge.sh/replay and upload the file there, and the game will
-be visualized for you. This way, you can see what decisions your bot made throughout the course of the
-game, identify potential weaknesses, and edit your bot from there.
-To that end, it may also help to look at replays of games played by high level bots for some inspiration,
-by seeing how the best performing bots seem to make their decisions.
+So you've written a bot, but how can you verify that it is performing as expected before
+you upload it?
+
+One of the most useful debugging features available is replay visualization.
+Every game that's played on Monad produces a game log (a `.json` file), which tracks the state of the game
+after every turn, as well as the moves that each player made.
+This is true when you run a match locally (see the documentation in the development kit
+for instructions on how to do this).
+
+There are then multiple options available to visualize the game recorded in this log file.
+
+* You may visit our [replay page](http://monad.surge.sh/replay) and upload the file there, and the game will
+be visualized for you on in the browser.
+* You may download our offline visualizer from the [downloads page](../downloads/README.md) to
+visualize games from a desktop application that requires no internet connection.
+
+These tools allow one to see the decisions that bots make throughout the course of a
+game, identify potential weaknesses, and gain insight into potentially stronger strategies.
 
 ## Conclusion
 
-We have now seen how bots are structured to be able to plug into the game flow. This is
-boilerplate you can always just copy when starting a new bot. We have also seen
-how one might begin to implement a strategy in the `do_turn()` method, taking in a state and returning
-commands based on it.
+We have now seen how Monad bots are structured and how they interact with both the
+game engine and the `GameHelper` library. This is boilerplate one can always just copy when starting a new bot.
+
+We have also seen how one might begin to implement a strategy in the `do_turn()` method,
+taking in a state and returning commands based on it.
+
+Finally, we have seen how to run local matches and improve our bots based on what visualization
+of these match replays reveal.
