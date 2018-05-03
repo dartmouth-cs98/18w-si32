@@ -171,66 +171,8 @@ For example, Player A sends 8 _Units_ North from **(2, 4)** and Player B sends 5
 **(2, 5)**; these two _Commands_ will be replaced by an effectively equal single _Command_ of "Player A
 sends 3 _Units_ North from **(2, 4)**.
 
-**Two Players**
+After all players move their units into their new squares, units of rival factions will fight each other. The faction with the greatest number of units will lose units equal to the number controlled by the faction with the second greatest number of units, and all other factions will lose all their units.
 
-In the case of two players, combat mechanics are simple. the player with the greater number of _Units_ in
-the _Cell_ will lose a number of _Units_ equal to the other player's number of _Units_, and the other
-player's number of _Units_ will be set to zero.
+For example, Player A has 12 units , Player B has 8 units, and Player C has 10 units in **(2, 5)** after movement has occurred. After combat, Player A will have 2 units remaining, and Players B and C will lose all their units.
 
-**Three or More Players**
 
-In the case of three or more players, combat mechanics are slightly more complex.
-
-**1**. Each player with nonzero _Units_ in the _Cell_ will assign some number of _Units_ towards
-each other player with nonzero _Units_ in the _Cell_ proportional to the enemy player's number of
-_Units_, rounded down. Any leftover units will be randomly assigned towards an enemy player.
-
-For example, if Player A has 8 units, Player B has 12 units, and Player C has 7 units,
-combat between these units proceeds in the following manner.
-
-- Player A will send (12/19) of his 8 _Units_, rounded down --> 5 _Units_ to Player B and (7/19)
-of his 8 _Units_, rounded down --> 2 _Units_ to Player C. The remaining _Unit_ (8 - 5 - 2 = 1)
-will be randomly assigned to Player B or Player C.
-- Player B will send (8/15) of his 12 _Units_, rounded down --> 6 _Units_ to Player A and (7/15)
-of his 8 _Units_, rounded down --> 5 _Units_ to Player C. The remaining _Unit_ (12 - 6 - 5 = 1)
-will be randomly assigned to Player A or Player C.
-- Player C will send (8/20) of his 7 _Units_, rounded down --> 2 _Units_ to Player A and (12/20)
-of his 7 _Units_, rounded down --> 4 _Units_ to Player B. The remaining _Units_ (8 - 2 - 4 = 2)
-will be randomly assigned to Player A or Player B.
-
-**2**. After assignments are complete, the assigned _Units_ between each pair of players will fight,
-with the weaker group eliminated and the strong group losing a number of _Units_ equal to the number
-of the weaker group. Let's assume that all randomly assigned _Units_ are just sent to the first enemy
-player, alphabetically. If we use tuples to represent the players and the _Units_ they send towards
-each other:
-
-(A, B): (5 + 1, 6 + 1) = (6, 7) (Player A sends 6 _Units_ to Player B and Player B sends 7 _Units_
- to Player A)
-Player A sends 6 _Units_ to Player B, Player B sends 7 _Units_ to Player A; Player A loses all sent
-_Units_, Player B keeps 1 _Unit_
-
-(A, C): (2, 2 + 1) = (2, 3)
-Player A sends 2 _Units_ to Player C, Player C sends 3 _Units_ to Player A; Player A loses all sent
-_Units_, Player C keeps 1 _Unit_
-
-(B, C): (5, 4)
-Player B sends 5 _Units_ to Player C, Player C sends 4 _Units_ to Player B; Player B keeps
-_Unit_, Player C loses all sent _Units_
-
-![Alt Text](https://i.imgur.com/MnDKg7u.png)
-
-**3**. After combat, the number of _Units_ in each _Cell_ will be updated accordingly.
-
- So Player B keeps 2 _Units_ in total and Player C keeps 1 _Unit_ in total.
-
- ![Alt Text](https://i.imgur.com/QvneJOx.png)
-
-**4**. Keep repeating the above process until there are no more than one players with nonzero
-_Units_ in the _Cell_.
-
- So Player B would fight Player C, and Player B would keep 1 _Unit_, and Player C would lose all
- _Units_.
-
-**5**. Player B keeps 1 _Unit_, Players A and C lose all _Units_.
-
-   ![Alt Text](https://i.imgur.com/NKPlpRR.png)
