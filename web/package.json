@@ -19,6 +19,7 @@
     "color": "^3.0.0",
     "fuse.js": "^3.2.0",
     "history": "^4.7.2",
+    "mixpanel-browser": "^2.21.0",
     "moment": "^2.21.0",
     "morgan": "^1.9.0",
     "msgpack-lite": "^0.1.26",

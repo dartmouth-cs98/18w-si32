@@ -1,4 +1,5 @@
 import * as http from "../../util/http.js";
+import mixpanel from "mixpanel-browser";
 
 const SESSION_START = "SESSION_START";
 const SESSION_DESTROY = "SESSION_DESTROY";
@@ -46,6 +47,8 @@ const register = (username, password) => dispatch => {
       password
     })
     .then(res => {
+      mixpanel.alias(res.body.user._id);
+      mixpanel.track("Sign up");
       dispatch({
         type: SESSION_START,
         session: res.body.session,

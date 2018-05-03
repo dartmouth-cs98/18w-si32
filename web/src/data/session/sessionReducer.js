@@ -5,6 +5,8 @@ import {
   RESET_USER_FOR_SESSION
 } from "./sessionActions";
 
+import mixpanel from "mixpanel-browser";
+
 // TODO replace hacky localStorage and initial state stuff for persisting
 // the session token. Should be in a cookie (?) and part of some actual bootstrap process
 
@@ -26,6 +28,7 @@ export default function sessionReducer(state = INITIAL_STATE, action) {
       return Object.assign({}, INITIAL_STATE);
 
     case SET_USER_FOR_SESSION:
+      mixpanel.identify(action.user._id);
       return Object.assign({}, state, {
         user: action.user
       });

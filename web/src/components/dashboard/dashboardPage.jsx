@@ -2,6 +2,7 @@ import React from "react";
 import Radium from "radium";
 import _ from "lodash";
 import { connect } from "react-redux";
+import mixpanel from "mixpanel-browser";
 
 import Button from "../common/button";
 import { Link, Page, Wrapper } from "../layout";
@@ -54,6 +55,7 @@ class DashboardPage extends React.PureComponent {
   }
 
   componentDidMount() {
+    mixpanel.track("Visit Dashboard");
     this.props.fetchBots(this.props.userId);
     this.props.fetchMatches(this.props.userId);
     this.props.fetchUser(this.props.userId);

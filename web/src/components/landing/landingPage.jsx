@@ -1,5 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
+import mixpanel from "mixpanel-browser";
 
 import history from "../../history";
 
@@ -11,6 +12,7 @@ import { colors, constants } from "../../style/";
 class LandingPage extends React.PureComponent {
   constructor(props) {
     super(props);
+    mixpanel.track("Landing page visit");
   }
 
   componentWillReceiveProps(nextProps) {
