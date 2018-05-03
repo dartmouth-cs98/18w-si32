@@ -6,6 +6,7 @@ import * as http from "../../util/http.js";
 /* code using Select Async based on https://github.com/JedWatson/react-select#async-options */
 
 const getGroups  = (input, callback) => {
+  input = input || "";
   return http
     .get("/groups")
     .query({q: input})
@@ -34,6 +35,7 @@ export default function groupSearchbar(currentGroup, onChange, {placeholder}) {
             placeholder={placeholder || "Search For New Groups"}
             autosize={false}
             clearable={true}
+            cache={false}
             multi={false}
             onChange={onChange}
             filterOptions={false}
