@@ -1,9 +1,15 @@
+# startWorker.py
+
 import traceback
 
+from game.Game import Game
 from game.DockerBot import DockerBot
-from game.GameState import GameState
+
 from waitForGame import pollUntilGameReady
 from endpoints import post_match_results
+
+# ------------------------------------------------------------------------------
+# run_worker() 
 
 def run_worker():
     while True:
@@ -17,7 +23,7 @@ def run_worker():
         for b in botSpecs:
             bots.append(DockerBot(b['id'], b['index'], b['url']))
 
-        game = GameState(bots)
+        game = Game(bots)
 
         try:
             # we'll need more than just a log at some point
@@ -52,5 +58,7 @@ def run_worker():
 
         print("Done cleaning up.")
 
+# ------------------------------------------------------------------------------
+# Script
 
 run_worker()

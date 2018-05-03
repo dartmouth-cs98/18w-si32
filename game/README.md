@@ -15,7 +15,6 @@ TODO: this.
 * `Coordinate`
 * `DockerBot`
 * `Game`
-* `GameState`
 * `Logger`
 * `Map`
 * `Player`
