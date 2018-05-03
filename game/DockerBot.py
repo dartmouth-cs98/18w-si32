@@ -28,6 +28,15 @@ class DockerBot(Bot):
         call("cp -R -L bot_common/* /bot%d" % self.playerNum, shell=True)
 
     def run(self):
+        # remove any existing container of that name, in case we didn't shut down clean before
+        try:
+            container = client.containers.get(self.name)
+            if container:
+                print("Removing existing container before starting bot.")
+                container.remove(force=True)
+        except Exception:
+            pass
+
         command = ["docker", "run", "-i",
                       "-v", "bot%d:/bot" % self.playerNum,
                       "--name", "%s" % self.name,
@@ -46,9 +55,12 @@ class DockerBot(Bot):
 
     # remove docker container
     def cleanup(self):
-        container = client.containers.get(self.name)
-        container.remove(force=True)
-        print("Killed and removed bot %d." % self.playerNum)
+        try:
+            container = client.containers.get(self.name)
+            container.remove(force=True)
+            print("Killed and removed bot %d." % self.playerNum)
+        except Exception:
+            pass
 
         # remove bot code from volume that is persistent
         call("rm -r /bot%d/*" % self.playerNum, shell=True)
