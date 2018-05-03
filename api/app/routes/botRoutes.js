@@ -38,7 +38,7 @@ botRouter.post("/", async (ctx) => {
   bot.trueSkillHistory.push({ timestamp: new Date(), score: { mu: DEFAULT_MU, sigma: DEFAULT_SIGMA } });
   bot.save();
 
-  await bot.populate("user");
+  await bot.populate("user").execPopulate();
 
   // delete this file to mark it as handled
   delete ctx.request.body.files.code;
