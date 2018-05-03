@@ -141,8 +141,6 @@ class LandingCanvas extends React.PureComponent {
       // iterate over columns
       for (let j = 0; j < this.sp.cellsInCol; j++) {
 
-        const r = this.getCellColorAlpha(j, i);
-
         // Draw hex and then check if it contains mouse
         let hex = this.drawHex(i, j);
 
