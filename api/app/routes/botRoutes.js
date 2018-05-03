@@ -2,8 +2,9 @@ const Router = require("koa-router");
 const auth = require("../auth");
 const s3 = require("../files/s3");
 const Bot = require("../models").Bot;
+const User = require("../models").User;
 const { AccessError, MalformedError } = require("../errors");
-const { DEFAULT_MU, DEFAULT_SIGMA } = require("../lib/trueskill");
+const { DEFAULT_MU, DEFAULT_SIGMA, USER_SIGMA_ADJUST, BOT_SIGMA_ADJUST } = require("../lib/trueskill");
 
 const botRouter = new Router();
 
@@ -36,9 +37,14 @@ botRouter.post("/", async (ctx) => {
   bot.code = key;
   bot.versionHistory.push({ timestamp: new Date(), version: 1 });
   bot.trueSkillHistory.push({ timestamp: new Date(), score: { mu: DEFAULT_MU, sigma: DEFAULT_SIGMA } });
-  bot.save();
+  await bot.save();
 
   await bot.populate("user").execPopulate();
+
+  // update the user's sigma
+  const user = await User.findById(ctx.state.userId);
+  user.trueSkill.sigma = user.trueSkill.sigma * USER_SIGMA_ADJUST; 
+  await user.save();
 
   // delete this file to mark it as handled
   delete ctx.request.body.files.code;
@@ -72,7 +78,13 @@ botRouter.post("/:botId", async (ctx) => {
   bot.set("code", key);
   bot.set("version", bot.version + 1);
   bot.versionHistory.push({ timestamp: new Date(), version: bot.version });
+  bot.trueSkill.sigma = bot.trueSkill.sigma * BOT_SIGMA_ADJUST;
   bot.save();
+  
+  // update the user's sigma
+  const user = await User.findById(ctx.state.userId);
+  user.trueSkill.sigma = user.trueSkill.sigma * USER_SIGMA_ADJUST; 
+  await user.save();
 
   ctx.body = { updatedRecords: [bot] };
 });
