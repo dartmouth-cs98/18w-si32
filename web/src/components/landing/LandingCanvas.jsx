@@ -1,4 +1,5 @@
 import React from "react";
+import _ from "lodash";
 
 import { constants } from "../../style";
 
@@ -179,10 +180,6 @@ class LandingCanvas extends React.PureComponent {
 
         const xpos = j * (this.sp.cell_w + CELL_OFFSET_X);
         const ypos = i * (this.sp.cell_h + CELL_OFFSET_Y);
-
-        const r = this.getCellColorAlpha(j, i);
-
-        let hex = this.drawHex(i,j);
 
         //this.mapGraphics.drawRect(xpos, ypos, this.sp.cell_w, this.sp.cell_h);
 
