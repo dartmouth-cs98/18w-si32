@@ -7,7 +7,6 @@ import * as http from "../../util/http.js";
 
 const getGroups  = (input, callback) => {
   input = input || "";
-  console.log(input);
   return http
     .get("/groups")
     .query({q: input})
@@ -20,7 +19,6 @@ const getGroups  = (input, callback) => {
       const globalOpt = {value: "global", label: "Global"};
       const globalMatch = input === "" || "global".includes(input.toLowerCase());
       const returnOpts = globalMatch ? [globalOpt].concat(options.splice(0, 6)) : options.splice(0, 6);
-      console.log(returnOpts);
       var data = {
         options: returnOpts,
         complete: options.length <= 6
