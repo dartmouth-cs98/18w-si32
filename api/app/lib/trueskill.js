@@ -2,6 +2,8 @@ const trueskill = require("trueskill");
 
 const DEFAULT_MU = 25.0;
 const DEFAULT_SIGMA = 25.0 / 3;
+const BOT_SIGMA_ADJUST = 1.7;
+const USER_SIGMA_ADJUST = 1.2;
 
 /**
   * returnNewSkillOfPlayers
@@ -34,3 +36,5 @@ module.exports.returnNewSkillOfPlayers = (players) => {
 
 module.exports.DEFAULT_MU = DEFAULT_MU;
 module.exports.DEFAULT_SIGMA = DEFAULT_SIGMA;
+module.exports.BOT_SIGMA_ADJUST = BOT_SIGMA_ADJUST;
+module.exports.USER_SIGMA_ADJUST = USER_SIGMA_ADJUST;
