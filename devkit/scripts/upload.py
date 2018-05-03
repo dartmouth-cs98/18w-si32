@@ -13,6 +13,7 @@ PROD_URL = "https://lit-mountain-10578.herokuapp.com"
 # Main
 
 def main():
+    # parse command line arguments 
     args = parse_arguments()
 
     # hit the production URL by default

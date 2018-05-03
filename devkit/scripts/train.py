@@ -20,16 +20,20 @@ DEFAULT_ITERS = 5   # default number of match iterations
 # Main
 
 def main():
+    # parse command line arguments to script
     args = parse_arguments()
 
+    # interpret semantic meaning of arguments
     botfiles = args.botfiles
     uniform_map = args.uniform
     n_players = len(args.botfiles)
     iters = DEFAULT_ITERS if args.iters is None else int(args.iters)
 
+    # structure:
+    # wins[i] = n 
+    # encodes player with playerID i has n wins
     wins = {}
 
-    # wins[i] = n encodes player with playerID i has n wins
     for i in range(n_players):
         wins[i] = 0
 

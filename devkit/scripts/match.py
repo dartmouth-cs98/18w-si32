@@ -20,6 +20,7 @@ REPLAY_FN = "game.json"
 # Main
 
 def main():
+    # parse command line arguments to script 
     args = parse_arguments()
 
     # set up bots by loading from source files

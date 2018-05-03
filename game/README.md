@@ -8,4 +8,15 @@ TODO: this.
 
 ## Anatomy
 
-TODO: this. 
+* `Bot`
+* `Building`
+* `Cell`
+* `Command`
+* `Coordinate`
+* `DockerBot`
+* `Game`
+* `GameState`
+* `Logger`
+* `Map`
+* `Player`
+* `Rules`
