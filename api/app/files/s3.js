@@ -6,8 +6,8 @@ const s3 = new AWS.S3({signatureVersion: "v4"});
 const { MalformedError } = require("../errors");
 
 // const MATCH_LOG_BUCKET = "si32-matches";
-const BOT_BUCKET = "si32-bots";
-const MATCH_BUCKET = "si32-matches";
+const BOT_BUCKET = process.env.S3_BOT_BUCKET || "si32-bots";
+const MATCH_BUCKET = process.env.S3_MATCH_BUCKET || "si32-matches";
 
 const BOT_EXPIRE = 60 * 5;
 const MATCH_EXPIRE = 60 * 60;
