@@ -8,8 +8,8 @@ import argparse
 # boilerplate for import from parent module
 sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
-from game.Bot import LocalBot
-from game.GameState import GameState
+from game.Game import Game
+from game.LocalBot import LocalBot
 
 MAX_ARGS = 4   # maximum of 4 bots in single match
 MIN_ARGS = 2   # minimum of 2 bots in single match
@@ -20,16 +20,20 @@ DEFAULT_ITERS = 5   # default number of match iterations
 # Main
 
 def main():
+    # parse command line arguments to script
     args = parse_arguments()
 
+    # interpret semantic meaning of arguments
     botfiles = args.botfiles
     uniform_map = args.uniform
     n_players = len(args.botfiles)
     iters = DEFAULT_ITERS if args.iters is None else int(args.iters)
 
+    # structure:
+    # wins[i] = n
+    # encodes player with playerID i has n wins
     wins = {}
 
-    # wins[i] = n encodes player with playerID i has n wins
     for i in range(n_players):
         wins[i] = 0
 
@@ -40,7 +44,7 @@ def main():
         bots = [LocalBot(arg, i) for (i, arg) in enumerate(botfiles)]
 
         # initialize the match
-        game = GameState(bots, uniform_map)
+        game = Game(bots, uniform_map)
 
         # run the match
         game.start()

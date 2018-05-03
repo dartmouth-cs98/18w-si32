@@ -8,8 +8,8 @@ import argparse
 # boilerplate for import from parent module
 sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
-from game.Bot import LocalBot
-from game.GameState import GameState
+from game.Game import Game
+from game.LocalBot import LocalBot
 
 MAX_ARGS = 4   # maximum of 4 bots in single match
 MIN_ARGS = 2   # minimum of 2 bots in single match
@@ -20,13 +20,14 @@ REPLAY_FN = "game.json"
 # Main
 
 def main():
+    # parse command line arguments to script
     args = parse_arguments()
 
     # set up bots by loading from source files
     bots = [LocalBot(arg, i) for (i, arg) in enumerate(args.botfiles)]
 
     # initialize the match
-    game = GameState(bots, args.uniform)
+    game = Game(bots, args.uniform)
 
     # run the match
     game.start()

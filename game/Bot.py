@@ -1,14 +1,11 @@
 # Bot.py
 # Class definition for 'Bot'
 
-import os
-import sys
 import msgpack
 import struct
-from subprocess import Popen, PIPE, call
 
 # ------------------------------------------------------------------------------
-# Class Definitions
+# Class Definition
 
 # Bot is our internal wrapper around an end-user implementation of a bot
 # this class should handle prepping and running a bot in a separate
@@ -26,31 +23,6 @@ class Bot(object):
     # pass line through to the bot's stdin
     def write(self, data):
         write(self.proc.stdin, data)
-
-# The Bot wrapper for local bot development.
-#
-# Constructor Arguments
-# fp (string)      - file path to the botfile.
-# playerNum (int)  - player number assigned to this player in match (ID).
-
-class LocalBot(Bot):
-    def __init__(self, fp, playerNum):
-        self.name = fp
-        self.playerNum = playerNum
-
-    def prep(self):
-        return
-
-    def run(self):
-        command = ["python", "./%s" % self.name]
-        self.proc = Popen(command, stdout=PIPE, stdin=PIPE, bufsize=50000)
-
-    def cleanup(self):
-        try:
-            self.proc.kill()
-        except Exception as e: # proc already exited
-            print(e)
-            pass
 
 # ------------------------------------------------------------------------------
 # Helper Functions

@@ -41,19 +41,15 @@ class Direction(IntEnum):
 # ------------------------------------------------------------------------------
 # Command
 
-MOVE_COMMAND = "MOVE"
-MINE_COMMAND = "MINE"
-BUILD_COMMAND = "BUILD"
+MOVE_COMMAND = "MOVE"       # Move command enum
+MINE_COMMAND = "MINE"       # Mine command enum
+BUILD_COMMAND = "BUILD"     # Build command enum 
 
 # ------------------------------------------------------------------------------
 # Game
 
-MAX_ITERS = 2000         # The maximum number of turn iterations in a single game.
-
-# ------------------------------------------------------------------------------
-# GameState
-
-DEBUG_LOG_FN = "./gameserver.log"
+MAX_ITERS = 2000                     # The maximum number of turn iterations in a single game.
+DEBUG_LOG_FN = "./gameserver.log"    # Output filename for debug log file
 
 # ------------------------------------------------------------------------------
 # Building
