@@ -9,7 +9,7 @@ decides what moves are sent back.
 Will you attack, build, or mine for resources? What will your opponent do?
 
 This guide contains everything you need to know to develop your first
-Monad bot. Let's get started. 
+Monad bot. Let's get started.
 
 ## Requirements
 
@@ -192,6 +192,17 @@ moves of the other
 player(s) to update state. Then it sends the bots the new state and our bots do it all over again
 (though a real
 bot would likely do different things based on what the new state looks like).
+
+## Replays and Debugging
+
+One of the most useful features for you will be the replay visualization feature. Every game that's played=
+on Monad produces a game log, which tracks the state of the game after every turn, as well as what moves
+were made by each player.
+You can take this gamelog file and go to monad.surge.sh/replay and upload the file there, and the game will
+be visualized for you. This way, you can see what decisions your bot made throughout the course of the
+game, identify potential weaknesses, and edit your bot from there.
+To that end, it may also help to look at replays of games played by high level bots for some inspiration,
+by seeing how the best performing bots seem to make their decisions.
 
 ## Conclusion
 
