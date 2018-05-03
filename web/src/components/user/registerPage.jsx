@@ -44,7 +44,7 @@ class RegisterPage extends React.PureComponent {
     });
 
     this.props.register(this.state.username, this.state.password)
-      .then((user) => {
+      .then(() => {
         history.push("/dashboard");
       })
       .catch((err) => {
