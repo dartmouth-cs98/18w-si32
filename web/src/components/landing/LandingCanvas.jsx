@@ -81,6 +81,10 @@ class LandingCanvas extends React.PureComponent {
     this.animate();
   }
 
+  componentWillUnmount() {
+    this.app.destroy();
+  }
+
   // compute the scene parameters based on map dimensions
   computeSceneParameters = () => {
     this.sp = {};
