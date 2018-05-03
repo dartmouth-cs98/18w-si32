@@ -13,8 +13,8 @@ client = docker.from_env()
 
 # class for being run in containerized "live" environment
 class DockerBot(Bot):
-    def __init__(self, name, playerNum, codeUrl):
-        self.playerNum = playerNum
+    def __init__(self, name, player_num, codeUrl):
+        self.player_num = player_num
         self.name = name
         self.codeUrl = codeUrl
 
@@ -22,10 +22,10 @@ class DockerBot(Bot):
         sys.stdout.flush()
 
         # download the user-provided bot code
-        get_bot_file(self.codeUrl, self.playerNum)
+        get_bot_file(self.codeUrl, self.player_num)
 
         # copy everything from bot_common (provided helpers, etc.) into bot dir
-        call("cp -R -L bot_common/* /bot%d" % self.playerNum, shell=True)
+        call("cp -R -L bot_common/* /bot%d" % self.player_num, shell=True)
 
     def run(self):
         # remove any existing container of that name, in case we didn't shut down clean before
@@ -38,7 +38,7 @@ class DockerBot(Bot):
             pass
 
         command = ["docker", "run", "-i",
-                      "-v", "bot%d:/bot" % self.playerNum,
+                      "-v", "bot%d:/bot" % self.player_num,
                       "--name", "%s" % self.name,
                       "si32-child-bot"]
 
@@ -58,9 +58,9 @@ class DockerBot(Bot):
         try:
             container = client.containers.get(self.name)
             container.remove(force=True)
-            print("Killed and removed bot %d." % self.playerNum)
+            print("Killed and removed bot %d." % self.player_num)
         except Exception:
             pass
 
         # remove bot code from volume that is persistent
-        call("rm -r /bot%d/*" % self.playerNum, shell=True)
+        call("rm -r /bot%d/*" % self.player_num, shell=True)
