@@ -100,7 +100,7 @@ class Map:
     # INPUTS: "start" (a tuple), "goal" (a tuple)
     # RETURN: a list of tuples indicating a possible path between "start" and "goal" positions
     def path(self, start, goal):
-        if (not (self.get_cell(start)).occupiable) | (not (self.get_cell(goal)).occupiable):
+        if (not (self.get_cell(start)).occupiable) or (not (self.get_cell(goal)).occupiable):
             empty = []
             return empty
 
@@ -130,11 +130,12 @@ class Map:
     # check if position is free
     def position_free(self, position):
         c = self.get_cell(position)
-        return c is not None and c.occupiable
+        #return c is not None and c.occupiable
+        return c is not None
 
     # check if cell is free
     def cell_free(self, cell):
-        return self.cell_in_range(cell) and cell.occupiable
+        return self.cell_in_range(cell) #and cell.occupiable
 
     # returns only the state we care about for the game log
     def get_state(self):

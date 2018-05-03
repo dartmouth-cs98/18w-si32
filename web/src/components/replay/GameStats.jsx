@@ -28,6 +28,11 @@ const GameStats = ({ turn=0, log, bots }) => {
   let units = [];
   let buildings = [];
   let area = [];
+
+  if (!thisTurn) {
+    return <div style={{ color: colors.lightGray, fontSize: constants.fontSizes.medium}}>
+    </div>;
+  }
   let resources = thisTurn.res;
 
   // initialize the arrays to 0
