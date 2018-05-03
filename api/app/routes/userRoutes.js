@@ -120,9 +120,8 @@ userRouter.post("/register", async (ctx) => {
   assert(_.get(ctx, "request.body.username", "").length > 0, "You need to enter a username");
   assert(_.get(ctx, "request.body.password", "").length > 0, "You need to enter a password");
 
-  // check for existing username
-  const existingUser = await User.find({ username: ctx.request.body.username });
-
+  // check for existing user with username 
+  const existingUser = await User.findOne({ username: ctx.request.body.username });
   if (existingUser) {
     throw new MalformedError("A user already exists with that username");
   }
