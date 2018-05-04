@@ -16,20 +16,20 @@ const HEX_RADIUS = 16;
 const CELL_OFFSET_X = 0;
 const CELL_OFFSET_Y = 0;
 
-const CELLS_IN_ROW = 75;
-const CELLS_IN_COL = 25;
-
 // TODO: tune these
 const FADE_DELAY_FACTOR = 5;
 const MAX_CELL_VALUE = 255;
 
 // TODO: can we abstract this out so it is only done in one place,
 // and always recomputed on resize
-const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-const vw = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+let vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+let vw = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
 
-const pageHeight = vh - constants.NAVBAR_HEIGHT;
-const pageWidth = vw;
+let pageHeight = vh - constants.NAVBAR_HEIGHT;
+let pageWidth = vw;
+
+let CELLS_IN_ROW = pageWidth / (2*HEX_RADIUS);
+let CELLS_IN_COL = pageHeight / (2*HEX_RADIUS);
 
 const getHexagonCorner = (center, i) => {
   let angle_deg = 60 * i   + 30;
@@ -48,18 +48,27 @@ class LandingCanvas extends React.PureComponent {
     this.animate = this.animate.bind(this);
     this.drawHex = this.drawHex.bind(this);
     this.addHexCells = this.addHexCells.bind(this);
+    this.initializeGraphics = this.initializeGraphics.bind(this);
+    this.initWrapper = this.initWrapper.bind(this);
     this.toBeMapped = null;
     this.active = {};
   }
 
-  componentDidMount() {
-    // compute scene parameters based on game map dimensions
-    this.computeSceneParameters();
+  updateParameters() {
+    vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+    vw = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
 
-    // setup pixi canvas
+    pageHeight = vh - constants.NAVBAR_HEIGHT;
+    pageWidth = vw;
+
+    CELLS_IN_ROW = pageWidth / (2*HEX_RADIUS);
+    CELLS_IN_COL = pageHeight / (2*HEX_RADIUS);
+  }
+
+  initializeGraphics() {
     this.app = new Application({
-      width: this.sp.w,
-      height: this.sp.h
+      width: pageWidth,
+      height: pageHeight,
     });
 
     this.stage = this.app.stage;
@@ -81,30 +90,29 @@ class LandingCanvas extends React.PureComponent {
     this.animate();
   }
 
+  initWrapper() {
+
+    if (this.app) {
+      this.landingCanvasRef.removeChild(this.app.view);
+      this.app.destroy();
+    }
+
+    this.updateParameters();
+    this.initializeGraphics();
+  }
+
+  componentDidMount() {
+    // compute scene parameters based on game map dimensions
+
+    this.initWrapper();
+    window.addEventListener("resize", this.initWrapper);
+
+  }
+
   componentWillUnmount() {
     this.app.destroy();
   }
 
-  // compute the scene parameters based on map dimensions
-  computeSceneParameters = () => {
-    this.sp = {};
-
-    // define cell width and height as function of # and the base values
-    this.sp.cell_w = Math.floor(pageWidth / CELLS_IN_ROW);
-    this.sp.cell_h = Math.floor(pageHeight / CELLS_IN_COL);
-
-    this.sp.cellsInRow = Math.floor(pageWidth / HEX_RADIUS*2)+1;
-    this.sp.cellsInCol = Math.floor(pageHeight / HEX_RADIUS*2)+1;
-
-    this.sp.cell_r = 10;
-
-    this.sp.w = CELLS_IN_ROW * (this.sp.cell_w + CELL_OFFSET_X);
-    this.sp.h = CELLS_IN_COL * (this.sp.cell_h + CELL_OFFSET_Y);
-  }
-
-  cellContainsPoint = (cX, cY, pX, pY) => {
-    return pX > cX && pX < cX + this.sp.cell_w && pY > cY && pY < cY + this.sp.cell_h;
-  }
 
   getCellColorAlpha = (j, i) => {
     if (this.active[`${j} ${i}`]) {
@@ -142,9 +150,9 @@ class LandingCanvas extends React.PureComponent {
     // get the mouse location from the renderer
     const mouse = this.renderer.plugins.interaction.mouse.global;
     // iterate over rows
-    for (let i = 0; i < this.sp.cellsInRow; i++) {
+    for (let i = 0; i < CELLS_IN_COL; i++) {
       // iterate over columns
-      for (let j = 0; j < this.sp.cellsInCol; j++) {
+      for (let j = 0; j < CELLS_IN_ROW; j++) {
 
         // Draw hex and then check if it contains mouse
         let hex = this.drawHex(i, j);
@@ -164,44 +172,6 @@ class LandingCanvas extends React.PureComponent {
               delete this.active[`${j} ${i}`];
             } else {
               this.active[`${j} ${i}`] -= 2;
-            }
-          }
-        }
-
-      }
-    }
-  }
-
-  // add the grid to main map graphics
-  addGridToStage = () => {
-    // get the mouse location from the renderer
-    const mouse = this.renderer.plugins.interaction.mouse.global;
-
-    // iterate over rows
-    for (let i = 0; i < CELLS_IN_ROW; i++) {
-      // iterate over columns
-      for (let j = 0; j < CELLS_IN_COL; j++) {
-
-        const xpos = j * (this.sp.cell_w + CELL_OFFSET_X);
-        const ypos = i * (this.sp.cell_h + CELL_OFFSET_Y);
-
-        //this.mapGraphics.drawRect(xpos, ypos, this.sp.cell_w, this.sp.cell_h);
-
-        if (this.cellContainsPoint(xpos, ypos, mouse.x, mouse.y)) {
-          // the mouse is in this cell, increment its value
-          if (this.active[`${j} ${i}`]) {
-            // don't allow the cell value to grow arbitrarily
-            this.active[`${j} ${i}`] = Math.min(this.active[`${j} ${i}`] + 1*FADE_DELAY_FACTOR, MAX_CELL_VALUE);
-          } else {
-            this.active[`${j} ${i}`] = 1*FADE_DELAY_FACTOR;
-          }
-        } else {
-          // the mouse is not in this cell, decrement its value
-          if (this.active[`${j} ${i}`]) {
-            if (this.active[`${j} ${i}`] == 1) {
-              delete this.active[`${j} ${i}`];
-            } else {
-              this.active[`${j} ${i}`]--;
             }
           }
         }
