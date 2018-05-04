@@ -90,7 +90,7 @@ class LandingCanvas extends React.PureComponent {
     this.animate();
   }
 
-  initWrapper() {
+  generateCanvas() {
 
     if (this.app) {
       this.landingCanvasRef.removeChild(this.app.view);
@@ -103,10 +103,8 @@ class LandingCanvas extends React.PureComponent {
 
   componentDidMount() {
     // compute scene parameters based on game map dimensions
-
     this.initWrapper();
-    window.addEventListener("resize", this.initWrapper);
-
+    window.addEventListener("resize", this.generateCanvas);
   }
 
   componentWillUnmount() {
