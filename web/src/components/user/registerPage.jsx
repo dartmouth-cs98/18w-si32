@@ -1,5 +1,8 @@
 import React from "react";
 import { connect } from "react-redux";
+import color from "color";
+
+import config from "../../config";
 
 import Link from "../common/link";
 import Message from "../common/message";
@@ -13,12 +16,16 @@ import {
   colors,
 } from "../../style";
 
+const { PASSWORD_MIN_LENGTH } = config;
+
 class RegisterPage extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
       username: "",
-      password: ""
+      password: "",
+      showPasswordMessage: false,
+      showUsernameMessage: false
     };
   }
 
@@ -33,9 +40,26 @@ class RegisterPage extends React.PureComponent {
     });
   }
 
+  onPasswordInputFocus = () => {
+    this.setState({ showPasswordMessage: false });
+  }
+
+  onUsernameInputFocus = () => {
+    this.setState({ showUsernameMessage: false });
+  }
+
+  verifyPassword = () => {
+    return this.state.password.length >= PASSWORD_MIN_LENGTH;
+  }
+
   doRegister = (event) => {
     if (event) {
       event.preventDefault();
+    }
+
+    if (!this.verifyPassword()) {
+      this.setState({ showPasswordMessage: true });
+      return;
     }
 
     this.setState({
@@ -48,9 +72,11 @@ class RegisterPage extends React.PureComponent {
         history.push("/dashboard");
       })
       .catch((err) => {
-        this.setState({
-          error: err.response.body.error
-        });
+        if (err.response.statusCode == 422) {
+          this.setState({ showUsernameMessage: true });
+        } else {
+          // TODO: this
+        }
       }).finally(() => {
         this.setState({
           submitting: false,
@@ -59,12 +85,19 @@ class RegisterPage extends React.PureComponent {
   }
 
   render() {
+    let errorMessage;
+    if (this.state.showPasswordMessage) {
+      errorMessage = `Password must be at least ${PASSWORD_MIN_LENGTH} characters`;
+    } else if (this.state.showUsernameMessage) {
+      errorMessage = "A user already exists with that username";
+    }
+
     return (
       <Page style={styles.pageStyles}>
         <div style={styles.wrapper}>
           <div style={styles.titleContainer}>Register for Monad</div>
           <form style={styles.form} onSubmit={this.doRegister}>
-            <Message kind="error">{ this.state.error }</Message>
+            <Message kind="error">{ errorMessage}</Message>
             <Input
               name="username"
               key="username"
@@ -72,6 +105,7 @@ class RegisterPage extends React.PureComponent {
               type="text"
               value={this.state.username}
               onChange={this.handleInputChange}
+              onFocus={this.onUsernameInputFocus}
             />
             <Input
               name="password"
@@ -80,6 +114,7 @@ class RegisterPage extends React.PureComponent {
               type="password"
               value={this.state.password}
               onChange={this.handleInputChange}
+              onFocus={this.onPasswordInputFocus}
             />
             <input type="submit" style={{display: "none"}} />
             <Button kind="primary" style={{width: 200}} onClick={this.doRegister} disabled={this.state.submitting || !this.state.username || !this.state.password}>
