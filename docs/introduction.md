@@ -43,7 +43,7 @@ declared the winner.
 
 ### Getting Started
 
-To get started playing Monad, head over to the [getting started](../getting-started/README.md) page
+To get started playing Monad, head over to the [getting started](../getting-started/) page
 for instructions on getting your development environment set up and writing the code
 to implement your first bot.
 
