@@ -2,12 +2,16 @@ from game.Coordinate import Coordinate
 
 class ObstacleMapProblem:
 
-    def __init__(self, map, start, goal):
+    def __init__(self, map, start, goal, flags, playerId):
         self.map = map
 
         self.start_state = start
 
         self.goal_state = goal
+
+        self.flags = flags
+
+        self.playerId = playerId
 
     def __str__(self):
         string = "Obstacle map problem: "
@@ -25,7 +29,6 @@ class ObstacleMapProblem:
     def manhattan_heuristic(self, state):
         heuristic = 0
 
-
         heuristic += abs(state.x - self.goal_state.x)
         heuristic += abs(state.y - self.goal_state.y)
 
@@ -41,13 +44,30 @@ class ObstacleMapProblem:
             cell = self.map.get_cell(Coordinate(new_state.x, new_state.y))
 
             if not (cell is None):
-                if cell.occupiable:
-                    successor_list.append(new_state)
+                if self.flags == "None":
+                    if cell.occupiable:
+                        successor_list.append(new_state)
+                elif self.flags == "Enemy units":
+                    if cell.occupiable and ((self.get_pos_owner(cell.position) == self.playerId) or (self.get_pos_owner(cell.position) is None)):
+                        successor_list.append(new_state)
+                #elif self.flags == "Enemy units and adjacents":
+                #elif self.flags = "Enemy buildings":
+
 
         return successor_list
 
     def goal_test(self, state):
-        if (state == self.goal_state):
+        if state == self.goal_state:
             return True
         else:
             return False
+
+    def get_pos_owner(self, pos):
+        cell = self.map.get_cell(pos)
+        if all(i == 0 for i in cell.units):
+            return None
+        else:
+            j = 0
+            while cell.units[j] == 0:
+                j += 1
+            return j
