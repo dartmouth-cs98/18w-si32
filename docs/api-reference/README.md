@@ -47,7 +47,7 @@ If `num_units` is not specified, all of the units in the cell specified by `posi
 build(position)
 ```
 
-Creates and returns a _build_ command to construct a building at the location specified by `location`.
+Creates and returns a _build_ command to construct a hive at the location specified by `location`.
 
 **mine()**
 
@@ -101,67 +101,67 @@ get_enemy_cells()
 
 Get (return) a list of all of the cells (`Cell` instances) in which enemy players have units. Enemy players are defined as all players who are not the invoking player.
 
-**get\_my\_building\_sites()**
+**get\_my\_hive\_sites()**
 
 ```
-get_my_building_sites()
+get_my_hive_sites()
 ```
 
-Get (return) a list of all of cells (`Cell` instances) in which the invoking player controls a building.
+Get (return) a list of all of cells (`Cell` instances) in which the invoking player controls a hive.
 
-Notice that this is distinct from the `get_my_buildings()` function in that it returns a list of cells, rather than a list of buildings (`Building` instances).
+Notice that this is distinct from the `get_my_hives()` function in that it returns a list of cells, rather than a list of hives (`Hive` instances).
 
-**get\_enemy\_building\_sites()**
-
-```
-get_enemy_building_sites()
-```
-
-Get (return) a list of all of cells (`Cell` instances) in which enemy players control buildings. Enemy players are defined as all players who are not the invoking player.
-
-Notice that this is distinct from the `get_enemy_buildings()` function in that it returns a list of cells, rather than a list of buildings (`Building` instances).
-
-### Building Data (Getters)
-
-**get\_my\_building\_count()**
+**get\_enemy\_hive\_sites()**
 
 ```
-get_my_building_count()
+get_enemy_hive_sites()
 ```
 
-Get (return) a count (number) of all buildings over which the invoking player has control.
+Get (return) a list of all of cells (`Cell` instances) in which enemy players control hives. Enemy players are defined as all players who are not the invoking player.
 
-**get\_enemy\_building\_count()**
+Notice that this is distinct from the `get_enemy_hives()` function in that it returns a list of cells, rather than a list of hives (`Hive` instances).
+
+### Hive Data (Getters)
+
+**get\_my\_hive\_count()**
 
 ```
-get_enemy_building_count()
+get_my_hive_count()
+```
+
+Get (return) a count (number) of all hives over which the invoking player has control.
+
+**get\_enemy\_hive\_count()**
+
+```
+get_enemy_hive_count()
 ```
 
 Get (return) a count (number) over which enemy players have control. Enemy players are defined as all players who are not the invoking player.
 
-**get\_my\_buildings()**
+**get\_my\_hives()**
 
 ```
-get_my_buildings()
+get_my_hives()
 ```
 
-Get (return) a list of all buildings (`Building` instances) over which the invoking player has control.
+Get (return) a list of all hives (`Hive` instances) over which the invoking player has control.
 
-**get\_enemy\_buildings()**
-
-```
-get_enemy_buildings()
-```
-
-Get (return) a list of all buildings (`Building` instances) over enemy players have control. Enemy players are defined as all players who are not the invoking player.
-
-**get\_building\_potential()**
+**get\_enemy\_hives()**
 
 ```
-get_building_potential()
+get_enemy_hives()
 ```
 
-Get (return) the number of buildings that the invoking player may currently contruct given the value of resources that this player currently possesses.
+Get (return) a list of all hives (`Hive` instances) over enemy players have control. Enemy players are defined as all players who are not the invoking player.
+
+**get\_hive\_potential()**
+
+```
+get_hive_potential()
+```
+
+Get (return) the number of hives that the invoking player may currently contruct given the value of resources that this player currently possesses.
 
 ### Unit Data (Getters)
 
