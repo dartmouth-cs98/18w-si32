@@ -176,7 +176,7 @@ class Canvas extends Component {
     const corners = new Polygon(_.range(0,6).map(i => getHexagonCorner(center, this.sp.cell_r, i)));
     this.mapGraphics.drawPolygon(corners);
 
-    // if cell has a building, draw a star
+    // if cell has a hive, draw a star
     if (cell.b !== undefined) {
       this.mapGraphics.beginFill(0xFFFFFF);
       this.mapGraphics.drawStar(center.x, center.y, 6, this.sp.cell_r - 2, this.sp.cell_r / 3);
@@ -209,9 +209,9 @@ class Canvas extends Component {
 
   getCellColorAlpha = (cell) => {
     const units = cell.u;
-    const building = cell.b;
-    if (building !== undefined) {
-      return { "color": getPlayerColor(building), "alpha": 1 };
+    const hive = cell.b;
+    if (hive !== undefined) {
+      return { "color": getPlayerColor(hive), "alpha": 1 };
     }
 
     if (!units) {
@@ -223,7 +223,7 @@ class Canvas extends Component {
       color = COLORS[cell.p];
       alpha = cell.u / MAX_UNITS;
     }
-    return { color, alpha, building };
+    return { color, alpha, hive };
    }
 
   drawCurrentFrame() {

@@ -18,33 +18,33 @@ commonly refer to as the game _Map_
 * `Units` Each player in Monad controls an army of _Units_ which navigate the _Map_ by moving
 between _Cells_
 * `Resources` Each _Unit_ has the ability to mine _Resources_ — effectively an in-game currency
-* `Buildings` Players use _Resources_ to build _Buildings_, which in turn spawn more _Units_
+* `Hives` Players use _Resources_ to build _Hives_, which in turn spawn more _Units_
 * `Obstacles` Some _Cells_ contain _Obstacles_ which prevent _Units_ from both navigating
-through them and constructing _Buildings_ within them
+through them and constructing _Hives_ within them
 
 ### Objective
 
-The objective of Monad is to destroy all of the _Buildings_ controlled by an enemy player, and
-therefore become the sole remaining player with _Buildings_ on the _Map_.
+The objective of Monad is to destroy all of the _Hives_ controlled by an enemy player, and
+therefore become the sole remaining player with _Hives_ on the _Map_.
 
 There are many strategies that may lead a bot to be successful in achieving this objective,
 but there are several sub-objectives that play at least some role in most winning strategies, namely
 
-- Gathering _Resources_ to accelerate _Building_ production
-- Constructing _Buildings_ to accelerate _Unit_ production
+- Gathering _Resources_ to accelerate _Hive_ production
+- Constructing _Hives_ to accelerate _Unit_ production
 - Controlling the _Map_ area to maximize favorable combat scenarios and to minimize the
 mobility of opposing  _Units_
 
 ### Initial Conditions
 
 Each player starts the game with a single _Unit_ and 100 _Resources_  — just enough to
-create one building.
+create one hive.
 
 ### Victory
 
 There are three ways in which a player emerges victorious in a Monad game
 
-1. They become the only player controlling a nonzero number of _Buildings_
+1. They become the only player controlling a nonzero number of _Hives_
 2. They are the only player controlling a nonzero number of _Units_ for a period of ten (10) turns
 3. They control the greatest number of _Units_ after 2000 turns have elapsed and neither of the
 previous two conditions have been met.
@@ -62,15 +62,15 @@ The _Map_ is composed of discrete _Cell's_, arranged in an according to a cartes
 The _Cell's_ in a _Map_ have properties:
 
 Each free _Cell_ initially contains some randomized _Resource_ value.
-Each _Cell_ may also contain a single _Building_.
+Each _Cell_ may also contain a single _Hive_.
 A _Cell_ may contain an arbitrary number of _Units_.
 Note that as the _Cell's are hex based, each _Cell_ will have 6 adjacent _Cell's.
 
-_Units_ and _Buildings_ each only ever occupy a single _Cell_ at a time.
+_Units_ and _Hives_ each only ever occupy a single _Cell_ at a time.
 
-A _Cell_ containing a _Building_ cannot be mined for _Resources_.
+A _Cell_ containing a _Hive_ cannot be mined for _Resources_.
 
-A _Cell_ that contains an _Obstacle_ contains no _Resources_ and can contain no _Units_ or _buildings_.
+A _Cell_ that contains an _Obstacle_ contains no _Resources_ and can contain no _Units_ or _hives_.
 
 **_Maps_ are symmetric**:
 
@@ -85,8 +85,8 @@ will initially have access to the same environment/resources.
 ### Units
 
 _Units_ are the dynamic element of any Monad match.
-They are responsible for combat, _Resource_ gathering, and _Building_ construction.
-Each _Unit_ occupies a single _Cell_ on the _Map_ at any one time. Each player controls a number of _Units_, which are produced by the _Buildings_ that they control.
+They are responsible for combat, _Resource_ gathering, and _Hive_ construction.
+Each _Unit_ occupies a single _Cell_ on the _Map_ at any one time. Each player controls a number of _Units_, which are produced by the _Hives_ that they control.
 
 Individual _Units_ have no identifying characteristics (e.g. health) besides their position on the map;
 they are effectively indistinguishable from one another. Therefore, there is no concept of a separate
@@ -96,54 +96,54 @@ the _Map_ simply tracks the number of _Units_ that currently reside within it.
 Units are controlled via _Commands_ which come in three (3) distinct varieties:
 
 - **Move** - Move the _Unit_ from its current _Cell_ to an adjacent _Cell_.
-- **Build** - If there is no _Building_ in the current _Cell_, and the player has sufficient
-_Resources_, construct a _Building_ in the current _Cell_. Construction of a _Building_ happens
+- **Build** - If there is no _Hive_ in the current _Cell_, and the player has sufficient
+_Resources_, construct a _Hive_ in the current _Cell_. Construction of a _Hive_ happens
 instantly.
-If a _Building_ is already present in the current _Cell_, help the _Building_ produce new _Units_.
+If a _Hive_ is already present in the current _Cell_, help the _Hive_ produce new _Units_.
 - **Mine** - Gather a single unit of _Resource_ from the current _Cell_, if there are any resources
 remaining.
 
-### Buildings
+### Hives
 
-_Buildings_ are static _Map_ objects which spawn new _Units_.
-A _Building_ can be created by any _Unit_ on a free _Cell_ (one that is not occupied by any player,
+_Hives_ are static _Map_ objects which spawn new _Units_.
+A _Hive_ can be created by any _Unit_ on a free _Cell_ (one that is not occupied by any player,
 and is not obstructed by an _Obstacle_), and costs 100 _Resources_.
-Each building occupies a single _Cell_ of the _Map_.
-A building will continuously spawn new _Units_ in the _Cell_ in which it is located at a rate
-proportional to the number of allied _Units_ stationed at the building's _Cell_.
+Each hive occupies a single _Cell_ of the _Map_.
+A hive will continuously spawn new _Units_ in the _Cell_ in which it is located at a rate
+proportional to the number of allied _Units_ stationed at the hive's _Cell_.
 
-Each building has a default "intrinsic defense rating" of ten (10).
-The building essentially serves as an additional force of ten (10) _Units_ in combat when defending,
+Each hive has a default "intrinsic defense rating" of ten (10).
+The hive essentially serves as an additional force of ten (10) _Units_ in combat when defending,
 which regenerates every turn.
 
-Buildings can be destroyed by _Units_ through combat.
+_Hives_ can be destroyed by _Units_ through combat.
 If an enemy player sends a number of _Units_ equal to or greater than the number of allied units + the
-intrinsic defense rating of the _Building_, the building and all its allied _Units_ are destroyed
-(along with a number of enemy _Units_ equal to the number of allied _Units_ + the building's intrinsic
+intrinsic defense rating of the _Hive_, the hive and all its allied _Units_ are destroyed
+(along with a number of enemy _Units_ equal to the number of allied _Units_ + the hive's intrinsic
 defense rating).
 
 If the enemy player sends a number of _Units_ less than the intrinsic defense rating of the
-_Building_, all
-attacking enemy _Units_ are destroyed and the building and its allied _Units_ are unharmed. If the enemy
-player sends a number of _Units_ larger than the building's intrinsic defense rating but smaller
+_Hive_, all
+attacking enemy _Units_ are destroyed and the hive and its allied _Units_ are unharmed. If the enemy
+player sends a number of _Units_ larger than the hive's intrinsic defense rating but smaller
 than the sum of the intrinsic defense rating and its number of docked allied _Units_, all attacking
-enemy _Units_ are destroyed but the _Building_ loses a number of allied _Units_ equal to the difference
+enemy _Units_ are destroyed but the _Hive_ loses a number of allied _Units_ equal to the difference
 of the number of attacking enemy _Units_ and the intrinsic defense rating plus one (1).
 
 Some examples serve to illustrate this point:
 
-- _Building_ has no allied _Units_ docked, enemy attacking force has 8 _Units_ --> enemy loses 8
-attacking _Units_, _Building_ unaffected.
-- _Building_ has no allied _Units_ docked, enemy attacking force has 10 _Units_ --> enemy loses 10
-attacking _Units_, _Building_ is destroyed.
-- _Building_ has 3 allied _Units_ docked, enemy attacking force has 8 _Units_ --> enemy loses 8
-attacking _Units_, _Building_ and 3 allied _Units_ unaffected.
-- _Building_ has 3 allied _Units_ docked, enemy attacking force has 15 _Units_ --> enemy loses 13
-attacking _Units_, _Building_ and 3 allied _Units_ are destroyed.
-- _Building_ has 3 allied _Units_ docked, enemy attacking force has 12 _Units_ --> enemy loses 12
-attacking _Units_, _Building_ loses 3 allied _Units_.
-_Building_ has 3 allied _Units_ docked, enemy attacking force has 13 _Units_ --> enemy loses 13
-attacking _Units_, _Building_ and 3 allied _Units_ are destroyed.
+- _Hive_ has no allied _Units_ docked, enemy attacking force has 8 _Units_ --> enemy loses 8
+attacking _Units_, _Hive_ unaffected.
+- _Hive_ has no allied _Units_ docked, enemy attacking force has 10 _Units_ --> enemy loses 10
+attacking _Units_, _Hive_ is destroyed.
+- _Hive_ has 3 allied _Units_ docked, enemy attacking force has 8 _Units_ --> enemy loses 8
+attacking _Units_, _Hive_ and 3 allied _Units_ unaffected.
+- _Hive_ has 3 allied _Units_ docked, enemy attacking force has 15 _Units_ --> enemy loses 13
+attacking _Units_, _Hive_ and 3 allied _Units_ are destroyed.
+- _Hive_ has 3 allied _Units_ docked, enemy attacking force has 12 _Units_ --> enemy loses 12
+attacking _Units_, _Hive_ loses 3 allied _Units_.
+_Hive_ has 3 allied _Units_ docked, enemy attacking force has 13 _Units_ --> enemy loses 13
+attacking _Units_, _Hive_ and 3 allied _Units_ are destroyed.
 
 ### Combat
 
@@ -174,5 +174,3 @@ sends 3 _Units_ North from **(2, 4)**.
 After all players move their units into their new squares, units of rival factions will fight each other. The faction with the greatest number of units will lose units equal to the number controlled by the faction with the second greatest number of units, and all other factions will lose all their units.
 
 For example, Player A has 12 units , Player B has 8 units, and Player C has 10 units in **(2, 5)** after movement has occurred. After combat, Player A will have 2 units remaining, and Players B and C will lose all their units.
-
-

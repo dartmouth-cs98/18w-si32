@@ -48,8 +48,8 @@ class Logger:
                         cleaned_cell['p'] = owner
                         break
 
-                if c.building:
-                    cleaned_cell['b'] = c.building.ownerId
+                if c.hive:
+                    cleaned_cell['b'] = c.hive.ownerId
 
                 this_row.append(cleaned_cell)
             cells.append(this_row)
