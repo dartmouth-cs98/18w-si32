@@ -76,7 +76,7 @@ Now initialize a virtual environment in your development directory:
 
 ```
 $ cd devkit/
-$ virualenv env
+$ virtualenv env
 ```
 
 The above command creates a virtual environment called `env`. You can name your
