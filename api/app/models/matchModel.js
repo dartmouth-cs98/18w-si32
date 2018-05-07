@@ -157,15 +157,18 @@ const getNextChallengeMatch = async () => {
 
 // finds, updates, and returns the next match to be played
 _Match.statics.getNext = async () => {
+  // if true, we won't create any 'normal' ranked games and only return
+  // games that are challenges
+  const queueOnly = process.env.QUEUE_ONLY == "true";
 
+  // the match to return to the worker
   let match;
-  const useQueue = Math.random() < .7;
-  if (useQueue) {
-    match = await getNextStandardMatch();
-  } 
 
-  if (!useQueue || !match) {
+  const useQueue = Math.random() < .7 || queueOnly;
+  if (useQueue) { // if we're using the queue, get the next one
     match = await getNextChallengeMatch();
+  } else { // otherwise, create one
+    match = await getNextStandardMatch();
   }
 
   if (!match) {
