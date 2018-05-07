@@ -50,9 +50,11 @@ class Rules:
         destination_pos = move.position.adjacent_in_direction(move.direction)
         new_cell = self.map.get_cell(destination_pos)
 
+        # can't move more units than you have
         if old_cell.units[move.playerId] < move.num_units:
             move.num_units = old_cell.units[move.playerId]
 
+        # set those units into their new cells
         old_cell.decrement_units(move.playerId, move.num_units)
         new_cell.increment_units(move.playerId, move.num_units)
 
