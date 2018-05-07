@@ -48,6 +48,7 @@ class LandingCanvas extends React.PureComponent {
     this.drawHex = this.drawHex.bind(this);
     this.addHexCells = this.addHexCells.bind(this);
     this.initializeGraphics = this.initializeGraphics.bind(this);
+    this.updateCellColor = this.updateCellColor.bind(this);
     this.generateCanvas = this.generateCanvas.bind(this);
     this.toBeMapped = null;
     this.active = {};
@@ -145,33 +146,36 @@ class LandingCanvas extends React.PureComponent {
   addHexCells = () => {
     // get the mouse location from the renderer
     const mouse = this.renderer.plugins.interaction.mouse.global;
-    // iterate over rows
+    // iterate over columns
     for (let i = 0; i < CELLS_IN_COL; i++) {
-      // iterate over columns
+      // iterate over rows
       for (let j = 0; j < CELLS_IN_ROW; j++) {
 
         // Draw hex and then check if it contains mouse
         let hex = this.drawHex(i, j);
+        this.updateCellColor(hex, mouse, i, j);
 
-        if (hex.contains(mouse.x, mouse.y)) {
-          // the mouse is in this cell, increment its value
-          if (this.active[`${j} ${i}`]) {
-            // don't allow the cell value to grow arbitrarily
-            this.active[`${j} ${i}`] = Math.min(this.active[`${j} ${i}`] + 1*FADE_DELAY_FACTOR, MAX_CELL_VALUE);
-          } else {
-            this.active[`${j} ${i}`] = 1*FADE_DELAY_FACTOR;
-          }
+      }
+    }
+  }
+
+  updateCellColor(hex, mouse, i, j) {
+    if (hex.contains(mouse.x, mouse.y)) {
+      // the mouse is in this cell, increment its value
+      if (this.active[`${j} ${i}`]) {
+        // don't allow the cell value to grow arbitrarily
+        this.active[`${j} ${i}`] = Math.min(this.active[`${j} ${i}`] + 1*FADE_DELAY_FACTOR, MAX_CELL_VALUE);
+      } else {
+        this.active[`${j} ${i}`] = 1*FADE_DELAY_FACTOR;
+      }
+    } else {
+      // the mouse is not in this cell, decrement its value
+      if (this.active[`${j} ${i}`]) {
+        if (this.active[`${j} ${i}`] == 1) {
+          delete this.active[`${j} ${i}`];
         } else {
-          // the mouse is not in this cell, decrement its value
-          if (this.active[`${j} ${i}`]) {
-            if (this.active[`${j} ${i}`] == 1) {
-              delete this.active[`${j} ${i}`];
-            } else {
-              this.active[`${j} ${i}`] -= 2;
-            }
-          }
+          this.active[`${j} ${i}`] -= 2;
         }
-
       }
     }
   }
