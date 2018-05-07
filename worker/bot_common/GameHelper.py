@@ -36,7 +36,7 @@ class GameHelper:
         self.eIds = list(range(self.numPlayers))
         self.eIds.remove(self.myId)
 
-        self.me = { "resources": 0 }
+        self.me = {"resources": 0}
 
         self.turn_handler = None
         self.logfile = open("./game" + str(self.myId) + ".log", "w")
@@ -125,7 +125,6 @@ class GameHelper:
     #   the number of cells on the map that are controlled by player with playerId
     def get_player_cell_count(self, playerId):
         return len(self.get_player_cells(playerId))
-
 
     # Get a list of all my cells on the map.
     # Return: (list of Cell)
@@ -412,7 +411,7 @@ class GameHelper:
             empty = []
             return empty
 
-        p = ObstacleMapProblem(self, start, goal, flags, self.myId)
+        p = ObstacleMapProblem(self.map, start, goal, flags, self.myId)
 
         result = astar_search(p, p.manhattan_heuristic)
 
@@ -423,7 +422,7 @@ class GameHelper:
         if (not (self.get_cell(start)).occupiable) | (not (self.get_cell(goal)).occupiable):
             return None
 
-        p = ObstacleMapProblem(self, start, goal, flags, self.myId)
+        p = ObstacleMapProblem(self.map, start, goal, flags, self.myId)
 
         result = astar_search(p, p.manhattan_heuristic)
 
@@ -451,9 +450,13 @@ class GameHelper:
         all_bld_positions = self.get_all_hive_positions()
 
         for pos in all_bld_positions:
+            if pos == start:
+                return pos
             if self.map.get_cell(pos).hive.ownerId != playerID:
                 continue
             if self.distance(start, pos, flags) is None:
+                continue
+            if self.distance(start, pos, flags) == 0:
                 continue
             if self.distance(start, pos, flags) < closest_distance:
                 closest_distance = self.distance(start, pos, flags)
@@ -470,6 +473,7 @@ class GameHelper:
                 if self.get_pos_owner(Coordinate(x, y)) == id:
                     units += self.get_unit_count_by_position(x, y)
         return units
+
 
     # --------------------------------------------------------------------------
     # LOGGING
