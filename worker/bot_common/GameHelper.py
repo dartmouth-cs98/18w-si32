@@ -102,7 +102,7 @@ class GameHelper:
     # Return: (Cell)
     #   Cell at <position> if <position> is valid, else None
     def get_cell(self, x, y = None):
-        if (type(x) == Coordinate):
+        if type(x) == Coordinate:
             return self.map.get_cell(x)
 
         # map handles validity check
@@ -340,6 +340,9 @@ class GameHelper:
         # only one player may have control over a cell at any one time,
         # so this should not be an issue!
 
+        if type(x) == Coordinate:
+            return self.get_unit_count_by_cell(self.get_cell(x))
+
         return self.get_unit_count_by_cell(self.get_cell(x, y))
 
     def my_units_at_pos(self, pos): # returns True if there are more units at pos1 than there are units located at pos2
@@ -349,7 +352,7 @@ class GameHelper:
     # --------------------------------------------------------------------------
 
     def get_pos_owner(self, pos):
-        cell = self.get_cell(pos[0], pos[1])
+        cell = self.get_cell(pos)
         if all(i == 0 for i in cell.units):
             return None
         else:
@@ -398,14 +401,18 @@ class GameHelper:
     # --------------------------------------------------------------------------
     # PATHFINDING
 
-    # INPUTS: "start" (a tuple), "goal" (a tuple)
+    # INPUTS: "start" (a tuple), "goal" (a tuple), "flags" (indicating what to avoid in the calculated path)
+        # types of flags: "None" (only avoid obstacles), "Enemy units" (avoid squares with enemy units),
+        # "Enemy units and adjacents" (avoid squares with enemy units and those adjacent to it),
+        # "Enemy buildings" (avoid squares with enemy buildings)
     # RETURN: a list of tuples indicating a possible path between "start" and "goal" positions
-    def path(self, start, goal):
+
+    def path(self, start, goal, flags="None"):
         if (not (self.get_cell(start)).occupiable) | (not (self.get_cell(goal)).occupiable):
             empty = []
             return empty
 
-        p = ObstacleMapProblem(self, start, goal)
+        p = ObstacleMapProblem(self, start, goal, flags, self.myId)
 
         result = astar_search(p, p.manhattan_heuristic)
 
@@ -460,9 +467,10 @@ class GameHelper:
         units = 0
         for x in range(bottom_left.x, top_right.x + 1):
             for y in range(bottom_left.y, top_right.y + 1):
-                if self.get_pos_owner((x, y)) == id:
+                if self.get_pos_owner(Coordinate(x, y)) == id:
                     units += self.get_unit_count_by_position(x, y)
         return units
+
     # --------------------------------------------------------------------------
     # LOGGING
 
