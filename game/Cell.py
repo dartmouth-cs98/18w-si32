@@ -38,12 +38,15 @@ class Cell:
         self.occupiable = occupiable #whether the cell is blocked or free (True = free, False = blocked)
 
     def update_from_log(self, log_cell):
-        if 'r' in log_cell:
+        if 'r' in log_cell: # update resource totals
             self.resource = log_cell['r']
-        if 'b' in log_cell:
+        if 'b' in log_cell: # create/update building if needed
             if self.hive == None or self.hive.ownerId != log_cell['b']:
                 self.hive = Hive(log_cell['b'])
-        if 'u' in log_cell:
+        else: # destroy building if needed
+            if self.hive != None:
+                self.hive = None
+        if 'u' in log_cell: # update unit numbers
             for i in range(self.num_players):
                 if i == log_cell['p']:
                     self.units[i] = log_cell['u']
