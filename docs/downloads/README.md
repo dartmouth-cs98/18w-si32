@@ -1,8 +1,8 @@
 # Downloads
 
-Below are various downloads to aid in the bot development process. 
+Below are various downloads to aid in the bot development process.
 
-### Bot Devlopment Kit
+### Bot Development Kit
 
 You can download the bot development kit [here.](https://s3.amazonaws.com/monad-assets/devkit.zip)
 
