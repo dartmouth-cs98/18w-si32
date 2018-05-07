@@ -3,7 +3,7 @@ import Radium from "radium";
 import _ from "lodash";
 
 import { constants, colors } from "../../style";
-import { 
+import {
   getPlayerColor,
   NEUTRAL_CELL_COLOR,
 } from "./Canvas";
@@ -26,7 +26,7 @@ const GameStats = ({ turn=0, log, bots }) => {
   let thisTurn = log.turns[turn];
 
   let units = [];
-  let buildings = [];
+  let hives = [];
   let area = [];
 
   if (!thisTurn) {
@@ -38,7 +38,7 @@ const GameStats = ({ turn=0, log, bots }) => {
   // initialize the arrays to 0
   _.each(log.rankedBots, () => {
     units.push(0);
-    buildings.push(0);
+    hives.push(0);
     area.push(0);
   });
 
@@ -53,7 +53,7 @@ const GameStats = ({ turn=0, log, bots }) => {
         player = cell.p;
       }
       if ("b" in cell) {
-        buildings[cell.b] += 1;
+        hives[cell.b] += 1;
         player = cell.b;
       }
 
@@ -65,7 +65,7 @@ const GameStats = ({ turn=0, log, bots }) => {
   });
 
   // zip them into one array
-  const stats = _.zip(units, buildings, area, resources);
+  const stats = _.zip(units, hives, area, resources);
 
   return (
     <table style={styles.table} width="100%">
@@ -73,7 +73,7 @@ const GameStats = ({ turn=0, log, bots }) => {
         <tr>
           <th></th>
           <th style={styles.th}>Units</th>
-          <th style={styles.th}>Buildings</th>
+          <th style={styles.th}>Hives</th>
           <th style={styles.th}>Area</th>
           <th style={styles.th}>Resources</th>
         </tr>

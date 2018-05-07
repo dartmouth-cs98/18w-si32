@@ -5,7 +5,7 @@ from game.params import (
     MOVE_COMMAND,
     MINE_COMMAND,
     BUILD_COMMAND,
-    BUILDING_COST,
+    HIVE_COST,
 )
 
 # Rules defines bulk of the game logic: how the various components of the game
@@ -75,11 +75,11 @@ class Rules:
     def update_build_command(self, move):
         cell = self.map.get_cell(move.position)
 
-        # if there is no building, create one
-        if cell.building is None:
+        # if there is no hive, create one
+        if cell.hive is None:
             if (self.player_has_enough_resources(move.playerId)) and (self.map.get_cell(cell.position).units[move.playerId] > 0):
-                cell.create_building(move.playerId)
-                self.players[move.playerId].decrement_resources(BUILDING_COST)
+                cell.create_hive(move.playerId)
+                self.players[move.playerId].decrement_resources(HIVE_COST)
 
 
     def update_combat_phase(self, moves):
@@ -203,4 +203,4 @@ class Rules:
         return sets
 
     def player_has_enough_resources(self, playerId):
-        return self.players[playerId].resources >= BUILDING_COST
+        return self.players[playerId].resources >= HIVE_COST

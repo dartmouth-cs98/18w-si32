@@ -10,16 +10,16 @@ def do_turn(game):
 
     units = game.get_my_cells()
 
-    buildings = game.get_enemy_building_sites()
-    if len(buildings) > 0:
+    hives = game.get_enemy_hive_sites()
+    if len(hives) > 0:
 
         closest_to_enemy = None
         closest_to_enemy_distance = float("inf")
 
         for s in units:
-            if (euclidean_distance(s.position, buildings[0].position) < closest_to_enemy_distance):
+            if (euclidean_distance(s.position, hives[0].position) < closest_to_enemy_distance):
                 closest_to_enemy = s
-                closest_to_enemy_distance = euclidean_distance(s.position, buildings[0].position)
+                closest_to_enemy_distance = euclidean_distance(s.position, hives[0].position)
 
             if (s.units[game.myId] < 8):
                 m = game.mine(s.position, game.get_unit_count_by_position(s.position))
@@ -28,8 +28,8 @@ def do_turn(game):
             else:
                 [x, y] = s.position
 
-                e_buildings = game.get_enemy_building_sites()
-                e_position = e_buildings[0].position
+                e_hives = game.get_enemy_hive_sites()
+                e_position = e_hives[0].position
 
                 surrounding = []
 
@@ -52,7 +52,7 @@ def do_turn(game):
                 if m:
                     commands.append(m)
 
-        if (game.get_building_potential() > 0):
+        if (game.get_hive_potential() > 0):
             if (closest_to_enemy):
                 m = game.build(closest_to_enemy.position)
                 if m:

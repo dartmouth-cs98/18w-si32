@@ -1,24 +1,24 @@
-# Building.py
-# Class definition for 'Building'
+# Hive.py
+# Class definition for 'Hive'
 
 from game.params import PRODUCTION_RATE, DEFENSE_RATING
 
-# A Building is constructed via a 'build' command, is always located on
+# A Hive is constructed via a 'build' command, is always located on
 # a single associated Cell, and is the sole source of resource production.
 #
 # Constructor Arguments
-# ownerID: The unique ID of this building's owner.
+# ownerID: The unique ID of this hive's owner.
 
-class Building:
+class Hive:
     def __init__(self, ownerId):
         self.ownerId = ownerId
         self.production_status = 0
         self.defense = DEFENSE_RATING
 
-    # increment the resource value of this building
+    # increment the resource value of this hive
     # by the default production rate.
     def production_tick(self):
         self.production_status += PRODUCTION_RATE
 
     def __str__(self):
-        return ("BUILDING OWNER: " + str(self.ownerId))
+        return ("HIVE OWNER: " + str(self.ownerId))

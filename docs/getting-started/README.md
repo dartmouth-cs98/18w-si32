@@ -147,9 +147,9 @@ get thinking about the game, and to introduce some of the methods available to u
 
 ### Streamer
 
-This bot will simply send its units towards an enemy building every turn, no matter where they are.
+This bot will simply send its units towards an enemy hive every turn, no matter where they are.
 It loops over all the cells where it has units, and issues commands to move all of them one square
-closer to the first enemy building returned by GameHelper.
+closer to the first enemy hive returned by GameHelper.
 
 ```
 def do_turn(game):
@@ -157,10 +157,10 @@ def do_turn(game):
 
     occupied_cells = game.get_my_cells()
 
-    enemy_buildings = game.get_enemy_building_sites()
+    enemy_hives = game.get_enemy_hive_sites()
 
     for cell in occupied_cells:
-        m = game.move_towards(cell.position, enemy_buildings[0].position)
+        m = game.move_towards(cell.position, enemy_hives[0].position)
         if m:
             commands.append(m)
 
@@ -174,14 +174,14 @@ called `game`, is an instance of GameHelper and we can call methods on it.
 We first get some information about the state of the game. The first we see
 is `game.get_my_cells()`. This method returns an array of the cells where we have one or more units
 located.
-We then call `game.get_enemy_building_sites()` to get an array of the enemy buildings on the map.
+We then call `game.get_enemy_hive_sites()` to get an array of the enemy hives on the map.
 There are many more things we can know about the state
 (see the [API Reference](../api-reference/README.md)),
 but for this simple strategy this is all we will ask about the game each turn.
 
 We now issue commands based on the start of the game. We loop over all the cells where we have units,
 and use the helper method `move_towards(from_position, to_position)` to create a command
-that moves all of our units at `cell.position` (our `from_position`) towards `enemyBuildings[0].position`
+that moves all of our units at `cell.position` (our `from_position`) towards `enemy_hives[0].position`
 (our `to_position`). We can only move one cell at a time, so this method creates a move
 one step in the right direction, and returns it. The method only returns a command if the move is
 possible,

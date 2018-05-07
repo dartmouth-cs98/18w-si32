@@ -133,7 +133,7 @@ class Canvas extends React.Component {
 
     for (let row = 0; row < this.sp.rows; row++) {
       for (let col = 0; col < this.sp.cols; col++) {
-        const g = new Graphics(); 
+        const g = new Graphics();
 
         const center = {
           x: col * (this.sp.cell_width + CELL_OFFSET_X) + this.sp.cell_width/2,
@@ -156,7 +156,7 @@ class Canvas extends React.Component {
   }
 
   drawUnitCount = (row, col, cell, alpha, center) => {
-    if (!this.props.showNums) { 
+    if (!this.props.showNums) {
       if (!_.isEmpty(this.textElements)) {
         _.each(this.textElements, (v, key) => {
           this.mapGraphics.removeChild(v);
@@ -214,10 +214,10 @@ class Canvas extends React.Component {
     const corners = new Polygon(_.range(0,7).map(i => getHexagonCorner(center, this.sp.cell_r, i)));
     this.mapGraphics.drawPolygon(corners);
 
-    // if cell has a building, draw a star
+    // if cell has a hive, draw a star
     if (cell.b != undefined) {
       this.mapGraphics.beginFill(0xFFFFFF);
-      this.mapGraphics.lineStyle(0, 0x000000, 1); 
+      this.mapGraphics.lineStyle(0, 0x000000, 1);
       this.mapGraphics.drawStar(center.x, center.y, 6, this.sp.cell_r - 2, this.sp.cell_r / 3);
     }
 
@@ -233,11 +233,11 @@ class Canvas extends React.Component {
       return;
     }
 
-    this.mapGraphics.lineStyle(4, 0xFFFFFF, 1); 
+    this.mapGraphics.lineStyle(4, 0xFFFFFF, 1);
     const { row, col } = this.props.selectedCell;
     const cell = this.props.replay.turns[this.props.frame].map[row][col];
     this.drawCell(row, col, cell, true);
-    this.mapGraphics.lineStyle(0, 0x000000, 1); 
+    this.mapGraphics.lineStyle(0, 0x000000, 1);
   }
 
   // add the grid to main map graphics
@@ -264,9 +264,9 @@ class Canvas extends React.Component {
 
   getCellColorAlpha = (cell) => {
     const units = cell.u;
-    const building = cell.b;
-    if (building != undefined) {
-      return { "color": getPlayerColor(building), "alpha": 1 };
+    const hive = cell.b;
+    if (hive != undefined) {
+      return { "color": getPlayerColor(hive), "alpha": 1 };
     }
 
     if (!units) {
@@ -278,7 +278,7 @@ class Canvas extends React.Component {
       color = COLORS[cell.p];
       alpha = cell.u / MAX_UNITS;
     }
-    return { color, alpha, building };
+    return { color, alpha, hive };
    }
 
   drawCurrentFrame() {
