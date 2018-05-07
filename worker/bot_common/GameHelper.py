@@ -101,7 +101,7 @@ class GameHelper:
     # Get map cell at specified (x, y) coordinate.
     # Return: (Cell)
     #   Cell at <position> if <position> is valid, else None
-    def get_cell(self, x, y = None):
+    def get_cell(self, x, y=None):
         if type(x) == Coordinate:
             return self.map.get_cell(x)
 
@@ -419,44 +419,44 @@ class GameHelper:
         return result.path
 
     # Return the distance between two positions 'start' and 'goal'
-    def distance(self, start, goal):
+    def distance(self, start, goal, flags):
         if (not (self.get_cell(start)).occupiable) | (not (self.get_cell(goal)).occupiable):
             return None
 
-        p = ObstacleMapProblem(self, start, goal)
+        p = ObstacleMapProblem(self, start, goal, flags, self.myId)
 
         result = astar_search(p, p.manhattan_heuristic)
 
         return len(result.path)
 
     # Return the position of the closest hive to 'start'
-    def closest_hive_pos(self, start):
+    def closest_hive_pos(self, start, flags):
         closest_distance = float("inf")
         closest_pos = None
         all_bld_positions = self.get_all_hive_positions()
 
         for pos in all_bld_positions:
-            if self.distance(start, pos) is None:
+            if self.distance(start, pos, flags) is None:
                 continue
-            if self.distance(start, pos) < closest_distance:
-                closest_distance = self.distance(start, pos)
+            if self.distance(start, pos, flags) < closest_distance:
+                closest_distance = self.distance(start, pos, flags)
                 closest_pos = pos
 
         return closest_pos
 
     # Return the position of the closest hive to 'start' controlled by player with ID 'id'
-    def closest_hive_pos_by_id(self, start, id):
+    def closest_hive_pos_by_id(self, start, playerID, flags):
         closest_distance = float("inf")
         closest_pos = None
         all_bld_positions = self.get_all_hive_positions()
 
         for pos in all_bld_positions:
-            if self.map.get_cell(pos).hive.ownerId != id:
+            if self.map.get_cell(pos).hive.ownerId != playerID:
                 continue
-            if self.distance(start, pos) is None:
+            if self.distance(start, pos, flags) is None:
                 continue
-            if self.distance(start, pos) < closest_distance:
-                closest_distance = self.distance(start, pos)
+            if self.distance(start, pos, flags) < closest_distance:
+                closest_distance = self.distance(start, pos, flags)
                 closest_pos = pos
 
         return closest_pos
