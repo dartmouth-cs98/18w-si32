@@ -121,7 +121,7 @@ class Map:
     def position_in_range(self, position):
         assert(type(position) is Coordinate)
 
-        return (position.x >= 0) and (position.x < (self.width - 1)) and (position.y >= 0) and (position.y < (self.height - 1))
+        return (position.x >= 0) and (position.x < self.width) and (position.y >= 0) and (position.y < self.height)
 
     # check if cell is within map
     def cell_in_range(self, cell):
