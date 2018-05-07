@@ -104,7 +104,7 @@ class Map:
             empty = []
             return empty
 
-        p = ObstacleMapProblem(self, start, goal)
+        p = ObstacleMapProblem(self, start, goal, "None", None)
 
         result = astar_search(p, p.manhattan_heuristic)
 
