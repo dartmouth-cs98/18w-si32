@@ -93,17 +93,17 @@ class Player:
 
         return cells
 
-    def get_buildings(self):
+    def get_hives(self):
         cells = []
         for col in self.map.cells:
             for cell in col:
-                if cell.building and cell.building.ownerId == self.playerId:
+                if cell.hive and cell.hive.ownerId == self.playerId:
                     cells.append(cell)
 
         return cells
 
-    def has_building(self):
-        return len(self.get_buildings()) > 0
+    def has_hive(self):
+        return len(self.get_hives()) > 0
 
     def increment_units_produced(self):
         self.units_produced += 1

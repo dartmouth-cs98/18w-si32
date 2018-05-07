@@ -9,7 +9,7 @@ import msgpack
 from game.Map import Map
 from game.Command import Command
 from game.Coordinate import Coordinate
-from game.params import MOVE_COMMAND, BUILD_COMMAND, MINE_COMMAND, BUILDING_COST, Direction
+from game.params import MOVE_COMMAND, BUILD_COMMAND, MINE_COMMAND, HIVE_COST, Direction
 
 from game.ObstacleMapProblem import ObstacleMapProblem
 
@@ -73,17 +73,17 @@ class GameHelper:
         elif position_from.y > position_to.y:
             d = Direction.NORTHEAST
 
-        # TODO: make this smarter by avoiding enemy units, enemy buildings, or stronger enemy buildings
+        # TODO: make this smarter by avoiding enemy units, enemy hives, or stronger enemy hives
 
         num_units = num_units if num_units else self.get_unit_count_by_position(position_from.x, position_from.y)
         return self.move(position_from, num_units, d)
 
     # Create and return a build command.
     # Return: (Command)
-    #   the build command to accomplish the specified building procedure.
+    #   the build command to accomplish the specified hive procedure.
     def build(self, position):
         # TODO: track concurrent mine and build commands:
-        #   right now, building simply requires a single unit in a cell
+        #   right now, hive simply requires a single unit in a cell
         #   do we care though that this unit will also be able to mine as well?
         #   the difference is small, but it will be more realistic in some sense
         #   if we have this logic.
@@ -150,26 +150,26 @@ class GameHelper:
     def get_player_cells(self, playerId):
         return self.get_occupied_cells(playerId)
 
-    # Get a list of all cells in which I have a building.
+    # Get a list of all cells in which I have a hive.
     # Return: (list of Cell)
-    #   list of all my building-occupied cells
-    def get_my_building_sites(self):
+    #   list of all my hive-occupied cells
+    def get_my_hive_sites(self):
         cells = []
         for col in self.map.cells:
             for cell in col:
-                if cell.building and cell.building.ownerId == self.myId:
+                if cell.hive and cell.hive.ownerId == self.myId:
                     cells.append(cell)
 
         return cells
 
-    # Get a list of all cells in which enemy has a building.
+    # Get a list of all cells in which enemy has a hive.
     # Return: (list of Cell)
-    #   list of all enemy building-occupied cells
-    def get_enemy_building_sites(self):
+    #   list of all enemy hive-occupied cells
+    def get_enemy_hive_sites(self):
         cells = []
         for col in self.map.cells:
             for cell in col:
-                if cell.building and cell.building.ownerId != self.myId:
+                if cell.hive and cell.hive.ownerId != self.myId:
                     cells.append(cell)
 
         return cells
@@ -188,110 +188,110 @@ class GameHelper:
         return cells
 
     # --------------------------------------------------------------------------
-    # BUILDING DATA GETTERS
+    # HIVE DATA GETTERS
 
-    # Get a count of all buildings on the map that I control.
+    # Get a count of all hives on the map that I control.
     # Return: (number)
-    #   the number of buildings on the map that I control
-    def get_my_building_count(self):
-        return len(self.get_my_buildings())
+    #   the number of hives on the map that I control
+    def get_my_hive_count(self):
+        return len(self.get_my_hives())
 
-    # Get a count of all buildings on the map that are enemy controlled.
+    # Get a count of all hives on the map that are enemy controlled.
     # Return: (number)
-    #   the number of buildings on the map that are enemy controlled
-    def get_enemy_building_count(self):
-        return len(self.get_enemy_buildings())
+    #   the number of hives on the map that are enemy controlled
+    def get_enemy_hive_count(self):
+        return len(self.get_enemy_hives())
 
-    #Get a count of all buildings on the map controlled by player with playerId
+    #Get a count of all hives on the map controlled by player with playerId
     #Return: (number)
-    #the number of buildings on the map controlled by player with playerId
-    def get_player_building_count(self, playerId):
-        return len(self.get_player_buildings(playerId))
+    #the number of hives on the map controlled by player with playerId
+    def get_player_hive_count(self, playerId):
+        return len(self.get_player_hives(playerId))
 
-    # Get a list of all my buildings on the map.
-    # Return: (list of Building)
-    #   list of buildings on the map that I control
-    def get_my_buildings(self):
-        return self.get_player_buildings(self.myId)
+    # Get a list of all my hives on the map.
+    # Return: (list of Hive)
+    #   list of hives on the map that I control
+    def get_my_hives(self):
+        return self.get_player_hives(self.myId)
 
-    # Get a list of all enemy buildings on the map.
-    # Return: (list of Building)
-    #   list of buildings on the map that the enemy players control
-    def get_enemy_buildings(self):
+    # Get a list of all enemy hives on the map.
+    # Return: (list of Hive)
+    #   list of hives on the map that the enemy players control
+    def get_enemy_hives(self):
         blds = []
         for col in self.map.cells:
             for cell in col:
-                if cell.building and cell.building.ownerId != self.myId:
-                    blds.append(cell.building)
+                if cell.hive and cell.hive.ownerId != self.myId:
+                    blds.append(cell.hive)
         return blds
 
-    # Get a list of all buildings controlled by a certain player
-    # Return: (list of building)
-    #   list of building instances controlled by <playerId> 
-    def get_player_buildings(self, playerId):
+    # Get a list of all hives controlled by a certain player
+    # Return: (list of hive)
+    #   list of hive instances controlled by <playerId>
+    def get_player_hives(self, playerId):
         blds = []
         for col in self.map.cells:
             for cell in col:
-                if cell.building and cell.building.ownerId == playerId:
-                    blds.append(cell.building)
+                if cell.hive and cell.hive.ownerId == playerId:
+                    blds.append(cell.hive)
         return blds
 
-    #Get a list of all buildings on the map
-    #Return: (list of building)
-    def get_all_buildings(self):
+    #Get a list of all hives on the map
+    #Return: (list of hive)
+    def get_all_hives(self):
         all_blds = []
 
         num_players = self.map.num_players
         for i in range(num_players):
-            for building in self.get_player_buildings(i):
-                all_blds.append(building)
+            for hive in self.get_player_hives(i):
+                all_blds.append(hive)
 
         return all_blds
 
-    # Get a list of all my buildings' positions on the map.
+    # Get a list of all my hives' positions on the map.
     # Return: (list of positions)
-    #   list of positions of buildings on the map that I control
-    def get_my_building_positions(self):
-        return self.get_player_building_positions(self.myId)
+    #   list of positions of hives on the map that I control
+    def get_my_hive_positions(self):
+        return self.get_player_hive_positions(self.myId)
 
-    # Get a list of all enemy buildings on the map.
-    # Return: (list of Building)
-    #   list of buildings on the map that the enemy players control
-    def get_enemy_building_positions(self):
+    # Get a list of all enemy hives on the map.
+    # Return: (list of Hive)
+    #   list of hives on the map that the enemy players control
+    def get_enemy_hive_positions(self):
         positions = []
         for col in self.map.cells:
             for cell in col:
-                if cell.building and cell.building.ownerId != self.myId:
+                if cell.hive and cell.hive.ownerId != self.myId:
                     positions.append(cell.positions)
         return positions
 
-    # Get a list of all buildings controlled by a certain player
-    # Return: (list of building)
-    def get_player_building_positions(self, playerId):
+    # Get a list of all hives controlled by a certain player
+    # Return: (list of hive)
+    def get_player_hive_positions(self, playerId):
         positions = []
         for col in self.map.cells:
             for cell in col:
-                if cell.building and cell.building.ownerId == playerId:
+                if cell.hive and cell.hive.ownerId == playerId:
                     positions.append(cell.position)
         return positions
 
-    # Get a list of all buildings on the map
-    # Return: (list of building)
-    def get_all_building_positions(self):
+    # Get a list of all hives on the map
+    # Return: (list of hive)
+    def get_all_hive_positions(self):
         all_bld_positions = []
 
         num_players = self.map.num_players
         for i in range(num_players):
-            for building in self.get_player_building_positions(i):
-                all_bld_positions.append(building)
+            for hive in self.get_player_hive_positions(i):
+                all_bld_positions.append(hive)
 
         return all_bld_positions
 
-    # Get the total number of buildings that I can currently construct.
+    # Get the total number of hives that I can currently construct.
     # Return: (number)
-    #   the number of buildings I can construct, assuming full resource use
-    def get_building_potential(self):
-        return int(self.get_my_resource_count() / BUILDING_COST)
+    #   the number of hives I can construct, assuming full resource use
+    def get_hive_potential(self):
+        return int(self.get_my_resource_count() / HIVE_COST)
 
     # --------------------------------------------------------------------------
     # UNIT DATA GETTERS
@@ -375,13 +375,13 @@ class GameHelper:
             return True
         return False
 
-    # returns True if player with playerId1 has higher building count than player with playerId2
-    def compare_building_count(self, playerId1=None, playerId2=None):
+    # returns True if player with playerId1 has higher hive count than player with playerId2
+    def compare_hive_count(self, playerId1=None, playerId2=None):
         if (playerId1 == None | playerId2 == None):
             playerId1 = 0
             playerId2 = 1
-        if (self.get_player_building_count(playerId1
-                ) > self.get_player_building_count(playerId2)):
+        if (self.get_player_hive_count(playerId1
+                ) > self.get_player_hive_count(playerId2)):
             return True
         return False
 
@@ -422,11 +422,11 @@ class GameHelper:
 
         return len(result.path)
 
-    # Return the position of the closest building to 'start'
-    def closest_building_pos(self, start):
+    # Return the position of the closest hive to 'start'
+    def closest_hive_pos(self, start):
         closest_distance = float("inf")
         closest_pos = None
-        all_bld_positions = self.get_all_building_positions()
+        all_bld_positions = self.get_all_hive_positions()
 
         for pos in all_bld_positions:
             if self.distance(start, pos) is None:
@@ -437,14 +437,14 @@ class GameHelper:
 
         return closest_pos
 
-    # Return the position of the closest building to 'start' controlled by player with ID 'id'
-    def closest_building_pos_by_id(self, start, id):
+    # Return the position of the closest hive to 'start' controlled by player with ID 'id'
+    def closest_hive_pos_by_id(self, start, id):
         closest_distance = float("inf")
         closest_pos = None
-        all_bld_positions = self.get_all_building_positions()
+        all_bld_positions = self.get_all_hive_positions()
 
         for pos in all_bld_positions:
-            if self.map.get_cell(pos).building.ownerId != id:
+            if self.map.get_cell(pos).hive.ownerId != id:
                 continue
             if self.distance(start, pos) is None:
                 continue

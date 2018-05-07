@@ -43,7 +43,7 @@ class Direction(IntEnum):
 
 MOVE_COMMAND = "MOVE"       # Move command enum
 MINE_COMMAND = "MINE"       # Mine command enum
-BUILD_COMMAND = "BUILD"     # Build command enum 
+BUILD_COMMAND = "BUILD"     # Build command enum
 
 # ------------------------------------------------------------------------------
 # Game
@@ -52,10 +52,10 @@ MAX_ITERS = 2000                     # The maximum number of turn iterations in 
 DEBUG_LOG_FN = "./gameserver.log"    # Output filename for debug log file
 
 # ------------------------------------------------------------------------------
-# Building
+# Hive
 
-PRODUCTION_RATE = 1      # The value of resources produced by a single building in a single turn.
-DEFENSE_RATING = 10      # The default defense value of a single building.
+PRODUCTION_RATE = 1      # The value of resources produced by a single hive in a single turn.
+DEFENSE_RATING = 10      # The default defense value of a single hive.
 
 # ------------------------------------------------------------------------------
 # Map
@@ -71,7 +71,7 @@ INITIAL_RESOURCES = 100  # The value of resources that an individual player begi
 # ------------------------------------------------------------------------------
 # Rules
 
-BUILDING_COST = 100      # The resource cost to construct an individual building.
+HIVE_COST = 100      # The resource cost to construct an individual hive.
 
 # ------------------------------------------------------------------------------
 # Cell

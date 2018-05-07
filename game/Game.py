@@ -71,9 +71,9 @@ class Game(ABC):
             pos = Coordinate(x=positions[count][0], y=positions[count][1])
             self.players.append(Player(count, self.map, bots[count], pos))
 
-        # Create a starting building for each player
+        # Create a starting hive for each player
         for player in self.players:
-            self.map.get_cell(player.starting_pos).create_building(player.playerId)
+            self.map.get_cell(player.starting_pos).create_hive(player.playerId)
 
 
     # --------------------------------------------------------------------------
@@ -155,10 +155,10 @@ class Game(ABC):
         for p in self.players:
             (crashed_players if p.crashed else valid_players).append(p)
 
-        # first we order by # of units, then by # of buildings
+        # first we order by # of units, then by # of hives
         # effectively, this uses units as tiebreaker, since the sort is stable
         ranked_players = sorted(valid_players, key=lambda p: p.total_units(), reverse=True)
-        ranked_players = sorted(ranked_players, key=lambda p: len(p.get_buildings()), reverse=True)
+        ranked_players = sorted(ranked_players, key=lambda p: len(p.get_hives()), reverse=True)
 
         for i, p in enumerate(ranked_players):
             p.rank = i + 1
@@ -174,9 +174,9 @@ class Game(ABC):
     def log_winner(self):
         self.logger.add_ranked_players(self.ranked_players)
 
-    # returns true if only one player has buildings left
+    # returns true if only one player has hives left
     def has_combat_winner(self):
-        return sum([1 for p in self.players if p.has_building()]) <= 1
+        return sum([1 for p in self.players if p.has_hive()]) <= 1
 
     # returns true if the game is over due to time
     def time_limit_reached(self):

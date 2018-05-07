@@ -4,7 +4,7 @@
 import itertools
 from random import randint
 
-from game.Building import Building
+from game.Hive import Hive
 from game.Coordinate import Coordinate
 
 from game.params import (
@@ -33,7 +33,7 @@ class Cell:
 
         self.num_players = num_players
 
-        self.building = None
+        self.hive = None
 
         self.occupiable = occupiable #whether the cell is blocked or free (True = free, False = blocked)
 
@@ -41,8 +41,8 @@ class Cell:
         if 'r' in log_cell:
             self.resource = log_cell['r']
         if 'b' in log_cell:
-            if self.building == None or self.building.ownerId != log_cell['b']:
-                self.building = Building(log_cell['b'])
+            if self.hive == None or self.hive.ownerId != log_cell['b']:
+                self.hive = Hive(log_cell['b'])
         if 'u' in log_cell:
             for i in range(self.num_players):
                 if i == log_cell['p']:
@@ -66,7 +66,7 @@ class Cell:
     # --------------------------------------------------------------------------
     # PLAYER UNIT METHODS
 
-    # useful for when buildings create units
+    # useful for when hives create units
     def increment_units(self, player, number=1):
         self.units[player] += number
 
@@ -78,30 +78,30 @@ class Cell:
         self.units[player] = num_units
 
     # --------------------------------------------------------------------------
-    # BUILDING METHODS
+    # HIVE METHODS
 
-    # add building reference
-    def create_building(self, playerID):
-        self.building = Building(playerID)
+    # add hivereference
+    def create_hive(self, playerID):
+        self.hive = Hive(playerID)
 
-    # remove building reference
-    def destroy_building(self):
-        self.building = None
+    # remove hivereference
+    def destroy_hive(self):
+        self.hive = None
 
     # --------------------------------------------------------------------------
     # UPDATE FUNCTIONS
 
     def update_cell(self, players):
-        self.update_units_and_building(players)
+        self.update_units_and_hive(players)
 
-    def update_units_and_building(self, players):
-        has_building = not (self.building is None) #whether the Cell has a building
-        building_owner = None # player ID of player who owns the building on this cell
+    def update_units_and_hive(self, players):
+        has_hive= not (self.hive is None) #whether the Cell has a hive
+        hive_owner = None # player ID of player who owns the hiveon this cell
 
-        if has_building:
-            building_owner = self.building.ownerId
-            buffed_units = self.units[building_owner] + DEFENSE_RATING  # buff the number of units of the building owner
-            self.units[building_owner] = buffed_units
+        if has_hive:
+            hive_owner = self.hive.ownerId
+            buffed_units = self.units[hive_owner] + DEFENSE_RATING  # buff the number of units of the hiveowner
+            self.units[hive_owner] = buffed_units
 
         contenders = []  # player IDs of all players with nonzero units on the cell
 
@@ -132,30 +132,30 @@ class Cell:
                 # self.units[1] -= units
                 # self.units[2] -= units
 
-        if has_building:
-            difference = buffed_units - self.units[building_owner]
-            # check if building is destroyed and debuff the number of units if necessary
+        if has_hive:
+            difference = buffed_units - self.units[hive_owner]
+            # check if hiveis destroyed and debuff the number of units if necessary
 
-            # destroy building if building has lost all defense points
-            if self.units[building_owner] == 0:
-                self.destroy_building()
-            # building absorbs all damage
+            # destroy hiveif hivehas lost all defense points
+            if self.units[hive_owner] == 0:
+                self.destroy_hive()
+            # hiveabsorbs all damage
             elif (difference < DEFENSE_RATING) and (difference >= 0):
-                self.units[building_owner] = self.units[building_owner] + difference # get back the "killed units" since damage was absorbed
-                self.units[building_owner] = self.units[building_owner] - 10 # remove building contribution from unit count
-            # building does not absorb all damage
+                self.units[hive_owner] = self.units[hive_owner] + difference # get back the "killed units" since damage was absorbed
+                self.units[hive_owner] = self.units[hive_owner] - 10 # remove hivecontribution from unit count
+            # hivedoes not absorb all damage
             else:
-                self.units[building_owner] = self.units[building_owner] + DEFENSE_RATING - 1 # absorb as much damage as possible without being destroyed
-                self.units[building_owner] = self.units[building_owner] - 10 # remove building contribution from unit count
+                self.units[hive_owner] = self.units[hive_owner] + DEFENSE_RATING - 1 # absorb as much damage as possible without being destroyed
+                self.units[hive_owner] = self.units[hive_owner] - 10 # remove hivecontribution from unit count
 
             # check if new units should be produced
-            if self.building:
-                while self.building.production_status >= UNIT_COST:
-                    self.increment_units(building_owner, 1)
-                    self.building.production_status -= UNIT_COST
-                    players[self.building.ownerId].increment_units_produced()
+            if self.hive:
+                while self.hive.production_status >= UNIT_COST:
+                    self.increment_units(hive_owner, 1)
+                    self.hive.production_status -= UNIT_COST
+                    players[self.hive.ownerId].increment_units_produced()
 
-                self.building.production_tick()
+                self.hive.production_tick()
 
     # --------------------------------------------------------------------------
     # INITIALIZING FUNCTION

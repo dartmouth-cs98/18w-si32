@@ -14,7 +14,7 @@ that they implement via a computer program.
 
 Monad is a simple turn-based strategy game played on a hexagonal grid. Bots control
 atomic units through the issuing of commands at each timestep. These commands may
-direct individual or groups of units to navigate the grid, construct a building, or
+direct individual or groups of units to navigate the grid, construct a hive, or
 mine for resources.
 
 #### Units
@@ -22,23 +22,23 @@ mine for resources.
 Every turn, a unit can choose to do one of three things:
 
 1. Move - The unit can move to any adjacent cell
-2. Build - If the player controlling the unit has enough resources, the unit can build a building in the
+2. Build - If the player controlling the unit has enough resources, the unit can build a hive in the
 cell it is located in
 3. Mine - The unit can mine resources from the cell it is located in, in order to be able to build more
-building in the future
+hive in the future
 
-#### Buildings
+#### Hives
 
-Buildings, once built, produce one (1) new unit every turn, and have an inherent defense rating of 10.
-This means that it would need to be attacked by 10 enemy units in order to be destroyed. Buildings cost 100
-resources to construct, and can be constructed on any cell that does not contain either a building
+Hives, once built, produce one (1) new unit every turn, and have an inherent defense rating of 10.
+This means that it would need to be attacked by 10 enemy units in order to be destroyed. Hives cost 100
+resources to construct, and can be constructed on any cell that does not contain either a hive
 or map obstacle.
 
 #### Goal
 
-The goal of the game is to eliminate all enemy buildings from the map, and thereby destroy your
+The goal of the game is to eliminate all enemy hives from the map, and thereby destroy your
 enemy's ability to produce new units. At the moment that a single player becomes the
-sole remaining owner of all buildings on the map, the game is over, and this player is
+sole remaining owner of all hives on the map, the game is over, and this player is
 declared the winner.
 
 ### Getting Started
@@ -52,4 +52,4 @@ Upload your bot to the Monad servers and observe how it stacks up. Challenge you
 friends to matches to see who has found the stronger strategy.
 Watch how your skill rating, which
 gets updated after every game your bot competes, fluctuates over time. Use all of this information to
-iterate on your current design and improve your bot's strategies. 
+iterate on your current design and improve your bot's strategies.
