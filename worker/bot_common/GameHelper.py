@@ -328,15 +328,10 @@ class GameHelper:
 
     # warning: this can't be called between conclusion of movement that puts units from different players onto same cell but before combat resolution so that only one player gains control of the cell
     def get_unit_count_by_cell(self, cell):
-        # only one player may have control over a cell at any one time,
-        # so this should not be an issue!
-        if all(i == 0 for i in cell.units):
-            return 0
-        else:
-            j = 0
-            while cell.units[j] == 0:
-                j += 1
-            return cell.units[j]
+        for u in cell.units:
+            if u != 0:
+                return u
+        return 0
 
     # Get the number of units in cell at position specified (<x>, <y>) controlled by <playerId>.
     # Return: (number)

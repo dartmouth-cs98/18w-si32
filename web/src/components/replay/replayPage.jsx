@@ -1,10 +1,12 @@
 import React from "react";
 import { connect } from "react-redux";
 
-import Page from "../layout/page";
+import { constants, colors } from "../../style";
+import { Page, Wrapper } from "../layout";
 
 import ReplayReader from "./ReplayReader";
 import ReplayVisualizer from "./ReplayVisualizer";
+import CellDetail from "./CellDetails";
 
 class ReplayPage extends React.PureComponent {
   constructor(props) {
@@ -23,6 +25,17 @@ class ReplayPage extends React.PureComponent {
     }
   }
 
+  onFrameChanged = (frameNumber) => {
+    this.setState({ frameNumber });
+  }
+
+  onCellSelected = ({row, col}) => {
+    this.setState({
+      selectedRow: row, 
+      selectedCol: col, 
+    });
+  }
+
   setReplayFile = (f) => {
     this.setState({ replay: f });
   }
@@ -36,7 +49,27 @@ class ReplayPage extends React.PureComponent {
   render() {
     let main;
     if (this.state.replay) {
-      main = <ReplayVisualizer replay={this.state.replay} resetReplayFile={this.resetReplayFile} />;
+      main = (
+        <Wrapper innerStyle={{display: "flex"}}>
+          <div style={styles.leftCol}>
+            <ReplayVisualizer 
+              replay={this.state.replay}
+              resetReplayFile={this.resetReplayFile}
+              onFrameChanged={this.onFrameChanged}
+              onCellSelected={this.onCellSelected}
+            />
+          </div>
+          <div style={styles.rightCol}>
+            { this.state.selectedRow != undefined ? 
+                      <CellDetail
+                        log={this.state.replay}
+                        turn={this.state.frameNumber}
+                        row={this.state.selectedRow} 
+                        col={this.state.selectedCol} 
+                      /> : <div style={styles.cellDetail.placeholder}>Click on a cell to see specifics.</div> }
+          </div>
+        </Wrapper>
+      );
     } else {
       main = <ReplayReader setReplayFile={this.setReplayFile} />;
     }
@@ -48,5 +81,21 @@ class ReplayPage extends React.PureComponent {
     );
   }
 }
+
+const styles ={
+  leftCol: {
+    flex: 1,
+  }, 
+  rightCol: {
+    minWidth: 500,
+  },
+  cellDetail: {
+    marginTop: 30,
+    placeholder: {
+      color: colors.lightGray,
+      fontSize: constants.fontSizes.medium,
+    }
+  }
+};
 
 export default connect(null, null)(ReplayPage);
