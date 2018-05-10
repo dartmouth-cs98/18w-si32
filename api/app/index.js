@@ -36,7 +36,7 @@ app
 // create the server and start listening!
 const server = require("http").createServer(app.callback());
 socket.init(server); // initialize the websocket
-server.listen(PORT)
+server.listen(PORT);
 
 
 /* eslint-disable no-console */

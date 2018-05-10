@@ -6,11 +6,11 @@ const init = (server) => {
   io.on("connection", (socket) => {
     socket.on("waitingMatch", (matchId) => {
       socket.join(matchId);
-    })
+    });
 
     socket.on("leaveMatch", (matchId) => {
       socket.leave(matchId);
-    })
+    });
   });
 };
 
