@@ -149,11 +149,13 @@ const styles = {
     justifyContent: "flex-start",
   },
   dashSectionContainer: {
-    width: "100%"
+    width: "100%",
+    paddingLeft: 20,
   },
   dashSection: {
     borderBottom: `2px solid ${colors.border}`,
     paddingBottom: 20,
+    paddingRight: 20,
   },
   botCards: {
     display: "flex",

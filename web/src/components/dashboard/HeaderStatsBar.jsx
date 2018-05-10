@@ -56,7 +56,9 @@ const styles = {
     width: "100%",
     backgroundColor: colors.sand,
     paddingTop: 20,
-    paddingBottom: 20
+    paddingBottom: 20,
+    paddingLeft: 20,
+    paddingRight: 10,
   },
   inner: {
     display: "flex",
