@@ -10,24 +10,43 @@ import CellDetail from "../replay/CellDetails";
 import GameStats from "../replay/GameStats";
 import { constants, colors } from "../../style";
 import { COLORS } from "../replay/Canvas";
+import socket from "../../util/socket";
 
 class MatchSinglePage extends React.PureComponent {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      isRunning: false,
+    };
   }
 
   componentDidMount() {
-    this.props.fetchMatch().then(res => {
-      // load the game log from S3
-      if (res.body.logUrl) {
-        return fetchLog(res.body.logUrl);
-      } else {
-        return {};
+    this.loadMatch().then(() => {
+      // if this match isn't done, tell server to inform us when it is
+      if (this.props.match.status !== "DONE") {
+        this.joinedSocket = true;
+        socket.emit("waitingMatch", this.props.id);
+        
+        // when it's running, update UI
+        socket.on("matchStarted", (data) => {
+          this.setState({
+            isRunning: true,
+          });
+        });
+
+        // when it's done, reload data
+        socket.on("matchResults", (data) => {
+          this.loadMatch();
+        });
       }
-    }).then(log => {
-      this.setState({ log });
     });
+  }
+
+  componentWillUnmount() {
+    // if we were subscribed to socket, stop
+    if (this.joinedSocket) { 
+      socket.emit("leaveMatch", this.props.id);
+    }
   }
 
   onFrameChanged = (frameNumber) => {
@@ -38,6 +57,19 @@ class MatchSinglePage extends React.PureComponent {
     this.setState({
       selectedRow: row, 
       selectedCol: col, 
+    });
+  }
+
+  loadMatch = () => {
+    return this.props.fetchMatch().then(res => {
+      // load the game log from S3
+      if (res.body.logUrl) {
+        return fetchLog(res.body.logUrl);
+      } else {
+        return false;
+      }
+    }).then(log => {
+      this.setState({ log });
     });
   }
 
@@ -99,7 +131,13 @@ class MatchSinglePage extends React.PureComponent {
   renderNotDone = () => (
     <Page>
       <Wrapper>
-        <div>Game is currently running, check back in a bit</div>
+        <div>
+          <div style={[styles.loading, styles.waitMessage]}>
+            { this.props.match.status == "RUNNING" || this.state.isRunning ? 
+              "Your match is currently running." 
+                : "Your match is in the queue. We'll update this page when the status changes" }
+          </div>
+        </div>
       </Wrapper>
     </Page>
   )
@@ -257,7 +295,19 @@ const styles = {
       color: colors.lightGray,
       fontSize: constants.fontSizes.medium,
     }
-  }
+  },
+  waitMessage: {
+    color: colors.darkGray,
+    fontSize: constants.fontSizes.large,
+    textAlign: "center",
+    padding: 150,
+    borderRadius: 5,
+  },
+  waitSub: {
+    fontSize: constants.fontSizes.medium,
+    color: colors.lightGray,
+    marginTop: 10,
+  },
 };
 
 const mapDispatchToProps = (dispatch, props) => ({
