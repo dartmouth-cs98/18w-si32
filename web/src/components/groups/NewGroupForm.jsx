@@ -1,5 +1,6 @@
 import React from "react";
 
+import Message from "../common/message";
 import { Input, Label } from "../form";
 import Button from "../common/button";
 
@@ -23,18 +24,26 @@ class NewGroupForm extends React.PureComponent {
     });
   }
 
-  submit = () => {
-    this.props.onSubmit(this.state);
+  submit = (e) => {
+    if (e) {
+      e.preventDefault();
+    }
+    this.props.onSubmit(this.state)
+    .catch(err => {
+      this.setState({
+        error: _.get(err, "response.body.error") || err,
+      });
+    });
   }
 
   render() {
-    const props = this.props;
-    const { handleSubmit } = props;
-    return (<form onSubmit={handleSubmit}>
+    return (<form onSubmit={this.submit} style={{marginTop: 10}}>
+              <Message kind="error">{ this.state.error }</Message>
               <Label>Group name</Label>
               <Input
                 name="name"
                 type="text"
+                autoComplete="off"
                 value={this.state.name}
                 onChange={this.handleInputChange}
               />
@@ -42,6 +51,7 @@ class NewGroupForm extends React.PureComponent {
               <Input
                 name="description"
                 type="text"
+                autoComplete="off"
                 value={this.state.description}
                 onChange={this.handleInputChange}
               />
@@ -69,6 +79,7 @@ class NewGroupForm extends React.PureComponent {
                   Private
                 </label>
               </div>*/}
+              <input type="submit" style={{display: "none"}} />
               <Button kind="primary" onClick={this.submit} style={styles.submitButton} disabled={this.state.submitting}>Create group</Button>
             </form>);
   }

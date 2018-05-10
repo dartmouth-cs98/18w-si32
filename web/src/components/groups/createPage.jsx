@@ -16,7 +16,7 @@ class GroupCreatePage extends React.PureComponent {
     const groupInfo = Object.assign({}, values, {
       public: values.public === "public"
     });
-    this.props.create(groupInfo).then((res) => {
+    return this.props.create(groupInfo).then((res) => {
       history.push(`/leaderboards/${res[1]._id}`);
     });
   }

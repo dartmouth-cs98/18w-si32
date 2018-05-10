@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const User = require("./userModel");
-const ensureRequiredProps = require("../lib/ensureRequiredProps");
 
 const { MalformedError } = require("../errors");
 
@@ -56,9 +55,16 @@ _Group.methods.removeMember = async function(targetUserId) {
 };
 
 _Group.statics.createGroupWithFoundingMember = async function(groupInfo, foundingUserId) {
-  const missingProperties = ensureRequiredProps(groupInfo, ["name"]);
-  if (missingProperties.length) {
-    throw new MalformedError("'name' is required for a group");
+  if (!groupInfo.name) {
+    throw new MalformedError("'name' is required to create a group");
+  }
+
+  const existingGroup = await Group.find({
+    name: groupInfo.name,
+  });
+
+  if (existingGroup) {
+    throw new MalformedError("A group already exists with that name");
   }
 
   const group = await Group.create({

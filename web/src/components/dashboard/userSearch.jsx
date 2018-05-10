@@ -25,23 +25,44 @@ class UserSearch extends React.PureComponent {
 
   handleInputChange = (event) => {
     this.setState({
-      query: event.target.value
+      query: event.target.value,
+      newQuery: true,
     });
   }
 
   doUserQuery = (event) => {
     if (event) event.preventDefault();
     if (this.state.query === "") return;
+
+    this.hasSearched = true;
+
+    this.setState({
+      isSearching: true,
+      newQuery: false,
+    });
+
     getUsersForSearch(this.state.query)
       .then(results => {
         this.setState({
-          results: results
+          results: results,
+          isSearching: false,
         });
       });
   }
 
   renderUserList() {
-    if (this.state.results.length < 1) { return null; }
+    if (!this.hasSearched) {
+      return null;
+    }
+
+    // until they've searched, don't show anything
+    if (this.state.isSearching) {
+      return <div style={styles.searching}>Searching for users...</div>;
+    }
+
+    if (this.state.results.length < 1) {
+      return <div style={styles.noResults}>No matching users found :(</div>;
+    }
 
     return <UserList users={this.state.results} />;
   }
@@ -53,6 +74,7 @@ class UserSearch extends React.PureComponent {
         <form style={styles.form} onSubmit={this.doUserQuery}>
           <Input
             name="user-search"
+            autoComplete="off"
             placeholder="search by username..."
             type="text"
             value={this.state.query}
@@ -93,6 +115,16 @@ const styles = {
     height: 38,
     width: 120,
     marginLeft: 10,
+  },
+  searching: {
+    color: colors.medGray,
+    marginTop: 5,
+    fontSize: constants.fontSizes.small,
+  },
+  noResults: {
+    color: colors.darkGray,
+    marginTop: 5,
+    fontSize: constants.fontSizes.small,
   },
 };
 
