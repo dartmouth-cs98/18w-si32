@@ -14,7 +14,6 @@ from game.params import (
     UNIFORM_RESOURCES,
 )
 
-
 # A Cell represents a single, atomic cell of the game map.
 #
 # Constructor Arguments
@@ -39,6 +38,9 @@ class Cell:
         self.occupiable = occupiable
 
     def update_from_log(self, log_cell):
+        if "o" in log_cell:
+            # mark cell as obstructed by obstacle
+            self.occupiable = False
         if "r" in log_cell:
             # update resource totals
             self.resource = log_cell["r"]
@@ -57,7 +59,6 @@ class Cell:
                     self.units[i] = log_cell["u"]
                 else:
                     self.units[i] = 0
-
 
     # --------------------------------------------------------------------------
     # RESOURCE METHODS
