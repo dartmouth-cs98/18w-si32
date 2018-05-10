@@ -23,14 +23,15 @@ class NewGroupForm extends React.PureComponent {
     });
   }
 
-  submit = () => {
+  submit = (e) => {
+    if (e) {
+      e.preventDefault();
+    }
     this.props.onSubmit(this.state);
   }
 
   render() {
-    const props = this.props;
-    const { handleSubmit } = props;
-    return (<form onSubmit={handleSubmit}>
+    return (<form onSubmit={this.submit}>
               <Label>Group name</Label>
               <Input
                 name="name"
@@ -69,6 +70,7 @@ class NewGroupForm extends React.PureComponent {
                   Private
                 </label>
               </div>*/}
+              <input type="submit" style={{display: "none"}} />
               <Button kind="primary" onClick={this.submit} style={styles.submitButton} disabled={this.state.submitting}>Create group</Button>
             </form>);
   }

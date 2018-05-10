@@ -71,7 +71,9 @@ class ProfilePage extends React.Component {
     const groupId = this.state.selectedGroup ? this.state.selectedGroup.value : null;
 
     if (groupId) {
-      this.props.joinGroup(this.state.selectedGroup.value);
+      this.props.joinGroup(this.state.selectedGroup.value).then(() => {
+        this.props.fetchUser(); // reload the user to pull ranks for the new group
+      });
       this.setState({
         selectedGroup: null,
       });
