@@ -3,8 +3,8 @@
 
 from random import randint
 
-from .Cell import Cell
-from .Coordinate import Coordinate
+from game.Cell import Cell
+from game.Coordinate import Coordinate
 
 from game.params import (
     DEFAULT_MAP_WIDTH,
@@ -33,34 +33,12 @@ class Map:
         self.height = height
         self.num_players = num_players
 
-        players_reachable = False  # whether each player can reach each every other player
+        self.cells = self.initialize_map(width, height, uniform)
 
-        # keep initializing self.cells until we get a map where each player can reach every other player
-        while not players_reachable:
-            #print("re-initializing")
+        # keep initializing map until we get a map where each player can reach every other player
+        while (not self.players_reachable()):
             self.cells = self.initialize_map(width, height, uniform)
 
-            if self.num_players == 1:
-                players_reachable = True
-            elif self.num_players == 2:
-                if len(self.path(Coordinate(TWO_PLAYER_START_POS[0]), Coordinate(TWO_PLAYER_START_POS[1]))) > 0:
-                    players_reachable = True
-            elif self.num_players == 3:
-                if (len(self.path(Coordinate(THREE_PLAYER_START_POS[0]), Coordinate(THREE_PLAYER_START_POS[1]))) > 0) and (
-                        len(self.path(Coordinate(THREE_PLAYER_START_POS[0]), Coordinate(THREE_PLAYER_START_POS[2]))) > 0) and (
-                        len(self.path(Coordinate(THREE_PLAYER_START_POS[1]), Coordinate(THREE_PLAYER_START_POS[2]))) > 0):
-                    players_reachable = True
-            elif self.num_players == 4:
-                if (len(self.path(Coordinate(FOUR_PLAYER_START_POS[0]), Coordinate(FOUR_PLAYER_START_POS[1]))) > 0) and (
-                        len(self.path(Coordinate(FOUR_PLAYER_START_POS[0]), Coordinate(FOUR_PLAYER_START_POS[2]))) > 0) and (
-                        len(self.path(Coordinate(FOUR_PLAYER_START_POS[0]), Coordinate(FOUR_PLAYER_START_POS[3]))) > 0) and (
-                        len(self.path(Coordinate(FOUR_PLAYER_START_POS[1]), Coordinate(FOUR_PLAYER_START_POS[2]))) > 0) and (
-                        len(self.path(Coordinate(FOUR_PLAYER_START_POS[1]), Coordinate(FOUR_PLAYER_START_POS[3]))) > 0) and (
-                        len(self.path(Coordinate(FOUR_PLAYER_START_POS[2]), Coordinate(FOUR_PLAYER_START_POS[3]))) > 0):
-                    players_reachable = True
-
-    # --------------------------------------------------------------------------
-    # Initializing Function
     def initialize_map(self, width, height, uniform):
         cells = []
         for r in range(height):
@@ -96,7 +74,27 @@ class Map:
 
         return cells
 
-    # --------------------------------------------------------------------------
+    # determine if paths exists between all players given the current map configuration
+    def players_reachable(self):
+        if self.num_players == 1:
+            return True
+
+        if self.num_players == 2:
+            return len(self.path(Coordinate(TWO_PLAYER_START_POS[0]), Coordinate(TWO_PLAYER_START_POS[1]))) > 0
+
+        if self.num_players == 3:
+            return (len(self.path(Coordinate(THREE_PLAYER_START_POS[0]), Coordinate(THREE_PLAYER_START_POS[1]))) > 0) and (
+                    len(self.path(Coordinate(THREE_PLAYER_START_POS[0]), Coordinate(THREE_PLAYER_START_POS[2]))) > 0) and (
+                    len(self.path(Coordinate(THREE_PLAYER_START_POS[1]), Coordinate(THREE_PLAYER_START_POS[2]))) > 0)
+
+        if self.num_players == 4:
+            return (len(self.path(Coordinate(FOUR_PLAYER_START_POS[0]), Coordinate(FOUR_PLAYER_START_POS[1]))) > 0) and (
+                    len(self.path(Coordinate(FOUR_PLAYER_START_POS[0]), Coordinate(FOUR_PLAYER_START_POS[2]))) > 0) and (
+                    len(self.path(Coordinate(FOUR_PLAYER_START_POS[0]), Coordinate(FOUR_PLAYER_START_POS[3]))) > 0) and (
+                    len(self.path(Coordinate(FOUR_PLAYER_START_POS[1]), Coordinate(FOUR_PLAYER_START_POS[2]))) > 0) and (
+                    len(self.path(Coordinate(FOUR_PLAYER_START_POS[1]), Coordinate(FOUR_PLAYER_START_POS[3]))) > 0) and (
+                    len(self.path(Coordinate(FOUR_PLAYER_START_POS[2]), Coordinate(FOUR_PLAYER_START_POS[3]))) > 0)
+
     # INPUTS: "start" (a tuple), "goal" (a tuple)
     # RETURN: a list of tuples indicating a possible path between "start" and "goal" positions
     def path(self, start, goal):

@@ -6,9 +6,10 @@ import { Application, Graphics, Point, Polygon, Text } from "pixi.js";
 const TICK_SPEED = 25;
 
 export const SCENE_BACKGROUND_COLOR = 0xFFFFFF;
-// const GRID_OUTLINE_COLOR = 0xec0b43;
 export const NEUTRAL_CELL_COLOR = 0x56666b;
 export const NEUTRAL_CELL_ALPHA = 0.1;
+export const OBSTRUCTED_CELL_COLOR = 0x000000;
+export const OBSTRUCTED_CELL_ALPHA = 0.8;
 
 const CELL_OFFSET_X = 1;
 const CELL_OFFSET_Y = 1;
@@ -263,8 +264,13 @@ class Canvas extends React.Component {
   }
 
   getCellColorAlpha = (cell) => {
+    if (cell.o) {
+      return { "color": OBSTRUCTED_CELL_COLOR, "alpha": OBSTRUCTED_CELL_ALPHA };
+    }
+
     const units = cell.u;
     const hive = cell.b;
+
     if (hive != undefined) {
       return { "color": getPlayerColor(hive), "alpha": 1 };
     }
@@ -272,6 +278,7 @@ class Canvas extends React.Component {
     if (!units) {
       return { "color": NEUTRAL_CELL_COLOR, "alpha": NEUTRAL_CELL_ALPHA };
     }
+
     let color, alpha = 0;
 
     if (cell.u > 0) {
@@ -285,7 +292,7 @@ class Canvas extends React.Component {
     this.mapGraphics.clear();
     //this.mapGraphics.removeChildren();
     this.addGridToStage();
-    //
+
     // render the stage container
     this.renderer.render(this.stage);
   }

@@ -1,5 +1,5 @@
 # Cell.py
-# Class implementation for 'Cell'
+# Class implementation for "Cell"
 
 import itertools
 from random import randint
@@ -14,7 +14,6 @@ from game.params import (
     UNIFORM_RESOURCES,
 )
 
-
 # A Cell represents a single, atomic cell of the game map.
 #
 # Constructor Arguments
@@ -26,33 +25,40 @@ from game.params import (
 class Cell:
     def __init__(self, position, num_players, occupiable=True, uniform=False):
         self.position = Coordinate(position)
+        self.num_players = num_players
+
+        self.units = self.initialize_units_list(num_players)
 
         # amount of resource in the cell (will be randomized for now)
         self.resource = randint(0, MAX_RESOURCES) if (not uniform) else UNIFORM_RESOURCES
-        self.units = self.initialize_units_list(num_players)
-
-        self.num_players = num_players
 
         self.hive = None
 
-        self.occupiable = occupiable #whether the cell is blocked or free (True = free, False = blocked)
+        # whether the cell is blocked or free (True = free, False = blocked)
+        self.occupiable = occupiable
 
     def update_from_log(self, log_cell):
-        if 'r' in log_cell: # update resource totals
-            self.resource = log_cell['r']
-        if 'b' in log_cell: # create/update building if needed
-            if self.hive == None or self.hive.ownerId != log_cell['b']:
-                self.hive = Hive(log_cell['b'])
-        else: # destroy building if needed
+        if "o" in log_cell:
+            # mark cell as obstructed by obstacle
+            self.occupiable = False
+        if "r" in log_cell:
+            # update resource totals
+            self.resource = log_cell["r"]
+        if "b" in log_cell:
+            # create/update building if needed
+            if self.hive == None or self.hive.ownerId != log_cell["b"]:
+                self.hive = Hive(log_cell["b"])
+        else:
+            # destroy building if needed
             if self.hive != None:
                 self.hive = None
-        if 'u' in log_cell: # update unit numbers
+        if "u" in log_cell:
+            # update unit numbers
             for i in range(self.num_players):
-                if i == log_cell['p']:
-                    self.units[i] = log_cell['u']
+                if i == log_cell["p"]:
+                    self.units[i] = log_cell["u"]
                 else:
                     self.units[i] = 0
-
 
     # --------------------------------------------------------------------------
     # RESOURCE METHODS
@@ -172,6 +178,6 @@ class Cell:
 
     def __str__(self):
         string = ""
-        string += "Cell at position: " + str(self.position) + '\n'
+        string += "Cell at position: " + str(self.position) + "\n"
         string += "Units:" + str(self.units)
         return string
