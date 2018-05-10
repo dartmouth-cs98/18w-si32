@@ -22,7 +22,8 @@ module.exports = merge(common, {
       filename: "200.html",
     }),
     new webpack.DefinePlugin({
-      ENV: "'PRODUCTION'",
+      ENV: "'STAGING'",
     })
   ],
 });
+

@@ -5,9 +5,11 @@
   "repository": "https://github.com/dartmouth-cs98/18w-si32",
   "main": "webpack.config.js",
   "scripts": {
-    "start": "webpack-dev-server -d --config webpack.dev.js",
+    "start": "webpack-dev-server -d --config webpack.local.js",
     "build": "webpack --config webpack.prod.js",
+    "build-dev": "webpack --config webpack.staging.js",
     "deploy": "npm run build && surge --domain monad.surge.sh dist/",
+    "deploy-dev": "npm run build-dev && surge --domain monad-dev.surge.sh dist/",
     "test": "eslint --ext .jsx --ext .js src",
     "prepush": "npm test",
     "lint:watch": "esw --watch --cache --ext .jsx --ext .js src"

@@ -1,12 +1,15 @@
-import devConfig from "./config.dev";
+import localConfig from "./config.local";
 import prodConfig from "./config.prod";
+import stagingConfig from "./config.staging";
 
 let config = {};
 
-if (PRODUCTION) {
+if (ENV == "PRODUCTION") {
   config = prodConfig;
+} else if (ENV == "STAGING") {
+  config = stagingConfig;
 } else {
-  config = devConfig;
+  config = localConfig;
 }
 
 export default config;

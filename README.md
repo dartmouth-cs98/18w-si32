@@ -150,7 +150,9 @@ View README in the `worker/` subdirectory for more details.
 
 **Web Client**
 
-We deploy the web client statically with Surge. Running `npm run deploy` in the `web/` directory will deploy the client.
+We deploy the web client statically with Surge. Running `npm run deploy` in the `web/` directory will deploy the client to the production site at [monad.surge.sh](http://monad.surge.sh/). 
+
+`npm run deploy-dev` will deploy to the staging site at [monad-dev.surge.sh](http://monad-dev.surge.sh/).
 
 **Web Documentation**
 
