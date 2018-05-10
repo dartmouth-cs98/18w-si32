@@ -44,35 +44,28 @@ class Map:
         for r in range(height):
             row = []
             for c in range(width):
-
                 # (maybe adjust later) distribution of roughly 1 in 5 cells blocked
-                p = randint(1, 6)
-                if p == 1:
-                    occupiable = False
-                else:
-                    occupiable = True
+                obstructed = randint(1, 6) == 1 and (not self.is_start_position(c, r))
 
-                # if a cell is a starter position, make it free
-                if self.num_players == 1:
-                    if (c, r) in ONE_PLAYER_START_POS:
-                        occupiable = True
-                elif self.num_players == 2:
-                    if (c, r) in TWO_PLAYER_START_POS:
-                        occupiable = True
-                elif self.num_players == 3:
-                    if (c, r) in THREE_PLAYER_START_POS:
-                        occupiable = True
-                elif self.num_players == 4:
-                    if (c, r) in FOUR_PLAYER_START_POS:
-                        occupiable = True
-
-                # new_cell = Cell(Coordinate(x=c, y=r), self.num_players, True, uniform) # ALL cells are free
-                new_cell = Cell(Coordinate(x=c, y=r), self.num_players, occupiable, uniform)
-
+                new_cell = Cell(Coordinate(x=c, y=r), self.num_players, obstructed, uniform)
                 row.append(new_cell)
+
             cells.append(row)
 
         return cells
+
+    # determine if the given cell coordinates are a starting position
+    def is_start_position(c, r):
+        if self.num_players == 1 and (c, r) in ONE_PLAYER_START_POS:
+            return True
+        elif self.num_players == 2 and (c, r) in TWO_PLAYER_START_POS:
+            return True
+        elif self.num_players == 3 and (c, r) in THREE_PLAYER_START_POS:
+            return True
+        elif self.num_players == 4 and (c, r) in FOUR_PLAYER_START_POS:
+            return True
+
+        return False
 
     # determine if paths exists between all players given the current map configuration
     def players_reachable(self):
@@ -98,7 +91,7 @@ class Map:
     # INPUTS: "start" (a tuple), "goal" (a tuple)
     # RETURN: a list of tuples indicating a possible path between "start" and "goal" positions
     def path(self, start, goal):
-        if (not (self.get_cell(start)).occupiable) or (not (self.get_cell(goal)).occupiable):
+        if (self.get_cell(start)).obstructed or (self.get_cell(goal)).obstructed:
             empty = []
             return empty
 
@@ -128,12 +121,11 @@ class Map:
     # check if position is free
     def position_free(self, position):
         c = self.get_cell(position)
-        #return c is not None and c.occupiable
         return c is not None
 
     # check if cell is free
     def cell_free(self, cell):
-        return self.cell_in_range(cell) #and cell.occupiable
+        return self.cell_in_range(cell)
 
     # returns only the state we care about for the game log
     def get_state(self):
@@ -160,9 +152,27 @@ class Map:
         f = "\nFree cells:\n"
         for r in self.cells:
             for cell in r:
-                if (not cell.occupiable):
+                if cell.obstructed:
                     b += str(cell.position)
                     b += " "
                 else:
                     f += str(cell.position)
         return b + f
+
+# ------------------------------------------------------------------------------
+# Map Generation
+
+# def vertical_barrier(width, height, n_players):
+#     cells = []
+#     for r in range(height):
+#         row = []
+#         for c in range(width):
+#
+#             obstructed = c > (width / 2) - 1 and c < (width / 2) and r > 2 and r < (width - 2)
+#
+#             new_cell = Cell(Coordinate(x=c, y=r), self.num_players, obstructed, uniform)
+#
+#             row.append(new_cell)
+#         cells.append(row)
+#
+#     return cells

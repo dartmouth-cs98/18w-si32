@@ -407,7 +407,7 @@ class GameHelper:
     # RETURN: a list of tuples indicating a possible path between "start" and "goal" positions
 
     def path(self, start, goal, flags="None"):
-        if (not (self.get_cell(start)).occupiable) | (not (self.get_cell(goal)).occupiable):
+        if (self.get_cell(start)).obstructed or (self.get_cell(goal)).obstructed:
             empty = []
             return empty
 
@@ -427,7 +427,7 @@ class GameHelper:
 
     # Return the distance between two positions 'start' and 'goal'
     def distance(self, start, goal, flags):
-        if (not (self.get_cell(start)).occupiable) | (not (self.get_cell(goal)).occupiable):
+        if (self.get_cell(start)).obstructed or (self.get_cell(goal)).obstructed:
             return None
 
         p = ObstacleMapProblem(self.map, start, goal, flags, self.myId)
