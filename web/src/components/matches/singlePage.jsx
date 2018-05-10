@@ -135,7 +135,7 @@ class MatchSinglePage extends React.PureComponent {
           <div style={[styles.loading, styles.waitMessage]}>
             { this.props.match.status == "RUNNING" || this.state.isRunning ? 
               "Your match is currently running." 
-                : "Your match is in the queue. We'll update this page when the status changes" }
+                : "Your match is in the queue. We'll update this page when the status changes." }
           </div>
         </div>
       </Wrapper>
