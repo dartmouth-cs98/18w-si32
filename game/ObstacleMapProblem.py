@@ -51,9 +51,33 @@ class ObstacleMapProblem:
                     if cell.occupiable:
                         successor_list.append(new_state)
                 elif self.flags == "Enemy units":
-                    if cell.occupiable and ((self.get_pos_owner(cell.position) == self.playerId) or (self.get_pos_owner(cell.position) is None)):
+                    if self.cell_has_no_enemy_units(cell):
                         successor_list.append(new_state)
-                elif self.flags == "Enemy units and adjacents":
+
+                elif self.flags == "Enemy units plus adjacents":
+                    if len(cells_with_enemy_units_and_adjacent_cells) == 0:
+                        enemy_cells = []
+                        for col in self.map.cells:
+                            for cell in col:
+                                if (not (self.get_pos_owner(cell.position) is None)) and (self.get_pos_owner(cell.position) != self.playerId):
+                                    enemy_cells.append(cell)
+                                    cells_with_enemy_units_and_adjacent_cells.add(cell)
+
+                        for enemy_cell in enemy_cells:
+                            adjacents = self.get_adjacents_of_cell(enemy_cell)
+                            cells_with_enemy_units_and_adjacent_cells = cells_with_enemy_units_and_adjacent_cells.union(adjacents)
+
+                    if cell.occupiable and (not (cell.position in cells_with_enemy_units_and_adjacent_cells)):
+                        successor_list.append(new_state)
+                elif self.flags == "Enemy buildings":
+                    if self.cell_has_no_enemy_buildings(cell):
+                        successor_list.append(new_state)
+                elif self.flags == "Enemy units and buildings":
+                    if self.cell_has_no_enemy_buildings(cell) and self.cell_has_no_enemy_units(cell):
+                        successor_list.append(new_state)
+                elif self.flags == "Enemy units plus adjacents and buildings":
+                    if not self.cell_has_no_enemy_buildings(cell):
+                        break
                     if len(cells_with_enemy_units_and_adjacent_cells) == 0:
                         enemy_cells = []
                         for col in self.map.cells:
@@ -69,11 +93,14 @@ class ObstacleMapProblem:
                     if cell.occupiable and (not (cell.position in cells_with_enemy_units_and_adjacent_cells)):
                         successor_list.append(new_state)
 
-                elif self.flags == "Enemy buildings":
-                    if cell.occupiable and ((cell.hive is None) or (cell.hive.ownerId == self.playerId)):
-                        successor_list.append(new_state)
 
         return successor_list
+
+    def cell_has_no_enemy_units(self, cell):
+        return cell.occupiable and ((self.get_pos_owner(cell.position) == self.playerId) or (self.get_pos_owner(cell.position) is None))
+
+    def cell_has_no_enemy_buildings(self, cell):
+        return cell.occupiable and ((cell.hive is None) or (cell.hive.ownerId == self.playerId))
 
     def goal_test(self, state):
         if state == self.goal_state:

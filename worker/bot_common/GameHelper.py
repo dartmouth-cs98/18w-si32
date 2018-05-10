@@ -8,7 +8,7 @@ import msgpack
 
 from game.Map import Map
 from game.Command import Command
-from game.Coordinate import Coordinate
+from game.Coordinate import Coordinate, direction_deltas
 from game.params import MOVE_COMMAND, BUILD_COMMAND, MINE_COMMAND, HIVE_COST, Direction
 
 from game.ObstacleMapProblem import ObstacleMapProblem
@@ -416,6 +416,14 @@ class GameHelper:
         result = astar_search(p, p.manhattan_heuristic)
 
         return result.path
+
+    def smarter_move(self, start, goal, flags="None", num_units=0):
+        path = self.path(start, goal, flags)
+        if len(path) > 1:
+            d = (path[1].x - path[0].x, path[1].y - path[0].y)
+            return self.move(start, num_units, d)
+        else:
+            return None
 
     # Return the distance between two positions 'start' and 'goal'
     def distance(self, start, goal, flags):

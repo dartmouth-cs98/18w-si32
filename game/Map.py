@@ -68,7 +68,7 @@ class Map:
             for c in range(width):
 
                 # (maybe adjust later) distribution of roughly 1 in 5 cells blocked
-                p = randint(1, 4)
+                p = randint(1, 6)
                 if p == 1:
                     occupiable = False
                 else:
