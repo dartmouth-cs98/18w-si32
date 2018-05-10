@@ -1,7 +1,7 @@
 # Map.py
 # Class implementation for 'Map'
 
-from random import randint
+from random import randint, choice
 
 from game.Cell import Cell
 from game.Coordinate import Coordinate
@@ -26,7 +26,6 @@ from game.astar_search import astar_search
 # width (number)       - the width of the map (in cells)
 # height (number)      - the height of the map (in cells)
 
-
 class Map:
     def __init__(self, num_players, uniform, width=DEFAULT_MAP_WIDTH, height=DEFAULT_MAP_HEIGHT):
         self.width = width
@@ -40,32 +39,9 @@ class Map:
             self.cells = self.initialize_map(width, height, uniform)
 
     def initialize_map(self, width, height, uniform):
-        cells = []
-        for r in range(height):
-            row = []
-            for c in range(width):
-                # (maybe adjust later) distribution of roughly 1 in 5 cells blocked
-                obstructed = randint(1, 6) == 1 and (not self.is_start_position(c, r))
-
-                new_cell = Cell(Coordinate(x=c, y=r), self.num_players, obstructed, uniform)
-                row.append(new_cell)
-
-            cells.append(row)
-
-        return cells
-
-    # determine if the given cell coordinates are a starting position
-    def is_start_position(c, r):
-        if self.num_players == 1 and (c, r) in ONE_PLAYER_START_POS:
-            return True
-        elif self.num_players == 2 and (c, r) in TWO_PLAYER_START_POS:
-            return True
-        elif self.num_players == 3 and (c, r) in THREE_PLAYER_START_POS:
-            return True
-        elif self.num_players == 4 and (c, r) in FOUR_PLAYER_START_POS:
-            return True
-
-        return False
+        # choose a random map type
+        map_type = choice(range(len(MAP_DISPATCH)))
+        return MAP_DISPATCH[map_type](width, height, self.num_players, uniform)
 
     # determine if paths exists between all players given the current map configuration
     def players_reachable(self):
@@ -162,17 +138,49 @@ class Map:
 # ------------------------------------------------------------------------------
 # Map Generation
 
-# def vertical_barrier(width, height, n_players):
-#     cells = []
-#     for r in range(height):
-#         row = []
-#         for c in range(width):
-#
-#             obstructed = c > (width / 2) - 1 and c < (width / 2) and r > 2 and r < (width - 2)
-#
-#             new_cell = Cell(Coordinate(x=c, y=r), self.num_players, obstructed, uniform)
-#
-#             row.append(new_cell)
-#         cells.append(row)
-#
-#     return cells
+# random distribution of obstacles
+def random(width, height, n_players, uniform):
+    cells = []
+    for r in range(height):
+        row = []
+        for c in range(width):
+            obstructed = randint(1, 2) == 1 and (not is_start_position(c, r, n_players))
+            new_cell = Cell(Coordinate(x=c, y=r), n_players, obstructed, uniform)
+            row.append(new_cell)
+        cells.append(row)
+
+    return cells
+
+# obstacles arranged in vertical barrier configuration 
+def vertical_barrier(width, height, n_players, uniform):
+    cells = []
+    for r in range(height):
+        row = []
+        for c in range(width):
+            obstructed = c > (width / 2) - 1 and c < (width / 2) + 1 and r > 2 and r < (width - 2) and (not is_start_position(c, r, n_players))
+            new_cell = Cell(Coordinate(x=c, y=r), n_players, obstructed, uniform)
+            row.append(new_cell)
+        cells.append(row)
+
+    return cells
+
+MAP_DISPATCH = {
+    0: random,
+    1: vertical_barrier
+}
+
+# ------------------------------------------------------------------------------
+# Helpers
+
+# determine if the given cell coordinates are a starting position
+def is_start_position(c, r, n_players):
+    if n_players == 1 and (c, r) in ONE_PLAYER_START_POS:
+        return True
+    elif n_players == 2 and (c, r) in TWO_PLAYER_START_POS:
+        return True
+    elif n_players == 3 and (c, r) in THREE_PLAYER_START_POS:
+        return True
+    elif n_players == 4 and (c, r) in FOUR_PLAYER_START_POS:
+        return True
+
+    return False
