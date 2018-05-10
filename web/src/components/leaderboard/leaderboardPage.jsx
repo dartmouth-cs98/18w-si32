@@ -104,7 +104,7 @@ class LeaderboardPage extends React.PureComponent {
     return (
       <Page>
         <Wrapper>
-          {groupSearchbar({value: groupId, label: groupLabel}, this.didSelectGroup, {placeholder: "Choose A Specific Group"})}
+          {groupSearchbar({value: groupId, label: groupLabel}, this.didSelectGroup, {showGlobal: true, placeholder: "Choose A Specific Group"})}
           <TitleBar
             title={groupLabel}
             right={titleOptions.right}

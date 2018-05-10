@@ -15,7 +15,7 @@
     }
   },
   "globals": {
-    "ENV": true,
+    "ENV": true
   },
   "rules": {
     "quotes": [

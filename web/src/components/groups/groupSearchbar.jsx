@@ -5,7 +5,16 @@ import * as http from "../../util/http.js";
 
 /* code using Select Async based on https://github.com/JedWatson/react-select#async-options */
 
-const getGroups  = (input, callback) => {
+const getGroupsNoGlobal = (input, callback) => {
+  return getGroups(input, {global: false}, callback);
+};
+
+const getGroupsWithGlobal = (input, callback) => {
+  return getGroups(input, {global: true}, callback);
+};
+
+const getGroups  = (input, opts, callback) => {
+  opts = opts || {};
   input = input || "";
   return http
     .get("/groups")
@@ -18,7 +27,7 @@ const getGroups  = (input, callback) => {
 
       const globalOpt = {value: "global", label: "Global"};
       const globalMatch = input === "" || "global".includes(input.toLowerCase());
-      const returnOpts = globalMatch ? [globalOpt].concat(options.splice(0, 6)) : options.splice(0, 6);
+      const returnOpts = globalMatch && opts.global ? [globalOpt].concat(options.splice(0, 6)) : options.splice(0, 6);
       var data = {
         options: returnOpts,
         complete: options.length <= 6
@@ -28,11 +37,12 @@ const getGroups  = (input, callback) => {
   });
 };
 
-export default function groupSearchbar(currentGroup, onChange, {placeholder}) {
+export default function groupSearchbar(currentGroup, onChange, {placeholder, showGlobal}) {
+  const getGroupsFunc = showGlobal ? getGroupsWithGlobal : getGroupsNoGlobal;
   return (
         <Select.Async
             name='search-groups'
-            loadOptions={getGroups}
+            loadOptions={getGroupsFunc}
             value={currentGroup}
             autoload={true}
             placeholder={placeholder || "Search For New Groups"}

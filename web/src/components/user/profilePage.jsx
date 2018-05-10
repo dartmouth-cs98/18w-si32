@@ -55,7 +55,7 @@ class ProfilePage extends React.Component {
       // if the session user is currently following the profile user
       return <Button
                 kind="primary"
-                style={styles.followingButton} 
+                style={styles.followingButton}
                 onClick={this.props.unfollowUser}
                 hoverContent="Unfollow"
               >
@@ -149,7 +149,7 @@ class ProfilePage extends React.Component {
               <div style={styles.groupList}>
                 <GroupList groups={this.props.profileUser.groups} ranks={this.props.profileUser.ranks} leaveGroup={this.props.leaveGroup} />
               </div>
-              { this.props.isOwnProfile ? groupSearchbar(this.state.selectedGroup, this.didSelectGroup, {placeholder: "Search for new groups to join"}) : null }
+              { this.props.isOwnProfile ? groupSearchbar(this.state.selectedGroup, this.didSelectGroup, {showGlobal: false, placeholder: "Search for new groups to join"}) : null }
               { this.props.isOwnProfile ? this.renderGroupActionBox() : null }
             </div>
           </div>
