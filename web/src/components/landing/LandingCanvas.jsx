@@ -108,6 +108,7 @@ class LandingCanvas extends React.PureComponent {
   }
 
   componentWillUnmount() {
+    this.stop = true;
     this.app.destroy();
   }
 
@@ -181,6 +182,10 @@ class LandingCanvas extends React.PureComponent {
   }
 
   animate() {
+    if (this.stop) {
+      return;
+    }
+
     this.mapGraphics.clear();
     this.addHexCells();
 
