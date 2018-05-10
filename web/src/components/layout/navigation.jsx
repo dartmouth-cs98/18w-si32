@@ -105,16 +105,19 @@ const styles = {
     zIndex: 1000
   },
   inner: {
-    width: constants.BODY_WIDTH,
+    //width: constants.BODY_WIDTH,
     height: constants.NAVBAR_HEIGHT,
     margin: "0px auto",
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
+    paddingLeft: 10,
+    paddingRight: 5,
+
   },
   mainNav: {
     display: "flex",
-    alignItems: "center"
+    alignItems: "center",
   },
   userAreaContainer: {
     display: "flex",

@@ -6,6 +6,8 @@ import Button from "../common/button";
 
 import { colors, constants } from "../../style";
 
+let n_matches = 5;
+
 class MatchList extends React.PureComponent {
 
   renderBotList = (match) => {
