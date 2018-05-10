@@ -15,7 +15,7 @@
     }
   },
   "globals": {
-    "PRODUCTION": true
+    "ENV": true,
   },
   "rules": {
     "quotes": [

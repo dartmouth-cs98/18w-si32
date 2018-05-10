@@ -16,7 +16,7 @@ module.exports = merge(common, {
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
     new webpack.DefinePlugin({
-      PRODUCTION: false,
+      ENV: "'LOCAL'",
     })
   ],
 });
