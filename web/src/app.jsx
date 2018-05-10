@@ -11,6 +11,8 @@ import { setUserForSession } from "./data/session/sessionActions";
 
 import Navigation from "./components/layout/navigation";
 
+import socket from "./util/socket";
+
 class App extends React.Component {
   constructor() {
     super();

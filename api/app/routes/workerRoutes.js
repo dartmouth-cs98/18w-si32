@@ -6,6 +6,7 @@ const fs = require("fs");
 const s3 = require("../files/s3");
 const auth = require("../auth");
 const Match = require("../models").Match;
+const socket = require("../lib/socket");
 
 const workerRouter = Router();
 
@@ -26,6 +27,9 @@ workerRouter.get("/nextTask", async (ctx, next) => {
     };
     return next();
   }
+  
+  // inform frontend via the socket that the game is now running
+  socket.matchStarted(match.id);
 
   /* eslint-disable node/no-unsupported-features */
   ctx.body = {
@@ -57,6 +61,9 @@ workerRouter.post("/result/:matchId", async (ctx, next) => {
 
     // if that was all successful, put the log in s3
     await s3.uploadLog(matchId, logData);
+
+    // inform frontend via the socket that the game is done
+    socket.matchResults(matchId);
 
     ctx.body = {message: "thanks bud"};
     return next();

@@ -4,6 +4,8 @@ const Koa = require("koa");
 const cors = require("@koa/cors");
 const koaBody = require("koa-body");
 
+const socket = require("./lib/socket");
+
 /* eslint-disable no-unused-vars */
 const db = require("./db");
 /* eslint-enable no-unused-vars */
@@ -30,8 +32,12 @@ app
   .use(rootRouter.allowedMethods());
 
 
-// listen for requests
-app.listen(PORT);
+
+// create the server and start listening!
+const server = require("http").createServer(app.callback());
+socket.init(server); // initialize the websocket
+server.listen(PORT)
+
 
 /* eslint-disable no-console */
 console.log(`Server listening on port ${PORT}`);
