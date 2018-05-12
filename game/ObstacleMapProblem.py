@@ -48,7 +48,7 @@ class ObstacleMapProblem:
 
             if not (cell is None):
                 if self.flags == "None":
-                    if cell.occupiable:
+                    if (not cell.obstructed):
                         successor_list.append(new_state)
                 elif self.flags == "Enemy units":
                     if self.cell_has_no_enemy_units(cell):
@@ -67,7 +67,7 @@ class ObstacleMapProblem:
                             adjacents = self.get_adjacents_of_cell(enemy_cell)
                             cells_with_enemy_units_and_adjacent_cells = cells_with_enemy_units_and_adjacent_cells.union(adjacents)
 
-                    if cell.occupiable and (not (cell.position in cells_with_enemy_units_and_adjacent_cells)):
+                    if (not cell.obstructed) and (not (cell.position in cells_with_enemy_units_and_adjacent_cells)):
                         successor_list.append(new_state)
                 elif self.flags == "Enemy buildings":
                     if self.cell_has_no_enemy_buildings(cell):
@@ -90,17 +90,17 @@ class ObstacleMapProblem:
                             adjacents = self.get_adjacents_of_cell(enemy_cell)
                             cells_with_enemy_units_and_adjacent_cells = cells_with_enemy_units_and_adjacent_cells.union(adjacents)
 
-                    if cell.occupiable and (not (cell.position in cells_with_enemy_units_and_adjacent_cells)):
+                    if (not cell.obstructed) and (not (cell.position in cells_with_enemy_units_and_adjacent_cells)):
                         successor_list.append(new_state)
 
 
         return successor_list
 
     def cell_has_no_enemy_units(self, cell):
-        return cell.occupiable and ((self.get_pos_owner(cell.position) == self.playerId) or (self.get_pos_owner(cell.position) is None))
+        return (not cell.obstructed) and ((self.get_pos_owner(cell.position) == self.playerId) or (self.get_pos_owner(cell.position) is None))
 
     def cell_has_no_enemy_buildings(self, cell):
-        return cell.occupiable and ((cell.hive is None) or (cell.hive.ownerId == self.playerId))
+        return (not cell.obstructed) and ((cell.hive is None) or (cell.hive.ownerId == self.playerId))
 
     def goal_test(self, state):
         if state == self.goal_state:
@@ -113,11 +113,10 @@ class ObstacleMapProblem:
         directions = direction_deltas[cell.position.y & 1]
         for direction in directions:
             adjacent = cell.position.adjacent_in_direction(direction)
-            if self.map.position_in_range(adjacent):
+            if self.map.position_within_bounds(adjacent):
                 adjacents.add(adjacent)
 
         return adjacents
-
 
     def get_pos_owner(self, pos):
         cell = self.map.get_cell(pos)
