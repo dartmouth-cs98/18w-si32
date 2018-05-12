@@ -113,7 +113,7 @@ class ObstacleMapProblem:
         directions = direction_deltas[cell.position.y & 1]
         for direction in directions:
             adjacent = cell.position.adjacent_in_direction(direction)
-            if self.map.position_in_range(adjacent):
+            if self.map.position_within_bounds(adjacent):
                 adjacents.add(adjacent)
 
         return adjacents

@@ -40,7 +40,8 @@ class Map:
 
     def initialize_map(self, width, height, uniform):
         # choose a random map type
-        map_type = choice(range(len(MAP_DISPATCH)))
+        # map_type = choice(range(len(MAP_DISPATCH)))
+        map_type = 0
         return MAP_DISPATCH[map_type](width, height, self.num_players, uniform)
 
     # determine if paths exists between all players given the current map configuration
@@ -79,29 +80,21 @@ class Map:
 
     # return cell at specified position
     def get_cell(self, position):
-        if not self.position_in_range(position):
+        assert(type(position) is Coordinate)
+        if not self.position_within_bounds(position):
             return None
 
         return self.cells[position.y][position.x]
 
-    # check if coordinates are contained by map
-    def position_in_range(self, position):
+    # True if specified position within map bounds, False otherwise
+    def position_within_bounds(self, position):
         assert(type(position) is Coordinate)
-
         return (position.x >= 0) and (position.x < self.width) and (position.y >= 0) and (position.y < self.height)
 
-    # check if cell is within map
-    def cell_in_range(self, cell):
-        return self.position_in_range(cell.position)
-
-    # check if position is free
-    def position_free(self, position):
+    # True if cell at specified position is NOT obstructed, False otherwise
+    def position_unobstructed(self, position):
         c = self.get_cell(position)
-        return c is not None
-
-    # check if cell is free
-    def cell_free(self, cell):
-        return self.cell_in_range(cell)
+        return (c is not None) and (not c.obstructed)
 
     # returns only the state we care about for the game log
     def get_state(self):
@@ -140,18 +133,21 @@ class Map:
 
 # random distribution of obstacles
 def random(width, height, n_players, uniform):
+    # pick a random density factor
+    density_factor = randint(2, 8)
+
     cells = []
     for r in range(height):
         row = []
         for c in range(width):
-            obstructed = randint(1, 2) == 1 and (not is_start_position(c, r, n_players))
+            obstructed = randint(1, density_factor) == 1 and (not is_start_position(c, r, n_players))
             new_cell = Cell(Coordinate(x=c, y=r), n_players, obstructed, uniform)
             row.append(new_cell)
         cells.append(row)
 
     return cells
 
-# obstacles arranged in vertical barrier configuration 
+# obstacles arranged in vertical barrier configuration
 def vertical_barrier(width, height, n_players, uniform):
     cells = []
     for r in range(height):
@@ -164,9 +160,23 @@ def vertical_barrier(width, height, n_players, uniform):
 
     return cells
 
+# obstacles arranged in horizontal barrier configuration
+def horizontal_barrier(width, height, n_players, uniform):
+    cells = []
+    for r in range(height):
+        row = []
+        for c in range(width):
+            obstructed = c > 2 and c < (width - 2) and r > (width / 2) - 1 and r < (width / 2) + 1 and (not is_start_position(c, r, n_players))
+            new_cell = Cell(Coordinate(x=c, y=r), n_players, obstructed, uniform)
+            row.append(new_cell)
+        cells.append(row)
+
+    return cells
+
 MAP_DISPATCH = {
     0: random,
-    1: vertical_barrier
+    1: vertical_barrier,
+    2: horizontal_barrier
 }
 
 # ------------------------------------------------------------------------------

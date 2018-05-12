@@ -106,7 +106,8 @@ class Game(ABC):
 
     # send all players the updated game state so they can make decisions
     def send_state(self):
-        cur_state = self.logger.get_cur_turn() # use the logger's representation of the map
+        # use the logger's representation of the map
+        cur_state = self.logger.get_cur_turn()
 
         # and send that to everyone
         for p in self.players:
@@ -191,8 +192,8 @@ class Game(ABC):
 
     def execute_move(self, move):
         if self.rules.verify_move(move):
-            self.logger.add_move(move)
             self.rules.update_by_move(move)
+            self.logger.add_move(move)
 
     def count_units_sent(self, moves):
         cells = {}
