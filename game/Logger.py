@@ -38,7 +38,7 @@ class Logger:
             this_row = []
             for c in row:
                 cleaned_cell = {}
-                if not c.occupiable:
+                if c.obstructed:
                     cleaned_cell["o"] = True
                 else:
                     if c.hive:

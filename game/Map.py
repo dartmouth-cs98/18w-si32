@@ -1,7 +1,7 @@
 # Map.py
 # Class implementation for 'Map'
 
-from random import randint
+from random import randint, choice
 
 from game.Cell import Cell
 from game.Coordinate import Coordinate
@@ -26,7 +26,6 @@ from game.astar_search import astar_search
 # width (number)       - the width of the map (in cells)
 # height (number)      - the height of the map (in cells)
 
-
 class Map:
     def __init__(self, num_players, uniform, width=DEFAULT_MAP_WIDTH, height=DEFAULT_MAP_HEIGHT):
         self.width = width
@@ -40,39 +39,10 @@ class Map:
             self.cells = self.initialize_map(width, height, uniform)
 
     def initialize_map(self, width, height, uniform):
-        cells = []
-        for r in range(height):
-            row = []
-            for c in range(width):
-
-                # (maybe adjust later) distribution of roughly 1 in 5 cells blocked
-                p = randint(1, 6)
-                if p == 1:
-                    occupiable = False
-                else:
-                    occupiable = True
-
-                # if a cell is a starter position, make it free
-                if self.num_players == 1:
-                    if (c, r) in ONE_PLAYER_START_POS:
-                        occupiable = True
-                elif self.num_players == 2:
-                    if (c, r) in TWO_PLAYER_START_POS:
-                        occupiable = True
-                elif self.num_players == 3:
-                    if (c, r) in THREE_PLAYER_START_POS:
-                        occupiable = True
-                elif self.num_players == 4:
-                    if (c, r) in FOUR_PLAYER_START_POS:
-                        occupiable = True
-
-                # new_cell = Cell(Coordinate(x=c, y=r), self.num_players, True, uniform) # ALL cells are free
-                new_cell = Cell(Coordinate(x=c, y=r), self.num_players, occupiable, uniform)
-
-                row.append(new_cell)
-            cells.append(row)
-
-        return cells
+        # choose a random map type
+        # map_type = choice(range(len(MAP_DISPATCH)))
+        map_type = 0
+        return MAP_DISPATCH[map_type](width, height, self.num_players, uniform)
 
     # determine if paths exists between all players given the current map configuration
     def players_reachable(self):
@@ -98,7 +68,7 @@ class Map:
     # INPUTS: "start" (a tuple), "goal" (a tuple)
     # RETURN: a list of tuples indicating a possible path between "start" and "goal" positions
     def path(self, start, goal):
-        if (not (self.get_cell(start)).occupiable) or (not (self.get_cell(goal)).occupiable):
+        if (self.get_cell(start)).obstructed or (self.get_cell(goal)).obstructed:
             empty = []
             return empty
 
@@ -110,30 +80,21 @@ class Map:
 
     # return cell at specified position
     def get_cell(self, position):
-        if not self.position_in_range(position):
+        assert(type(position) is Coordinate)
+        if not self.position_within_bounds(position):
             return None
 
         return self.cells[position.y][position.x]
 
-    # check if coordinates are contained by map
-    def position_in_range(self, position):
+    # True if specified position within map bounds, False otherwise
+    def position_within_bounds(self, position):
         assert(type(position) is Coordinate)
-
         return (position.x >= 0) and (position.x < self.width) and (position.y >= 0) and (position.y < self.height)
 
-    # check if cell is within map
-    def cell_in_range(self, cell):
-        return self.position_in_range(cell.position)
-
-    # check if position is free
-    def position_free(self, position):
+    # True if cell at specified position is NOT obstructed, False otherwise
+    def position_unobstructed(self, position):
         c = self.get_cell(position)
-        #return c is not None and c.occupiable
-        return c is not None
-
-    # check if cell is free
-    def cell_free(self, cell):
-        return self.cell_in_range(cell) #and cell.occupiable
+        return (c is not None) and (not c.obstructed)
 
     # returns only the state we care about for the game log
     def get_state(self):
@@ -160,9 +121,76 @@ class Map:
         f = "\nFree cells:\n"
         for r in self.cells:
             for cell in r:
-                if (not cell.occupiable):
+                if cell.obstructed:
                     b += str(cell.position)
                     b += " "
                 else:
                     f += str(cell.position)
         return b + f
+
+# ------------------------------------------------------------------------------
+# Map Generation
+
+# random distribution of obstacles
+def random(width, height, n_players, uniform):
+    # pick a random density factor
+    density_factor = randint(2, 8)
+
+    cells = []
+    for r in range(height):
+        row = []
+        for c in range(width):
+            obstructed = randint(1, density_factor) == 1 and (not is_start_position(c, r, n_players))
+            new_cell = Cell(Coordinate(x=c, y=r), n_players, obstructed, uniform)
+            row.append(new_cell)
+        cells.append(row)
+
+    return cells
+
+# obstacles arranged in vertical barrier configuration
+def vertical_barrier(width, height, n_players, uniform):
+    cells = []
+    for r in range(height):
+        row = []
+        for c in range(width):
+            obstructed = c > (width / 2) - 1 and c < (width / 2) + 1 and r > 2 and r < (width - 2) and (not is_start_position(c, r, n_players))
+            new_cell = Cell(Coordinate(x=c, y=r), n_players, obstructed, uniform)
+            row.append(new_cell)
+        cells.append(row)
+
+    return cells
+
+# obstacles arranged in horizontal barrier configuration
+def horizontal_barrier(width, height, n_players, uniform):
+    cells = []
+    for r in range(height):
+        row = []
+        for c in range(width):
+            obstructed = c > 2 and c < (width - 2) and r > (width / 2) - 1 and r < (width / 2) + 1 and (not is_start_position(c, r, n_players))
+            new_cell = Cell(Coordinate(x=c, y=r), n_players, obstructed, uniform)
+            row.append(new_cell)
+        cells.append(row)
+
+    return cells
+
+MAP_DISPATCH = {
+    0: random,
+    1: vertical_barrier,
+    2: horizontal_barrier
+}
+
+# ------------------------------------------------------------------------------
+# Helpers
+
+# determine if the given cell coordinates are a starting position
+def is_start_position(c, r, n_players):
+    if n_players == 1 and (c, r) in ONE_PLAYER_START_POS:
+        return True
+    elif n_players == 2 and (c, r) in TWO_PLAYER_START_POS:
+        return True
+    elif n_players == 3 and (c, r) in THREE_PLAYER_START_POS:
+        return True
+    elif n_players == 4 and (c, r) in FOUR_PLAYER_START_POS:
+        return True
+
+    return False
