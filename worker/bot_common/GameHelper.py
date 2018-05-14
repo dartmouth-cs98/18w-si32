@@ -30,6 +30,9 @@ class GameHelper:
         # second thing is number of players
         self.numPlayers = read(sys.stdin.buffer)
 
+        # third thing is the params set for this bot for the game
+        self.loadParams()
+
         self.map = None
 
         #list of enemy IDs
@@ -44,6 +47,20 @@ class GameHelper:
 
     def __del__(self):
         self.logfile.close()
+
+    # --------------------------------------------------------------------------
+    # BOT PARAMETERS
+
+    # Reads bot parameters over stdin and sets them in parameter dictionary
+    def load_params(self):
+        self.params = read(sys.stdin.buffer)
+
+    # Get the value for a parameter specified externally (via the web UI)
+    # Return: value, or None if nonexistent param
+    def param(self, param_name):
+        if param_name in self.params:
+            return self.params[param_name]
+        return None
 
     # --------------------------------------------------------------------------
     # COMMAND CREATION
