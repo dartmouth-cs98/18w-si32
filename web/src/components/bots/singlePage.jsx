@@ -1,6 +1,7 @@
 import React from "react";
 import Radium from "radium";
 import { connect } from "react-redux";
+import history from "../../history";
 import { Page, Wrapper, TitleBar } from "../layout";
 import { fetchBot, updateBotCode } from "../../data/bot/botActions";
 import { colors, constants } from "../../style";
@@ -16,15 +17,13 @@ class BotSinglePage extends React.PureComponent {
     this.props.fetchBot();
   }
 
-  handleFileChange = (event) => {
-    // store handle to the selected file
-    // TODO check on client side that this is valid
-    this.props.upload(event.target.files[0]);
-  }
-
   // when upload button pressed, open the file input
-  uploadNewBot = () => {
-    this.input.click();
+  updateBotClicked = (e) => {
+    if (e) {
+      e.preventDefault();
+    }
+
+    history.push(`/bots/${this.props.id}/update`);
   }
 
   render() {
@@ -37,8 +36,8 @@ class BotSinglePage extends React.PureComponent {
         <TitleBar
           title={this.props.bot.name}
           right={`v${this.props.bot.version}`}
-          buttonLabel={(this.props.userId == this.props.bot.user) && "Upload a new version"}
-          buttonAction={this.uploadNewBot}
+          buttonLabel={(this.props.userId == this.props.bot.user) && "Update Bot"}
+          buttonAction={this.updateBotClicked}
         />
         <input ref={(input) => this.input = input} type="file" style={styles.inputFile} onChange={this.handleFileChange} />
         <Wrapper>
@@ -147,7 +146,6 @@ const styles = {
 
 const mapDispatchToProps = (dispatch, props) => ({
   fetchBot: () => dispatch(fetchBot(props.id)),
-  upload: (file) => dispatch(updateBotCode(props.id, file)),
 });
 
 const mapStateToProps = (state, props) => ({
