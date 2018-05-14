@@ -18,9 +18,9 @@ class ObstacleMapProblem:
         return string
 
     def transition_cost_fn(self, first_state, second_state):
-        if first_state.x != second_state.x:  #if any position coordinate changed, movement happened
+        if first_state.x != second_state.x:  # if any position coordinate changed, movement happened
             return 1
-        if first_state.y != second_state.y:  #if any position coordinate changed, movement happened
+        if first_state.y != second_state.y:  # if any position coordinate changed, movement happened
             return 1
         else:
             return 0
@@ -36,14 +36,14 @@ class ObstacleMapProblem:
     def get_successors(self, state):
         successor_list = []
 
-        #directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+        # directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]
         directions = direction_deltas[state.y & 1]
 
         cells_with_enemy_units_and_adjacent_cells = set()
 
         for direction in directions:
             new_state = state.adjacent_in_direction(direction)
-            #new_state = Coordinate(state.x + direction[0], state.y + direction[1])
+            # new_state = Coordinate(state.x + direction[0], state.y + direction[1])
             cell = self.map.get_cell(Coordinate(new_state.x, new_state.y))
 
             if not (cell is None):

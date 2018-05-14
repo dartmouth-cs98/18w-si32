@@ -417,11 +417,18 @@ class GameHelper:
 
         return result.path
 
-    def smarter_move(self, start, goal, flags="None", num_units=0):
-        path = self.path(start, goal, flags)
+    def smarter_move_towards(self, position_from, position_to, flags="None", num_units=None):
+        position_from = Coordinate(position_from)
+        position_to = Coordinate(position_to)
+
+        path = self.path(position_from, position_to, flags)
+        if position_from == position_to:
+            return None
+
         if len(path) > 1:
             d = (path[1].x - path[0].x, path[1].y - path[0].y)
-            return self.move(start, num_units, d)
+            num_units = num_units if num_units else self.get_unit_count_by_position(position_from.x, position_from.y)
+            return self.move(position_from, num_units, d)
         else:
             return None
 
