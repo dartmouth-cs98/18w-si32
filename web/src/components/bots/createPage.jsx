@@ -9,6 +9,7 @@ import history from "../../history";
 import { Input, Label, FileInput } from "../form";
 import { Page, Wrapper } from "../layout";
 import { createBot } from "../../data/bot/botActions";
+import BotParamSelect from "./BotParamSelect";
 
 import { fontStyles, colorStyles } from "../../style";
 
@@ -85,6 +86,8 @@ class BotCreatePage extends React.PureComponent {
                 name="botFile"
                 onChange={this.handleFileChange}
               />
+
+              <BotParamSelect file={this.state.botFile} />
 
               <input type="submit" style={{display: "none"}} />
               <Button kind="primary" onClick={this.submit} style={styles.submitButton} disabled={this.state.submitting}>
