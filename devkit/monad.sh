@@ -17,7 +17,7 @@ elif [ "$1" = "upload" ]; then
   python ./scripts/upload.py "${@:2}"
 else
   # unrecognized command
-  echo "ERROR: unrecognized command"
+  echo "error: unrecognized command"
   exit 1
 fi
 
