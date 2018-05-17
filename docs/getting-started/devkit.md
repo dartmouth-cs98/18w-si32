@@ -93,7 +93,9 @@ optional arguments:
 ### Train a Bot over Multiple Iterations
 
 Run multiple matches in succession, and output the results metadata once
-all matches have been completed. By default, no logfiles are written.
+all matches have been completed.
+
+By default, no logfiles are written.
 
 **Usage**
 
@@ -130,3 +132,5 @@ optional arguments:
   -h, --help         show this help message and exit
   -d, --development  specify development mode
 ```
+
+<div style="padding-bottom:50px"></div>

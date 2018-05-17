@@ -7,9 +7,10 @@
     "theme-api": {
       "languages": [
         {
-          
+
         }
       ]
     }
-  }
+  },
+  "pdf.margin.bottom": "100"
 }
