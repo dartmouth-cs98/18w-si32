@@ -1,15 +1,19 @@
+# endpoints.py 
+
 import sys
 import os
 import requests
 import urllib.request
 
-# by default use localhost, but if api_route set in environment point to different url
+# by default use localhost,
+# but if api_route set in environment point to different url
 API = 'http://localhost:3000/worker'
 if 'api_route' in os.environ:
     API = os.environ['api_route']
 
 def is_game_ready():
     try:
+        print("making request")
         return requests.get(API + '/nextTask').json()
     except requests.exceptions.ConnectionError as err:
         return { 'newGame': False }
