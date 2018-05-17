@@ -14,6 +14,7 @@
     "up": "docker-compose up",
     "start": "nodemon app/index.js",
     "prepush": "npm run lint",
+    "clean": "npm run clean-containers && npm run clean-images",
     "clean-images": "docker rmi $(docker images -a -q)",
     "clean-containers": "docker stop $(docker ps -a -q) && docker rm $(docker ps -a -q)"
   },
