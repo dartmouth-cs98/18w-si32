@@ -389,7 +389,7 @@ class GameHelper:
 
     # returns True if player with playerId1 has more units than player with playerId2
     def compare_total_unit_count(self, playerId1=None, playerId2=None):
-        if (playerId1 == None | playerId2 == None):
+        if playerId1 == None | playerId2 == None:
             playerId1 = 0
             playerId2 = 1
         if (self.get_player_unit_count(playerId1) > self.get_player_unit_count(playerId2)):
@@ -436,7 +436,7 @@ class GameHelper:
             return None
 
     # Return the distance between two positions 'start' and 'goal'
-    def distance(self, start, goal, flags):
+    def distance(self, start, goal, flags="None"):
         if (self.get_cell(start)).obstructed or (self.get_cell(goal)).obstructed:
             return None
 
@@ -447,13 +447,32 @@ class GameHelper:
         return len(result.path)
 
     # Return the position of the closest hive to 'start'
-    def closest_hive_pos(self, start, flags):
+    def closest_hive_pos(self, start, flags="None"):
         closest_distance = float("inf")
         closest_pos = None
         all_bld_positions = self.get_all_hive_positions()
 
         for pos in all_bld_positions:
             if self.distance(start, pos, flags) is None:
+                continue
+            if self.distance(start, pos, flags) == 0:
+                continue
+            if self.distance(start, pos, flags) < closest_distance:
+                closest_distance = self.distance(start, pos, flags)
+                closest_pos = pos
+
+        return closest_pos
+
+    # Return the position of the closest hive to 'start'
+    def closest_enemy_hive_pos(self, start, flags="None"):
+        closest_distance = float("inf")
+        closest_pos = None
+        enemy_bld_positions = self.get_enemy_hive_positions()
+
+        for pos in enemy_bld_positions:
+            if self.distance(start, pos, flags) is None:
+                continue
+            if self.distance(start, pos, flags) == 0:
                 continue
             if self.distance(start, pos, flags) < closest_distance:
                 closest_distance = self.distance(start, pos, flags)
@@ -462,7 +481,7 @@ class GameHelper:
         return closest_pos
 
     # Return the position of the closest hive to 'start' controlled by player with ID 'id'
-    def closest_hive_pos_by_id(self, start, playerID, flags):
+    def closest_hive_pos_by_id(self, start, playerID, flags="None"):
         closest_distance = float("inf")
         closest_pos = None
         all_bld_positions = self.get_all_hive_positions()
@@ -490,6 +509,14 @@ class GameHelper:
         for x in range(bottom_left.x, top_right.x + 1):
             for y in range(bottom_left.y, top_right.y + 1):
                 if self.get_pos_owner(Coordinate(x, y)) == id:
+                    units += self.get_unit_count_by_position(x, y)
+        return units
+
+    def get_enemy_unit_count_in_region(self, bottom_left, top_right):
+        units = 0
+        for x in range(bottom_left.x, top_right.x + 1):
+            for y in range(bottom_left.y, top_right.y + 1):
+                if self.get_pos_owner(Coordinate(x, y)) != self.myId:
                     units += self.get_unit_count_by_position(x, y)
         return units
 
@@ -533,6 +560,8 @@ class GameHelper:
 
         return commands
 
+    def coordinate(self, x, y):
+        return Coordinate(x, y)
     # --------------------------------------------------------------------------
     # LOGGING
 
