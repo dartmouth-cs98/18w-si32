@@ -10,7 +10,7 @@ const fetchBots = (userId) => httpGetAction("BOT", "/bots", { userId });
 
 const fetchBot = (botId) => httpGetAction("BOT", `/bots/${botId}`, null, { isSingle: true });
 
-const createBot = (name, code) => (dispatch, getState) => {
+const createBot = (name, code, params) => (dispatch, getState) => {
   if (!name) {
     return Promise.reject("Need to name your bot");
   }
@@ -22,6 +22,7 @@ const createBot = (name, code) => (dispatch, getState) => {
     .post("/bots")
     .field("name", name)
     .field("code", code)
+    .field("params", JSON.stringify(params))
     .then(res => {
       // push the new bot into the store
       dispatch({

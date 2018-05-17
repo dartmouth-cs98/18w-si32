@@ -27,10 +27,14 @@ botRouter.post("/", async (ctx) => {
     throw new MalformedError("Bot must be a python file");
   }
 
+  const params = JSON.parse(ctx.request.body.fields.params);
+  const cleanParams = Bot.cleanParams(params);
+
   const bot = await Bot.create({
     name: ctx.request.body.fields.name,
     user: ctx.state.userId,
     trueSkill: {},
+    params: cleanParams,
   });
 
   const { key } = await s3.uploadBot(ctx.state.userId, bot._id, ctx.request.body.files.code);

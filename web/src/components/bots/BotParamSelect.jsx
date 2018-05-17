@@ -1,6 +1,7 @@
 import React from "react";
 import Radium from "radium";
 import history from "../../history";
+import { Input, Label, FileInput } from "../form";
 import { colors, constants } from "../../style";
 
 // parses a file and returns all params found in the file that the user 
@@ -8,11 +9,12 @@ import { colors, constants } from "../../style";
 const getParamsFromFile = (file) => {
   return new Promise((resolve, reject) => {
     // read the file
+    const usedParams = {};
     var reader = new FileReader();
     reader.readAsText(file, "UTF-8");
 
     reader.onload = (evt) => {
-      const params = {};
+      const params = [];
       const code = evt.target.result;
       const re = /game.param\((['"])(.*)\1\)/g; // create regex to pluck out the param name 
       let match = re.exec(code);
@@ -20,7 +22,11 @@ const getParamsFromFile = (file) => {
       // iterate over matches
       while (match != null) {
         // set the param as a key in the params we have
-        params[match[2]] = { type: null, value: null }; 
+        if (!(match in usedParams)) {
+          params.push({ name: match[2], type: "", value: "" }); 
+          usedParams[match] = true;
+        }
+
         match = re.exec(code);
       }
       resolve(params);
@@ -32,6 +38,54 @@ const getParamsFromFile = (file) => {
 
   });
 };
+
+class _BotParamInput extends React.PureComponent {
+
+  nameChanged = (event) => {
+    this.props.onChange(event.target.value, this.props.param.value, this.props.param.type);
+  }
+
+  valueChanged = (event) => {
+    this.props.onChange(this.props.param.name, event.target.value, this.props.param.type);
+  }
+
+  typeChanged = (event) => {
+    this.props.onChange(this.props.param.name, this.props.param.value, event.target.value);
+  }
+
+  render() {
+    return (
+    <div style={styles.param}>
+      <div style={styles.paramBox}>
+        <Label kind="sub">Param name</Label>
+        <Input
+          type="text"
+          value={this.props.param.name}
+          onChange={this.nameChanged}
+        />
+      </div>
+      <div style={[styles.paramBox, {margin: "0 20px"}]}>
+        <Label kind="sub">Value</Label>
+        <Input
+          type="text"
+          value={this.props.param.value}
+          onChange={this.valueChanged}
+        />
+      </div>
+      <div style={[styles.paramBox, {flexGrow: 0}]}>
+        <Label kind="sub">Type</Label>
+        <select style={styles.select} value={this.props.param.type} onChange={this.typeChanged}>
+          <option value=""></option>
+          <option value="int">Int</option>
+          <option value="float">Float</option>
+          <option value="string">String</option>
+        </select>
+      </div>
+    </div>
+    );
+  }
+}
+const BotParamInput = Radium(_BotParamInput);
 
 class BotParamSelect extends React.PureComponent {
   constructor(props) {
@@ -51,32 +105,49 @@ class BotParamSelect extends React.PureComponent {
         });
       });
     }
-
   }
 
   mergeParamsFromFile = (params) => {
     const newParams = {};
 
     _.each(params, (val, key) => {
-
       if (key in this.state.params) {
         newParams[key] = this.state.params[key];
       } else {
         newParams[key] = val;
       }
-
     }); 
+
     this.setState({
       params: newParams,
     });
+    this.props.onChange(params);
+  }
+
+  paramChanged = (index) => (name, value, type) => {
+    const params = this.state.params;
+    params[index].name = name;
+    params[index].value = value;
+    params[index].type = type;
+    this.props.onChange(params);
+    this.forceUpdate();
   }
 
   render() {
     console.log("P", this.state.params);
     return (
       <div>
+        <Label>
+          Set any parameters for your bot
+        </Label>
         { this.state.error }
-        <div>bot params { _.map(this.state.params, (p,k) => k) }</div>
+        { _.map(this.state.params, (param,i) => 
+          <BotParamInput
+            key={i}
+            param={param}
+            onChange={this.paramChanged(i)} 
+          />
+        ) }
       </div>
     );
   }
@@ -86,7 +157,32 @@ const styles = {
   error: {
     color: colors.red,
     padding: "10px 0",
-  }
+  },
+  params: {
+  },
+  param: {
+    display: "flex",
+    justifyContent: "space-between",
+    borderBottom: `1px solid ${colors.border}`,
+  },
+  paramBox: {
+    flex: 1,
+  },
+
+  select: {
+    minWidth: 80,
+    height: constants.INPUT_HEIGHT,
+    fontSize: constants.fontSizes.small,
+    padding: 10,
+    margin: "10px 0",
+    borderColor: colors.border,
+    borderStyle: "solid",
+    borderWidth: "2px",
+    borderRadius: 3,
+    ":focus": {
+      borderColor: colors.lightGray,
+    }
+  },
 };
 
 export default Radium(BotParamSelect);

@@ -16,7 +16,7 @@ import { fontStyles, colorStyles } from "../../style";
 class BotCreatePage extends React.PureComponent {
   constructor(props) {
     super(props);
-    this.state = { botName: "" };
+    this.state = { botName: "", params: [] };
   }
 
   handleInputChange = (event) => {
@@ -47,7 +47,7 @@ class BotCreatePage extends React.PureComponent {
       error: false,
     });
 
-    this.props.create(this.state.botName, this.state.botFile).then(() => {
+    this.props.create(this.state.botName, this.state.botFile, this.state.params).then(() => {
       // after making a bot, users probably want to start a match with it
       // TODO pre-select the bot
       history.push("/matches/create");
@@ -61,6 +61,12 @@ class BotCreatePage extends React.PureComponent {
       this.setState({
         submitting: false,
       });
+    });
+  }
+
+  paramsChanged = (params) => {
+    this.setState({
+      params,
     });
   }
 
@@ -87,7 +93,9 @@ class BotCreatePage extends React.PureComponent {
                 onChange={this.handleFileChange}
               />
 
-              <BotParamSelect file={this.state.botFile} />
+              <div style={{marginTop: 30}}>
+                <BotParamSelect file={this.state.botFile} onChange={this.paramsChanged} />
+              </div>
 
               <input type="submit" style={{display: "none"}} />
               <Button kind="primary" onClick={this.submit} style={styles.submitButton} disabled={this.state.submitting}>
@@ -103,7 +111,7 @@ class BotCreatePage extends React.PureComponent {
 
 const styles = {
   uploadWrap: {
-    maxWidth: 500,
+    maxWidth: 600,
     margin: "20px auto",
   },
   form: {
@@ -116,7 +124,7 @@ const styles = {
 };
 
 const mapDispatchToProps = dispatch => ({
-  create: (name, file) => dispatch(createBot(name, file)),
+  create: (name, file, params) => dispatch(createBot(name, file, params)),
 });
 
 export default connect(null, mapDispatchToProps)(Radium(BotCreatePage));
