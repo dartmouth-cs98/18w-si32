@@ -418,8 +418,11 @@ class GameHelper:
         return result.path
 
     def smarter_move_towards(self, position_from, position_to, flags="None", num_units=None):
-        position_from = Coordinate(position_from)
-        position_to = Coordinate(position_to)
+        if not (type(position_from) is Coordinate):
+            position_from = Coordinate(position_from)
+
+        if not (type(position_to) is Coordinate):
+            position_to = Coordinate(position_to)
 
         path = self.path(position_from, position_to, flags)
         if position_from == position_to:
@@ -480,7 +483,8 @@ class GameHelper:
         return closest_pos
 
     # Return the number of units of a certain ID in the rectangular region with bottom left corner at 'bottom_left'
-    # and top right corner at 'top_right'
+    # and top right corner at 'top_right' (both coordinates)
+    # Inputs are Coordinates
     def get_unit_count_in_region_by_id(self, bottom_left, top_right, id):
         units = 0
         for x in range(bottom_left.x, top_right.x + 1):
@@ -489,6 +493,45 @@ class GameHelper:
                     units += self.get_unit_count_by_position(x, y)
         return units
 
+    def get_pos_with_most_units_in_region_by_id(self, bottom_left, top_right, id):
+        units = -1 * float("inf")
+        pos = None
+
+        for x in range(bottom_left.x, top_right.x + 1):
+            for y in range(bottom_left.y, top_right.y + 1):
+                if self.get_pos_owner(Coordinate(x, y)) == id:
+                    if self.get_unit_count_by_position(x, y) > units:
+                        units = self.get_unit_count_by_position(x, y)
+                        pos = Coordinate(x, y)
+        return pos
+    # --------------------------------------------------------------------------
+    # OTHER METHODS
+
+    # Returns a list of moves/commands that will try to gather the units belonging to player with id 'id' into
+    # the cell with the greatest number of units
+
+    # returns empty list if no further consolidation is possible
+    def consolidate(self, bottom_left, top_right, id, flags="None"):
+        commands = []
+
+        pos_with_most_units = self.get_pos_with_most_units_in_region_by_id(bottom_left, top_right, id)
+
+        if pos_with_most_units is None:
+            return commands
+
+        occupied_cells = self.get_occupied_cells(id)
+        occupied_positions_within_region = []
+
+        for cell in occupied_cells:
+            if (cell.position.x >= bottom_left.x) & (cell.position.x <= top_right.x) & (cell.position.y >= bottom_left.y) & (cell.position.y <= top_right.y):
+                occupied_positions_within_region.append(cell.position)
+
+        for occupied_position in occupied_positions_within_region:
+            move = self.smarter_move_towards(occupied_position, pos_with_most_units, flags)
+            if not (move is None):
+                commands.append(move)
+
+        return commands
 
     # --------------------------------------------------------------------------
     # LOGGING
