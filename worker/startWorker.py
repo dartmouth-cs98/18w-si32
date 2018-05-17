@@ -9,11 +9,10 @@ from waitForGame import pollUntilGameReady
 from endpoints import post_match_results
 
 # ------------------------------------------------------------------------------
-# run_worker() 
+# run_worker()
 
 def run_worker():
     while True:
-
         # get the next game
         (botSpecs, gameType, matchId) = pollUntilGameReady()
 
