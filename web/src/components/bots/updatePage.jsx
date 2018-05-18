@@ -124,7 +124,7 @@ class BotUpdatePage extends React.PureComponent {
 
 const styles = {
   uploadWrap: {
-    maxWidth: 500,
+    maxWidth: 600,
     margin: "20px auto",
   },
   form: {
