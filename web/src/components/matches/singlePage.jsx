@@ -28,14 +28,14 @@ class MatchSinglePage extends React.PureComponent {
         socket.emit("waitingMatch", this.props.id);
         
         // when it's running, update UI
-        socket.on("matchStarted", (data) => {
+        socket.on("matchStarted", () => {
           this.setState({
             isRunning: true,
           });
         });
 
         // when it's done, reload data
-        socket.on("matchResults", (data) => {
+        socket.on("matchResults", () => {
           this.loadMatch();
         });
       }

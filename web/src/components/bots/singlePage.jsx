@@ -3,7 +3,7 @@ import Radium from "radium";
 import { connect } from "react-redux";
 import history from "../../history";
 import { Page, Wrapper, TitleBar } from "../layout";
-import { fetchBot, updateBotCode } from "../../data/bot/botActions";
+import { fetchBot } from "../../data/bot/botActions";
 import { colors, constants } from "../../style";
 import SkillHistoryChart from "../common/SkillHistoryChart";
 

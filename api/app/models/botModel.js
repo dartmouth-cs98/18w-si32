@@ -86,14 +86,13 @@ _Bot.statics.cleanParams = (params) => {
       throw new MalformedError("Every param needs a name and value");
     }
 
-    if (!_.includes(["int", "float", "string"], p.type)) {
+    if (!_.includes(["INT", "FLOAT", "STRING"], p.type)) {
       throw new MalformedError(`Invalid param type for ${p.name}`); 
     }
 
     // strip out all quotes from names/vals
     p.name = p.name.replace(/["']/g, "");
     p.value = p.value.replace(/["']/g, "");
-    p.type = p.type.toUpperCase(); // type to uppercase
 
     if (p.type == "FLOAT" && !float_regex.test(p.value)) {
       throw new MalformedError(`${p.value} is not a valid float`);

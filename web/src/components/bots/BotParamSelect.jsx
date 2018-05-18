@@ -1,7 +1,7 @@
 import React from "react";
 import Radium from "radium";
-import history from "../../history";
-import { Input, Label, FileInput } from "../form";
+import _ from "lodash";
+import { Input, Label } from "../form";
 import { colors, constants } from "../../style";
 
 // parses a file and returns all params found in the file that the user 
@@ -30,11 +30,11 @@ const getParamsFromFile = (file) => {
         match = re.exec(code);
       }
       resolve(params);
-    }
+    };
 
-    reader.onerror = (evt) => {
+    reader.onerror = () => {
       reject("Couldn't read the file");
-    }
+    };
 
   });
 };
@@ -76,9 +76,9 @@ class _BotParamInput extends React.PureComponent {
         <Label kind="sub">Type</Label>
         <select style={styles.select} value={this.props.param.type} onChange={this.typeChanged}>
           <option value=""></option>
-          <option value="int">Int</option>
-          <option value="float">Float</option>
-          <option value="string">String</option>
+          <option value="INT">Int</option>
+          <option value="FLOAT">Float</option>
+          <option value="STRING">String</option>
         </select>
       </div>
     </div>
@@ -91,15 +91,24 @@ class BotParamSelect extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      params: {},
+      params: props.initialParams || {},
     };
+    this.init = true;
   }
 
   componentWillReceiveProps(nextProps) {
+    // only update initia params once, when the bot loads
+    if (this.init && nextProps.initialParams != this.props.initialParams) {
+      this.init = false;
+      this.setState({
+        params: nextProps.initialParams,
+      });
+    }
+
     if (nextProps.file != this.props.file) {
       getParamsFromFile(nextProps.file).then((params) => {
         this.mergeParamsFromFile(params);
-      }, err => {
+      }, () => {
         this.setState({
           error: <div style={styles.error}>{"Couldn't parse parameters from that file"}</div>,
         });
@@ -108,20 +117,22 @@ class BotParamSelect extends React.PureComponent {
   }
 
   mergeParamsFromFile = (params) => {
-    const newParams = {};
+    const newParams = [];
+    _.each(params, (p) => {
+      const existing = _.find(this.state.params, { name: p.name });
 
-    _.each(params, (val, key) => {
-      if (key in this.state.params) {
-        newParams[key] = this.state.params[key];
-      } else {
-        newParams[key] = val;
+      // if there's already one of that name, don't erase what the user had
+      if (existing) {
+        newParams.push(Object.assign({}, existing));
+      } else { // otherwise insert the new param
+        newParams.push(p);
       }
     }); 
 
+    this.props.onChange(params);
     this.setState({
       params: newParams,
     });
-    this.props.onChange(params);
   }
 
   paramChanged = (index) => (name, value, type) => {
@@ -134,7 +145,6 @@ class BotParamSelect extends React.PureComponent {
   }
 
   render() {
-    console.log("P", this.state.params);
     return (
       <div>
         <Label>

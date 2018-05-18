@@ -6,20 +6,27 @@ import { connect } from "react-redux";
 import Button from "../common/button";
 import Message from "../common/message";
 import history from "../../history";
-import { Input, Label, FileInput } from "../form";
+import { Label, FileInput } from "../form";
 import { Page, Wrapper } from "../layout";
-import { createBot, fetchBot, updateBotCode } from "../../data/bot/botActions";
+import { createBot, fetchBot, updateBot } from "../../data/bot/botActions";
+import BotParamSelect from "./BotParamSelect";
 
 import { fontStyles, colorStyles } from "../../style";
 
 class BotUpdatePage extends React.PureComponent {
   constructor(props) {
     super(props);
-    this.state = { botName: "" };
+    this.state = { botName: "", params: [] };
   }
 
   componentDidMount() {
     this.props.fetchBot();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.bot.params != _.get(this.props, "bot.params")) {
+      this.setState({ params: nextProps.bot.params });
+    }
   }
 
   handleInputChange = (event) => {
@@ -50,7 +57,7 @@ class BotUpdatePage extends React.PureComponent {
       error: false,
     });
 
-    this.props.update(this.state.botFile).then(() => {
+    this.props.update(this.state.botFile, this.state.params).then(() => {
       history.push(`/bots/${this.props.id}`);
     })
     .catch(err => {
@@ -65,6 +72,12 @@ class BotUpdatePage extends React.PureComponent {
     });
   }
 
+  paramsChanged = (params) => {
+    this.setState({
+      params,
+    });
+  }
+
   render() {
     if (!this.props.bot) {
       return null;
@@ -76,7 +89,7 @@ class BotUpdatePage extends React.PureComponent {
           <div style={styles.uploadWrap}>
             <h1 style={[fontStyles.large, colorStyles.red]}>Update {this.props.bot.name}</h1>
             <p style={{marginTop: 15, lineHeight: 1.4}}>
-              You can update your bot's code and/or its parameters. You can leave the file selection
+              You can update your {"bot's"} code and/or its parameters. You can leave the file selection
               empty if you only want to update parameters.
             </p>
             <form style={styles.form} onSubmit={this.submit}>
@@ -88,6 +101,14 @@ class BotUpdatePage extends React.PureComponent {
                 name="botFile"
                 onChange={this.handleFileChange}
               />
+
+              <div style={{marginTop: 30}}>
+                <BotParamSelect
+                  initialParams={this.state.params}
+                  file={this.state.botFile}
+                  onChange={this.paramsChanged}
+                />
+              </div>
 
               <input type="submit" style={{display: "none"}} />
               <Button kind="primary" onClick={this.submit} style={styles.submitButton} disabled={this.state.submitting}>
@@ -118,7 +139,7 @@ const styles = {
 const mapDispatchToProps = (dispatch, props) => ({
   fetchBot: () => dispatch(fetchBot(props.id)),
   create: (name, file) => dispatch(createBot(name, file)),
-  update: (file) => dispatch(updateBotCode(props.id, file)),
+  update: (file, params) => dispatch(updateBot(props.id, file, params)),
 });
 
 const mapStateToProps = (state, props) => ({
