@@ -19,11 +19,11 @@ from game.params import (
 # Constructor Arguments
 # position (tuple)     - tuple representing the map position of this cell instance
 # num_players (number) - the number of players involved in this game instance
-# occupiable (boolean) - True if this cell is standard, False if it is a wall
+# obstructed (boolean) - False if this cell is standard, True if it is an obstacle
 # uniform (boolean)    - True if distribution of map resources should be uniform, False otherwise
 
 class Cell:
-    def __init__(self, position, num_players, occupiable=True, uniform=False):
+    def __init__(self, position, num_players, obstructed=False, uniform=False):
         self.position = Coordinate(position)
         self.num_players = num_players
 
@@ -34,13 +34,12 @@ class Cell:
 
         self.hive = None
 
-        # whether the cell is blocked or free (True = free, False = blocked)
-        self.occupiable = occupiable
+        # whether the cell is blocked or free (False = free, True = blocked)
+        self.obstructed = obstructed
 
     def update_from_log(self, log_cell):
-        if "o" in log_cell:
-            # mark cell as obstructed by obstacle
-            self.occupiable = False
+        # mark cell as obstructed by obstacle
+        self.obstructed = "o" in log_cell
         if "r" in log_cell:
             # update resource totals
             self.resource = log_cell["r"]

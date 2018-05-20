@@ -2,6 +2,8 @@ import sys
 import time
 from GameHelper import GameHelper
 
+# comment
+
 def euclidean_distance(from_position, to_position):
     return abs(from_position.x - to_position.x) + abs(from_position.y - to_position.y)
 

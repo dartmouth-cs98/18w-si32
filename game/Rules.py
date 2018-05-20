@@ -20,26 +20,38 @@ class Rules:
         self.map = map
         self.players = players
 
+    # --------------------------------------------------------------------------
+    # Command Verification
+
     def verify_move(self, move):
         if move.command == MOVE_COMMAND:
-            return self.within_bounds(move) and self.enough_units(move)
-        return self.enough_units(move)
+            return self.legal_movement(move) and self.enough_units(move)
+        else:
+            return self.enough_units(move)
 
-
-    def within_bounds(self, move):
-        new_coords = move.position.adjacent_in_direction(move.direction)
-        # return self.map.position_in_range(new_coords)
-        return self.map.position_free(new_coords) # this also checks if in bounds
-
+    # determine if player has sufficient units to issue valid command
     def enough_units(self, move):
         cell = self.map.get_cell(move.position)
         return cell.units[move.playerId] >= move.num_units
+
+    # determine if new location reached via movement command is legal
+    def legal_movement(self, move):
+        new_coords = move.position.adjacent_in_direction(move.direction)
+        return self.map.position_within_bounds(new_coords) and self.map.position_unobstructed(new_coords)
+
+    # determine if player specified by <playerId> has sufficient resources for new hive
+    def player_has_enough_resources(self, playerId):
+        return self.players[playerId].resources >= HIVE_COST
+
+    # --------------------------------------------------------------------------
+    # Game State Update
 
     def update_by_move(self, move):
         if move.command == MOVE_COMMAND and move.num_units > 0:
             # only execute move command if it has a non-zero number of units
             self.update_move_command(move)
         elif move.command == MINE_COMMAND and move.num_units > 0:
+            # only execute mine command if it has a non-zero number of units
             self.update_mine_command(move)
         elif move.command == BUILD_COMMAND:
             self.update_build_command(move)
@@ -84,7 +96,7 @@ class Rules:
 
     def update_combat_phase(self, moves):
         # dictionaries
-        sets = self.moves_to_dictionary(moves)
+        sets = moves_to_dictionary(moves)
 
         num_players = len(sets)
 
@@ -101,7 +113,7 @@ class Rules:
 
             while (j >= 0):
                 moves[i], moves[j] = self.combat(moves[i], sets[j], i, j)
-                sets = self.moves_to_dictionary(moves)
+                sets = moves_to_dictionary(moves)
                 j -= 1
 
             i -= 1
@@ -173,34 +185,35 @@ class Rules:
 
         return player_moves, enemy_moves
 
-    # multi-player version of moves_to_dictionary
-    # takes a variable 'moves', which is a list of lists of Commands
-    # (one Command list for each player, a.k.a. a 'move')
-    def moves_to_dictionary(self, moves):
+# ------------------------------------------------------------------------------
+# Helper Functions
 
-        num_players = len(moves) #the number of players, corresponds to the number of 'moves'
-        sets = [] #a list of dictionaries (mapping positions to Commands of a player from that position)
+# multi-player version of moves_to_dictionary
+# takes a variable 'moves', which is a list of lists of Commands
+# (one Command list for each player, a.k.a. a 'move')
+def moves_to_dictionary(moves):
+    # a list of dictionaries (mapping positions to Commands of a player from that position)
+    sets = []
 
-        for move in moves: #initialize empty dictionaries
-            sets.append({})
+    # the number of players, corresponds to the number of 'moves'
+    num_players = len(moves)
 
-        player = 0
+    for move in moves: #initialize empty dictionaries
+        sets.append({})
 
-        while player < num_players:
+    player = 0
 
-            # for each COMMAND of a player
-            for move in moves[player]:
-                # check if the command's position is in the player's dictionary's keys
-                if move.position not in sets[player]:
-                    # if not, add it with value as a singleton list with that Command
-                    sets[player][move.position] = [move]
-                else:
-                    # if it is, append to the value (list of Commands)
-                    sets[player][move.position].append(move)
+    while player < num_players:
+        # for each command of a player
+        for move in moves[player]:
+            # check if the command's position is in the player's dictionary's keys
+            if move.position not in sets[player]:
+                # if not, add it with value as a singleton list with that Command
+                sets[player][move.position] = [move]
+            else:
+                # if it is, append to the value (list of Commands)
+                sets[player][move.position].append(move)
 
-            player += 1
+        player += 1
 
-        return sets
-
-    def player_has_enough_resources(self, playerId):
-        return self.players[playerId].resources >= HIVE_COST
+    return sets

@@ -193,3 +193,5 @@ get_my_resource_count()
 ```
 
 Get (return) the current total value of resources controlled by the invoking player.
+
+<div style="padding-bottom:50px"></div>

@@ -5,9 +5,11 @@ import { Application, Graphics, Point, Polygon, Text } from "pixi.js";
 
 const TICK_SPEED = 25;
 
-const SCENE_BACKGROUND_COLOR = 0xFFFFFF;
-const NEUTRAL_CELL_COLOR = 0x56666b;
-const NEUTRAL_CELL_ALPHA = 0.1;
+export const SCENE_BACKGROUND_COLOR = 0xFFFFFF;
+export const NEUTRAL_CELL_COLOR = 0x56666b;
+export const NEUTRAL_CELL_ALPHA = 0.1;
+export const OBSTRUCTED_CELL_COLOR = 0x000000;
+export const OBSTRUCTED_CELL_ALPHA = 0.8;
 
 const CELL_OFFSET_X = 1;
 const CELL_OFFSET_Y = 1;
@@ -22,7 +24,7 @@ export const COLORS = [
 ];
 
 // Helper functions for hexagonal math
-const getHexagonCorner = (center, size, i) => {
+export const getHexagonCorner = (center, size, i) => {
   let angle_deg = 60 * i   + 30;
   let angle_rad = Math.PI / 180 * angle_deg;
   return new Point(
@@ -31,7 +33,7 @@ const getHexagonCorner = (center, size, i) => {
   );
 };
 
-const getPlayerColor = (playerN) => {
+export const getPlayerColor = (playerN) => {
   return COLORS[playerN];
 };
 
@@ -60,6 +62,9 @@ class Canvas extends Component {
 
     this.renderer.autoResize = true;
     this.renderer.backgroundColor = SCENE_BACKGROUND_COLOR;
+
+    // adds a hitarea for each hexagon
+    this.makeHitAreas();
 
     // create the root graphics and add it as child of the stage
     this.mapGraphics = new Graphics();
@@ -117,6 +122,37 @@ class Canvas extends Component {
 
     this.sp.w = (this.sp.cols + 1) * this.sp.cell_width + CELL_OFFSET_X * this.sp.cols;
     this.sp.h = (this.sp.rows + .5) * this.sp.cell_height * 3/4 + CELL_OFFSET_Y * this.sp.rows;
+  }
+
+  // creates and adds hit areas to the stage (once!) for each polygon
+  makeHitAreas = () => {
+    // no need if no click handler
+    if (!this.props.onCellClicked) {
+      return;
+    }
+
+    for (let row = 0; row < this.sp.rows; row++) {
+      for (let col = 0; col < this.sp.cols; col++) {
+        const g = new Graphics();
+
+        const center = {
+          x: col * (this.sp.cell_width + CELL_OFFSET_X) + this.sp.cell_width/2,
+          y: row * (this.sp.cell_height * 3/4 + CELL_OFFSET_Y) + this.sp.cell_height/2,
+        };
+
+        if (row % 2 === 0) {
+          center.x += this.sp.cell_width / 2;
+        }
+
+        const corners = new Polygon(_.range(0,6).map(i => getHexagonCorner(center, this.sp.cell_r, i)));
+        g.interactive = true;
+        g.hitArea = corners;
+        g.click = () => {
+          this.props.onCellClicked(row, col);
+        };
+        this.stage.addChild(g);
+      }
+    }
   }
 
   drawUnitCount = (row, col, cell, alpha, center) => {
@@ -187,6 +223,18 @@ class Canvas extends Component {
     this.drawUnitCount(row, col, cell, alpha, center);
   }
 
+  drawSelectedCell = () => {
+    if (!this.props.selectedCell) {
+      return;
+    }
+
+    this.mapGraphics.lineStyle(4, 0xFFFFFF, 1);
+    const { row, col } = this.props.selectedCell;
+    const cell = this.props.replay.turns[this.props.frame].map[row][col];
+    this.drawCell(row, col, cell, true);
+    this.mapGraphics.lineStyle(0, 0x000000, 1);
+  }
+
   // add the grid to main map graphics
   addGridToStage = () => {
     // iterate over rows
@@ -205,6 +253,8 @@ class Canvas extends Component {
         this.drawCell(i, j, cell);
       }
     }
+
+    this.drawSelectedCell();
   }
 
   getCellColorAlpha = (cell) => {

@@ -224,3 +224,5 @@ taking in a state and returning commands based on it.
 
 Finally, we have seen how to run local matches and improve our bots based on what visualization
 of these match replays reveal.
+
+<div style="padding-bottom:50px"></div>

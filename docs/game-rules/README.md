@@ -171,6 +171,12 @@ For example, Player A sends 8 _Units_ North from **(2, 4)** and Player B sends 5
 **(2, 5)**; these two _Commands_ will be replaced by an effectively equal single _Command_ of "Player A
 sends 3 _Units_ North from **(2, 4)**.
 
-After all players move their units into their new squares, units of rival factions will fight each other. The faction with the greatest number of units will lose units equal to the number controlled by the faction with the second greatest number of units, and all other factions will lose all their units.
+After all players move their units into their new squares, units of rival factions will fight each other. The
+faction with the greatest number of units will lose units equal to the number controlled by the faction with
+the second greatest number of units, and all other factions will lose all their units.
 
-For example, Player A has 12 units , Player B has 8 units, and Player C has 10 units in **(2, 5)** after movement has occurred. After combat, Player A will have 2 units remaining, and Players B and C will lose all their units.
+For example, Player A has 12 units , Player B has 8 units, and Player C has 10 units in **(2, 5)** after
+movement has occurred. After combat, Player A will have 2 units remaining, and Players B and C will lose all
+their units.
+
+<div style="padding-bottom:50px"></div>

@@ -2,7 +2,7 @@ import React from "react";
 import Radium from "radium";
 import _ from "lodash";
 
-import { constants } from "../../style";
+import { constants } from "../style";
 import {
   getPlayerColor,
   NEUTRAL_CELL_COLOR,
@@ -21,7 +21,7 @@ const DIRECTIONS = {
 const WIDTH = 200;
 
 const playerColorString = (playerNum) => {
-  if (playerNum == undefined) {
+  if (playerNum === undefined) {
     return "#" + NEUTRAL_CELL_COLOR.toString(16);
   }
 
@@ -29,14 +29,14 @@ const playerColorString = (playerNum) => {
 };
 
 const DirectionArrows = Radium(({ directionStyle, inMove, outMove }) => {
-  const isWesterly = directionStyle == styles.arrows.west || directionStyle == styles.arrows.southWest || directionStyle == styles.arrows.northWest;
+  const isWesterly = directionStyle === styles.arrows.west || directionStyle === styles.arrows.southWest || directionStyle === styles.arrows.northWest;
   const outColor = playerColorString(outMove.player);
   const inColor = playerColorString(inMove.player);
 
   return (
     <div style={styles.arrows.wrap}>
       <div style={[styles.arrows.common, directionStyle]}>
-        <div style={[styles.arrows.outWrap, outMove.n == 0 ? styles.arrows.inactive : null ]}>
+        <div style={[styles.arrows.outWrap, outMove.n === 0 ? styles.arrows.inactive : null ]}>
           <span style={[
               styles.arrows.numberOut,
               isWesterly ? styles.arrows.numberOutWest : null,
@@ -45,7 +45,7 @@ const DirectionArrows = Radium(({ directionStyle, inMove, outMove }) => {
           </span>
           <i style={[styles.arrows.arrowOut, {color: outColor}]} className="fa fa-long-arrow-right"></i>
         </div>
-        <div style={[styles.arrows.inWrap, inMove.n == 0 ? styles.arrows.inactive : null]}>
+        <div style={[styles.arrows.inWrap, inMove.n === 0 ? styles.arrows.inactive : null]}>
           <i style={styles.arrows.arrowIn} className="fa fa-long-arrow-left"></i>
           <span style={[
               styles.arrows.numberIn,
@@ -61,20 +61,16 @@ const DirectionArrows = Radium(({ directionStyle, inMove, outMove }) => {
 });
 
 class CellDetail extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   // return how many units moving out of current cell in direction
   outInDirection(commands, direction) {
     const { turn = 0, row, col, log } = this.props;
     const cell = log.turns[turn].map[row][col];
     let player = cell.p;
-    if (player == undefined) {
+    if (player === undefined) {
       player = cell.b;
     }
     const loc = col * log.w + row;
-    const forDirection = commands.filter(c => (c.p == loc && c.d == direction));
+    const forDirection = commands.filter(c => (c.p === loc && c.d === direction));
     const n = forDirection.map(c => c.n);
     return { player, n: _.reduce(n, (a, curVal) => a+curVal, 0) };
   }
@@ -83,8 +79,8 @@ class CellDetail extends React.Component {
   inFromDirection(commands, direction) {
     const { row, col, log } = this.props;
     const loc = col * log.w + row;
-    const forDirection = commands.filter(c => (c.t == loc && c.d == direction));
-    if (!forDirection || forDirection.length == 0) {
+    const forDirection = commands.filter(c => (c.t === loc && c.d === direction));
+    if (!forDirection || forDirection.length === 0) {
       return { n: 0 };
     }
 
@@ -109,7 +105,7 @@ class CellDetail extends React.Component {
 
     const cell = log.turns[turn].map[row][col];
     const loc = col * log.w + row;
-    const commands = log.turns[turn].cmd.filter(c => (c.t == loc || c.p == loc && c.d != DIRECTIONS.NONE));
+    const commands = log.turns[turn].cmd.filter(c => (c.t === loc || (c.p === loc && c.d !== DIRECTIONS.NONE)));
 
     let playerColor = "#" + NEUTRAL_CELL_COLOR.toString(16);
     if ("p" in cell) {
@@ -258,7 +254,6 @@ const styles = {
       paddingRight: 5,
       paddingLeft: 0,
     },
-
     arrowIn: {
       fontSize: 40,
       color: "white",
@@ -270,18 +265,15 @@ const styles = {
     inactive: {
       opacity: .2,
     },
-
     outWrap: {
       display: "flex",
       alignItems: "center",
-
     },
     inWrap: {
       display: "flex",
       alignItems: "center",
       marginTop: -10,
     },
-
     east: {
       transform: `rotate(0deg) translateX(${ARROW_OFFSET})`,
     },
@@ -301,7 +293,6 @@ const styles = {
       transform: `rotate(240deg) translateX(${ARROW_OFFSET})`,
     },
   },
-
   inner: {
     wrap: {
       position: "absolute",
