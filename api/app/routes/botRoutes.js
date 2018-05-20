@@ -1,4 +1,5 @@
 const Router = require("koa-router");
+const _ = require("lodash");
 const auth = require("../auth");
 const s3 = require("../files/s3");
 const Bot = require("../models").Bot;
@@ -77,7 +78,7 @@ botRouter.post("/:botId", async (ctx) => {
   }
 
   // if there's new code, upload and update with it 
-  if (ctx.request.body.files.length > 0 && ctx.reqest.body.files.code != "") {
+  if (!_.isEmpty(ctx.request.body.files.code)) {
     const { key } = await s3.uploadBot(ctx.state.userId, bot._id, ctx.request.body.files.code);
 
     // delete this file to mark it as handled

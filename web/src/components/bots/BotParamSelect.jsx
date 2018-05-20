@@ -123,13 +123,13 @@ class BotParamSelect extends React.PureComponent {
 
       // if there's already one of that name, don't erase what the user had
       if (existing) {
-        newParams.push(Object.assign({}, existing));
+        newParams.push(existing);
       } else { // otherwise insert the new param
         newParams.push(p);
       }
     }); 
 
-    this.props.onChange(params);
+    this.props.onChange(newParams);
     this.setState({
       params: newParams,
     });

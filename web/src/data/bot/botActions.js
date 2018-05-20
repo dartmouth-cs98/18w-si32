@@ -36,7 +36,11 @@ const createBot = (name, code, params) => (dispatch, getState) => {
     });
 };
 
-const updateBot = (botId, code="", params=[]) => (dispatch, getState) => {
+const updateBot = (botId, code, params=[]) => (dispatch, getState) => {
+  if (!code) {
+    code = "";
+  }
+
   return http
     .post(`/bots/${botId}`)
     .field("id", botId)
