@@ -52,8 +52,21 @@ class GameHelper:
     # BOT PARAMETERS
 
     # Reads bot parameters over stdin and sets them in parameter dictionary
-    def load_params(self):
-        self.params = read(sys.stdin.buffer)
+    def loadParams(self):
+        self.params = {}
+        params = read(sys.stdin.buffer)
+
+        if not params:
+            return
+
+        # for each param, parse it into the correct type
+        for p in params:
+            if p['type'] == 'INT':
+                self.params[p['name']] = int(p['value'])
+            elif p['type'] == 'FLOAT':
+                self.params[p['name']] = float(p['value'])
+            else:
+                self.params[p['name']] = p['value']
 
     # Get the value for a parameter specified externally (via the web UI)
     # Return: value, or None if nonexistent param

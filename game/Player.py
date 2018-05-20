@@ -45,6 +45,8 @@ class Player:
     def send_init_data(self):
         self.bot.write(self.playerId)
         self.bot.write(self.map.num_players)
+        print("Sending params", self.bot.params)
+        self.bot.write(self.bot.params)
 
     def send_state(self, state):
         if self.crashed or self.timed_out:
