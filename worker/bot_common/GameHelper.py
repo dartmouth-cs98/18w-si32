@@ -201,9 +201,9 @@ class GameHelper:
     def get_enemy_hive_count(self):
         return len(self.get_enemy_hives())
 
-    #Get a count of all hives on the map controlled by player with playerId
-    #Return: (number)
-    #the number of hives on the map controlled by player with playerId
+    # Get a count of all hives on the map controlled by player with playerId
+    # Return: (number)
+    # the number of hives on the map controlled by player with playerId
     def get_player_hive_count(self, playerId):
         return len(self.get_player_hives(playerId))
 
@@ -325,7 +325,8 @@ class GameHelper:
     # Return: (number)
     #   the number of units in <cell> controlled by player <playerId>
 
-    # warning: this can't be called between conclusion of movement that puts units from different players onto same cell but before combat resolution so that only one player gains control of the cell
+    # warning: this can't be called between conclusion of movement that puts units from different players onto same cell
+    # but before combat resolution so that only one player gains control of the cell
     def get_unit_count_by_cell(self, cell):
         for u in cell.units:
             if u != 0:
@@ -429,7 +430,45 @@ class GameHelper:
             return None
 
         if len(path) > 1:
-            d = (path[1].x - path[0].x, path[1].y - path[0].y)
+            d_tuple = (path[1].x - path[0].x, path[1].y - path[0].y)
+
+            vers = position_from.y & 1
+
+            if vers == 0:
+                if d_tuple == (0, -1):
+                    d = Direction.NORTHWEST
+                elif d_tuple == (1, -1):
+                    d = Direction.NORTHEAST
+                elif d_tuple == (1, 0):
+                    d = Direction.EAST
+                elif d_tuple == (1, 1):
+                    d = Direction.SOUTHEAST
+                elif d_tuple == (0, 1):
+                    d = Direction.SOUTHWEST
+                elif d_tuple == (-1, 0):
+                    d = Direction.WEST
+                elif d_tuple == (0, 0):
+                    d = Direction.NONE
+                else:
+                    return None
+            else:
+                if d_tuple == (-1, -1):
+                    d = Direction.NORTHWEST
+                elif d_tuple == (0, -1):
+                    d = Direction.NORTHEAST
+                elif d_tuple == (1, 0):
+                    d = Direction.EAST
+                elif d_tuple == (0, 1):
+                    d = Direction.SOUTHEAST
+                elif d_tuple == (-1, 1):
+                    d = Direction.SOUTHWEST
+                elif d_tuple == (-1, 0):
+                    d = Direction.WEST
+                elif d_tuple == (0, 0):
+                    d = Direction.NONE
+                else:
+                    return None
+
             num_units = num_units if num_units else self.get_unit_count_by_position(position_from.x, position_from.y)
             return self.move(position_from, num_units, d)
         else:
