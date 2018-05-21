@@ -1,4 +1,5 @@
 const Router = require("koa-router");
+const _ = require("lodash");
 const auth = require("../auth");
 const s3 = require("../files/s3");
 const Bot = require("../models").Bot;
@@ -27,10 +28,14 @@ botRouter.post("/", async (ctx) => {
     throw new MalformedError("Bot must be a python file");
   }
 
+  const params = JSON.parse(ctx.request.body.fields.params);
+  const cleanParams = Bot.cleanParams(params);
+
   const bot = await Bot.create({
     name: ctx.request.body.fields.name,
     user: ctx.state.userId,
     trueSkill: {},
+    params: cleanParams,
   });
 
   const { key } = await s3.uploadBot(ctx.state.userId, bot._id, ctx.request.body.files.code);
@@ -64,18 +69,29 @@ botRouter.get("/:botId", async (ctx) => {
 // update bot with uploaded code
 botRouter.post("/:botId", async (ctx) => {
   const bot = await Bot.findById(ctx.params.botId);
+  
+  const params = JSON.parse(ctx.request.body.fields.params);
+  const cleanParams = Bot.cleanParams(params);
 
   if (ctx.state.userId != bot.user) {
     throw new AccessError("That's not your bot");
   }
 
-  const { key } = await s3.uploadBot(ctx.state.userId, bot._id, ctx.request.body.files.code);
+  // if there's new code, upload and update with it 
+  if (!_.isEmpty(ctx.request.body.files.code)) {
+    const { key } = await s3.uploadBot(ctx.state.userId, bot._id, ctx.request.body.files.code);
 
-  // delete this file to mark it as handled
-  delete ctx.request.body.files.code;
+    // delete this file to mark it as handled
+    delete ctx.request.body.files.code;
+    
+    // update bot in db w/ code's url, and increment the version
+    bot.set("code", key);
+  }
 
-  // update bot in db w/ code's url, and increment the version
-  bot.set("code", key);
+  // set params for bot
+  bot.set("params", cleanParams);
+
+
   bot.set("version", bot.version + 1);
   bot.versionHistory.push({ timestamp: new Date(), version: bot.version });
   bot.trueSkill.sigma = bot.trueSkill.sigma * BOT_SIGMA_ADJUST;

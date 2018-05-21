@@ -39,7 +39,7 @@ _Match.statics.createWithBots = (userId, botIds, { isChallenge=false, status="QU
   assert(2 <= botIds.length && botIds.length <= 4 && _.every(botIds, _.isString), "Need 2-4 bots to start a match!");
   return Bot.find({
     "_id": { $in: botIds }
-  }).select({ code: 1, _id: 1, name: 1, user: 1, version: 1 }).lean().then(bots => {
+  }).select({ code: 1, _id: 1, name: 1, user: 1, params: 1, version: 1 }).lean().then(bots => {
     if (bots.length != botIds.length) {
       throw new MalformedError("not all bots found");
     }
@@ -47,6 +47,8 @@ _Match.statics.createWithBots = (userId, botIds, { isChallenge=false, status="QU
     // pluck all users involved in the match
     const allUserIds = _.uniq(bots.map(b => b.user.toString()));
 
+    // we copy the bot data into the match so that we have a full record of who
+    // the bots were when they played
     return Match.create({
       createdBy: userId,
       users: allUserIds,
@@ -71,10 +73,10 @@ const getNextBotToPlay = async (targetMu, chosenBots) => {
 
   const bots = await Bot.aggregate([
     {$match: {}},
-    {$project: {id: 1, user: 1, lastSkill: {$slice: ["$trueSkillHistory", -1]}}},
+    {$project: {id: 1, user: 1, params: 1, lastSkill: {$slice: ["$trueSkillHistory", -1]}}},
     {$sort: {"lastSkill.timestamp": 1}}, // sort by most recently updated date w/ oldest first
     {$sort: {lastDate: 1}}, // sort by most recently updated date w/ oldest first
-    {$skip: botIdx},// offset by our randomly distributed value
+    {$skip: botIdx}, // offset by our randomly distributed value
     {$limit: BOT_SELECT_RANGE},
   ]).exec();
 
@@ -118,7 +120,10 @@ const getNextStandardMatch = async () => {
     ]).exec();
 
     // select the bots of the chosen user
-    const playerBots = await Bot.find({ user: firstPlayer[0]._id }, { _id: 1, user: 1, trueSkillHistory: 1 });
+    const playerBots = await Bot.find(
+      { user: firstPlayer[0]._id },
+      { _id: 1, user: 1, params: 1, trueSkillHistory: 1 }
+    );
 
     // if the player has bots, select one at random
     if (playerBots && playerBots.length > 0) {
@@ -167,7 +172,10 @@ _Match.statics.getNext = async () => {
   const useQueue = Math.random() < .7 || queueOnly;
   if (useQueue) { // if we're using the queue, get the next one
     match = await getNextChallengeMatch();
-  } else { // otherwise, create one
+  }
+
+  // create one, if no queued match and we're not using only the queue
+  if (!queueOnly && !match) {
     match = await getNextStandardMatch();
   }
 
@@ -180,6 +188,7 @@ _Match.statics.getNext = async () => {
     {
       name: bot.name,
       id: bot._id,
+      params: bot.params,
       index: i,
       url: s3.getBotUrl(bot.code),
     }

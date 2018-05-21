@@ -15,6 +15,7 @@ class LocalBot(Bot):
     def __init__(self, fp, player_num):
         self.name = fp
         self.player_num = player_num
+        self.params = {}
 
     def prep(self):
         return

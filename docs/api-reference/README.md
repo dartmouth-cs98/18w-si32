@@ -3,23 +3,18 @@
 In order to simplify the development experience, we provided a helper library (`GameHelper`)
 that provides a simple API for interacting with the game engine.
 
-You may include this library by writing the lines below at the top of your botfile (`bot.py`) file.
+All functions described below in this API reference can be invoked on the `GameHelper` object
+that is provided as an argument to your turn handling function. 
 
+### Parameters
+
+**param()**
 ```
-from GameHelper import GameHelper
-game = GameHelper()
-```
-
-All functions described below in this API reference will be invoked using this `GameHelper` object.
-
-For example,
-
-```
-game.move((1,1), 5, 'NORTHEAST')
+param(param_name)
 ```
 
-returns a command that moves five (5) units from the cell at coordinates (1,1) to the
-adjacent cell in the Northeast direction.
+Returns the value you set online in Monad for the parameter `param_name`. 
+
 
 ### Command Creation
 

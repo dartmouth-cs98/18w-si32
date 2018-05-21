@@ -20,7 +20,7 @@ def run_worker():
 
         # create a bot object for each bot that's in this match
         for b in botSpecs:
-            bots.append(DockerBot(b['id'], b['index'], b['url']))
+            bots.append(DockerBot(b['id'], b['index'], b['url'], b.get('params', {})))
 
         game = Game(bots)
 
