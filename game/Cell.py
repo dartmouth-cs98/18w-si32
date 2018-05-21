@@ -40,17 +40,24 @@ class Cell:
     def update_from_log(self, log_cell):
         # mark cell as obstructed by obstacle
         self.obstructed = "o" in log_cell
+
+        # resource value only sent when value updates
         if "r" in log_cell:
             # update resource totals
             self.resource = log_cell["r"]
+
+        # if b in cell, exists
         if "b" in log_cell:
             # create/update building if needed
             if self.hive == None or self.hive.ownerId != log_cell["b"]:
                 self.hive = Hive(log_cell["b"])
+        # otherwise, destroy building if it exists
         else:
             # destroy building if needed
             if self.hive != None:
                 self.hive = None
+
+        # if units there, update
         if "u" in log_cell:
             # update unit numbers
             for i in range(self.num_players):
@@ -58,6 +65,9 @@ class Cell:
                     self.units[i] = log_cell["u"]
                 else:
                     self.units[i] = 0
+        # otherwise, zero them out
+        else:
+            self.units = [0] * self.num_players
 
     # --------------------------------------------------------------------------
     # RESOURCE METHODS
