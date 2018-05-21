@@ -6,7 +6,6 @@ that provides a simple API for interacting with the game engine.
 All functions described below in this API reference can be invoked on the `GameHelper` object
 that is provided as an argument to your turn handling function. 
 
-
 ### Parameters
 
 **param()**

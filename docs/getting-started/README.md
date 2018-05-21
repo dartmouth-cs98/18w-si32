@@ -152,6 +152,11 @@ out new parameters without modifying and re-uploading your code. Here's how to u
 
 At any point, from the bot's page, you can update the parameters without re-uploading the code.
 
+As a second argument to `register_turn_handler`, you can provide a dictionary of default
+parameters for your bot to use. This is handy for running matches locally.
+
+`GameHelper.register_turn_handler(do_turn, default_params={'MYPARAM': 1.42, ...})`
+
 ## Implementing a Strategy
 
 Now its time to think about what we want our bot to do. The `GameHelper` library comes with
