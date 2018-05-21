@@ -30,8 +30,8 @@ class GameHelper:
         # second thing is number of players
         self.numPlayers = read(sys.stdin.buffer)
 
-        # third thing is the params set for this bot for the game
-        self.loadParams()
+        self.params = {} # default the params to an empty dict
+        self.load_params() # then load in the params (3rd thing sent to a bot)
 
         self.map = None
 
@@ -52,8 +52,7 @@ class GameHelper:
     # BOT PARAMETERS
 
     # Reads bot parameters over stdin and sets them in parameter dictionary
-    def loadParams(self):
-        self.params = {}
+    def load_params(self):
         params = read(sys.stdin.buffer)
 
         if not params:
@@ -67,6 +66,11 @@ class GameHelper:
                 self.params[p['name']] = float(p['value'])
             else:
                 self.params[p['name']] = p['value']
+
+    def set_default_params(self, params):
+        for (val, key) in enumerate(params):
+            if key not in self.params:
+                self.params[key] = val
 
     # Get the value for a parameter specified externally (via the web UI)
     # Return: value, or None if nonexistent param
@@ -604,9 +608,10 @@ class GameHelper:
     # USER MODIFICATION WILL LIKELY BREAK GAME - DO NOT TOUCH
 
     @classmethod
-    def register_turn_handler(cls, handler):
+    def register_turn_handler(cls, handler, default_params={}):
         newGame = cls()
         newGame.turn_handler = handler
+        newGame.set_default_params(default_params)
         newGame.run_game()
         return newGame
 
