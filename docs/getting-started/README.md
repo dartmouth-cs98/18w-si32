@@ -138,6 +138,20 @@ an empty commands list every turn and would never do anything, but it would be a
 But you don't want to settle for that, do you?
 Read on for tips on implementing your first strategy!
 
+### Bot parameters
+
+Monad allows you to replace constant values in your botfile with parameters that you can configure
+via the Monad UI. Frequently, the only changes to your bot code between versions will be changes to
+parameters like a threshold for a probability, or a value you check against to trigger an attack or
+some other condition. By allowing you to modify these values from the Monad UI, you can quickly test
+out new parameters without modifying and re-uploading your code. Here's how to use them: 
+
+1. Replace your value with a call to `game.param("PARAM_NAME")`
+2. Upload your bot code with this call (for the last time!)
+3. On upload, you'll be prompted to provide a value for that parameter
+
+At any point, from the bot's page, you can update the parameters without re-uploading the code.
+
 ## Implementing a Strategy
 
 Now its time to think about what we want our bot to do. The `GameHelper` library comes with
