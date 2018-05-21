@@ -1,5 +1,5 @@
+# Code adapted from previously written code in CS 76
 from game.Coordinate import Coordinate, direction_deltas
-
 
 class ObstacleMapProblem:
     def __init__(self, map, start, goal, flags, playerId):

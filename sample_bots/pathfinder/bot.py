@@ -1,3 +1,5 @@
+# based on Gabe's fortifier
+
 from GameHelper import GameHelper
 
 def do_turn(game):
@@ -28,8 +30,9 @@ def do_turn(game):
                     commands.append(game.smarter_move_towards(pos, hive_pos, "Enemy units plus adjacents and buildings", unit_count_at_cell))
                     attacking = True
 
-        #if not attacking:
-             # mining and building here
+        if not attacking:
+            if cell.hive is None:
+                GameHelper.build(cell.position)
 
     return commands
 
