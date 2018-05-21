@@ -45,6 +45,8 @@ class GameHelper:
         self.logfile = open("./game" + str(self.myId) + ".log", "w")
         self.log(self.myId)
 
+        self.move_dict = {}
+
     def __del__(self):
         self.logfile.close()
 
@@ -453,6 +455,10 @@ class GameHelper:
         return result.path
 
     def smarter_move_towards(self, position_from, position_to, flags="None", num_units=None):
+        if flags == "None":
+            if (position_from, position_to) in self.move_dict:
+                return self.move_dict[(position_from, position_to)]
+
         if not (type(position_from) is Coordinate):
             position_from = Coordinate(position_from)
 
@@ -504,6 +510,9 @@ class GameHelper:
                     return None
 
             num_units = num_units if num_units else self.get_unit_count_by_position(position_from.x, position_from.y)
+
+            if flags == "None":
+                self.move_dict[(position_from, position_to)] = self.move(position_from, num_units, d)
             return self.move(position_from, num_units, d)
         else:
             return None
