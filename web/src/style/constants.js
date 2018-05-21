@@ -11,6 +11,7 @@ const BODY_WIDTH = 1280;
 
 // latex style names
 const fontSizes = {
+  ultimate: 72,
   largest: 30,
   larger: 25,
   large: 22,
