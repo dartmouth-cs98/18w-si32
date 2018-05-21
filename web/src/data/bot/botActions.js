@@ -10,7 +10,7 @@ const fetchBots = (userId) => httpGetAction("BOT", "/bots", { userId });
 
 const fetchBot = (botId) => httpGetAction("BOT", `/bots/${botId}`, null, { isSingle: true });
 
-const createBot = (name, code) => (dispatch, getState) => {
+const createBot = (name, code, params) => (dispatch, getState) => {
   if (!name) {
     return Promise.reject("Need to name your bot");
   }
@@ -22,6 +22,7 @@ const createBot = (name, code) => (dispatch, getState) => {
     .post("/bots")
     .field("name", name)
     .field("code", code)
+    .field("params", JSON.stringify(params))
     .then(res => {
       // push the new bot into the store
       dispatch({
@@ -35,11 +36,16 @@ const createBot = (name, code) => (dispatch, getState) => {
     });
 };
 
-const updateBotCode = (botId, code) => (dispatch, getState) => {
+const updateBot = (botId, code, params=[]) => (dispatch, getState) => {
+  if (!code) {
+    code = "";
+  }
+
   return http
     .post(`/bots/${botId}`)
     .field("id", botId)
     .field("code", code)
+    .field("params", JSON.stringify(params))
     .then(res => {
       // push the updated bot into the store
       dispatch({
@@ -47,10 +53,6 @@ const updateBotCode = (botId, code) => (dispatch, getState) => {
         doMerge: true,
         payload: res.body.updatedRecords,
       });
-    }).catch(err => {
-      /* eslint-disable no-console */
-      console.log("err AFTER upload attempt", err);
-      /* eslint-enable no-console */
     });
 };
 
@@ -58,5 +60,5 @@ export {
   createBot,
   fetchBot,
   fetchBots,
-  updateBotCode,
+  updateBot,
 };

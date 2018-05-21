@@ -16,6 +16,7 @@ import DashboardPage from "./components/dashboard/dashboardPage";
 import BotListPage from "./components/bots/listPage";
 import BotSinglePage from "./components/bots/singlePage";
 import BotCreatePage from "./components/bots/createPage";
+import BotUpdatePage from "./components/bots/updatePage";
 
 import MatchListPage from "./components/matches/listPage";
 import MatchCreatePage from "./components/matches/createPage";
@@ -71,6 +72,10 @@ const routes = [
       {
         path: "/create",
         action: () => <BotCreatePage />
+      },
+      {
+        path: "/:id/update",
+        action:({ params: { id }}) => <BotUpdatePage id={id}/>
       },
       {
         path: "/:id",

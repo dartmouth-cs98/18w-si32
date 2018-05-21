@@ -19,6 +19,9 @@ const styles = {
     color: colors.darkGray,
     fontSize: constants.fontSizes.small,
   },
+  sub: {
+    color: colors.medGray,
+  }
 };
 
 export default Radium(Label);

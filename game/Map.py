@@ -140,7 +140,8 @@ def random(width, height, n_players, uniform):
     for r in range(height):
         row = []
         for c in range(width):
-            obstructed = randint(1, density_factor) == 1 and (not is_start_position(c, r, n_players))
+            #obstructed = randint(1, density_factor) == 1 and (not is_start_position(c, r, n_players))
+            obstructed = False
             new_cell = Cell(Coordinate(x=c, y=r), n_players, obstructed, uniform)
             row.append(new_cell)
         cells.append(row)

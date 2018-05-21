@@ -9,11 +9,10 @@ from waitForGame import pollUntilGameReady
 from endpoints import post_match_results
 
 # ------------------------------------------------------------------------------
-# run_worker() 
+# run_worker()
 
 def run_worker():
     while True:
-
         # get the next game
         (botSpecs, gameType, matchId) = pollUntilGameReady()
 
@@ -21,7 +20,7 @@ def run_worker():
 
         # create a bot object for each bot that's in this match
         for b in botSpecs:
-            bots.append(DockerBot(b['id'], b['index'], b['url']))
+            bots.append(DockerBot(b['id'], b['index'], b['url'], b.get('params', {})))
 
         game = Game(bots)
 

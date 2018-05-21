@@ -1,9 +1,10 @@
+# waitForGame.py
+
 import endpoints
 import time
 
 # called whenever there would be a game that this worker needs to run
 def pollUntilGameReady():
-
     r = endpoints.is_game_ready()
 
     while not new_game_available(r):

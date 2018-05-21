@@ -11,7 +11,7 @@ import { setUserForSession } from "./data/session/sessionActions";
 
 import Navigation from "./components/layout/navigation";
 
-import socket from "./util/socket";
+import socket from "./util/socket"; // eslint-disable-line
 
 class App extends React.Component {
   constructor() {

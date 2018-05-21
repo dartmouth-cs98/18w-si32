@@ -28,14 +28,14 @@ class MatchSinglePage extends React.PureComponent {
         socket.emit("waitingMatch", this.props.id);
         
         // when it's running, update UI
-        socket.on("matchStarted", (data) => {
+        socket.on("matchStarted", () => {
           this.setState({
             isRunning: true,
           });
         });
 
         // when it's done, reload data
-        socket.on("matchResults", (data) => {
+        socket.on("matchResults", () => {
           this.loadMatch();
         });
       }
@@ -135,7 +135,7 @@ class MatchSinglePage extends React.PureComponent {
           <div style={[styles.loading, styles.waitMessage]}>
             { this.props.match.status == "RUNNING" || this.state.isRunning ? 
               "Your match is currently running." 
-                : "Your match is in the queue. We'll update this page when the status changes" }
+                : "Your match is in the queue. We'll update this page when the status changes." }
           </div>
         </div>
       </Wrapper>

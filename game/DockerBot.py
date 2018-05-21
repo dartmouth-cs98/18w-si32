@@ -13,10 +13,11 @@ client = docker.from_env()
 
 # class for being run in containerized "live" environment
 class DockerBot(Bot):
-    def __init__(self, name, player_num, codeUrl):
+    def __init__(self, name, player_num, codeUrl, params=[]):
         self.player_num = player_num
         self.name = name
         self.codeUrl = codeUrl
+        self.params = params
 
     def prep(self):
         sys.stdout.flush()
