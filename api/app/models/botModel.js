@@ -6,6 +6,7 @@ const User = require("./userModel");
 const TrueSkill = require("../lib/trueskill");
 const TrueSkillSchema = require("./trueskill");
 
+const { MalformedError } = require("../errors");
 const Schema = mongoose.Schema;
 
 const _Bot = new Schema({
@@ -40,6 +41,15 @@ const _Bot = new Schema({
     required: true
   },
   code: { type: String, },
+  params: [ {
+    _id: false,
+    name: String,
+    value: Schema.Types.Mixed,
+    type: { 
+      type: String,
+      enum: ["FLOAT", "INT", "STRING"],
+    }
+  } ],
 }, {
   timestamps: true
 });
@@ -53,6 +63,50 @@ _Bot.statics.findByUser = (userId) => {
   return Bot.find({
     user: userId,
   });
+};
+
+
+const float_regex = /^[+-]?([0-9]*[.])?[0-9]+$/;
+const int_regex = /^[+-]?[0-9]+$/;
+
+// validates that all parameters in the array are set correctly
+// cleans them to ensure everything in correct format
+_Bot.statics.cleanParams = (params) => {
+  if (!params) {
+    return [];
+  }
+  const clean_params = [];
+
+  _.each(params, p => {
+    p.name = (p.name || "").trim();
+    p.value = (p.value || "").trim();
+    p.type = (p.type || "").trim();
+
+    if (p.name == "" || p.value == "") {
+      throw new MalformedError("Every param needs a name and value");
+    }
+
+    if (!_.includes(["INT", "FLOAT", "STRING"], p.type)) {
+      throw new MalformedError(`Invalid param type for ${p.name}`); 
+    }
+
+    // strip out all quotes from names/vals
+    p.name = p.name.replace(/["']/g, "");
+    p.value = p.value.replace(/["']/g, "");
+
+    if (p.type == "FLOAT" && !float_regex.test(p.value)) {
+      throw new MalformedError(`${p.value} is not a valid float`);
+    }
+
+    if (p.type == "INT" && !int_regex.test(p.value)) {
+      throw new MalformedError(`${p.value} is not a valid int`);
+    }
+
+    clean_params.push(p);
+  });
+
+  // at this point, everthing is valid, so we can just return the new params
+  return clean_params;
 };
 
 // Consumes an ordered array of how bots finished in a match. Updates the skill

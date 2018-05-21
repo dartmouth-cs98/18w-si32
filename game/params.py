@@ -48,7 +48,7 @@ BUILD_COMMAND = "BUILD"     # Build command enum
 # ------------------------------------------------------------------------------
 # Game
 
-MAX_ITERS = 2000                     # The maximum number of turn iterations in a single game.
+MAX_ITERS = 1000                     # The maximum number of turn iterations in a single game.
 DEBUG_LOG_FN = "./gameserver.log"    # Output filename for debug log file
 
 # ------------------------------------------------------------------------------

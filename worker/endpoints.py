@@ -13,7 +13,6 @@ if 'api_route' in os.environ:
 
 def is_game_ready():
     try:
-        print("making request")
         return requests.get(API + '/nextTask').json()
     except requests.exceptions.ConnectionError as err:
         return { 'newGame': False }
