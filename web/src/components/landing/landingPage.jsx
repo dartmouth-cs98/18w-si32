@@ -13,7 +13,7 @@ import { fetchLog } from "../../data/match/matchRoutes";
 
 import { colors, constants } from "../../style/";
 
-const MATCH_ID = 0;//
+const MATCH_ID = 0;
 
 class LandingPage extends React.PureComponent {
   constructor(props) {
@@ -249,7 +249,6 @@ const styles = {
   },
   startButton: {
     width: "300px",
-    //margin: "40px auto",
   }
 };
 
