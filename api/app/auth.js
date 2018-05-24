@@ -29,9 +29,8 @@ const workerAuth = async (ctx, next) => {
 };
 
 const noAuth = async (ctx, next) => {
-  console.log("HERE")
   return next();
-}
+};
 
 module.exports = {
   loggedIn,

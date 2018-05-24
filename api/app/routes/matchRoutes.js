@@ -8,7 +8,7 @@ const { NotFoundError, MalformedError } = require("../errors");
 
 // maximum number of games a user can create in the queue at a time
 const MAX_QUEUED_GAMES = 3;
-const LANDING_MATCH_ID = "5b0729d4a47a3700124c6982"
+const LANDING_MATCH_ID = "5b0729d4a47a3700124c6982";
 
 const matchRouter = Router();
 
@@ -43,7 +43,7 @@ matchRouter.get("/:matchId", auth.loggedIn, async (ctx) => {
 });
 
 matchRouter.get("/landing", auth.noAuth, async (ctx) => {
-  const match = await Match.findById(LANDING_MATCH_ID)
+  const match = await Match.findById(LANDING_MATCH_ID);
     .populate({ path: "bots.user", model: "User", select: "-password" })
     .populate({ path: "users", model: "User", select: "-password" })     // yes, this is a little duplicative, but it's useful
     .lean();
