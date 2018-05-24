@@ -7,6 +7,7 @@ import history from "../../history";
 import Page from "../layout/page";
 import LandingCanvas from "./LandingCanvas";
 import Canvas from "../replay/Canvas";
+import Button from "../common/button";
 
 import { fetchLog } from "../../data/match/matchRoutes";
 
@@ -29,6 +30,10 @@ class LandingPage extends React.PureComponent {
     if (nextProps.user) {
       history.push("/dashboard");
     }
+  }
+
+  goToLogin = () => {
+    history.push("/login");
   }
 
   loadMatch = () => {
@@ -80,27 +85,61 @@ class LandingPage extends React.PureComponent {
           </div>
           <div style={styles.overlayPageRow}>
             <div style={styles.column}>
-              <div style={styles.paragraphTitle}>Welcome to Monad.</div>
-              <div style={styles.paragraphContainer}>
-                <p>
-                  Monad is a programming challenge in which
-                  you design and implement an artificial intelligence agent
-                  to compete with those of other users in a turn-based
-                  strategy game on a two-dimensional grid.
-                </p>
+              <div style={styles.columnItem}>
+                <div style={styles.paragraphTitle}>Welcome to Monad.</div>
+                <div style={styles.paragraphContainer}>
+                  <p>
+                    Monad is a programming challenge in which
+                    you design and implement an artificial intelligence agent
+                    to compete with those of other users in a turn-based
+                    strategy game.
+                  </p>
+                </div>
+              </div>
+              <div style={styles.columnItem}>
+                <div style={styles.paragraphTitle}>The Evolution of Intelligence.</div>
+                <div style={styles.paragraphContainer}>
+                  <p>
+                    Monad's universe is centered around not a specific spatial
+                    location, but rather a specific time — the early stages of life.
+                    You command a swarm of simple autonomous agents, and with them
+                    attempt to reproduce, expand, and ultimately assert supremacy
+                    over the environment.
+                    <br/> <br/>
+                    Can you design a set of local rules that will lead to
+                    globally intelligent behavior?
+                  </p>
+                </div>
               </div>
             </div>
             <div style={styles.column}>
-              {/*
-              <Canvas size={null}
-                replay={this.props.replay}
-                frame={this.state.currentFrame}
-                incrementFrame={this.incrementCurrentFrame}
-                showNums={false}
-                onCellClicked={this.viewOnly}
-                selectedCell={null}
-                play={true} />
-              */}
+              {
+                /* <Canvas size={null}
+                  replay={null}
+                  frame={this.state.currentFrame}
+                  incrementFrame={this.incrementCurrentFrame}
+                  showNums={false}
+                  onCellClicked={this.viewOnly}
+                  selectedCell={null}
+                  play={true} />
+                */
+              }
+              <div style={styles.columnItem}>
+                <div style={styles.paragraphTitle}>Universal Appeal.</div>
+                <div style={styles.paragraphContainer}>
+                  <p>
+                    The game underlying Monad is simple to understand yet
+                    difficult to master, making it suitable for programmers of all ability levels.
+                  <br/> <br/>
+                    Whether you are just starting out, or are already well on
+                    your way to implementing AGI on a single-tape Turing Machine,
+                    Monad has something for you.
+                  </p>
+                </div>
+              </div>
+              <Button kind={"primary"} onClick={this.goToLogin} style={styles.startButton}>
+                GET STARTED
+              </Button>
             </div>
           </div>
         </div>
@@ -169,11 +208,14 @@ const styles = {
     height: "90%",
     display: "flex",
     flexDirection: "column",
-    justifyContent: "flex-start",
+    justifyContent: "space-around",
     alignItems: "center"
   },
-  paragraphTitle: {
-    paddingBottom: "10px"
+  columnItem: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center"
   },
   paragraphContainer: {
     width: "90%",
@@ -186,6 +228,7 @@ const styles = {
     borderRadius: "3px",
     borderColor: colors.primary,
     padding: "15px",
+    margin: "10px",
     fontSize: constants.fontSizes.large,
     backgroundColor: "rgba(255,255,255,0.6)"
   },
@@ -203,6 +246,10 @@ const styles = {
     display: "inline-block",
     padding: "5px",
     transform: "rotate(45deg)"
+  },
+  startButton: {
+    width: "300px",
+    //margin: "40px auto",
   }
 };
 

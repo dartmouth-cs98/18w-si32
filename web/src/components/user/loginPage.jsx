@@ -111,6 +111,7 @@ const styles = {
     display: "flex",
     justifyContent: "center",
     flexDirection: "column",
+    fontWeight: "300"
   },
   wrapper: {
     width: "100%",
