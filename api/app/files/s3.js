@@ -18,16 +18,6 @@ const isPythonFile = (file) => (
   file.name.slice(-3) === ".py"
 );
 
-// const isPythonFile = (file) => (
-//   _.includes([
-//     "text/x-python",
-//     "text/plain",
-//     "application/x-python-code",
-//     "application/x-python",
-//     "text/x-python-script"
-//   ], file.type)
-// );
-
 const upload = (bucket, key, file, options={}) => {
   let body = file;
   if ("path" in file) {

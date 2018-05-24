@@ -10,10 +10,9 @@ import Canvas from "../replay/Canvas";
 import Button from "../common/button";
 
 import { fetchLog } from "../../data/match/matchRoutes";
+import { fetchLandingMatch } from "../../data/match/matchActions";
 
 import { colors, constants } from "../../style/";
-
-const MATCH_ID = 0;
 
 class LandingPage extends React.PureComponent {
   constructor(props) {
@@ -23,6 +22,10 @@ class LandingPage extends React.PureComponent {
     this.state = {
       currentFrame: 0
     }
+  }
+
+  componentWillMount() {
+    this.loadReplay();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -36,8 +39,8 @@ class LandingPage extends React.PureComponent {
     history.push("/login");
   }
 
-  loadMatch = () => {
-    return this.props.fetchMatch().then(res => {
+  loadReplay = () => {
+    return this.props.fetchLandingMatch().then(res => {
       // load the game log from S3
       if (res.body.logUrl) {
         return fetchLog(res.body.logUrl);
@@ -66,6 +69,8 @@ class LandingPage extends React.PureComponent {
   }
 
   render() {
+    if (!this.state.log) return (<div></div>);
+
     return (
       <Page style={styles.page}>
         <div style={styles.landingCanvasContainer}>
@@ -113,17 +118,14 @@ class LandingPage extends React.PureComponent {
               </div>
             </div>
             <div style={styles.column}>
-              {
-                /* <Canvas size={null}
-                  replay={null}
+                <Canvas size={null}
+                  replay={this.state.log}
                   frame={this.state.currentFrame}
                   incrementFrame={this.incrementCurrentFrame}
                   showNums={false}
                   onCellClicked={this.viewOnly}
                   selectedCell={null}
                   play={true} />
-                */
-              }
               <div style={styles.columnItem}>
                 <div style={styles.paragraphTitle}>Universal Appeal.</div>
                 <div style={styles.paragraphContainer}>
@@ -253,7 +255,7 @@ const styles = {
 };
 
 const mapDispatchToProps = (dispatch, props) => ({
-  fetchMatch: () => dispatch(fetchMatch(MATCH_ID)),
+  fetchLandingMatch: () => dispatch(fetchLandingMatch()),
 });
 
 const mapStateToProps = state => ({
