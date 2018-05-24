@@ -8,7 +8,7 @@ import Logo from "../common/logo";
 
 import { constants, colors } from "../../style";
 
-const { FEEDBACK_URL } = config;
+const { FEEDBACK_URL, PRIVACY_POLICY_URL } = config;
 
 class Footer extends React.PureComponent {
   openFeedback = () => {
@@ -16,11 +16,7 @@ class Footer extends React.PureComponent {
   }
 
   openPrivacyPolicy = () => {
-    return;
-  }
-
-  openContact = () => {
-    window.open("mailto:monadteam@gmail.com");
+    window.open(PRIVACY_POLICY_URL, "_blank");
   }
 
   render() {
@@ -28,13 +24,10 @@ class Footer extends React.PureComponent {
       <div style={styles.wrapper}>
         <div style={styles.linksContainer}>
           <Link style={styles.link} href="#" onClick={this.openFeedback}>
-            Privacy Policy
-          </Link>
-          <Link style={styles.link} href="#" onClick={this.openPrivacyPolicy}>
             Feedback
           </Link>
-          <Link style={styles.link} href="#" onClick={this.openContact}>
-            Contact
+          <Link style={styles.link} href="#" onClick={this.openPrivacyPolicy}>
+            Privacy Policy
           </Link>
         </div>
         <div style={styles.logoContainer}>
