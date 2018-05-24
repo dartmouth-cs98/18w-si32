@@ -2,15 +2,19 @@ import React from "react";
 import { connect } from "react-redux";
 import _ from "lodash";
 import moment from "moment";
+
+import socket from "../../util/socket";
+
 import { Page, Wrapper, TitleBar, Link } from "../layout";
 import { fetchMatch } from "../../data/match/matchActions";
 import { fetchLog } from "../../data/match/matchRoutes";
+
 import ReplayVisualizer from "../replay/ReplayVisualizer";
 import CellDetail from "../replay/CellDetails";
 import GameStats from "../replay/GameStats";
+
 import { constants, colors } from "../../style";
 import { COLORS } from "../replay/Canvas";
-import socket from "../../util/socket";
 
 class MatchSinglePage extends React.PureComponent {
   constructor(props) {
@@ -26,7 +30,7 @@ class MatchSinglePage extends React.PureComponent {
       if (this.props.match.status !== "DONE") {
         this.joinedSocket = true;
         socket.emit("waitingMatch", this.props.id);
-        
+
         // when it's running, update UI
         socket.on("matchStarted", () => {
           this.setState({
@@ -44,7 +48,7 @@ class MatchSinglePage extends React.PureComponent {
 
   componentWillUnmount() {
     // if we were subscribed to socket, stop
-    if (this.joinedSocket) { 
+    if (this.joinedSocket) {
       socket.emit("leaveMatch", this.props.id);
     }
   }
@@ -55,8 +59,8 @@ class MatchSinglePage extends React.PureComponent {
 
   onCellSelected = ({row, col}) => {
     this.setState({
-      selectedRow: row, 
-      selectedCol: col, 
+      selectedRow: row,
+      selectedCol: col,
     });
   }
 
@@ -117,7 +121,7 @@ class MatchSinglePage extends React.PureComponent {
         return this.renderFailed();
       }
 
-      return  <ReplayVisualizer 
+      return  <ReplayVisualizer
         hideSelectButton
         replay={this.state.log}
         onFrameChanged={this.onFrameChanged}
@@ -133,8 +137,8 @@ class MatchSinglePage extends React.PureComponent {
       <Wrapper>
         <div>
           <div style={[styles.loading, styles.waitMessage]}>
-            { this.props.match.status == "RUNNING" || this.state.isRunning ? 
-              "Your match is currently running." 
+            { this.props.match.status == "RUNNING" || this.state.isRunning ?
+              "Your match is currently running."
                 : "Your match is in the queue. We'll update this page when the status changes." }
           </div>
         </div>
@@ -169,16 +173,16 @@ class MatchSinglePage extends React.PureComponent {
                   log={this.state.log}
                   turn={this.state.frameNumber}
                   bots={this.props.match.bots}
-                /> 
+                />
               </div>
               <div style={styles.cellDetail}>
                 <h3 style={styles.title}>Cell Details</h3>
-                { this.state.selectedRow != undefined ? 
+                { this.state.selectedRow != undefined ?
                     <CellDetail
                       log={this.state.log}
                       turn={this.state.frameNumber}
-                      row={this.state.selectedRow} 
-                      col={this.state.selectedCol} 
+                      row={this.state.selectedRow}
+                      col={this.state.selectedCol}
                     /> : <div style={styles.cellDetail.placeholder}>Click on a cell to see specifics.</div> }
               </div>
             </div>
