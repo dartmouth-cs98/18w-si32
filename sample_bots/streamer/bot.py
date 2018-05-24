@@ -7,10 +7,11 @@ def do_turn(game):
 
     units = game.get_my_cells()
 
-    buildings = game.get_enemy_building_sites()
-    if len(buildings) > 0:
+    hives = game.get_enemy_hive_sites()
+
+    if len(hives) > 0:
         for s in units:
-            m = game.move_towards(s.position,buildings[0].position)
+            m = game.move_towards(s.position, hives[0].position)
             if m:
                 commands.append(m)
 
