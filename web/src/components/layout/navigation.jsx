@@ -10,10 +10,7 @@ import Logo from "../common/logo";
 
 import { logout } from "../../data/session/sessionActions";
 
-import {
-  colors,
-  constants,
-} from "../../style";
+import { colors, constants } from "../../style";
 
 const { DOCS_URL, FEEDBACK_URL } = config;
 
@@ -50,9 +47,6 @@ class Navigation extends React.PureComponent {
     } else {
       return (
         <div style={styles.userAreaContainer}>
-          <Link style={styles.link} href="#" onClick={this.openFeedback}>
-            Feedback
-          </Link>
           <Link style={styles.link} href="/login">
             Log In
           </Link>
@@ -105,7 +99,6 @@ const styles = {
     zIndex: 1000
   },
   inner: {
-    //width: constants.BODY_WIDTH,
     height: constants.NAVBAR_HEIGHT,
     margin: "0px auto",
     display: "flex",

@@ -10,6 +10,7 @@ const { MIXPANEL_TOKEN } = config;
 import { setUserForSession } from "./data/session/sessionActions";
 
 import Navigation from "./components/layout/navigation";
+import Footer from "./components/layout/footer";
 
 import socket from "./util/socket"; // eslint-disable-line
 
@@ -41,6 +42,7 @@ class App extends React.Component {
       <div>
         <Navigation />
         <div id="main">{this.main}</div>
+        <Footer />
       </div>
     );
   }

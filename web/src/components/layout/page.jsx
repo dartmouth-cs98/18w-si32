@@ -10,7 +10,7 @@ class Page extends React.PureComponent {
 }
 
 const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-const pageHeight = vh - constants.NAVBAR_HEIGHT*2;
+const pageHeight = vh - constants.NAVBAR_HEIGHT;
 
 const styles = {
   base: {
