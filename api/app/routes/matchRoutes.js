@@ -43,7 +43,7 @@ matchRouter.get("/:matchId", auth.loggedIn, async (ctx) => {
 });
 
 matchRouter.get("/landing", auth.noAuth, async (ctx) => {
-  const match = await Match.findById(LANDING_MATCH_ID);
+  const match = await Match.findById(LANDING_MATCH_ID)
     .populate({ path: "bots.user", model: "User", select: "-password" })
     .populate({ path: "users", model: "User", select: "-password" })     // yes, this is a little duplicative, but it's useful
     .lean();
