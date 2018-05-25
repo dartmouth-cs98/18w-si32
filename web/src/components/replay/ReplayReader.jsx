@@ -154,14 +154,23 @@ class ReplayReader extends React.PureComponent {
       <div style={styles.wrapper}>
         {this.renderBadFileModal()}
         <div style={styles.uploadHeader}>Replay Your Bot</div>
-        <div style={styles.uploadDescription}>
-          Use this page to view replays of your locally-run matches.
-        </div>
         <div style={{...styles.dropZoneBase, ...dropZoneCnd}} id="dropZone">
           {fileSelectButton}
           Drop a Replay File to Upload
         </div>
-
+        <div style={styles.explanationHeader}>
+          How to Use this Page
+        </div>
+        <div style={styles.explanationContainer}>
+          <p>
+            When you run a match locally using the development kit,
+            a replay file, 'game.json,' is generated. To visualize
+            this locally-run match replay, you can upload the file here.
+            <br/> <br />
+            For all non-local matches, replays will be available both on your
+            profile and dashboard pages.
+          </p>
+        </div>
       </div>
     );
   }
@@ -253,6 +262,19 @@ const styles = {
   },
   modalText: {
     padding: "5px 0 5px 0"
+  },
+  explanationHeader: {
+    color: colors.blue,
+    fontSize: constants.fontSizes.large
+  },
+  explanationContainer: {
+    width: "60%",
+    padding: "10px",
+    margin: "10px",
+    borderStyle: "solid",
+    borderColor: colors.primary,
+    borderWidth: "1px",
+    borderRadius: "2px"
   }
 };
 
