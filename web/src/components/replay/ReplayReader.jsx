@@ -154,7 +154,9 @@ class ReplayReader extends React.PureComponent {
       <div style={styles.wrapper}>
         {this.renderBadFileModal()}
         <div style={styles.uploadHeader}>Replay Your Bot</div>
-
+        <div style={styles.uploadDescription}>
+          Use this page to view replays of your locally-run matches.
+        </div>
         <div style={{...styles.dropZoneBase, ...dropZoneCnd}} id="dropZone">
           {fileSelectButton}
           Drop a Replay File to Upload
@@ -173,11 +175,13 @@ const styles = {
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    paddingTop: "40px"
+    paddingTop: "40px",
+    fontWeight: 300
   },
   uploadHeader: {
     color: colors.red,
-    fontSize: "30px"
+    fontSize: "30px",
+    padding: "10px"
   },
   dropZoneBase: {
     width: "60%",
