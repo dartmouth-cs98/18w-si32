@@ -23,6 +23,14 @@ class UserSearch extends React.PureComponent {
     };
   }
 
+  onInputFocus = () => {
+    this.setState({
+      query: "",
+      hasSearched: false,
+      results: []
+    });
+  }
+
   handleInputChange = (event) => {
     this.setState({
       query: event.target.value,
@@ -34,9 +42,8 @@ class UserSearch extends React.PureComponent {
     if (event) event.preventDefault();
     if (this.state.query === "") return;
 
-    this.hasSearched = true;
-
     this.setState({
+      hasSearched: true,
       isSearching: true,
       newQuery: false,
     });
@@ -51,7 +58,7 @@ class UserSearch extends React.PureComponent {
   }
 
   renderUserList() {
-    if (!this.hasSearched) {
+    if (!this.state.hasSearched) {
       return null;
     }
 
@@ -79,6 +86,7 @@ class UserSearch extends React.PureComponent {
             type="text"
             value={this.state.query}
             onChange={this.handleInputChange}
+            onFocus={this.onInputFocus}
           />
           <input type="submit" style={{display: "none"}} />
           <Button kind="primary" onClick={this.doUserQuery} style={styles.submitButton}>
