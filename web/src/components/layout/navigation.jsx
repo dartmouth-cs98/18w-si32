@@ -25,17 +25,10 @@ class Navigation extends React.PureComponent {
     window.open(DOCS_URL, "_blank");
   }
 
-  openFeedback = () => {
-    window.open(FEEDBACK_URL, "_blank");
-  }
-
   renderUserArea() {
     if (this.props.isLoggedIn) {
       return (
         <div style={styles.userAreaContainer}>
-          <Link style={styles.link} href="#" onClick={this.openFeedback}>
-            Feedback
-          </Link>
           <Link style={styles.link} href={`/users/${this.props.userId}`}>
             Profile
           </Link>
