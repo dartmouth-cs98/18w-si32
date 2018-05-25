@@ -1,4 +1,23 @@
 #!/bin/bash
+#
+# monad.sh
+#
+# Entry point for Monad CLI.
+# Shell script wraps the functionality of
+# various python scripts useful during local development.
+#
+# Usage:
+#   monad.sh <command> param0 [param1, ...]
+#
+# Supported Commands:
+#   - match
+#   - train
+#   - upload
+#
+# Exit Codes:
+#   0 = clean exit
+#   1 = invalid syntax
+#   2 = unrecognized command
 
 # check if a command was even specified
 if [ "$#" -lt 1 ]; then
@@ -18,7 +37,7 @@ elif [ "$1" = "upload" ]; then
 else
   # unrecognized command
   echo "error: unrecognized command"
-  exit 1
+  exit 2
 fi
 
 exit 0
