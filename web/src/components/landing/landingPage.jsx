@@ -31,6 +31,7 @@ class LandingPage extends React.PureComponent {
       this.setState({
         log: JSON.parse(response)
       });
+      this.forceUpdate();
     });
   }
 
@@ -74,9 +75,24 @@ class LandingPage extends React.PureComponent {
     }
   }
 
-  render() {
-    if (!this.state.log) return (<div></div>);
+  renderCanvas = () => {
+    if (!this.state.log) {
+      return (<div></div>);
+    } else {
+      return (
+        <Canvas size={null}
+          replay={this.state.log}
+          frame={this.state.currentFrame}
+          incrementFrame={this.incrementCurrentFrame}
+          showNums={false}
+          onCellClicked={this.viewOnly}
+          selectedCell={null}
+          play={true}/>
+      );
+    }
+  }
 
+  render() {
     return (
       <Page style={styles.page}>
         <div style={styles.landingCanvasContainer}>
@@ -107,14 +123,7 @@ class LandingPage extends React.PureComponent {
                   </p>
                 </div>
               </div>
-              <Canvas size={null}
-                replay={this.state.log}
-                frame={this.state.currentFrame}
-                incrementFrame={this.incrementCurrentFrame}
-                showNums={false}
-                onCellClicked={this.viewOnly}
-                selectedCell={null}
-                play={true}/>
+              { this.renderCanvas() }
             </div>
             <div style={styles.rightColumn}>
               <div style={styles.rightColumnItem}>
