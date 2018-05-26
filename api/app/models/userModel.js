@@ -18,6 +18,10 @@ const _User = new Schema({
     type: String,
     required: true
   },
+  onboard: {
+    type: Boolean,
+    default: false
+  },
   trueSkill: { type: TrueSkillSchema, required: true },
   trueSkillHistory: [{
     score: TrueSkillSchema,
@@ -89,6 +93,10 @@ _User.statics.updateSkillByRankedFinish = async function(rankedUsers, matchId) {
   });
 };
 
+_User.statics.onboard = async function(userId) {
+  return await User.findOneAndUpdate({ _id: userId }, { "$set": { "onboard": true }}, { new: true });
+}
+
 // generic follow/unfollow helper. pass in which op to do and updates both target and source
 _User.methods._followUnfollow = async function(targetUserId, op) {
   if (targetUserId == this._id.toString())  {
@@ -117,7 +125,6 @@ _User.methods.follow = async function(targetUserId) {
 _User.methods.unfollow = async function(targetUserId) {
   return await this._followUnfollow(targetUserId, "$pull");
 };
-
 
 _User.methods.toJSON = function() {
   var obj = this.toObject();

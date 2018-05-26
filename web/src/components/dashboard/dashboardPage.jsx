@@ -1,29 +1,32 @@
+import _ from "lodash";
 import React from "react";
 import Radium from "radium";
-import _ from "lodash";
+import Modal from "react-modal";
 import { connect } from "react-redux";
 import mixpanel from "mixpanel-browser";
 
 import Button from "../common/button";
 import { Link, Page, Wrapper } from "../layout";
 
+import config from "../../config";
+
 import UserSearch from "./UserSearch";
 import UserList from "../user/UserList";
 import BotCard from "../bots/BotCard";
 import MatchList from "../matches/MatchList";
 import HeaderStatsBar from "./HeaderStatsBar";
+import { MainTitle } from "../common/titles";
 
 import { fetchBots } from "../../data/bot/botActions";
 import { fetchMatches } from "../../data/match/matchActions";
-import { fetchUser } from "../../data/user/userActions";
+import { fetchUser, onboardUser } from "../../data/user/userActions";
 import { getSessionUser } from "../../data/user/userSelectors";
 import { getMatchesForUser } from "../../data/match/matchSelectors";
 import { getBotsForUser } from "../../data/bot/botSelectors";
 
-import { MainTitle } from "../common/titles";
+import { colors, constants, fontStyles, colorStyles } from "../../style";
 
-import { colors, fontStyles, colorStyles } from "../../style";
-
+const { DEVKIT_URL } = config;
 
 const DashBotList = Radium(({ bots }) => {
   const items = _.map(bots, (b,i) => (
@@ -51,7 +54,15 @@ const DashBotList = Radium(({ bots }) => {
 class DashboardPage extends React.PureComponent {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      showModal: false
+    };
+  }
+
+  componentWillMount() {
+    if (!this.props.user.onboard) {
+      this.setState({ showModal: true });
+    }
   }
 
   componentDidMount() {
@@ -59,6 +70,16 @@ class DashboardPage extends React.PureComponent {
     this.props.fetchBots(this.props.userId);
     this.props.fetchMatches(this.props.userId);
     this.props.fetchUser(this.props.userId);
+  }
+
+  downloadDevkit = () => {
+    window.open(DEVKIT_URL, "_blank");
+  }
+
+  markUserOnboarded = () => {
+    this.props.onboardUser(this.props.userId);
+    // dont actually need this, since it navigates user away from dash...
+    this.setState({ showModal: false });
   }
 
   renderNoBots = () => {
@@ -92,6 +113,31 @@ class DashboardPage extends React.PureComponent {
     return <div style={{marginTop: 10}}><UserList users={this.props.user.following} /></div>;
   }
 
+  renderOnboardModal = () => {
+    return (
+      <Modal
+        isOpen={this.state.showModal}
+        onRequestClose={this.closeModal}
+        style={styles.modalStyles}
+        contentLabel="Monad Onboarding">
+        <div style={styles.modalTitle}>Welcome to Monad!</div>
+        <div>Follow the 3 steps below to get started by uploading your first bot.</div>
+        <div style={styles.listContainer}>
+          <div style={styles.listItem}>1. Download the <Link href="#" onClick={this.downloadDevkit}>development kit</Link></div>
+          <div style={styles.listItem}>2. Copy and paste the code below into 'bot.py' where indicated</div>
+          <div style={styles.codeBlock}>
+            cells = game.get_my_cells()
+            <br/>
+            for cell in cells:
+            <br/>
+            <span style={styles.indent}>game.move(cell.position, 1, choice(game.get_movement_directions()))</span>
+          </div>
+          <div style={styles.listItem}>3. Upload your bot from the <Link href="/bots/create" onClick={this.markUserOnboarded}>bot creation page</Link></div>
+        </div>
+      </Modal>
+    );
+  }
+
   render() {
     if (!this.props.user) return <div></div>;
 
@@ -100,6 +146,7 @@ class DashboardPage extends React.PureComponent {
         <HeaderStatsBar user={this.props.user} />
 
         { this.renderTopBots() }
+        { this.renderOnboardModal() }
 
         <Wrapper style={styles.dashSectionContainer} innerStyle={styles.dashSection}>
           <div style={styles.matchesRow}>
@@ -135,6 +182,7 @@ const mapDispatchToProps = dispatch => ({
   fetchBots: (userId) => dispatch(fetchBots(userId)),
   fetchMatches: (userId) => dispatch(fetchMatches(userId)),
   fetchUser: (userId) => dispatch(fetchUser(userId, true, true)),
+  onboardUser: (userId) => dispatch(onboardUser(userId)),
 });
 
 const mapStateToProps = state => ({
@@ -147,6 +195,7 @@ const mapStateToProps = state => ({
 const styles = {
   pageStyles: {
     justifyContent: "flex-start",
+    fontWeight: 300
   },
   dashSectionContainer: {
     width: "100%",
@@ -189,6 +238,51 @@ const styles = {
   users: {
     flex: 1,
   },
+  modalStyles: {
+    content : {
+      width: "80%",
+      height: "60%",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center",
+      fontFamily: "rubik",
+      fontWeight: 300,
+      top: "50%",
+      left: "50%",
+      right: "auto",
+      bottom: "auto",
+      marginRight: "-50%",
+      transform: "translate(-50%, -50%)",
+      borderColor: colors.blue,
+      borderStyle: "solid"
+    }
+  },
+  modalTitle: {
+    fontSize: constants.fontSizes.larger,
+    color: colors.blue,
+    padding: "10px"
+  },
+  listContainer: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "flex-start",
+    padding: "10px"
+  },
+  listItem: {
+    padding: "15px"
+  },
+  codeBlock: {
+    backgroundColor: "#eee",
+    border: "1px solid #999",
+    display: "block",
+    padding: "15px",
+    marginLeft: "30px"
+  },
+  indent: {
+    paddingLeft: "15px"
+  }
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(DashboardPage);

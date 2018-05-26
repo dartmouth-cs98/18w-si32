@@ -53,6 +53,15 @@ userRouter.get("/:userId", auth.loggedIn, async (ctx) => {
   ctx.body = user;
 });
 
+// mark a user as onboarded
+userRouter.put("/onboard", auth.loggedIn, async (ctx) => {
+  let user = await User.onboard(ctx.state.userId);
+
+  ctx.body = {
+    updatedRecords: [user]
+  };
+});
+
 // trying to be RESTful here. Imagine we're creating some "follows" resource/link
 // from logged in user to targetUserId, which is passed in the body.
 userRouter.put("/follows/:targetUserId", auth.loggedIn, async (ctx) => {
@@ -120,7 +129,7 @@ userRouter.post("/register", async (ctx) => {
   assert(_.get(ctx, "request.body.username", "").length > 0, "You need to enter a username");
   assert(_.get(ctx, "request.body.password", "").length > 0, "You need to enter a password");
 
-  // check for existing user with username 
+  // check for existing user with username
   const existingUser = await User.findOne({ username: ctx.request.body.username });
   if (existingUser) {
     throw new MalformedError("A user already exists with that username");
@@ -173,7 +182,6 @@ userRouter.post("/login", async (ctx) => {
 
 userRouter.post("/logout", auth.loggedIn, async (ctx) => {
   await session.destroy(ctx.state.token);
-
   ctx.body = {};
 });
 

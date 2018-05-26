@@ -11,9 +11,13 @@
 
 import sys
 import time
+from random import choice
+
 from GameHelper import GameHelper
 
 def do_turn(game):
-    pass
+    cells = game.get_my_cells()
+    for cell in cells:
+        game.move(cell.position, 1, choice(game.get_movement_directions()))
 
 GameHelper.register_turn_handler(do_turn)
