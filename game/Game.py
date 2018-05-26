@@ -59,19 +59,17 @@ class Game(ABC):
     # --------------------------------------------------------------------------
     # INITIALIZING FUNCTION
 
-    def initialize_players(self, bots, map):  # initalizes players
-        i = 0
+    # initalizes players
+    def initialize_players(self, bots, map):
         self.players = []
         positions = STARTING_POSITIONS[len(bots) - 1]
 
-        # Should accept any number of bots now
-
-        # Create a player object for each bot
+        # create a player object for each bot
         for count, bot in enumerate(bots):
             pos = Coordinate(x=positions[count][0], y=positions[count][1])
             self.players.append(Player(count, self.map, bots[count], pos))
 
-        # Create a starting hive for each player
+        # create a starting hive for each player
         for player in self.players:
             self.map.get_cell(player.starting_pos).create_hive(player.playerId)
 
@@ -97,7 +95,8 @@ class Game(ABC):
 
             self.iter += 1
 
-        # once game ends, log one more turn, so that viz has a final state to work with
+        # once game ends, log one more turn,
+        # so that viz has a final state to work with
         self.logger.new_turn(self.map, self.players)
         self.logger.end_turn()
 
