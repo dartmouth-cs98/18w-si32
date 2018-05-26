@@ -3,11 +3,11 @@ import Radium from "radium";
 import Color from "color";
 
 import history from "../../history";
+
 import { constants, colors } from "../../style";
 
 // generic button class
-// kind=primary|secondary|tertiary
-// TODO implement size prop
+// kind = primary | secondary | tertiary
 class _Button extends React.PureComponent {
   onClick = (event) => {
     // if the button should just act like a link and take us somewhere

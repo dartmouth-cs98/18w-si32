@@ -3,8 +3,6 @@ import * as http from "../util/http.js";
 // base actions for typical http requests
 
 /* eslint-disable no-unused-vars */
-// TODO: getState, options creating eslint error here because they are not used,
-// do we need it?
 
 const httpGetAction = (collectionName, endpoint, params, options={}) => (dispatch, getState) => {
   dispatch({

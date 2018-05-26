@@ -43,7 +43,6 @@ const MAX_UNITS = 5;
 class Canvas extends React.Component {
   constructor(props) {
     super(props);
-
     this.animate = this.animate.bind(this);
   }
 
@@ -324,7 +323,8 @@ const styles = {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-  }
+    backgroundColor: "rgba(0,0,0,0)"
+  },
 };
 
 export default Canvas;
