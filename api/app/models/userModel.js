@@ -95,7 +95,7 @@ _User.statics.updateSkillByRankedFinish = async function(rankedUsers, matchId) {
 
 _User.statics.onboard = async function(userId) {
   return await User.findOneAndUpdate({ _id: userId }, { "$set": { "onboard": true }}, { new: true });
-}
+};
 
 // generic follow/unfollow helper. pass in which op to do and updates both target and source
 _User.methods._followUnfollow = async function(targetUserId, op) {
