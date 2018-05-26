@@ -28,10 +28,6 @@ const workerAuth = async (ctx, next) => {
   return next();
 };
 
-const noAuth = async (ctx, next) => {
-  return next();
-};
-
 module.exports = {
   loggedIn,
   workerAuth,
