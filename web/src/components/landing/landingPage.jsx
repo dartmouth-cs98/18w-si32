@@ -14,6 +14,8 @@ import { fetchLandingMatch } from "../../data/match/matchActions";
 
 import { colors, constants } from "../../style/";
 
+import REPLAY_LOG from "../../static/landingReplay.json"
+
 class LandingPage extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -25,7 +27,11 @@ class LandingPage extends React.PureComponent {
   }
 
   componentWillMount() {
-    this.loadReplay();
+    this.loadJSON((response) => {
+      this.setState({
+        log: JSON.parse(response)
+      });
+    });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -39,17 +45,17 @@ class LandingPage extends React.PureComponent {
     history.push("/login");
   }
 
-  loadReplay = () => {
-    return this.props.fetchLandingMatch().then(res => {
-      // load the game log from S3
-      if (res.body.logUrl) {
-        return fetchLog(res.body.logUrl);
-      } else {
-        return false;
+  loadJSON = (next) => {
+    var xobj = new XMLHttpRequest();
+    xobj.overrideMimeType("application/json");
+    xobj.open('GET', REPLAY_LOG, true);
+    xobj.onreadystatechange = () => {
+      if (xobj.readyState == 4 && xobj.status == 200) {
+        // .open will NOT return a value but simply returns undefined in async mode so use a callback
+        next(xobj.responseText);
       }
-    }).then(log => {
-      this.setState({ log });
-    });
+    }
+    xobj.send(null);
   }
 
   setFrame = (frameNo) => {
@@ -62,7 +68,7 @@ class LandingPage extends React.PureComponent {
     const nextFrame = this.state.currentFrame + 1;
     this.setFrame(nextFrame);
 
-    if ((nextFrame + 1) === this.props.replay.turns.length) {
+    if ((nextFrame + 1) === this.state.log.turns.length) {
       // if we have reached the end of the game, reset to beginning
       this.setState({ currentFrame: 0 });
     }
@@ -89,8 +95,8 @@ class LandingPage extends React.PureComponent {
             </div>
           </div>
           <div style={styles.overlayPageRow}>
-            <div style={styles.column}>
-              <div style={styles.columnItem}>
+            <div style={styles.leftColumn}>
+              <div style={styles.leftColumnItem}>
                 <div style={styles.paragraphTitle}>Welcome to Monad.</div>
                 <div style={styles.paragraphContainer}>
                   <p>
@@ -101,7 +107,17 @@ class LandingPage extends React.PureComponent {
                   </p>
                 </div>
               </div>
-              <div style={styles.columnItem}>
+              <Canvas size={null}
+                replay={this.state.log}
+                frame={this.state.currentFrame}
+                incrementFrame={this.incrementCurrentFrame}
+                showNums={false}
+                onCellClicked={this.viewOnly}
+                selectedCell={null}
+                play={true}/>
+            </div>
+            <div style={styles.rightColumn}>
+              <div style={styles.rightColumnItem}>
                 <div style={styles.paragraphTitle}>The Evolution of Intelligence.</div>
                 <div style={styles.paragraphContainer}>
                   <p>
@@ -109,24 +125,11 @@ class LandingPage extends React.PureComponent {
                     location, but rather a specific time — the early stages of life.
                     You command a swarm of simple autonomous agents, and with them
                     attempt to reproduce, expand, and ultimately assert supremacy
-                    over the environment.
-                    <br/> <br/>
-                    Can you design a set of local rules that will lead to
-                    globally intelligent behavior?
+                    over your environment.
                   </p>
                 </div>
               </div>
-            </div>
-            <div style={styles.column}>
-                <Canvas size={null}
-                  replay={this.state.log}
-                  frame={this.state.currentFrame}
-                  incrementFrame={this.incrementCurrentFrame}
-                  showNums={false}
-                  onCellClicked={this.viewOnly}
-                  selectedCell={null}
-                  play={true} />
-              <div style={styles.columnItem}>
+              <div style={styles.rightColumnItem}>
                 <div style={styles.paragraphTitle}>Universal Appeal.</div>
                 <div style={styles.paragraphContainer}>
                   <p>
@@ -139,9 +142,12 @@ class LandingPage extends React.PureComponent {
                   </p>
                 </div>
               </div>
-              <Button kind={"primary"} onClick={this.goToLogin} style={styles.startButton}>
-                GET STARTED
-              </Button>
+              <div style={styles.rightColumnItem}>
+                <div style={styles.paragraphTitle}>What Are You Waiting For?</div>
+                <Button kind={"primary"} onClick={this.goToLogin} style={styles.startButton}>
+                  GET STARTED
+                </Button>
+              </div>
             </div>
           </div>
         </div>
@@ -205,22 +211,38 @@ const styles = {
   subtitle: {
     padding: "5px",
   },
-  column: {
-    width: "50%",
+  leftColumn: {
+    width: "55%",
     height: "90%",
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-around",
     alignItems: "center"
   },
-  columnItem: {
+  leftColumnItem: {
+    width: "90%",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  rightColumn: {
+    width: "45%",
+    height: "90%",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-around",
+    alignItems: "center"
+  },
+  rightColumnItem: {
+    width: "90%",
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center"
   },
   paragraphContainer: {
-    width: "90%",
+    width: "100%",
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
@@ -243,7 +265,8 @@ const styles = {
     alignItems: "center",
   },
   arrowDown: {
-    border: "solid black",
+    borderStyle: "solid",
+    borderColor: "black",
     borderWidth: "0 2px 2px 0",
     display: "inline-block",
     padding: "5px",
@@ -251,6 +274,7 @@ const styles = {
   },
   startButton: {
     width: "300px",
+    margin: "10px"
   }
 };
 
