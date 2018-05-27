@@ -1,7 +1,6 @@
 import _ from "lodash";
 import React from "react";
 import Radium from "radium";
-import Modal from "react-modal";
 import { connect } from "react-redux";
 import mixpanel from "mixpanel-browser";
 
@@ -10,6 +9,7 @@ import { Link, Page, Wrapper } from "../layout";
 
 import config from "../../config";
 
+import OnboardModal from "./OnboardModal";
 import UserSearch from "./UserSearch";
 import UserList from "../user/UserList";
 import BotCard from "../bots/BotCard";
@@ -25,8 +25,6 @@ import { getMatchesForUser } from "../../data/match/matchSelectors";
 import { getBotsForUser } from "../../data/bot/botSelectors";
 
 import { colors, constants, fontStyles, colorStyles } from "../../style";
-
-const { DEVKIT_URL } = config;
 
 const DashBotList = Radium(({ bots }) => {
   const items = _.map(bots, (b,i) => (
@@ -57,10 +55,13 @@ class DashboardPage extends React.PureComponent {
     this.state = {
       showModal: false
     };
+
+    this.markUserOnboarded = this.markUserOnboarded.bind(this);
   }
 
   componentWillMount() {
-    if (!this.props.user.onboard) {
+    // !this.props.user.onboard
+    if (true) {
       this.setState({ showModal: true });
     }
   }
@@ -72,14 +73,10 @@ class DashboardPage extends React.PureComponent {
     this.props.fetchUser(this.props.userId);
   }
 
-  downloadDevkit = () => {
-    window.open(DEVKIT_URL, "_blank");
-  }
-
   markUserOnboarded = () => {
-    this.props.onboardUser(this.props.userId);
     // dont actually need this, since it navigates user away from dash...
     this.setState({ showModal: false });
+    this.props.onboardUser(this.props.userId);
   }
 
   renderNoBots = () => {
@@ -115,26 +112,9 @@ class DashboardPage extends React.PureComponent {
 
   renderOnboardModal = () => {
     return (
-      <Modal
-        isOpen={this.state.showModal}
-        onRequestClose={this.closeModal}
-        style={styles.modalStyles}
-        contentLabel="Monad Onboarding">
-        <div style={styles.modalTitle}>Welcome to Monad!</div>
-        <div>Follow the 3 steps below to get started by uploading your first bot.</div>
-        <div style={styles.listContainer}>
-          <div style={styles.listItem}>1. Download the <Link href="#" onClick={this.downloadDevkit}>development kit</Link></div>
-          <div style={styles.listItem}>2. Copy and paste the code below into 'bot.py' where indicated</div>
-          <div style={styles.codeBlock}>
-            cells = game.get_my_cells()
-            <br/>
-            for cell in cells:
-            <br/>
-            <span style={styles.indent}>game.move(cell.position, 1, choice(game.get_movement_directions()))</span>
-          </div>
-          <div style={styles.listItem}>3. Upload your bot from the <Link href="/bots/create" onClick={this.markUserOnboarded}>bot creation page</Link></div>
-        </div>
-      </Modal>
+      <OnboardModal
+        showModal={this.state.showModal}
+        markUserOnboarded={this.markUserOnboarded} />
     );
   }
 
@@ -238,51 +218,6 @@ const styles = {
   users: {
     flex: 1,
   },
-  modalStyles: {
-    content : {
-      width: "80%",
-      height: "60%",
-      display: "flex",
-      flexDirection: "column",
-      justifyContent: "center",
-      alignItems: "center",
-      fontFamily: "rubik",
-      fontWeight: 300,
-      top: "50%",
-      left: "50%",
-      right: "auto",
-      bottom: "auto",
-      marginRight: "-50%",
-      transform: "translate(-50%, -50%)",
-      borderColor: colors.blue,
-      borderStyle: "solid"
-    }
-  },
-  modalTitle: {
-    fontSize: constants.fontSizes.larger,
-    color: colors.blue,
-    padding: "10px"
-  },
-  listContainer: {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "flex-start",
-    padding: "10px"
-  },
-  listItem: {
-    padding: "15px"
-  },
-  codeBlock: {
-    backgroundColor: "#eee",
-    border: "1px solid #999",
-    display: "block",
-    padding: "15px",
-    marginLeft: "30px"
-  },
-  indent: {
-    paddingLeft: "15px"
-  }
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(DashboardPage);
