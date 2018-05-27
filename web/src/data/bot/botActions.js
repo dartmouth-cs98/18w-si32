@@ -3,8 +3,6 @@ import { httpGetAction } from "../httpCollectionActions";
 import history from "../../history";
 
 /* eslint-disable no-unused-vars */
-// TODO: getState creating eslint error here because it is not used,
-// do we need it?
 
 const fetchBots = (userId) => httpGetAction("BOT", "/bots", { userId });
 
@@ -31,8 +29,9 @@ const createBot = (name, code, params) => (dispatch, getState) => {
         payload: res.body.updatedRecords,
       });
 
-      // TODO this probably should live elsewhere in code
-      history.push(`/bots/${res.body.updatedRecords[0]._id}`);
+      // TODO: this probably should live elsewhere in code
+      // TODO: add this back in at some point?
+      // history.push(`/bots/${res.body.updatedRecords[0]._id}`);
     });
 };
 

@@ -59,18 +59,16 @@ class DashboardPage extends React.PureComponent {
     this.markUserOnboarded = this.markUserOnboarded.bind(this);
   }
 
-  componentWillMount() {
-    // !this.props.user.onboard
-    if (true) {
-      this.setState({ showModal: true });
-    }
-  }
-
   componentDidMount() {
     mixpanel.track("Visit Dashboard");
     this.props.fetchBots(this.props.userId);
     this.props.fetchMatches(this.props.userId);
-    this.props.fetchUser(this.props.userId);
+    this.props.fetchUser(this.props.userId).then(() => {
+      // if user has not yet completed onboarding, prompt them with modal
+      if (!this.props.user.onboard) {
+        this.setState({ showModal: true });
+      }
+    });
   }
 
   markUserOnboarded = () => {
@@ -157,20 +155,6 @@ class DashboardPage extends React.PureComponent {
   }
 }
 
-const mapDispatchToProps = dispatch => ({
-  fetchBots: (userId) => dispatch(fetchBots(userId)),
-  fetchMatches: (userId) => dispatch(fetchMatches(userId)),
-  fetchUser: (userId) => dispatch(fetchUser(userId, true, true)),
-  onboardUser: (userId) => dispatch(onboardUser(userId)),
-});
-
-const mapStateToProps = state => ({
-  user: getSessionUser(state) || {},
-  userId: state.session.userId,
-  matches: getMatchesForUser(state, state.session.userId),
-  bots: getBotsForUser(state, state.session.userId, { limit: 3 }),
-});
-
 const styles = {
   pageStyles: {
     justifyContent: "flex-start",
@@ -218,5 +202,19 @@ const styles = {
     flex: 1,
   },
 };
+
+const mapDispatchToProps = dispatch => ({
+  fetchBots: (userId) => dispatch(fetchBots(userId)),
+  fetchMatches: (userId) => dispatch(fetchMatches(userId)),
+  fetchUser: (userId) => dispatch(fetchUser(userId, true, true)),
+  onboardUser: (userId) => dispatch(onboardUser(userId)),
+});
+
+const mapStateToProps = state => ({
+  user: getSessionUser(state) || {},
+  userId: state.session.userId,
+  matches: getMatchesForUser(state, state.session.userId),
+  bots: getBotsForUser(state, state.session.userId, { limit: 3 }),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(DashboardPage);

@@ -53,10 +53,12 @@ userRouter.get("/:userId", auth.loggedIn, async (ctx) => {
   ctx.body = user;
 });
 
-// mark a user as onboarded
+/**
+ * @api PUT path /users/onboard
+ * Mark a user as having completed onboarding.
+ */
 userRouter.put("/onboard", auth.loggedIn, async (ctx) => {
   let user = await User.onboard(ctx.state.userId);
-
   ctx.body = {
     updatedRecords: [user]
   };

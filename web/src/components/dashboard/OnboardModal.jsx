@@ -1,6 +1,6 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
 import Modal from "react-modal";
+import { connect } from "react-redux";
+import React, { Component } from "react";
 
 import config from "../../config";
 
@@ -46,7 +46,7 @@ class OnboardModal extends Component {
       event.preventDefault();
     }
 
-    if (this.state.botName === "" || !this.state.botfile) {
+    if (this.state.botName === "" || !this.state.botFile) {
       // very basic validation
       return;
     }
@@ -61,7 +61,8 @@ class OnboardModal extends Component {
     // more involved than necessary on the onboard bot, but we
     // could alter this in the future.
     this.props.create(this.state.botName, this.state.botFile, []).then(() => {
-      // mark the user as onboarded back on the dash 
+      // mark the user as onboarded back on the dash
+      // just closes the modal and brings back to dash
       this.props.markUserOnboarded();
     })
     .catch(err => {
@@ -85,7 +86,7 @@ class OnboardModal extends Component {
         <div style={styles.modalTitle}>Welcome to Monad!</div>
         <div style={styles.subtitle}>Follow the 4 steps below to get started by uploading your first bot.</div>
         <div style={styles.listContainer}>
-          <div style={styles.listItem}>1. Download the <Link href="#" onClick={this.downloadDevkit}>development kit</Link></div>
+          <div style={styles.listItem}>1. Download and unpack the <Link href="#" onClick={this.downloadDevkit}>development kit</Link></div>
           <div style={styles.listItem}>2. Copy and paste the code below into 'bot.py' where indicated</div>
           <div style={styles.codeBlock}>
             cells = game.get_my_cells()
