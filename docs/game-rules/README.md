@@ -4,11 +4,10 @@ Here we provide a detailed breakdown of the rules of Monad.
 
 ### What is Monad?
 
-Monad is a turn-based strategy game that brings together elements of Starcraft and chess.
+Monad is a turn-based strategy game that brings together elements of Starcraft and Chess.
 Instead of playing the game yourself, however, the game is played by autonomous artificial intelligence
-programs ("agents") that you design and implement. Once you have implemented a bot, you then
-upload your code to the Monad servers where your bot is then pitted against bots
-submitted by other Monad players from all over the world.
+programs ("agents") that you design and implement. Once you have completed your agent
+(hereafter referred to as a "bot"), you then upload the code that implements it to the Monad servers where your it is then pitted against bots submitted by other Monad players from all over the world.
 
 ### Language
 

@@ -4,7 +4,7 @@ In order to simplify the development experience, we provided a helper library (`
 that provides a simple API for interacting with the game engine.
 
 All functions described below in this API reference can be invoked on the `GameHelper` object
-that is provided as an argument to your turn handling function. 
+that is provided as an argument to your turn handling function.
 
 ### Parameters
 
@@ -13,10 +13,10 @@ that is provided as an argument to your turn handling function.
 param(param_name)
 ```
 
-Returns the value you set online in Monad for the parameter `param_name`. 
+Returns the value you set online in Monad for the parameter `param_name`.
 
 
-### Command Creation
+### Command Generation
 
 **move()**
 
@@ -24,7 +24,7 @@ Returns the value you set online in Monad for the parameter `param_name`.
 move(position_from, num_units, direction)
 ```
 
-Creates and returns a _move_ command to move `num_units` units from the cell specified by `position_from` in the direction specified by `direction`.
+Generates a _move_ command to move `num_units` units from the cell specified by `position_from` in the direction specified by `direction`.
 
 **move_towards()**
 
@@ -32,7 +32,7 @@ Creates and returns a _move_ command to move `num_units` units from the cell spe
 move_towards(position_from, position_to, num_units=None)
 ```
 
-Creates and returns a _move_ command to move `num_units` units from the cell specified by `position_from` in the direction of the cell specified by `position_to`. That is, the units are moved in such a way that the distance between the cell specified by `position_from` and the cell specified by `position_to` is decreased.
+Generates a _move_ command to move `num_units` units from the cell specified by `position_from` in the direction of the cell specified by `position_to`. That is, the units are moved in such a way that the distance between the cell specified by `position_from` and the cell specified by `position_to` is decreased.
 
 If `num_units` is not specified, all of the units in the cell specified by `position_from` will be affected by the generated command.
 
@@ -42,7 +42,7 @@ If `num_units` is not specified, all of the units in the cell specified by `posi
 build(position)
 ```
 
-Creates and returns a _build_ command to construct a hive at the location specified by `location`.
+Generates a _build_ command to construct a hive at the location specified by `location`.
 
 **mine()**
 
@@ -50,7 +50,7 @@ Creates and returns a _build_ command to construct a hive at the location specif
 mine(position, num_units)
 ```
 
-Creates and returns a _mine_ command to instruct _num\_units_ units at the position specified by _position_ to mine.
+Generates a _mine_ command to instruct _num\_units_ units at the position specified by _position_ to mine.
 
 If the there are fewer than _num\_units_ units at the specified position, then all of the invoking player's units at that position will be instructed to mine.
 
