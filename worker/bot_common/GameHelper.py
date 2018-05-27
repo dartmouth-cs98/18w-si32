@@ -30,12 +30,12 @@ class GameHelper:
         # second thing is number of players
         self.numPlayers = read(sys.stdin.buffer)
 
-        self.params = {} # default the params to an empty dict
-        self.load_params() # then load in the params (3rd thing sent to a bot)
+        self.params = {}    # default the params to an empty dict
+        self.load_params()  # then load in the params (3rd thing sent to a bot)
 
         self.map = None
 
-        #list of enemy IDs
+        # list of enemy IDs
         self.eIds = list(range(self.numPlayers))
         self.eIds.remove(self.myId)
 
@@ -46,6 +46,7 @@ class GameHelper:
         self.log(self.myId)
 
         self.move_dict = {}
+        self.command_queue = []
 
     def __del__(self):
         self.logfile.close()
@@ -75,7 +76,8 @@ class GameHelper:
                 self.params[key] = val
 
     # Get the value for a parameter specified externally (via the web UI)
-    # Return: value, or None if nonexistent param
+    # Return:
+    #   value, or None if nonexistent param
     def param(self, param_name):
         if param_name in self.params:
             return self.params[param_name]
@@ -84,15 +86,16 @@ class GameHelper:
     # --------------------------------------------------------------------------
     # COMMAND CREATION
 
-    # Create and return a move command.
-    # Return: (Command)
-    #   the move command to accomplish the specified movement.
+    # Create a move command and append it to the command queue.
+    # Return: (None)
     def move(self, position_from, num_units, direction):
-        return Command(self.myId, Coordinate(position_from), MOVE_COMMAND, num_units, direction)
+        command = Command(self.myId, Coordinate(position_from), MOVE_COMMAND, num_units, direction)
+        if command:
+            self.command_queue.append(command)
 
-    # Create and return a move command, with an additional layer of abstraction.
-    # Return: (Command)
-    #   the move command to accomplish the specified movement, or None.
+    # Create a move command and append it to the command queue,
+    # this time with an additional layer of abstraction to aid development.
+    # Return: (None)
     def move_towards(self, position_from, position_to, num_units=None):
         position_to = Coordinate(position_to)
         position_from = Coordinate(position_from)
@@ -109,27 +112,27 @@ class GameHelper:
         elif position_from.y > position_to.y:
             d = Direction.NORTHEAST
 
-        # TODO: make this smarter by avoiding enemy units, enemy hives, or stronger enemy hives
+        n = num_units if num_units else self.get_unit_count_by_position(position_from.x, position_from.y)
+        self.move(position_from, n, d)
 
-        num_units = num_units if num_units else self.get_unit_count_by_position(position_from.x, position_from.y)
-        return self.move(position_from, num_units, d)
-
-    # Create and return a build command.
-    # Return: (Command)
-    #   the build command to accomplish the specified hive procedure.
+    # Create a build command and append it to the command queue.
+    # Return: (None)
     def build(self, position):
         # TODO: track concurrent mine and build commands:
         #   right now, hive simply requires a single unit in a cell
         #   do we care though that this unit will also be able to mine as well?
         #   the difference is small, but it will be more realistic in some sense
         #   if we have this logic.
-        return Command(self.myId, Coordinate(position), BUILD_COMMAND, 1, Direction.NONE)
+        command = Command(self.myId, Coordinate(position), BUILD_COMMAND, 1, Direction.NONE)
+        if command:
+            self.command_queue.append(command)
 
-    # Create and return a mine command.
-    # Return: (Command)
-    #   the mine command to accomplish the specified mining procedure.
+    # Create a mine command and append it to the command queue.
+    # Return: (None)
     def mine(self, position, num_units):
-        return Command(self.myId, Coordinate(position), MINE_COMMAND, num_units, Direction.NONE)
+        command = Command(self.myId, Coordinate(position), MINE_COMMAND, num_units, Direction.NONE)
+        if command:
+            self.command_queue.append(command)
 
     # --------------------------------------------------------------------------
     # CELL GETTERS
@@ -264,24 +267,22 @@ class GameHelper:
     # Return: (list of hive)
     #   list of hive instances controlled by <playerId>
     def get_player_hives(self, playerId):
-        blds = []
+        hives = []
         for col in self.map.cells:
             for cell in col:
-                if cell.hive and cell.hive.ownerId == playerId:
-                    blds.append(cell.hive)
-        return blds
+                if cell.hive and (cell.hive.ownerId == playerId):
+                    hives.append(cell.hive)
+        return hives
 
-    #Get a list of all hives on the map
-    #Return: (list of hive)
+    # Get a list of all hives on the map
+    # Return: (list of hives)
+    #   flat list of all hives on the map, regardless of player
     def get_all_hives(self):
-        all_blds = []
-
-        num_players = self.map.num_players
-        for i in range(num_players):
-            for hive in self.get_player_hives(i):
-                all_blds.append(hive)
-
-        return all_blds
+        all_hives = []
+        for player_id in range(self.map.num_players):
+            for hive in self.get_player_hives(player_id):
+                all_hives.append(hive)
+        return all_hives
 
     # Get a list of all my hives' positions on the map.
     # Return: (list of positions)
@@ -301,7 +302,8 @@ class GameHelper:
         return positions
 
     # Get a list of all hives controlled by a certain player
-    # Return: (list of hive)
+    # Return: (list of Coordinate)
+    #   list of coordinates of hives owned by player with id <playerId>
     def get_player_hive_positions(self, playerId):
         positions = []
         for col in self.map.cells:
@@ -311,16 +313,17 @@ class GameHelper:
         return positions
 
     # Get a list of all hives on the map
-    # Return: (list of hive)
+    # Return: (list of Coordinate)
+    #   flat list of coordinates of cells on map that contain a hive
     def get_all_hive_positions(self):
-        all_bld_positions = []
+        all_hive_positions = []
 
         num_players = self.map.num_players
         for i in range(num_players):
             for hive in self.get_player_hive_positions(i):
-                all_bld_positions.append(hive)
+                all_hive_positions.append(hive)
 
-        return all_bld_positions
+        return all_hive_positions
 
     # Get the total number of hives that I can currently construct.
     # Return: (number)
@@ -375,7 +378,6 @@ class GameHelper:
     def get_unit_count_by_position(self, x, y=None):
         # only one player may have control over a cell at any one time,
         # so this should not be an issue!
-
         if type(x) == Coordinate:
             return self.get_unit_count_by_cell(self.get_cell(x))
 
@@ -442,16 +444,13 @@ class GameHelper:
         # "Enemy units and adjacents" (avoid squares with enemy units and those adjacent to it),
         # "Enemy buildings" (avoid squares with enemy buildings)
     # RETURN: a list of tuples indicating a possible path between "start" and "goal" positions
-
     def path(self, start, goal, flags="None"):
         if (self.get_cell(start)).obstructed or (self.get_cell(goal)).obstructed:
             empty = []
             return empty
 
         p = ObstacleMapProblem(self.map, start, goal, flags, self.myId)
-
         result = astar_search(p, p.manhattan_heuristic)
-
         return result.path
 
     def smarter_move_towards(self, position_from, position_to, flags="None", num_units=None):
@@ -613,6 +612,7 @@ class GameHelper:
                         units = self.get_unit_count_by_position(x, y)
                         pos = Coordinate(x, y)
         return pos
+
     # --------------------------------------------------------------------------
     # OTHER METHODS
 
@@ -644,6 +644,7 @@ class GameHelper:
 
     def coordinate(self, x, y):
         return Coordinate(x, y)
+
     # --------------------------------------------------------------------------
     # LOGGING
 
@@ -655,6 +656,7 @@ class GameHelper:
     # GAME PROTOCOL
     # USER MODIFICATION WILL LIKELY BREAK GAME - DO NOT TOUCH
 
+    # Register the user-implemented turn handler.
     @classmethod
     def register_turn_handler(cls, handler, default_params={}):
         newGame = cls()
@@ -663,22 +665,27 @@ class GameHelper:
         newGame.run_game()
         return newGame
 
+    # Internal GameHelper match loop.
     def run_game(self):
         while True:
-            self.load_state()
-            commands = self.turn_handler(self)
-            self.send_commands(commands)
+            self.command_queue = []        # reset the command queue
+            self.load_state()              # load updated state
+            self.turn_handler(self)        # handle the turn
+            self.send_commands()           # and send generated commands
 
-    # reads in the game state and loads it
+    # Read in the game state and load it.
     def load_state(self):
         state = read(sys.stdin.buffer)
-
         if self.map:
-            self.map.update_from_log(state["m"]) # update map from the passed log-formatted state
+            # update map from the passed log-formatted state
+            self.map.update_from_log(state["m"])
         else:
-            self.map = Map.create_from_log(state["m"], len(state["r"])) # or create map if needed
+            # or create map if needed
+            self.map = Map.create_from_log(state["m"], len(state["r"]))
 
-        self.me["resources"] = state["r"][self.myId] # parse my resources out
+        # parse my resources out
+        self.me["resources"] = state["r"][self.myId]
 
-    def send_commands(self, commands):
-        write(sys.stdout.buffer, [c.to_dict() for c in commands])
+    # Send commands from the command queue
+    def send_commands(self):
+        write(sys.stdout.buffer, [c.to_dict() for c in self.command_queue])

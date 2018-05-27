@@ -1,22 +1,26 @@
+# bot.py
+#
+# Bot Name: Streamer
+#
+# Strategy Overview:
+#   Streamer does one thing and does it well: streams units as quickly as
+#   they become available towards an enemy hive.
+#   Opponents not prepared to put up an immediate defense against Streamer's
+#   early offensive posture may find themselves in trouble.
+#   However, the low dimensionality of Streamer's strategy may prove easily defensible.
+
 import sys
 import time
+from random import choice
 from GameHelper import GameHelper
 
 def do_turn(game):
-    commands = []
+    cells = game.get_my_cells()
 
-    units = game.get_my_cells()
+    hive_sites = game.get_enemy_hive_sites()
 
-    hives = game.get_enemy_hive_sites()
-
-    if len(hives) > 0:
-        for s in units:
-            m = game.move_towards(s.position, hives[0].position)
-            if m:
-                commands.append(m)
-
-
-    # done for this turn, send all my commands
-    return commands
+    if len(hive_sites) > 0:
+        for cell in cells:
+            game.move_towards(cell.position, hive_sites[0].position)
 
 GameHelper.register_turn_handler(do_turn)

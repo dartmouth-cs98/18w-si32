@@ -1,39 +1,37 @@
+# bot.py
+#
+# Bot Name: Waiter
+#
+# Strategy Overview:
+#   Waiter is Streamer's more patient older brother. Instead of immediately
+#   directing available units into the fray, Waiter holds them back until
+#   a critical threshold of units has been reached, at which point it
+#   unleashes them in a devastating attack.
+#   However, if the enemy manages to ward off this initial onslaught,
+#   Waiter may prove to not have many more tricks left up its sleeves.
+
 import sys
 import time
+from random import choice
 from GameHelper import GameHelper
 
-game = GameHelper()
+UNIT_THRESHOLD = 40
 
+def do_turn(game):
+    cells = game.get_my_cells()
 
-while True:
-    # l = sys.stdin.readline()
-    # print(str(i) + ": bot 2 received: " + l,)
+    nUnits = game.get_my_total_unit_count()
 
-    commands = []
+    if nUnits < UNIT_THRESHOLD:
+        my_hive_sites = game.get_my_hive_sites()
+        if len(my_hive_sites) > 0:
+            for cell in cells:
+                game.move_towards(cell.position, my_hive_sites[0].position)
 
-    # load state for next turn
-    game.load_state()
-
-    units = game.get_my_cells()
-
-    nUnits = game.get_total_units()
-
-    if nUnits < 40:
-        buildings = game.my_buildings()
-        if len(buildings) > 0:
-            for s in units:
-                m = game.move_towards(s.position,buildings[0].position)
-                game.log(m)
-                if m:
-                    commands.append(m)
     else:
-        buildings = game.get_enemy_buildings()
-        if len(buildings) > 0:
-            for s in units:
-                m = game.move_towards(s.position,buildings[0].position)
-                if m:
-                    commands.append(m)
+        enemy_hive_sites = game.get_enemy_hive_sites()
+        if len(enemy_hive_sites) > 0:
+            for cell in cells:
+                game.move_towards(cell.position, enemy_hive_sites[0].position)
 
-
-    # done for this turn, send all my commands
-    game.send_commands(commands)
+GameHelper.register_turn_handler(do_turn)
