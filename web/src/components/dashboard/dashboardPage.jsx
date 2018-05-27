@@ -74,7 +74,6 @@ class DashboardPage extends React.PureComponent {
   }
 
   markUserOnboarded = () => {
-    // dont actually need this, since it navigates user away from dash...
     this.setState({ showModal: false });
     this.props.onboardUser(this.props.userId);
   }
