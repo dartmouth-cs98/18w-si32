@@ -19,7 +19,7 @@ def euclidean_distance(from_position, to_position):
     return abs(from_position.x - to_position.x) + abs(from_position.y - to_position.y)
 
 def do_turn(game):
-    units = game.get_my_cells()
+    cells = game.get_my_cells()
 
     hive_sites = game.get_enemy_hive_sites()
     if len(hive_sites) > 0:
@@ -27,15 +27,15 @@ def do_turn(game):
         closest_to_enemy = None
         closest_to_enemy_distance = float("inf")
 
-        for s in units:
-            if (euclidean_distance(s.position, hive_sites[0].position) < closest_to_enemy_distance):
-                closest_to_enemy = s
-                closest_to_enemy_distance = euclidean_distance(s.position, hive_sites[0].position)
+        for cell in cells:
+            if (euclidean_distance(cell.position, hive_sites[0].position) < closest_to_enemy_distance):
+                closest_to_enemy = cell
+                closest_to_enemy_distance = euclidean_distance(cell.position, hive_sites[0].position)
 
-            if (s.units[game.myId] < 8):
-                game.mine(s.position, game.get_unit_count_by_position(s.position))
+            if (cell.units[game.myId] < 8):
+                game.mine(cell.position, game.get_unit_count_by_position(cell.position))
             else:
-                [x, y] = s.position
+                [x, y] = cell.position
 
                 e_hive_sites = game.get_enemy_hive_sites()
                 e_position = e_hive_sites[0].position
@@ -52,10 +52,10 @@ def do_turn(game):
                 elif y > e_position.y:
                     surrounding.append([x, y - 1])
 
-                for cell in surrounding:
-                    game.move_towards(s.position,cell, 2)
+                for s_cell in surrounding:
+                    game.move_towards(cell.position, s_cell, 2)
 
-                game.mine(s.position, game.get_unit_count_by_position(s.position) - 2 * len(surrounding))
+                game.mine(cell.position, game.get_unit_count_by_position(cell.position) - 2 * len(surrounding))
 
         if (game.get_hive_potential() > 0):
             if (closest_to_enemy):
