@@ -15,7 +15,12 @@
     "visualizer": "npm run visualizer-rm && npm run visualizer-build && npm run visualizer-cp",
     "visualizer-rm": "aws s3 rm s3://monad-assets/monad-visualizer-0.1.0.dmg",
     "visualizer-build": "cd ../visualizer && npm run electron-pack",
-    "visualizer-cp": "aws s3 cp ../visualizer/dist/monad-visualizer-0.1.0.dmg s3://monad-assets/ --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers full=emailaddress=kyle.dotterrer.18@dartmouth.edu"
+    "visualizer-cp": "aws s3 cp ../visualizer/dist/monad-visualizer-0.1.0.dmg s3://monad-assets/ --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers full=emailaddress=kyle.dotterrer.18@dartmouth.edu",
+    "sample": "npm run sample-rm && npm run sample-zip && npm run sample-cp && npm run sample-clean",
+    "sample-rm": "aws s3 rm s3://monad-assets/sample/*",
+    "sample-zip": "./scripts-sample/sample-zip.sh",
+    "sample-cp": "./scripts-sample/sample-cp.sh",
+    "sample-clean": "rm -f ../sample/*.zip"
   },
   "license": "ISC"
 }
