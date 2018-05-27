@@ -6,7 +6,8 @@ for the bots to make their moves, it asks for them.
 
 Your job is to write code that implements your bot's logic and
 decides what moves are sent back.
-Will you attack, build, or mine for resources? What will your opponent do?
+Will you attack, build, or mine for resources? What will your opponent do, and how will your
+strategy take this into account?
 
 This guide contains everything you need to know to develop your first
 Monad bot. Let's get started.
@@ -36,22 +37,20 @@ devkit/
 ├── README.md
 ├── bot.py
 ├── game/
-├── match.sh
+├── monad.sh
 ├── requirements.txt
-├── scripts/
-├── train.sh
-└── upload.sh
+└── scripts/
 ```
 
 The only setup remaining is to setup a python virtual environment in your
 development directory. This step is not required, but
 we highly recommend utilizing the Monad development kit in conjunction
-with python virtual environments to simplify the installation and maintenance
+with Python virtual environments to simplify the installation and maintenance
 of dependencies.
 Instructions for completing this step are included in the
 `README` provided with the development kit, but are reproduced here for convenience.
 
-Ensure that you have `pip` installed; if you installed python using Homebrew,
+Ensure that you have `pip` installed; if you installed Python using Homebrew,
 `pip` should have been installed as well. Verify this with
 
 ```
@@ -109,11 +108,8 @@ When you download the development kit, the file `bot.py` will be pre-populated w
 from GameHelper import GameHelper
 
 def do_turn(game):
-    commands = []
 
-    # implement you bot logic here.
-
-    return commands
+    # YOUR BOT LOGIC HERE.
 
 GameHelper.register_turn_handler(do_turn)
 ```
@@ -132,8 +128,9 @@ game state, and must return a list of commands. These commands will be sent to t
 executed.
 
 And thats all there is to it.
-This `bot.py` program could now be uploaded and play a game. It would return
-an empty commands list every turn and would never do anything, but it would be a valid bot nonetheless!
+This `bot.py` program could now be uploaded and play a game.
+On every turn, it would generate an empty queue of commands, and therefore would never do anything,
+but it would be a valid bot nonetheless!
 
 But you don't want to settle for that, do you?
 Read on for tips on implementing your first strategy!
@@ -144,7 +141,7 @@ Monad allows you to replace constant values in your botfile with parameters that
 via the Monad UI. Frequently, the only changes to your bot code between versions will be changes to
 parameters like a threshold for a probability, or a value you check against to trigger an attack or
 some other condition. By allowing you to modify these values from the Monad UI, you can quickly test
-out new parameters without modifying and re-uploading your code. Here's how to use them: 
+out new parameters without modifying and re-uploading your code. Here's how to use them:
 
 1. Replace your value with a call to `game.param("PARAM_NAME")`
 2. Upload your bot code with this call (for the last time!)
@@ -172,22 +169,15 @@ closer to the first enemy hive returned by GameHelper.
 
 ```
 def do_turn(game):
-    commands = []
-
     occupied_cells = game.get_my_cells()
 
     enemy_hives = game.get_enemy_hive_sites()
 
     for cell in occupied_cells:
-        m = game.move_towards(cell.position, enemy_hives[0].position)
-        if m:
-            commands.append(m)
-
-    # done for this turn, send all my commands
-    return commands
+        game.move_towards(cell.position, enemy_hives[0].position)
 ```
 
-Let's walk through the new things we have seen here. The object that our do_turn method is passed,
+Let's walk through the new things we have seen here. The object that our `do_turn()` method is passed,
 called `game`, is an instance of GameHelper and we can call methods on it.
 
 We first get some information about the state of the game. The first we see
@@ -198,19 +188,18 @@ There are many more things we can know about the state
 (see the [API Reference](../api-reference/README.md)),
 but for this simple strategy this is all we will ask about the game each turn.
 
-We now issue commands based on the start of the game. We loop over all the cells where we have units,
+We now issue commands based on the state of the game. We loop over all the cells where we have units,
 and use the helper method `move_towards(from_position, to_position)` to create a command
 that moves all of our units at `cell.position` (our `from_position`) towards `enemy_hives[0].position`
-(our `to_position`). We can only move one cell at a time, so this method creates a move
-one step in the right direction, and returns it. The method only returns a command if the move is
-possible,
-so it is a good idea to check if a command was returned before appending it to our commands array.
+(our `to_position`). We can only move one cell at a time, so this method generates a move
+one step in the right direction. Command generation methods, like `move_towards()`, are smart,
+and will only generate valid commands, Thus, if you specify parameters that constitute an
+invalid movement, the invocation will effectively be ignored.
 
-And that's it. We return our commands for that turn, and the game server handles them along with the
-moves of the other
-player(s) to update state. Then it sends the bots the new state and our bots do it all over again
-(though a real
-bot would likely do different things based on what the new state looks like).
+And that's it. We issue our commands for this turn, and the game server handles them along with the
+moves of the other player(s) to update the game state. Then it sends the bots the new state
+and our bots do it all over again (though a real bot would likely do different things based on
+what the new state looks like).
 
 ## Replays and Debugging
 
@@ -239,7 +228,7 @@ We have now seen how Monad bots are structured and how they interact with both t
 game engine and the `GameHelper` library. This is boilerplate one can always just copy when starting a new bot.
 
 We have also seen how one might begin to implement a strategy in the `do_turn()` method,
-taking in a state and returning commands based on it.
+taking in a state and generating commands based on it.
 
 Finally, we have seen how to run local matches and improve our bots based on what visualization
 of these match replays reveal.

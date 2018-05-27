@@ -112,8 +112,8 @@ class GameHelper:
         elif position_from.y > position_to.y:
             d = Direction.NORTHEAST
 
-        num_units = num_units if num_units else self.get_unit_count_by_position(position_from.x, position_from.y)
-        self.move(position_from, num_units, d)
+        n = num_units if num_units else self.get_unit_count_by_position(position_from.x, position_from.y)
+        self.move(position_from, n, d)
 
     # Create a build command and append it to the command queue.
     # Return: (None)
