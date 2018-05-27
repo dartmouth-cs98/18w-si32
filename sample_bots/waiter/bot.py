@@ -1,3 +1,15 @@
+# bot.py
+#
+# Bot Name: Waiter
+#
+# Strategy Overview:
+#   Waiter is Streamer's more patient older brother. Instead of immediately
+#   directing available units into the fray, Waiter holds them back until
+#   a critical threshold of units has been reached, at which point it
+#   unleashes them in a devastating attack.
+#   However, if the enemy manages to ward off this initial onslaught,
+#   Waiter may prove to not have many more tricks left up its sleeves.
+
 import sys
 import time
 from random import choice

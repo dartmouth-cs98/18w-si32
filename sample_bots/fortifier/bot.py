@@ -1,3 +1,14 @@
+# bot.py
+#
+# Bot Name: Fortifier
+#
+# Strategy Overview:
+#   Fortifier seeks to expand outward slowly from the starting
+#   hive location, building new hives in the process.
+#   As its name suggests, Fortifer eventually construct a formidable
+#   map position, but does so in a deliberate, often time consuming manner.
+#   This delay may prove costly against an adapatable opponent.
+
 import sys
 import time
 from random import choice

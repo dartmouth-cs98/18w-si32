@@ -1,3 +1,14 @@
+# bot.py
+#
+# Bot Name: Streamer
+#
+# Strategy Overview:
+#   Streamer does one thing and does it well: streams units as quickly as
+#   they become available towards an enemy hive.
+#   Opponents not prepared to put up an immediate defense against Streamer's
+#   early offensive posture may find themselves in trouble.
+#   However, the low dimensionality of Streamer's strategy may prove easily defensible.
+
 import sys
 import time
 from random import choice
