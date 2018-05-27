@@ -1,5 +1,7 @@
 import sys
 import time
+from random import choice
+
 from GameHelper import GameHelper
 
 def euclidean_distance(from_position, to_position):
@@ -8,24 +10,24 @@ def euclidean_distance(from_position, to_position):
 def do_turn(game):
     units = game.get_my_cells()
 
-    hives = game.get_enemy_hive_sites()
-    if len(hives) > 0:
+    hive_sites = game.get_enemy_hive_sites()
+    if len(hive_sites) > 0:
 
         closest_to_enemy = None
         closest_to_enemy_distance = float("inf")
 
         for s in units:
-            if (euclidean_distance(s.position, hives[0].position) < closest_to_enemy_distance):
+            if (euclidean_distance(s.position, hive_sites[0].position) < closest_to_enemy_distance):
                 closest_to_enemy = s
-                closest_to_enemy_distance = euclidean_distance(s.position, hives[0].position)
+                closest_to_enemy_distance = euclidean_distance(s.position, hive_sites[0].position)
 
             if (s.units[game.myId] < 8):
                 game.mine(s.position, game.get_unit_count_by_position(s.position))
             else:
                 [x, y] = s.position
 
-                e_hives = game.get_enemy_hive_sites()
-                e_position = e_hives[0].position
+                e_hive_sites = game.get_enemy_hive_sites()
+                e_position = e_hive_sites[0].position
 
                 surrounding = []
 

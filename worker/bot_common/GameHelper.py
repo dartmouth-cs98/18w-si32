@@ -267,14 +267,21 @@ class GameHelper:
     # Return: (list of hive)
     #   list of hive instances controlled by <playerId>
     def get_player_hives(self, playerId):
-        hives = [cell.hive for cell in col for col in self.map.cells if (cell.hive and cell.hive.ownerId == playerId)]
+        hives = []
+        for col in self.map.cells:
+            for cell in col:
+                if cell.hive and (cell.hive.ownerId == playerId):
+                    hives.append(cell.hive)
         return hives
 
     # Get a list of all hives on the map
     # Return: (list of hives)
     #   flat list of all hives on the map, regardless of player
     def get_all_hives(self):
-        all_hives = [hive for hive in self.get_player_hives(i) for i in range(self.map.num_players)]
+        all_hives = []
+        for player_id in range(self.map.num_players):
+            for hive in self.get_player_hives(player_id):
+                all_hives.append(hive)
         return all_hives
 
     # Get a list of all my hives' positions on the map.
@@ -371,7 +378,6 @@ class GameHelper:
     def get_unit_count_by_position(self, x, y=None):
         # only one player may have control over a cell at any one time,
         # so this should not be an issue!
-
         if type(x) == Coordinate:
             return self.get_unit_count_by_cell(self.get_cell(x))
 

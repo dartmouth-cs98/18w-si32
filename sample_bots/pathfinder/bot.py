@@ -1,4 +1,5 @@
 # based on Gabe's fortifier
+from random import choice
 
 from GameHelper import GameHelper
 
