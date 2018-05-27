@@ -84,6 +84,20 @@ class GameHelper:
         return None
 
     # --------------------------------------------------------------------------
+    # TODO: fix
+
+    def get_movement_directions(self):
+        return [
+            Direction.EAST,
+            Direction.WEST,
+            Direction.NORTHEAST,
+            Direction.NORTHWEST,
+            Direction.SOUTHEAST,
+            Direction.SOUTHWEST,
+            Direction.NONE
+        ]
+
+    # --------------------------------------------------------------------------
     # COMMAND CREATION
 
     # Create a move command and append it to the command queue.

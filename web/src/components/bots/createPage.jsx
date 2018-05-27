@@ -40,7 +40,7 @@ class BotCreatePage extends React.PureComponent {
     if (event) {
       event.preventDefault();
     }
-    // TODO validation
+    // TODO: validation
 
     this.setState({
       submitting: true,
@@ -49,7 +49,7 @@ class BotCreatePage extends React.PureComponent {
 
     this.props.create(this.state.botName, this.state.botFile, this.state.params).then(() => {
       // after making a bot, users probably want to start a match with it
-      // TODO pre-select the bot
+      // TODO: pre-select the bot
       history.push("/matches/create");
     })
     .catch(err => {

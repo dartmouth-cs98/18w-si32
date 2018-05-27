@@ -1,29 +1,30 @@
+import _ from "lodash";
 import React from "react";
 import Radium from "radium";
-import _ from "lodash";
 import { connect } from "react-redux";
 import mixpanel from "mixpanel-browser";
 
 import Button from "../common/button";
 import { Link, Page, Wrapper } from "../layout";
 
+import config from "../../config";
+
+import OnboardModal from "./OnboardModal";
 import UserSearch from "./UserSearch";
 import UserList from "../user/UserList";
 import BotCard from "../bots/BotCard";
 import MatchList from "../matches/MatchList";
 import HeaderStatsBar from "./HeaderStatsBar";
+import { MainTitle } from "../common/titles";
 
 import { fetchBots } from "../../data/bot/botActions";
 import { fetchMatches } from "../../data/match/matchActions";
-import { fetchUser } from "../../data/user/userActions";
+import { fetchUser, onboardUser } from "../../data/user/userActions";
 import { getSessionUser } from "../../data/user/userSelectors";
 import { getMatchesForUser } from "../../data/match/matchSelectors";
 import { getBotsForUser } from "../../data/bot/botSelectors";
 
-import { MainTitle } from "../common/titles";
-
-import { colors, fontStyles, colorStyles } from "../../style";
-
+import { colors, constants, fontStyles, colorStyles } from "../../style";
 
 const DashBotList = Radium(({ bots }) => {
   const items = _.map(bots, (b,i) => (
@@ -51,14 +52,28 @@ const DashBotList = Radium(({ bots }) => {
 class DashboardPage extends React.PureComponent {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      showModal: false
+    };
+
+    this.markUserOnboarded = this.markUserOnboarded.bind(this);
   }
 
   componentDidMount() {
     mixpanel.track("Visit Dashboard");
     this.props.fetchBots(this.props.userId);
     this.props.fetchMatches(this.props.userId);
-    this.props.fetchUser(this.props.userId);
+    this.props.fetchUser(this.props.userId).then(() => {
+      // if user has not yet completed onboarding, prompt them with modal
+      if (!this.props.user.onboard) {
+        this.setState({ showModal: true });
+      }
+    });
+  }
+
+  markUserOnboarded = () => {
+    this.setState({ showModal: false });
+    this.props.onboardUser(this.props.userId);
   }
 
   renderNoBots = () => {
@@ -92,6 +107,14 @@ class DashboardPage extends React.PureComponent {
     return <div style={{marginTop: 10}}><UserList users={this.props.user.following} /></div>;
   }
 
+  renderOnboardModal = () => {
+    return (
+      <OnboardModal
+        showModal={this.state.showModal}
+        markUserOnboarded={this.markUserOnboarded} />
+    );
+  }
+
   render() {
     if (!this.props.user) return <div></div>;
 
@@ -100,6 +123,7 @@ class DashboardPage extends React.PureComponent {
         <HeaderStatsBar user={this.props.user} />
 
         { this.renderTopBots() }
+        { this.renderOnboardModal() }
 
         <Wrapper style={styles.dashSectionContainer} innerStyle={styles.dashSection}>
           <div style={styles.matchesRow}>
@@ -131,22 +155,10 @@ class DashboardPage extends React.PureComponent {
   }
 }
 
-const mapDispatchToProps = dispatch => ({
-  fetchBots: (userId) => dispatch(fetchBots(userId)),
-  fetchMatches: (userId) => dispatch(fetchMatches(userId)),
-  fetchUser: (userId) => dispatch(fetchUser(userId, true, true)),
-});
-
-const mapStateToProps = state => ({
-  user: getSessionUser(state) || {},
-  userId: state.session.userId,
-  matches: getMatchesForUser(state, state.session.userId),
-  bots: getBotsForUser(state, state.session.userId, { limit: 3 }),
-});
-
 const styles = {
   pageStyles: {
     justifyContent: "flex-start",
+    fontWeight: 300
   },
   dashSectionContainer: {
     width: "100%",
@@ -190,5 +202,19 @@ const styles = {
     flex: 1,
   },
 };
+
+const mapDispatchToProps = dispatch => ({
+  fetchBots: (userId) => dispatch(fetchBots(userId)),
+  fetchMatches: (userId) => dispatch(fetchMatches(userId)),
+  fetchUser: (userId) => dispatch(fetchUser(userId, true, true)),
+  onboardUser: (userId) => dispatch(onboardUser(userId)),
+});
+
+const mapStateToProps = state => ({
+  user: getSessionUser(state) || {},
+  userId: state.session.userId,
+  matches: getMatchesForUser(state, state.session.userId),
+  bots: getBotsForUser(state, state.session.userId, { limit: 3 }),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(DashboardPage);

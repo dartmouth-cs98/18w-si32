@@ -25,6 +25,8 @@ const unfollowUser = (targetUserId) => httpDeleteAction("USER", `/users/follows/
 const joinGroup = (groupId) => httpPutAction("USER", `/users/memberships/${groupId}`);
 const leaveGroup = (groupId) => httpDeleteAction("USER", `/users/memberships/${groupId}`);
 
+const onboardUser = (userId) => httpPutAction("USER", "/users/onboard");
+
 export {
   fetchUser,
   fetchUsers,
@@ -33,4 +35,5 @@ export {
   unfollowUser,
   joinGroup,
   leaveGroup,
+  onboardUser,
 };

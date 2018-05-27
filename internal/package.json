@@ -8,7 +8,7 @@
   "scripts": {
     "assets": "npm run devkit && npm run visualizer",
     "devkit": "npm run devkit-rm && npm run devkit-zip && npm run devkit-cp && npm run devkit-clean",
-    "devkit-rm": "aws s3 rm s3://monad-assets/devkit.zip",
+    "devkit-rm": "aws s3 rm s3://monad-assets/devkit.zip && rm -f ../devkit/game.json ../devkit/gameserver.log ../devkit/game0.log ../devkit/game1.log",
     "devkit-zip": "zip -9 -r --exclude=*env* devkit.zip ../devkit",
     "devkit-cp": "aws s3 cp devkit.zip s3://monad-assets/ --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers full=emailaddress=kyle.dotterrer.18@dartmouth.edu",
     "devkit-clean": "rm -f devkit.zip",

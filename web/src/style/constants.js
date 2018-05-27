@@ -6,9 +6,6 @@ const PROGRESS_HEIGHT = 18;
 
 const BODY_WIDTH = 1280;
 
-// TODO: add font sizes to this to keep consistent across app?
-// would we want them to be absolute (px, pt) or relative (vw)?
-
 // latex style names
 const fontSizes = {
   ultimate: 72,
