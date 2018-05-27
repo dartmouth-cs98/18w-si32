@@ -2,7 +2,7 @@
   "name": "internal",
   "author": "Monad Team",
   "version": "1.0.0",
-  "description": "",
+  "description": "Internal automation and dev ops scripts",
   "repository": "https://github.com/dartmouth-cs98/18w-si32",
   "main": "index.js",
   "scripts": {
