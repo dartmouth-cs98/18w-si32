@@ -16,11 +16,12 @@ from game.Coordinate import Coordinate
 
 from game.params import (
     MAX_ITERS,
-    DEBUG_LOG_FN,
     MOVE_COMMAND,
     MINE_COMMAND,
     BUILD_COMMAND,
     STARTING_POSITIONS,
+    DEBUG_LOG_FN,
+    LOG_FE
 )
 
 # ------------------------------------------------------------------------------
@@ -38,7 +39,7 @@ class Game(ABC):
 
         self.logger = Logger(self.map)
 
-        self.debugLogFile = open(DEBUG_LOG_FN, "w")
+        self.debug_fp = open(DEBUG_LOG_FN, "w")
 
         self.rules = Rules(self.map, self.players)
 
@@ -57,7 +58,7 @@ class Game(ABC):
         super().__init__()
 
     # --------------------------------------------------------------------------
-    # INITIALIZING FUNCTION
+    # MAIN METHODS
 
     # initalizes players
     def initialize_players(self, bots, map):
@@ -72,10 +73,6 @@ class Game(ABC):
         # create a starting hive for each player
         for player in self.players:
             self.map.get_cell(player.starting_pos).create_hive(player.playerId)
-
-
-    # --------------------------------------------------------------------------
-    # MAIN FUNCTIONS
 
     # runs a game and returns when it is over
     def start(self):
@@ -106,7 +103,7 @@ class Game(ABC):
     # send all players the updated game state so they can make decisions
     def send_state(self):
         # use the logger's representation of the map
-        cur_state = self.logger.get_cur_turn()
+        cur_state = self.logger.get_current_turn()
 
         # and send that to everyone
         for p in self.players:
@@ -171,9 +168,6 @@ class Game(ABC):
         # put them all together
         self.ranked_players = ranked_players + crashed_players
 
-    def log_winner(self):
-        self.logger.add_ranked_players(self.ranked_players)
-
     # returns true if only one player has hives left
     def has_combat_winner(self):
         return sum([1 for p in self.players if p.has_hive()]) <= 1
@@ -183,7 +177,7 @@ class Game(ABC):
         return self.iter >= MAX_ITERS
 
     # --------------------------------------------------------------------------
-    # PLAYER MOVEMENT FUNCTIONS
+    # PLAYER MOVEMENT METHODS
 
     def execute_moves(self, moves):
         for move in moves:
@@ -222,22 +216,28 @@ class Game(ABC):
 
         return new_moves
 
-    def write_log(self, file_name):
-        self.logger.write(file_name)
+    # --------------------------------------------------------------------------
+    # LOGGING METHODS
+
+    def log_winner(self):
+        self.logger.add_ranked_players(self.ranked_players)
+
+    def write_log(self, fn):
+        self.logger.write(fn)
 
     def get_log(self):
         return self.logger.get_log()
 
-    def get_ranked_players(self):
-        return self.ranked_players
-
     def get_raw_log(self):
         return self.logger.get_raw_log()
 
+    def get_ranked_players(self):
+        return self.ranked_players
+
     # log to the debug file
-    def log(self, out):
-        self.debugLogFile.write(str(out) + "\n")
-        self.debugLogFile.flush()
+    def write_debug_log(self, out):
+        self.debug_fp.write(str(out) + "\n")
+        self.debug_fp.flush()
 
 # ------------------------------------------------------------------------------
 # Helper Functions

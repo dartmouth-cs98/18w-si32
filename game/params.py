@@ -37,6 +37,12 @@ class Direction(IntEnum):
 
         return self.NONE
 
+# ------------------------------------------------------------------------------
+# Logging
+
+LOG_FE = ".log"                      # File extension for log files
+DEBUG_LOG_FN = "./engine.log"        # Output filename for engine debug log file
+PLAYER_LOG_FN = "./player_"          # Output filename for player debug log file
 
 # ------------------------------------------------------------------------------
 # Command
@@ -49,7 +55,6 @@ BUILD_COMMAND = "BUILD"     # Build command enum
 # Game
 
 MAX_ITERS = 1000                     # The maximum number of turn iterations in a single game.
-DEBUG_LOG_FN = "./gameserver.log"    # Output filename for debug log file
 
 # ------------------------------------------------------------------------------
 # Hive
