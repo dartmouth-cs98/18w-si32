@@ -167,7 +167,7 @@ In the onboarding tutorial that you complete after first registering with Monad,
 you implement a bot that simply moves each of the units available to it in a random
 direction on every turn. Lets improve upon this decidedly naïve strategy.
 
-Streamer will simply send its units towards an enemy hive every turn, no matter where they are.
+Streamer will send its units towards an enemy hive every turn, no matter where they are.
 It loops over all the cells where it has units, and issues commands to move all of them one square
 closer to the first enemy hive returned by GameHelper.
 
@@ -210,20 +210,39 @@ what the new state looks like).
 So you've written a bot, but how can you verify that it is performing as expected before
 you upload it?
 
+**Log Files**
+
 The lowest-level debugging tools available to you are debug log files. These are files
 that your bot generates during its execution, allowing you to see the internals of
-your bots logic over the course of a match. 
+your bots logic over the course of a match.
 
-One of the most useful debugging features available is replay visualization.
-Every game that's played on Monad produces a game log (a `.json` file), which tracks the state of the game
-after every turn, as well as the moves that each player made.
+By default, your bot will not write any debug log files. However, all you need to
+do to get started using this feature is invoke the `log()` function that is made available as
+a method of the `GameHelper` class.
+
+For instance, including a line of the form
+
+```
+game.log("hello, world!")
+```
+
+in the `do_turn()` function that you implement in your `bot.py` file will write
+the string "hello, world!" to the local file `player_<ID>.log`, where `<ID>` will
+be replaced by the player ID of the invoking player.
+
+**Replay Visualization**
+
+A higher-level and more powerful debugging tool is replay visualization.
+Every game that's played on Monad produces a replay log in JSON format.
+Such files are typically named `replay.json` by convention. Match replay files track
+the state of the game after every turn, as well as the moves that each player make throughout the match.
 This is true when you run a match locally (see the documentation in the development kit
 for instructions on how to do this).
 
 There are then multiple options available to visualize the game recorded in this log file.
 
-* You may visit our [replay page](http://monad.surge.sh/replay) and upload the file there, and the game will
-be visualized for you on in the browser.
+* You may visit our [replay page](http://monad.surge.sh/replay) and upload the file there,
+and the game will be visualized for you in the browser.
 * You may download our offline visualizer from the [downloads page](../downloads/README.md) to
 visualize games from a desktop application that requires no internet connection.
 
@@ -238,7 +257,7 @@ game engine and the `GameHelper` library. This is boilerplate one can always jus
 We have also seen how one might begin to implement a strategy in the `do_turn()` method,
 taking in a state and generating commands based on it.
 
-Finally, we have seen how to run local matches and improve our bots based on what visualization
-of these match replays reveal.
+Finally, we have seen how to run local matches and improve our bots based on what
+the log output and visualization of these match replays reveal.
 
 <div style="padding-bottom:50px"></div>
