@@ -12,7 +12,7 @@ strategy take this into account?
 This guide contains everything you need to know to develop your first
 Monad bot. Let's get started.
 
-## Requirements
+### Requirements
 
 The only requirement for implementing your first Monad bot is that you have Python (version 3+) installed on your machine.
 
@@ -24,7 +24,7 @@ brew install python
 
 Verify that the installation was successful by running `python --version` in your terminal. You should see version information printed to the console. If not,  [troubleshoot!](http://lmgtfy.com/?q=homebrew+python+issue)
 
-## Development Setup
+### Development Setup
 
 We provide a local development kit that comes with everything you need to get
 started developing bots for Monad. Download the development kit from the [downloads](../downloads/README.md) page.
@@ -154,7 +154,7 @@ parameters for your bot to use. This is handy for running matches locally.
 
 `GameHelper.register_turn_handler(do_turn, default_params={'MYPARAM': 1.42, ...})`
 
-## Implementing a Strategy
+### Implementing a Strategy
 
 Now its time to think about what we want our bot to do. The `GameHelper` library comes with
 helper commands for getting information about the state and creating a command. Our job is
@@ -163,7 +163,11 @@ get thinking about the game, and to introduce some of the methods available to u
 
 ### Streamer
 
-This bot will simply send its units towards an enemy hive every turn, no matter where they are.
+In the onboarding tutorial that you complete after first registering with Monad,
+you implement a bot that simply moves each of the units available to it in a random
+direction on every turn. Lets improve upon this decidedly naïve strategy.
+
+Streamer will simply send its units towards an enemy hive every turn, no matter where they are.
 It loops over all the cells where it has units, and issues commands to move all of them one square
 closer to the first enemy hive returned by GameHelper.
 
@@ -201,10 +205,14 @@ moves of the other player(s) to update the game state. Then it sends the bots th
 and our bots do it all over again (though a real bot would likely do different things based on
 what the new state looks like).
 
-## Replays and Debugging
+### Replays and Debugging
 
 So you've written a bot, but how can you verify that it is performing as expected before
 you upload it?
+
+The lowest-level debugging tools available to you are debug log files. These are files
+that your bot generates during its execution, allowing you to see the internals of
+your bots logic over the course of a match. 
 
 One of the most useful debugging features available is replay visualization.
 Every game that's played on Monad produces a game log (a `.json` file), which tracks the state of the game
@@ -222,7 +230,7 @@ visualize games from a desktop application that requires no internet connection.
 These tools allow one to see the decisions that bots make throughout the course of a
 game, identify potential weaknesses, and gain insight into potentially stronger strategies.
 
-## Conclusion
+### Conclusion
 
 We have now seen how Monad bots are structured and how they interact with both the
 game engine and the `GameHelper` library. This is boilerplate one can always just copy when starting a new bot.
