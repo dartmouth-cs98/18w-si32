@@ -63,7 +63,7 @@ class Logger:
         }
 
     # return the current information needed to set map state for a turn
-    def get_cur_turn(self):
+    def get_current_turn(self):
         return {
                 "m": self.turn_log["map"],
                 "r": self.turn_log["res"],
@@ -98,16 +98,18 @@ class Logger:
                 "rank": p.rank
             })
 
+    # get the compressed / packed log
     def get_log(self):
         return gzip.compress(msgpack.packb(self.log))
 
+    # get the raw, uncompressed / unpacked log
     def get_raw_log(self):
         return json.dumps(self.log)
 
-    def write(self, fileName=None):
-        if not fileName:
+    def write(self, fn=None):
+        if fn is None:
             print(self.log)
             return
 
-        with gzip.open("%s.mp.gz"%fileName, "w") as log_file:
+        with gzip.open("%s.mp.gz"%fn, "w") as log_file:
             log_file.write(msgpack.packb(self.log))

@@ -14,7 +14,8 @@ from game.LocalBot import LocalBot
 MAX_ARGS = 4   # maximum of 4 bots in single match
 MIN_ARGS = 2   # minimum of 2 bots in single match
 
-REPLAY_FN = "game.json"
+# filename of match replay file 
+REPLAY_FN = "replay.json"
 
 # ------------------------------------------------------------------------------
 # Main

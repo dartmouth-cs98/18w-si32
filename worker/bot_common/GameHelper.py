@@ -9,7 +9,15 @@ import msgpack
 from game.Map import Map
 from game.Command import Command
 from game.Coordinate import Coordinate, direction_deltas
-from game.params import MOVE_COMMAND, BUILD_COMMAND, MINE_COMMAND, HIVE_COST, Direction
+from game.params import (
+    MOVE_COMMAND,
+    BUILD_COMMAND,
+    MINE_COMMAND,
+    HIVE_COST,
+    PLAYER_LOG_FN,
+    LOG_FE,
+    Direction
+)
 
 from game.ObstacleMapProblem import ObstacleMapProblem
 
@@ -42,14 +50,14 @@ class GameHelper:
         self.me = {"resources": 0}
 
         self.turn_handler = None
-        self.logfile = open("./game" + str(self.myId) + ".log", "w")
-        self.log(self.myId)
+
+        self.player_log_fp = open(PLAYER_LOG_FN + str(self.myId) + LOG_FE, "w")
 
         self.move_dict = {}
         self.command_queue = []
 
     def __del__(self):
-        self.logfile.close()
+        self.player_log_fp.close()
 
     # --------------------------------------------------------------------------
     # BOT PARAMETERS
@@ -660,11 +668,12 @@ class GameHelper:
         return Coordinate(x, y)
 
     # --------------------------------------------------------------------------
-    # LOGGING
+    # DEBUG LOGGING
 
+    # Write the content specified by <out> to debug log file.
     def log(self, out):
-        self.logfile.write(str(out) + "\n")
-        self.logfile.flush()
+        self.player_log_fp.write(str(out) + "\n")
+        self.player_log_fp.flush()
 
     # --------------------------------------------------------------------------
     # GAME PROTOCOL
