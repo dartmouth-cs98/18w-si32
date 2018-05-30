@@ -24,6 +24,14 @@ With this setup in place, all of the commands below should be available to you.
 **Scripts**
 
 ```
+npm start
+```
+
+Combines the functionality of both of the commands below to ensure that all live assets are up to date.
+
+Note: because one of the dependent tasks (visualizer) takes some time, this one will as well.
+
+```
 npm run devkit
 ```
 
@@ -35,15 +43,11 @@ npm run visualizer
 
 Builds the current offline visualizer application (maintained in the `visualizer/` directory) and uploads it to the Monad assets bucket on S3.
 
+Note: this task initiates a fresh build of the entire Electron app, so it takes some time.
+
 ```
 npm run sample
 ```
 
 Generates obfuscated versions of our sample bots, creates archives for each, and uploads them
 to the Monad assets bucket on S3 (in the `sample/` subdirectory).
-
-```
-npm run assets
-```
-
-Combines the functionality of both of the above commands to ensure that all live assets are up to date.
