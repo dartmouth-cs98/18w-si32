@@ -5,6 +5,7 @@ import history from "../../history";
 
 import { Page, Wrapper, TitleBar } from "../layout";
 import { fetchMatches } from "../../data/match/matchActions";
+import { getMatchesForUser } from "../../data/match/matchSelectors";
 
 import MatchList from "./MatchList";
 
@@ -14,7 +15,7 @@ class MatchListPage extends React.PureComponent {
   }
 
   componentDidMount() {
-    this.props.fetchMatches();
+    this.props.fetchMatches(this.props.userId);
   }
 
   createMatch = () => {
@@ -38,11 +39,12 @@ class MatchListPage extends React.PureComponent {
 }
 
 const mapDispatchToProps = dispatch => ({
-  fetchMatches: () => dispatch(fetchMatches()),
+  fetchMatches: (userId) => dispatch(fetchMatches(userId)),
 });
 
 const mapStateToProps = state => ({
-  matches: state.matches.records,
+  matches: getMatchesForUser(state, state.session.userId, -1),
+  userId: state.session.userId,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MatchListPage);

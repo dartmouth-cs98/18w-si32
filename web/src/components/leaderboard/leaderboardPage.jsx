@@ -1,8 +1,10 @@
 import React from "react";
+import Radium from "radium";
 import { connect } from "react-redux";
 
 import Page from "../layout/page";
 import { Wrapper } from "../layout/wrappers";
+import Button from "../common/button";
 import groupSearchbar from "../groups/groupSearchbar";
 import LeaderboardTable from "./LeaderboardTable";
 
@@ -14,6 +16,7 @@ import { getSessionUser } from "../../data/user/userSelectors";
 import { fetchGroup } from "../../data/group/groupActions";
 import { setSelectedGroup } from "../../data/leaderboard/leaderboardActions";
 import { joinGroup, leaveGroup, fetchGroupRank } from "../../data/user/userActions";
+import { colors, constants } from "../../style";
 
 class LeaderboardPage extends React.PureComponent {
   constructor(props) {
@@ -68,50 +71,67 @@ class LeaderboardPage extends React.PureComponent {
     this.props.leaveGroup(this.props.selectedGroup.id);
   }
 
+  renderButton = (group) => {
+    if (group.isGlobal) {
+      return null;
+    }
+    if (group.userInGroup) {
+      return <Button
+                kind="primary"
+                style={styles.memberButton}
+                onClick={this.leaveGroup}
+                hoverContent="Leave Group"
+              >
+                Member 
+              </Button>;
+    } else {
+      return <Button kind="primary" style={{padding: "0 40px", height: 40}} onClick={this.joinGroup}>Join Group</Button>;
+    }
+  }
+
   getRightTitleOptions() {
-    if (!this.props.group || !this.props.group.id || this.props.group.id === "global") {
-      return {};
+    if (!this.props.group || !this.props.group._id || this.props.group._id === "global") {
+      return { isGlobal: true };
     }
 
     let userInGroup = false;
     if (this.props.user.groups) {
       const groupIds = this.props.user.groups.map(g => g._id);
-      userInGroup = groupIds.includes(this.props.group.id);
+      userInGroup = groupIds.includes(this.props.group._id);
     }
 
-    const inGroupOptions = {
-      right: "Member",
-      buttonLabel: "Leave Group",
-      buttonAction: this.leaveGroup,
-    };
-
-    const notInGroupOptions = {
-      right: "Not A Member",
-      buttonLabel: "Join Group",
-      buttonAction: this.joinGroup,
-    };
-
-    return userInGroup ? inGroupOptions : notInGroupOptions;
+    return { isGlobal: false, userInGroup };
   }
 
   render() {
-    const groupLabel = this.props.group ? capitalize(this.props.group.name || "Loading...") : "Global";
+    let groupLabel = this.props.group ? capitalize(this.props.group.name || "Loading...") : "Global";
     const groupId = this.props.group ? this.props.group._id : "global";
     const userRank = this.props.user.ranks ? this.props.user.ranks[groupId] : null;
 
-    const titleOptions = this.getRightTitleOptions();
+    const groupInfo = this.getRightTitleOptions();
+    const button = this.renderButton(groupInfo);
+
+    const title = <div>
+      { groupLabel }
+      <span style={styles.rank}>
+        <span style={styles.rank.title}>Rank:</span>
+        <span style={styles.rank.rank}>{_.get(userRank, "rank", "-")}</span>
+        /
+        { _.get(userRank, "of", "-") }
+        </span>
+      </div>;
 
     return (
       <Page>
-        <Wrapper>
+        <Wrapper style={styles.selectWrapper} innerStyle={styles.inner}>
+          <div style={styles.selectTitle}>Select a group to view your ranking:</div>
           {groupSearchbar({value: groupId, label: groupLabel}, this.didSelectGroup, {showGlobal: true, placeholder: "Choose A Specific Group"})}
+        </Wrapper>
+        <Wrapper>
           <TitleBar
-            title={groupLabel}
-            right={titleOptions.right}
-            buttonLabel={titleOptions.buttonLabel}
-            buttonAction={titleOptions.buttonAction}
+            title={title}
+            right={button}
           />
-          <span>My Rank: {userRank ? userRank.rank: ""}</span>
           <LeaderboardTable groupId={groupId} />
         </Wrapper>
       </Page>
@@ -133,4 +153,47 @@ const mapStateToProps = (state, props) => ({
   group: state.groups.records[props.id] || {_id: "global", name: "Global"},
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(LeaderboardPage);
+const styles = {
+  selectWrapper: {
+    width: "100%",
+    backgroundColor: colors.sand,
+    paddingTop: 10,
+    paddingBottom: 10,
+  },
+  rank: {
+    color: colors.medGray,
+    marginLeft: 15,
+    fontSize: constants.fontSizes.large,
+    position: "relative",
+    bottom: 3,
+    fontWeight: 300,
+    rank: {
+      fontWeight: 500,
+    },
+    title: {
+      paddingRight: 5,
+    },
+  },
+  selectTitle: {
+    color: colors.medGray,
+    marginRight: 15,
+  },
+  inner: {
+    display: "flex",
+    alignItems: "center",
+  },
+  memberButton: {
+    borderColor: colors.border,
+    borderWidth: 1,
+    color: colors.medGray,
+    width: 150,
+    height: 40,
+    ":hover": {
+      background: "transparent",
+      borderWidth: 2,
+      color: colors.medGray,
+    },
+  },
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Radium(LeaderboardPage));

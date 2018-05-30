@@ -125,7 +125,7 @@ class DashboardPage extends React.PureComponent {
         { this.renderTopBots() }
         { this.renderOnboardModal() }
 
-        <Wrapper style={styles.dashSectionContainer} innerStyle={styles.dashSection}>
+        <Wrapper style={styles.dashSectionContainer} innerStyle={[styles.dashSection, { borderBottom: 0 }]}>
           <div style={styles.matchesRow}>
             <div style={styles.matches}>
               <div style={styles.sectionHeader}>
@@ -213,7 +213,7 @@ const mapDispatchToProps = dispatch => ({
 const mapStateToProps = state => ({
   user: getSessionUser(state) || {},
   userId: state.session.userId,
-  matches: getMatchesForUser(state, state.session.userId),
+  matches: getMatchesForUser(state, state.session.userId, 20),
   bots: getBotsForUser(state, state.session.userId, { limit: 3 }),
 });
 

@@ -32,7 +32,7 @@ class Footer extends React.PureComponent {
         </div>
         <div style={styles.logoContainer}>
           <div style={styles.logo}>MONAD</div>
-          <div>© Monad by CS98. All Rights Reserved.</div>
+          <div style={styles.copy}>© Monad by CS98. All Rights Reserved.</div>
         </div>
       </div>
     );
@@ -49,7 +49,7 @@ const styles = {
     padding: "0 15px",
     borderStyle: "solid none none none",
     borderWidth: "1px",
-    borderColor: colors.primary
+    borderColor: colors.border
   },
   logoContainer: {
     display: "flex",
@@ -81,6 +81,9 @@ const styles = {
       opacity: .8,
     }
   },
+  copy: {
+    fontSize: constants.fontSizes.smaller,
+  }
 };
 
 export default Radium(Footer);
