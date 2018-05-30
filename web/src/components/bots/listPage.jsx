@@ -5,6 +5,7 @@ import history from "../../history";
 
 import { Page, Wrapper, TitleBar } from "../layout";
 import { fetchBots } from "../../data/bot/botActions";
+import { getBotsForUser } from "../../data/bot/botSelectors";
 
 import BotList from "./BotList";
 
@@ -14,7 +15,7 @@ class BotListPage extends React.PureComponent {
   }
 
   componentDidMount() {
-    this.props.fetchBots();
+    this.props.fetchBots(this.props.userId);
   }
 
   createBot = () => {
@@ -31,6 +32,7 @@ class BotListPage extends React.PureComponent {
         />
         <Wrapper>
           <BotList bots={this.props.bots} />
+          <div style={{clear: "both"}}></div>
         </Wrapper>
       </Page>
     );
@@ -38,11 +40,12 @@ class BotListPage extends React.PureComponent {
 }
 
 const mapDispatchToProps = dispatch => ({
-  fetchBots: () => dispatch(fetchBots()),
+  fetchBots: (userId) => dispatch(fetchBots(userId)),
 });
 
 const mapStateToProps = state => ({
-  bots: state.bots.records,
+  userId: state.session.userId,
+  bots: getBotsForUser(state, state.session.userId, { limit: 15 }),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(BotListPage);
