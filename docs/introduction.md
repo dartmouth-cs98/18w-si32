@@ -51,7 +51,7 @@ From there, the sky is the limit.
 Upload your bot to the Monad servers and observe how it stacks up. Challenge your
 friends to matches to see who has found the stronger strategy.
 Watch how your skill rating, which
-gets updated after every game your bot competes, fluctuates over time. Use all of this information to
+gets updated after every match your bot completes, fluctuates over time. Use all of this information to
 iterate on your current design and improve your bot's strategies.
 
 <div style="padding-bottom:50px"></div>

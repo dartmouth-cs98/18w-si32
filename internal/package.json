@@ -6,7 +6,7 @@
   "repository": "https://github.com/dartmouth-cs98/18w-si32",
   "main": "index.js",
   "scripts": {
-    "assets": "npm run devkit && npm run visualizer",
+    "start": "npm run devkit && npm run visualizer && npm run sample",
     "devkit": "npm run devkit-rm && npm run devkit-zip && npm run devkit-cp && npm run devkit-clean",
     "devkit-rm": "aws s3 rm s3://monad-assets/devkit.zip && rm -f ../devkit/game.json ../devkit/gameserver.log ../devkit/game0.log ../devkit/game1.log",
     "devkit-zip": "zip -9 -r --exclude=*env* devkit.zip ../devkit",
