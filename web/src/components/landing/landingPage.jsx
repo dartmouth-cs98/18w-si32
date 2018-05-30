@@ -102,7 +102,7 @@ class LandingPage extends React.PureComponent {
           <div style={styles.overlayPageColumn}>
             <div style={styles.titleText}>Monad</div>
             <div style={styles.subtitleContainer}>
-              <div style={styles.subtitle}>The World's First Provably-Deterministic Hash Function.</div>
+              <div style={styles.subtitle}>The Web's Premier AI Programming Challenge.</div>
             </div>
             <div style={styles.iconContainer}>
               <i style={styles.arrowDown}></i>
