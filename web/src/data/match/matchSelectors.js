@@ -5,7 +5,21 @@ import _ from "lodash";
 const getMatchesForUser = createSelector(
   state => state.matches.records,
   (state, userId) => userId,
-  (matches, userId) => _.reverse(_.sortBy(_.filter(matches, (m) => _.includes(m.users, userId) && m.status == "DONE" ), "updatedAt")),
+  (state, userId, limit) => limit || 15,
+  (matches, userId, limit) => {
+    if (limit == -1) {
+      limit = 150;
+    }
+
+    return _.reverse(
+      _.sortBy(
+        _.filter(matches, (m) => _.includes(m.users, userId) && m.status == "DONE" ), 
+        "updatedAt"
+      )
+    ).slice(0, limit);
+  }
+  
 );
+
 
 export { getMatchesForUser };

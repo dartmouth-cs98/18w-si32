@@ -47,6 +47,7 @@ class LeaderboardTable extends React.PureComponent {
             id: "index",
             Header: "#",
             accessor: null,
+            maxWidth: 100,
             Cell: props => (<span className='number'>{props.index + page*PAGE_SIZE + 1}</span>)
           },
           {
@@ -54,7 +55,7 @@ class LeaderboardTable extends React.PureComponent {
             accessor: "username"
           },
           {
-            Header: "Rating",
+            Header: "Power Rating",
             accessor: "rating"
           },
         ]}

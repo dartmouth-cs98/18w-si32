@@ -19,7 +19,7 @@ class MatchList extends React.PureComponent {
         </div>
         <div style={styles.botSkill}>
           { b.trueSkill ? b.trueSkill.mu.toFixed(1) : null }
-          { match.isChallenge ? null : <span style={[styles.botSkillDelta, b.trueSkill.delta > 0 ? styles.botDeltaPositive : styles.botDeltaNegative]}>
+          { match.isChallenge || b.trueSkill == undefined ? null : <span style={[styles.botSkillDelta, b.trueSkill.delta > 0 ? styles.botDeltaPositive : styles.botDeltaNegative]}>
             { ( (b.trueSkill.delta > 0 ? "+" : "") + b.trueSkill.delta.toFixed(1)) }
           </span> }
         </div>
