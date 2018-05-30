@@ -1,6 +1,9 @@
 # Monad Bot Development Kit
 
-Everything you need to get started developing for Monad!
+The bot development kit contains everything you need to get started developing for Monad.
+
+Download the kit [here](https://s3.amazonaws.com/monad-assets/devkit.zip)
+or from the [downloads](../downloads) page.
 
 ### Overview
 
