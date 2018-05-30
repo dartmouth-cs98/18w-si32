@@ -36,6 +36,40 @@ Generates a _move_ command to move `num_units` units from the cell specified by 
 
 If `num_units` is not specified, all of the units in the cell specified by `position_from` will be affected by the generated command.
 
+**path()**
+
+```
+path(self, start, goal, flags="None")
+```
+
+returns a list of Coordinate objects from **start** (a coordinate) to **goal** (another coordinate) that indicate a legitimate path between those positions (avoiding any obstacles). It will perform an A-star search.
+
+It takes an additional "flags" parameter that takes several different strings that will affect the move it returns:
+
+"None" (will avoid obstacles)
+"Enemy units" (will avoid obstacles, and any squares with enemy units)
+"Enemy units plus adjacents" (will avoid obstacles, and any squares with enemy units along with any squares adjacent to those squares - used to prevent the possibility of moving into squares enemy units will move into)
+"Enemy buildings" (will avoid obstacles, and enemy buildings)
+"Enemy units plus buildings" (will avoid enemy units, and enemy buildings)
+"Enemy units plus adjacents and buildings" (will avoid enemy units, adjacent squares to enemy units, and enemy buildings)
+
+**smarter_move_towards()**
+
+```
+smarter_move_towards(self, position_from, position_to, flags="None", num_units=None)
+```
+
+A version of move_towards geared for maps with obstacles; smarter_move_towards will call path() and will always a return a _move_ command that will get the units in position_from to position_to (i.e. if it returns something non-None, it will return the first move of a legitimate path - insofar given the current state - towards position_to). 
+
+**distance()**
+
+```
+(self, start, goal, flags="None")
+```
+
+Will return the length of the corresponding path between **start** and **goal**.
+
+
 **build()**
 
 ```
