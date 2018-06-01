@@ -185,10 +185,11 @@ Combat in Monad takes place in two discrete phases.
 
 #### Second phase: _Cell_-Update Phase:
 
-A _Cell_ is defined to not contain _Units_ controlled by more than one player at the start of every
-turn. If a _Cell_ ends up having nonzero numbers of _Units_ of more than one player (as a result of
-_Unit_ movement), the game state will process some combat operation which will result in only one or
-less players with remaining units in the _Cell_.
+A _Cell_, by definition, does not contain _Units_ controlled by more than one player at the
+start of any turn.
+If a _Cell_ ends up containing a nonzero numbers of _Units_ controlled by multiple players (as a result of
+_Unit_ movement), the game state will process some combat operation, at the end of which
+only a single player (or, in rare cases, no players) will have units remaining in the _Cell_.
 
 For example, Player A sends 8 _Units_ North from **(2, 4)** and Player B sends 5 _Units_ South from
 **(2, 5)**; these two _Commands_ will be replaced by an effectively equal single _Command_ of "Player A
