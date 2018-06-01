@@ -10,6 +10,7 @@ sed -i '.bak' "s/.*monad-visualizer-0.1.0.dmg$/$(shasum -a 256 monad-visualizer-
 # remove the auto-generated backup file
 rm -f ../../docs/downloads/hash.md.bak
 
+# deploy docs to reflect updates 
 cd ../../docs
 npm run deploy
 

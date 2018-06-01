@@ -8,6 +8,7 @@ sed -i '.bak' "s/.*devkit.zip$/$(shasum -a 256 devkit.zip)/" ../docs/downloads/h
 # remove the auto-generated backup file
 rm -f ../docs/downloads/hash.md.bak
 
+# deploy docs to reflect updates 
 cd ../docs
 npm run deploy
 

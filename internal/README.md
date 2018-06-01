@@ -37,6 +37,14 @@ npm run devkit
 
 Creates an archive of the current development kit (maintained in the `devkit/`) and uploads it to the the Monad assets bucket on S3.
 
+Subtasks
+
+* `devkit-rm` Remove the existing devkit archive from S3 bucket.
+* `devkit-zip` Archive the current local devkit directory.
+* `devkit-hash` Generate the hash checksum for updated devkit and update documentation with this new value.
+* `devkit-cp` Upload the new devkit archive to S3 bucket.
+* `devkit-clean` Remove the locally-generated devkit archive.
+
 ```
 npm run visualizer
 ```
@@ -45,9 +53,27 @@ Builds the current offline visualizer application (maintained in the `visualizer
 
 Note: this task initiates a fresh build of the entire Electron app, so it takes some time.
 
+Subtasks
+
+* `visualizer-rm` Remove the existing visualizer disk image file from S3 bucket.
+* `visualizer-build` Initiate new build of the visualizer.
+* `visualizer-hash` Generate the hash checksum for updated visualizer and update documentation with this new
+value.
+* `visualizer-cp` Upload the new visualizer disk image file to S3 bucket.
+
 ```
 npm run sample
 ```
 
 Generates obfuscated versions of our sample bots, creates archives for each, and uploads them
 to the Monad assets bucket on S3 (in the `sample/` subdirectory).
+
+Subtasks
+
+* `sample-rm` Remove the existing sample bot archives from S3 bucket.
+* `sample-obfuscate` Generate obfuscated versions of source for sample bots.
+* `sample-zip` Archive the current versions of each sample bot, with obfuscated source.
+* `sample-hash` Generate the hash checksum for updated sample bot archives and update documentation with
+these new values.
+* `sample-cp` Upload the new sample bot archives to S3 bucket.
+* `sample-clean` Remove the locally generated sample bot archives. 

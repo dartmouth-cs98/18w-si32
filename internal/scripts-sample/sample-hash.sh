@@ -13,6 +13,7 @@ sed -i '.bak' "s/.*fortifier.zip$/$(shasum -a 256 fortifier.zip)/"  ../docs/samp
 # remove the auto-generated backup file
 rm -f ../docs/sample/hash.md.bak
 
+# deploy docs to reflect updates 
 cd ../docs
 npm run deploy
 
