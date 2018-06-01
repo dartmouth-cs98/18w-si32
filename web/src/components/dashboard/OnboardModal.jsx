@@ -1,3 +1,5 @@
+import Color from "color";
+import Radium from "radium";
 import Modal from "react-modal";
 import { connect } from "react-redux";
 import React, { Component } from "react";
@@ -14,10 +16,15 @@ import { colors, constants, fontStyles, colorStyles } from "../../style";
 
 const { DEVKIT_URL } = config;
 
+// amount of time to wait before resetting the copy text
+const RESET_WAIT_TIME = 3000;
+// the string we copy to users clipboard as onboarding code
+const COPY_STRING = "cells = game.get_my_cells()\nfor cell in cells:\n\tgame.move(cell.position, 1, choice(game.get_movement_directions()))";
+
 class OnboardModal extends Component {
   constructor(props) {
     super(props);
-    this.state = { botName: "" };
+    this.state = { botName: "", copied: false };
   }
 
   downloadDevkit = () => {
@@ -39,6 +46,36 @@ class OnboardModal extends Component {
     this.setState({
       botFile: file,
     });
+  }
+
+  resetCopyState = () => {
+    this.setState({ copied: false });
+  }
+
+  copyToClipboard = () => {
+    // solution to copying to clipboard problem made much more robust by
+    // following the instruction provided by Angelos Chalaris, available here
+    // https://hackernoon.com/copying-text-to-clipboard-with-javascript-df4d4988697f
+    const el = document.createElement("textarea");
+    el.value = COPY_STRING;
+    el.setAttribute("readonly", "");
+    el.style.position = "absolute";
+    el.style.left = "-9999px";
+    document.body.appendChild(el);
+    const selected =
+      document.getSelection().rangeCount > 0
+        ? document.getSelection().getRangeAt(0)
+        : false;
+    el.select();
+    document.execCommand("copy");
+    document.body.removeChild(el);
+    if (selected) {
+      document.getSelection().removeAllRanges();
+      document.getSelection().addRange(selected);
+    }
+    this.setState({ copied: true });
+    // reset state the update text after time interval 
+    window.setTimeout(this.resetCopyState, RESET_WAIT_TIME);
   }
 
   submit = (event) => {
@@ -88,12 +125,15 @@ class OnboardModal extends Component {
         <div style={styles.listContainer}>
           <div style={styles.listItem}>1. Download and unpack the <Link href="#" onClick={this.downloadDevkit}>development kit</Link></div>
           <div style={styles.listItem}>2. Copy and paste the code below into 'bot.py' where indicated</div>
-          <div style={styles.codeBlock}>
+          <p style={styles.codeBlock} id="codeBlock">
             cells = game.get_my_cells()
             <br/>
             for cell in cells:
             <br/>
-            <span style={styles.indent}>game.move(cell.position, 1, choice(game.get_movement_directions()))</span>
+            &nbsp;&nbsp;game.move(cell.position, 1, choice(game.get_movement_directions()))
+          </p>
+          <div style={styles.copyButtonContainer}>
+            <div style={styles.copyButton} onClick={this.copyToClipboard}>{`${this.state.copied ? "Copied!" : "Copy to Clipboard"}`}</div>
           </div>
           <form style={styles.form} onSubmit={this.submit}>
             <div style={styles.listItem}>3. Name your bot</div>
@@ -186,10 +226,25 @@ const styles = {
     width: 300,
     margin: "20px auto",
   },
+  copyButtonContainer: {
+    width: "100%",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    alignItems: "center",
+    padding: "10px"
+  },
+  copyButton: {
+    color: colors.blue,
+    ":hover": {
+      color: Color(colors.blue).darken(0.4).string(),
+      cursor: "pointer"
+    },
+  }
 }
 
 const mapDispatchToProps = dispatch => ({
   create: (name, file, params) => dispatch(createBot(name, file, params)),
 });
 
-export default connect(null, mapDispatchToProps)(OnboardModal);
+export default connect(null, mapDispatchToProps)(Radium(OnboardModal));
