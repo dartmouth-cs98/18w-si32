@@ -35,8 +35,8 @@ Once the buckets are created and configured, set the corresponding keys in `.env
 You'll need a Mongo server and a Redis server. 
 Be sure to set the .env variables to point at those servers.
 
-To push the API code to a Heroku instance: from within this directory, run `heroku container:push web -a APPNAME`
-to deploy to the application at APPNAME.  
+To push the API code to a Heroku instance: from within this directory, run `heroku container:push web -a APPNAME`,
+followed by `heroku container:release web -a APPNAME` to deploy to the application at APPNAME.  
 
 At present, the live Heroku app is `lit-mountain-10578` and the dev one is `si32-dev`. 
 
