@@ -59,7 +59,7 @@ _Group.statics.createGroupWithFoundingMember = async function(groupInfo, foundin
     throw new MalformedError("'name' is required to create a group");
   }
 
-  const existingGroup = await Group.find({
+  const existingGroup = await Group.findOne({
     name: groupInfo.name,
   });
 
