@@ -93,7 +93,6 @@ class Rules:
                 cell.create_hive(move.playerId)
                 self.players[move.playerId].decrement_resources(HIVE_COST)
 
-
     def update_combat_phase(self, moves):
         # dictionaries
         sets = moves_to_dictionary(moves)

@@ -11,6 +11,8 @@ programs ("agents") that you design and implement. Once you have completed your 
 
 ### Language
 
+**Game Space**
+
 * `Map` Monad games take place in a two-dimensional hexagonal grid environment that we
 commonly refer to as the game _Map_
 * `Cells` The _Map_ is composed of individual hexagonal _Cells_
@@ -20,6 +22,12 @@ between _Cells_
 * `Hives` Players use _Resources_ to build _Hives_, which in turn spawn more _Units_
 * `Obstacles` Some _Cells_ contain _Obstacles_ which prevent _Units_ from both navigating
 through them and constructing _Hives_ within them
+
+**Other**
+
+* `Turns` A turn refers to a move by each bot in a match. If there are four bots participating
+in a match, for instance, a turn would consist of the moves made by each of the four bots.
+Once these four moves are issued and used to update the game state, the next turn commences.
 
 ### Objective
 
@@ -41,20 +49,35 @@ create one hive.
 
 ### Victory
 
-There are three ways in which a player emerges victorious in a Monad game
+As the objective section above suggests, a bot emerges victorious in a Monad match
+in the event that it becomes the only bot in the match controlling a nonzero number
+of _Hives_.
 
-1. They become the only player controlling a nonzero number of _Hives_
-2. They are the only player controlling a nonzero number of _Units_ for a period of ten (10) turns
-3. They control the greatest number of _Units_ after 2000 turns have elapsed and neither of the
-previous two conditions have been met.
+In the case of matches with more than two players,
+a bot that has its last _Hive_ destroyed but still has active _Units_ on the map
+is not immediately removed from the match. Instead, the bot is still permitted
+to issue commands to these remaining units in the normal manner.
+
+**Breaking Ties**
+
+In an effort to prevent matches from running for long periods of time (possibly indefinitely)
+and consuming large amounts of computing power, Monad enforces a hard turn limit of 2000
+turns per match. That is, once 2000 turns have elapsed, the game is over.
+
+In the event that this turn limit is reached and no bot has emerged as the unambiguous
+victor, the bot with the greatest number of active _Units_ is declared the victor.
 
 ### Maps
 
 In order to test bot versatility and to decrease predictability of matches, the _Resource_
-allocation and _Obstacle_ distribution on Monad _Maps_ are randomized.
-However, all _Maps_ share a few basic characteristics:
+allocation on maps is randomized. Furthermore, the _Obstacle_ distribution varies
+from match to match — sometimes the distribution may be random, within certain density
+parameters, while other times the _Obstacle_ distribution may have a more well-defined
+structure.
 
-**_Maps_ are grid-based**:
+Despite these differences, however, all _Maps_ share a few basic characteristics.
+
+**_Maps_ are grid-based**
 
 The _Map_ is composed of discrete _Cell's_, arranged in an according to a cartesian coordinate system.
 
@@ -71,11 +94,12 @@ A _Cell_ containing a _Hive_ cannot be mined for _Resources_.
 
 A _Cell_ that contains an _Obstacle_ contains no _Resources_ and can contain no _Units_ or _hives_.
 
-**_Maps_ are symmetric**:
+**_Maps_ are symmetric**
 
 In order to make games as fair as possible, and to minimize the effects of luck and variance in
 determining the outcome of an individual match, _Maps_ are symmetric in terms of _Resource_
 allocation and _Obstacle_ distribution.
+
 Each player starts a match in a symmetric part of the _Map_. For instance, in a 4-player game, each
 player will begin with their starter unit at the center of a quadrant of the map, and each quadrant will
 initially contain the same total amount of _Resources_ and _Obstacles_. This ensures that each player
