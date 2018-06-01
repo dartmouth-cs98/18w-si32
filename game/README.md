@@ -2,7 +2,7 @@
 
 The game engine component of Monad.
 
-## Development
+### Development
 
 Development of game components within the `game/` directory is straightforward.
 
@@ -10,17 +10,17 @@ Development of game components within the `game/` directory is straightforward.
 * Run a local match to verify that your changes have not broken anything.
 * Done.
 
-## Anatomy
+### Anatomy
 
 * `Bot` The higher-wrapper around all bots. Both `LocalBot` and `DockerBot` subclass
 the `Bot` class.
 * `Hive` Static game elements responsible for producing units.
 * `Cell` Atomic elements of the hexagonal grid that composes a Monad map.
-* `Command` Primary communication protocal between bots and the worker and vice versa.
+* `Command` Primary communication protocol between bots and the worker, and vice versa.
 * `Coordinate` Helper class for easier navigation of the map coordinate system.
 * `DockerBot` The Docker-compatible subclass of the `Bot` class; used for all
 matches run online.
-* `Game`
+* `Game` The state manager for each individual match that is run.
 * `LocalBot` The local development-compatible subclass of the `Bot` class; used
 for all matches run locally.
 * `Logger` Module responsible for producing match log files.

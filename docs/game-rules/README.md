@@ -47,6 +47,26 @@ mobility of opposing  _Units_
 Each player starts the game with a single _Unit_ and 100 _Resources_  — just enough to
 create one hive.
 
+### Units
+
+Every turn, a _Unit_ can choose to do one of three things.
+
+1. Move - The unit can move to any adjacent cell
+2. Build - If the player controlling the unit has enough resources, the unit can build a hive in the
+cell in which it is located
+3. Mine - The unit can mine resources from the cell in which it is located, in order to
+be able to build more _Hives_ in future turns (more on this below)
+
+### Hives
+
+A _Hive_ is the result of a _Unit_ executing a build command. _Hives_ are constructed
+in a single turn, and occupy the map _Cell_ in which they are constructed.
+
+_Hives_, once constructed, produce one (1) new unit every turn, and have an inherent
+defense rating of 10. This means that it would need to be attacked by 10 enemy _Units_
+in order to be destroyed. _Hives_ cost 100 resources to construct, and can be constructed
+in any _Cell_ that does not contain either an existing _Hive_ or map _Obstacle_.
+
 ### Victory
 
 As the objective section above suggests, a bot emerges victorious in a Monad match
@@ -183,12 +203,13 @@ Combat in Monad takes place in two discrete phases.
  such 'collisions' between _Unit_ groups, _Units_ will be subtracted from each _Unit_ group until only
  the stronger group remains or both groups are eliminated.
 
-#### Second phase: _Cell_-Update Phase:
+#### Second phase: Cell-Update Phase:
 
-A _Cell_ is defined to not contain _Units_ controlled by more than one player at the start of every
-turn. If a _Cell_ ends up having nonzero numbers of _Units_ of more than one player (as a result of
-_Unit_ movement), the game state will process some combat operation which will result in only one or
-less players with remaining units in the _Cell_.
+A _Cell_, by definition, does not contain _Units_ controlled by more than one player at the
+start of any turn.
+If a _Cell_ ends up containing a nonzero numbers of _Units_ controlled by multiple players (as a result of
+_Unit_ movement), the game state will process some combat operation, at the end of which
+only a single player (or, in rare cases, no players) will have units remaining in the _Cell_.
 
 For example, Player A sends 8 _Units_ North from **(2, 4)** and Player B sends 5 _Units_ South from
 **(2, 5)**; these two _Commands_ will be replaced by an effectively equal single _Command_ of "Player A

@@ -130,10 +130,8 @@ class LandingPage extends React.PureComponent {
                 <div style={styles.paragraphTitle}>The Evolution of Intelligence.</div>
                 <div style={styles.paragraphContainer}>
                   <p>
-                    Monad's universe is centered around not a specific spatial
-                    location, but rather a specific time — the early stages of life.
-                    You command a swarm of simple autonomous agents, and with them
-                    attempt to reproduce, expand, and ultimately assert supremacy
+                    In Monad, you assume command of a swarm of simple autonomous agents,
+                    and with them attempt to reproduce, expand, and ultimately assert supremacy
                     over your environment.
                   </p>
                 </div>

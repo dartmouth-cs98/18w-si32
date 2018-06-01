@@ -1,22 +1,32 @@
 # Monad
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://opensource.org/licenses/MIT)
 
-_Last updated: 7 March 2018_
+_Last updated: 1 June 2018_
 
 ## Overview
 
-Monad is a web-based artificial intelligence programming challenge. The user-facing interface is a web client where users submit code files that implement artificial intelligence agents, hereafter referred to as bots. Once submitted, users pit their bots gainst those designed by other users in a simple turn-based strategy game (think: Starcraft meets Chess).
+Monad is a web-based artificial intelligence programming challenge. The user-facing interface is a web
+client where users submit code files that implement artificial intelligence agents (hereafter referred to
+as "bots"). Once submitted, users pit their bots against those designed by other users in a simple
+yet engaging turn-based strategy game combining elements of [Starcraft](https://starcraft2.com/en-us/)
+and chess.
 
 Monad is currently deployed and publicly available [here](http://monad.surge.sh).
 
 ## Project Status
 
-A brief overview of where we are, and where we intend to go.
+As of June 1, 2018, Monad is no longer under active development, at least for the
+time being.
 
-**Implemented Functionality:**
+The itemization below shows the features that we accomplished throughout
+our two terms working on the project in an academic setting (Dartmouth's [CS98](http://cs98.me)) as
+well as those features that were under consideration but were never implemented.
+These may serve as a starting point should development re-commence in the future.
+
+**Implemented: Winter, 2018**
 
 - Initial game logic
-- Initial _game helper_ class to aid users in bot development
+- Initial `GameHelper` class to aid users in bot development
 - Containerized worker to run matches safely
 - Web client that allows users to:
 	- Register / sign in
@@ -32,26 +42,27 @@ A brief overview of where we are, and where we intend to go.
 - Web API that supports the functions of both the web client and the worker and
 couples the two components together
 
-**Planned Functionality:**
+**Implemented: Spring, 2018**
 
 - Improved UI / UX experience
-- Feed page to display activity of users _followed_ by the current user
 - Guided tutorials regarding bot development
-- Guided tutorials regarding bot strategy
-- Provided bots of various known skill levels against which users may train their bots and gauge progress
-- Collection and visualization of match statistics (units, resources, etc.)
+- Guided tutorials regarding bot strategy improvement
+- Sample bots of various skill levels against which users may train their bots and gauge progress
+- Collection and visualization of individual match statistics (units, resources, etc.)
 - Support for matches of varying numbers of players
 - More advanced / aesthetically pleasing replay graphics
-- Native desktop application / CLI to enable local replay visualization and more efficient local bot development
+- Native desktop application for match replay visualization
+- CLI to enable more efficient local bot development
+- Support for easily-alterable hyperparameter choices within bot implementations
 
-**Future Functionality:**
+**Future Directions**
 
+- Game universe lore
 - Online IDE to implement bots
 - Online discussion forum
-- Story / universe / game lore
-- More complex game mechanics allowing for cooperation / game-theoretic interaction
+- Feed page to display activity of users of interest
+- More complex game mechanics allowing for cooperation
 - Support for a larger subset of programming languages
-- Support hyperparameter choices for bots (env vars to set probability thresholds, etc.)
 - Support for machine learning
 
 ## Architecture
@@ -102,7 +113,14 @@ The code that implements the game engine and game logic is located in the `game/
 
 A wrapper around various game protocols to allow users to design and implement bots more efficiently by abstracting away low level details.
 
-The code that implements the bot development kit is located in the `game/` subdirectory.
+The code that implements the bot development kit is located in the `devkit/` subdirectory.
+
+**Offline Visualizer**
+
+A standalone native desktop application (implemented with Electron) that allows users to
+visualize match replays during local bot development and debugging without an internet connection.
+
+The code that implements the offline visualizer is located in the `visulizer/` subdirectory.
 
 ## Development
 
@@ -146,11 +164,31 @@ The command `make` will build and configure the worker. You should now be ready 
 
 View README in the `worker/` subdirectory for more details.
 
+**Offline Visualizer**
+
+Navigate to the `visualizer/` directory.
+
+The command `npm run electron-dev` will build the application and serve it via
+`webpack-dev-server` in an Electron application window.
+
+To build for production, run `npm run electron-pack`.
+
+View README in the `visualizer/` subdirectory for more details.
+
+**Assets**
+
+In addition to the moving pieces of the platform described above, we maintain
+a growing volume of downloadable content for users. This content includes
+the local bot development kit, the offline visualizer, and sample bot archives.
+
+Downloadable content is managed automatically via a collection of scripts maintained in
+the `internal/` subdirectory. See the README there for more details.
+
 ## Deployment
 
 **Web Client**
 
-We deploy the web client statically with Surge. Running `npm run deploy` in the `web/` directory will deploy the client to the production site at [monad.surge.sh](http://monad.surge.sh/). 
+We deploy the web client statically with Surge. Running `npm run deploy` in the `web/` directory will deploy the client to the production site at [monad.surge.sh](http://monad.surge.sh/).
 
 `npm run deploy-dev` will deploy to the staging site at [monad-dev.surge.sh](http://monad-dev.surge.sh/).
 
@@ -160,7 +198,9 @@ We deploy the web documentation statically with Surge. Running `npm run deploy` 
 
 **Web API**
 
-We deploy the web API with Heroku. Running `heroku container:push web -a APPNAME` will deploy to the application at `APPNAME`.
+We deploy the web API with Heroku.
+
+Running `heroku container:push web -a APPNAME` will deploy to the application at `APPNAME`.
 
 **Worker**
 

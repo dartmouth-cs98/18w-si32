@@ -249,6 +249,26 @@ visualize games from a desktop application that requires no internet connection.
 These tools allow one to see the decisions that bots make throughout the course of a
 game, identify potential weaknesses, and gain insight into potentially stronger strategies.
 
+### Skill Ratings
+
+If you have uploaded any Monad bot via the web client, you have likely seen a banner
+announcing your "skill rating" along with several other pieces of information.
+This skill rating is computed using the TrueSkill skill-based ranking system developed by Microsoft.
+
+In brief, your skill ranking based on two parameters:
+
+* Your perceived skill, _mu_
+* The system's confidence in your perceived skill value, _sigma_
+
+Generally, your skill rating is positively impacted by your _mu_ value and negatively impacted
+by your _sigma_ value, so
+
+* Increases in _mu_ lead to a higher perceived skill
+* Increases in _sigma_ reflect a lower level of confidence in your perceived skill, which in turn
+negatively impacts your skill rating
+
+and vice versa. 
+
 ### Conclusion
 
 We have now seen how Monad bots are structured and how they interact with both the
