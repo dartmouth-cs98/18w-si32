@@ -64,11 +64,15 @@ class LeaderboardPage extends React.PureComponent {
   }
 
   joinGroup = () => {
-    this.props.joinGroup(this.props.selectedGroup.id);
+    this.props.joinGroup(this.props.selectedGroup.id).then(() => {
+      this.props.fetchGroup();
+    });
   }
 
   leaveGroup = () => {
-    this.props.leaveGroup(this.props.selectedGroup.id);
+    this.props.leaveGroup(this.props.selectedGroup.id).then(() => {
+      this.props.fetchGroup();
+    });
   }
 
   renderButton = (group) => {
@@ -95,9 +99,8 @@ class LeaderboardPage extends React.PureComponent {
     }
 
     let userInGroup = false;
-    if (this.props.user.groups) {
-      const groupIds = this.props.user.groups.map(g => g._id);
-      userInGroup = groupIds.includes(this.props.group._id);
+    if (this.props.group) {
+      userInGroup = this.props.group.members.includes(this.props.user._id);
     }
 
     return { isGlobal: false, userInGroup };
