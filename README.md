@@ -62,6 +62,7 @@ couples the two components together
 - Online discussion forum
 - Feed page to display activity of users of interest
 - More complex game mechanics allowing for cooperation
+- More complex game mechanics allowing for incomplete information
 - Support for a larger subset of programming languages
 - Support for machine learning
 
