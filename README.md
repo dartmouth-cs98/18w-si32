@@ -11,7 +11,7 @@ as "bots"). Once submitted, users pit their bots against those designed by other
 yet engaging turn-based strategy game combining elements of [Starcraft](https://starcraft2.com/en-us/)
 and chess.
 
-Monad is currently deployed and publicly available [here](http://monad.surge.sh).
+Monad is currently deployed and publicly at [playmonad.com](http://playmonad.com).
 
 ## Project Status
 
@@ -189,7 +189,7 @@ the `internal/` subdirectory. See the README there for more details.
 
 **Web Client**
 
-We deploy the web client statically with Surge. Running `npm run deploy` in the `web/` directory will deploy the client to the production site at [monad.surge.sh](http://monad.surge.sh/).
+We deploy the web client statically with Surge. Running `npm run deploy` in the `web/` directory will deploy the client to the production site at [playmonad.com](http://playmonad.com/).
 
 `npm run deploy-dev` will deploy to the staging site at [monad-dev.surge.sh](http://monad-dev.surge.sh/).
 
