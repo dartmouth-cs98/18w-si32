@@ -241,7 +241,7 @@ for instructions on how to do this).
 
 There are then multiple options available to visualize the game recorded in this log file.
 
-* You may visit our [replay page](http://monad.surge.sh/replay) and upload the file there,
+* You may visit our [replay page](http://playmonad.com/replay) and upload the file there,
 and the game will be visualized for you in the browser.
 * You may download our offline visualizer from the [downloads page](../downloads/README.md) to
 visualize games from a desktop application that requires no internet connection.
@@ -267,7 +267,7 @@ by your _sigma_ value, so
 * Increases in _sigma_ reflect a lower level of confidence in your perceived skill, which in turn
 negatively impacts your skill rating
 
-and vice versa. 
+and vice versa.
 
 ### Conclusion
 

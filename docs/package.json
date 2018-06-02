@@ -6,7 +6,7 @@
   "scripts": {
     "serve": "./node_modules/gitbook-cli/bin/gitbook.js --lrport 9999 --port 4001 serve",
     "build": "./node_modules/gitbook-cli/bin/gitbook.js build",
-    "deploy": "./node_modules/gitbook-cli/bin/gitbook.js build && surge _book"
+    "deploy": "./node_modules/gitbook-cli/bin/gitbook.js build && surge --domain docs.playmonad.com _book"
   },
   "author": "Monad Team",
   "license": "ISC",
