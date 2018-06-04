@@ -1,4 +1,5 @@
-# Code adapted from previously written code in CS 76
+# Code adapted from previously written code in CS 76 (Artificial Intelligence)
+
 from game.Coordinate import Coordinate, direction_deltas
 
 class ObstacleMapProblem:
