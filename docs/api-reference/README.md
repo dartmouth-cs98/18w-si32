@@ -88,6 +88,16 @@ Generates a _mine_ command to instruct _num\_units_ units at the position specif
 
 If the there are fewer than _num\_units_ units at the specified position, then all of the invoking player's units at that position will be instructed to mine.
 
+**consolidate()**
+
+```
+consolidate(self, bottom_left, top_right, id, flags="None")
+```
+
+Generates a list of commands that will attempt to get the units of the player with id "id" onto one cell (may be useful for mustering forces for an attack)
+
+
+
 ### Cell Data (Getters)
 
 **get\_cell()**
