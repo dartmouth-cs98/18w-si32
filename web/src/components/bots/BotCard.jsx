@@ -21,35 +21,6 @@ const BotCard = ({ bot, style, hasDivider }) => (
 
       <div style={fontStyles.small}><StatDifference history={bot.trueSkillHistory} /></div>
     </div>
-
-    {/*<h4 style={styles.subtitle}>Rankings</h4>
-    <table style={styles.rankTable}>
-      <tbody>
-        <tr style={styles.rankTableRow}>
-          <td style={[colorStyles.medGray, fontStyles.medBold, fontStyles.small]}>
-            Global
-          </td>
-          <td style={[colorStyles.darkGray, fontStyles.large]}>
-            14/312
-          </td>
-          <td style={[colorStyles.lightGray, fontStyles.small, styles.rankDiff]}>
-            <span style={[colorStyles.green]}>&uarr;18</span> since last week
-          </td>
-        </tr>
-        <tr style={styles.rankTableRow}>
-          <td style={[colorStyles.medGray, fontStyles.medBold, fontStyles.small]}>
-            Dartmouth
-          </td>
-          <td style={[colorStyles.darkGray, fontStyles.large]}>
-            4/73
-          </td>
-          <td style={[colorStyles.lightGray, fontStyles.small, styles.rankDiff]}>
-            <span style={[colorStyles.red]}>&darr;3</span> since last week
-          </td>
-        </tr>
-      </tbody>
-    </table>*/}
-
   </div>
 );
 
