@@ -1,6 +1,7 @@
 # astar_search.py 
 
-# Code taken from previously written code in CS 76
+# Code taken from previously written code in CS 76 (Artificial Intelligence), adapted from code written by CS 76 instructors
+
 from game.SearchSolution import SearchSolution
 from heapq import heappush, heappop
 
