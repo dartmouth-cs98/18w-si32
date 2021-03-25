@@ -6,7 +6,7 @@ jmespath==0.9.3
 pyasn1==0.4.2
 pyminifier==2.1
 python-dateutil==2.7.2
-PyYAML==3.12
+PyYAML==5.4
 rsa==3.4.2
 s3transfer==0.1.13
 six==1.11.0
