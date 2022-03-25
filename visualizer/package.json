@@ -74,7 +74,7 @@
   },
   "devDependencies": {
     "concurrently": "^3.5.1",
-    "electron": "^1.8.4",
+    "electron": "^13.6.6",
     "electron-builder": "^20.10.0",
     "rimraf": "^2.6.2",
     "wait-on": "^2.1.0"
