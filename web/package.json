@@ -34,7 +34,7 @@
     "react-redux": "^5.0.6",
     "react-select": "^1.2.1",
     "react-table": "^6.7.6",
-    "recharts": "^1.0.0-beta.10",
+    "recharts": "^2.1.14",
     "redux": "^3.7.2",
     "redux-form": "^7.2.3",
     "redux-logger": "^3.0.6",
