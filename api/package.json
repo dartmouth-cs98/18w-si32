@@ -28,7 +28,7 @@
     "koa": "^2.5.0",
     "koa-body": "^2.5.0",
     "koa-router": "^7.4.0",
-    "mongoose": "^5.0.3",
+    "mongoose": "^5.13.20",
     "msgpack-lite": "^0.1.26",
     "node": "^9.4.0",
     "nodemon": "^1.14.12",
